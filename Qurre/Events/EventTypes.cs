@@ -1,6 +1,6 @@
 ﻿namespace Qurre.Events
 {
-    internal enum PlayerEvents : int //1xxx
+    internal enum PlayerEvents : uint //1xxx
     {
         //1000+ <- Network events
         Preauth = 1001,
@@ -41,12 +41,78 @@
         InteractLocker = 1503,
         InteractScp330 = 1504,
         InteractShootingTarget = 1505,
-        UnloadWeapon = 1506,
 
+        //1600+ <- Gun
+        UnloadGun = 1601,
+        AimGun = 1602,
+        ReloadGun = 1603,
+        ShotGun = 1604,
+        DryfireGun = 1605,
+
+        //1700+ <- Player Role Events
+        Spawn = 1701,
+        ChangeRole = 1702,
+        Escape = 1703,
+
+        //1800+ <- Damage
+        Damage = 1801,
+        DamageWindow = 1802,
+        DamageShootingTarget = 1803,
+
+        //1900+ <- Misc
+        ChangeSpectator = 1901,
+        Handcuff = 1902,
+        RemoveHandcuffs = 1903,
+        MakeNoise = 1904,
+        ReceiveEffect = 1905,
+        UseHotkey = 1906,
     }
 
-    internal enum MapEvents : int //2xxx
+    internal enum MapEvents : uint //2xxx
     {
+        //2000+ <- Main Map Events
+        MapGenerated = 2001,
+        LczDecontamination = 2002,
+        LczAnnounce = 2003,
+        GeneratorActivated = 2004,
 
+        //2100+ <- Place/Spawn
+        PlaceBlood = 2101,
+        PlaceBulletHole = 2102,
+        ItemSpawned = 2103,
+        RagdollSpawn = 2104,
+        GrenadeExploded = 2105,
+
+        //2200+ <- Team Respawn
+        TeamRespawnSelected = 2201,
+        TeamRespawn = 2202,
+    }
+
+    internal enum ServerEvents : uint //3xxx
+    {
+        //3000+ <- 
+
+        //3100+ <- Commands
+        RemoteAdminCommand = 3101,
+        GameConsoleCommand = 3102,
+        ServerConsoleCommand = 3103,
+
+        //3200+ <- Reports
+        CheaterReport = 3201,
+        LocalReport = 3202,
+    }
+
+    internal enum RoundEvents : uint //4xxx
+    {
+        Waiting = 4001,
+        Start = 4002,
+        Restart = 4003,
+        End = 4004,
+    }
+    internal enum AlphaEvents : uint //5xxx
+    {
+        Start = 5001,
+        Stop = 5002,
+        Detonation = 5003,
     }
 }
