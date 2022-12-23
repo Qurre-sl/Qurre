@@ -31,11 +31,11 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\depedencies\Assembly-CSharp.dll</HintPath>
-    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\depedencies\Assembly-CSharp-firstpass.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp_public">
+      <HintPath>..\depedencies\Assembly-CSharp_public.dll</HintPath>
     </Reference>
     <Reference Include="CommandSystem.Core">
       <HintPath>..\depedencies\CommandSystem.Core.dll</HintPath>
@@ -49,8 +49,8 @@
     <Reference Include="NorthwoodLib">
       <HintPath>..\depedencies\NorthwoodLib.dll</HintPath>
     </Reference>
-    <Reference Include="PluginAPI">
-      <HintPath>..\depedencies\PluginAPI.dll</HintPath>
+    <Reference Include="PluginAPI_public">
+      <HintPath>..\depedencies\PluginAPI_public.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -65,14 +65,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="API\Core\Plugin.cs" />
     <Compile Include="API\Extensions.cs" />
     <Compile Include="Loader\EntryPoint.cs" />
     <Compile Include="Loader\MainConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="API\Utils\" />
     <Folder Include="Events\" />
     <Folder Include="Patcher\" />
   </ItemGroup>
