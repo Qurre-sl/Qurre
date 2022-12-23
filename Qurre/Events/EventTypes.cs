@@ -35,14 +35,13 @@
         PickupArmor = 1407,
         PickupScp330 = 1408,
 
-
-        //1400+ <- Interact
-        InteractGenerator = 1401,
-        InteractElevator = 1402,
-        InteractLocker = 1403,
-        InteractScp330 = 1404,
-        InteractShootingTarget = 1405,
-        UnloadWeapon = 1406,
+        //1500+ <- Interact
+        InteractGenerator = 1501,
+        InteractElevator = 1502,
+        InteractLocker = 1503,
+        InteractScp330 = 1504,
+        InteractShootingTarget = 1505,
+        UnloadWeapon = 1506,
 
     }
 
