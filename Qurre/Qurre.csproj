@@ -66,13 +66,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Extensions.cs" />
+    <Compile Include="Events\EventTypes.cs" />
     <Compile Include="Loader\EntryPoint.cs" />
     <Compile Include="Loader\MainConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Events\" />
-    <Folder Include="Patcher\" />
+    <Folder Include="Internal\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
