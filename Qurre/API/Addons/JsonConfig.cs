@@ -79,7 +79,7 @@ namespace Qurre.API.Addons
         internal static string ConfigPath = string.Empty;
         internal static void Init()
         {
-            ConfigPath = Path.Combine(PluginManager.ConfigsDirectory, $"{Loader.Port}.json");
+            ConfigPath = System.IO.Path.Combine(PluginManager.ConfigsDirectory, $"{Loader.Port}.json");
             if (!File.Exists(ConfigPath))
             {
                 byte[] content = new UTF8Encoding(true).GetBytes("{\n    \n}");

@@ -46,22 +46,22 @@ namespace Qurre.API
 		static internal void LogTxt(object message)
 		{
 			if (!Logging) return;
-			if (!Directory.Exists(PluginManager.LogsDirectory))
+			if (!Directory.Exists(Path.Logs))
 			{
-				Directory.CreateDirectory(PluginManager.LogsDirectory);
-				Custom($"Logs directory not found - creating: {PluginManager.LogsDirectory}", "WARN", ConsoleColor.DarkYellow);
+				Directory.CreateDirectory(Path.Logs);
+				Custom($"Logs directory not found - creating: {Path.Logs}", "WARN", ConsoleColor.DarkYellow);
 			}
-			File.AppendAllText(Path.Combine(PluginManager.LogsDirectory, $"{Loader.Port}-log.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
+			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Loader.Port}-log.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
 		}
 		static internal void AllLogsTxt(object message)
 		{
 			if (!AllLogging) return;
-			if (!Directory.Exists(PluginManager.LogsDirectory))
+			if (!Directory.Exists(Path.Logs))
 			{
-				Directory.CreateDirectory(PluginManager.LogsDirectory);
-				Custom($"Logs directory not found - creating: {PluginManager.LogsDirectory}", "WARN", ConsoleColor.DarkYellow);
+				Directory.CreateDirectory(Path.Logs);
+				Custom($"Logs directory not found - creating: {Path.Logs}", "WARN", ConsoleColor.DarkYellow);
 			}
-			File.AppendAllText(Path.Combine(PluginManager.LogsDirectory, $"{Loader.Port}-all-logs.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
+			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Loader.Port}-all-logs.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
 		}
 	}
 }

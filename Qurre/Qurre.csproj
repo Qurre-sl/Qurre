@@ -73,6 +73,7 @@
   <ItemGroup>
     <Compile Include="API\Addons\JsonConfig.cs" />
     <Compile Include="API\Addons\KillElement.cs" />
+    <Compile Include="API\Path.cs" />
     <Compile Include="API\Log.cs" />
     <Compile Include="API\Player.cs" />
     <Compile Include="API\Extensions.cs" />
