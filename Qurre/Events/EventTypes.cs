@@ -1,6 +1,6 @@
 ﻿namespace Qurre.Events
 {
-    internal enum PlayerEvents : uint //1xxx
+    public enum PlayerEvents : uint //1xxx
     {
         //1000+ <- Network events
         Preauth = 1001,
@@ -68,7 +68,7 @@
         UseHotkey = 1906,
     }
 
-    internal enum MapEvents : uint //2xxx
+    public enum MapEvents : uint //2xxx
     {
         //2000+ <- Main Map Events
         MapGenerated = 2001,
@@ -88,7 +88,7 @@
         TeamRespawn = 2202,
     }
 
-    internal enum ServerEvents : uint //3xxx
+    public enum ServerEvents : uint //3xxx
     {
         //3000+ <- 
 
@@ -102,14 +102,14 @@
         LocalReport = 3202,
     }
 
-    internal enum RoundEvents : uint //4xxx
+    public enum RoundEvents : uint //4xxx
     {
         Waiting = 4001,
         Start = 4002,
         Restart = 4003,
         End = 4004,
     }
-    internal enum AlphaEvents : uint //5xxx
+    public enum AlphaEvents : uint //5xxx
     {
         Start = 5001,
         Stop = 5002,

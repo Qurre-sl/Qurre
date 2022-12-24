@@ -18,9 +18,6 @@ namespace Qurre.Loader
     {
         public static EntryPoint Singleton { get; private set; }
 
-        [PluginConfig]
-        public MainConfig Config;
-
         [PluginEntryPoint("Qurre-Lite", "2.0.0", "Framework for SCP:SL servers with unique functions & api.", "Qurre Team")]
         private void Init()
         {

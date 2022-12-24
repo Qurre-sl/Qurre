@@ -65,10 +65,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Player.cs" />
     <Compile Include="API\Extensions.cs" />
     <Compile Include="Events\EventTypes.cs" />
     <Compile Include="Loader\EntryPoint.cs" />
-    <Compile Include="Loader\MainConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
