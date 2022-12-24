@@ -74,6 +74,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+	<Compile Include="API\Controllers\Alpha.cs" />
     <Compile Include="API\Addons\JsonConfig.cs" />
     <Compile Include="API\Addons\KillElement.cs" />
     <Compile Include="API\Attributes\PluginPriority.cs" />
@@ -84,6 +85,8 @@
     <Compile Include="API\Classification\Player\HealthSituation.cs" />
     <Compile Include="API\Server.cs" />
     <Compile Include="API\Classification\Player\UserInfomation.cs" />
+	<Compile Include="API\Round.cs" />
+	<Compile Include="API\Map.cs" />
     <Compile Include="API\Path.cs" />
     <Compile Include="API\Log.cs" />
     <Compile Include="API\Player.cs" />
