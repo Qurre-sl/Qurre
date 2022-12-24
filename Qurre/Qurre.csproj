@@ -71,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Addons\KillElement.cs" />
+    <Compile Include="API\Classification\Player\UserInfomation.cs" />
     <Compile Include="API\Player.cs" />
     <Compile Include="API\Extensions.cs" />
     <Compile Include="Events\EventTypes.cs" />

@@ -28,6 +28,7 @@ namespace Qurre.API
         private readonly string _nick = "";
         private string _tag = "";
         internal List<KillElement> _kills = new();
-
+        public ReferenceHub ReferenceHub => rh;
+        public API.Classification.Player.UserInfomation UserInfomation;
     }
 }
