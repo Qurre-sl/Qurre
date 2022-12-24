@@ -1,27 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Qurre.API.Classification.Player
+﻿namespace Qurre.API.Classification.Player
 {
-    public class UserInfomation
+    using Qurre.API;
+    public struct UserInfomation
     {
-        private Qurre.API.Player PlayerAPI;
-        public string SteamId
+        private readonly Player _player;
+        internal UserInfomation(Player pl) => _player = pl;
+
+        public string UserId
         {
-            get => PlayerAPI.ReferenceHub.characterClassManager.UserId;
-            set => PlayerAPI.ReferenceHub.characterClassManager.UserId = value;
+            get => _player.ReferenceHub.characterClassManager.UserId;
+            set => _player.ReferenceHub.characterClassManager.UserId = value;
         }
         public string NickName
         {
-            get => PlayerAPI.ReferenceHub.nicknameSync.Network_myNickSync;
-            set => PlayerAPI.ReferenceHub.nicknameSync.Network_myNickSync = value;
+            get => _player.ReferenceHub.nicknameSync.Network_myNickSync;
+            set => _player.ReferenceHub.nicknameSync.Network_myNickSync = value;
         }
-        public string DisplayName => PlayerAPI.ReferenceHub.nicknameSync.Network_displayName;
-        public string CustomInfo => PlayerAPI.ReferenceHub.nicknameSync.Network_customPlayerInfoString;
-        public string RoleName => PlayerAPI.ReferenceHub.serverRoles.Network_myText;
-        public string RoleColor => PlayerAPI.ReferenceHub.serverRoles.Network_myColor;
+        public string DisplayName => _player.ReferenceHub.nicknameSync.Network_displayName;
+        public string CustomInfo => _player.ReferenceHub.nicknameSync.Network_customPlayerInfoString;
+        public string RoleName => _player.ReferenceHub.serverRoles.Network_myText;
+        public string RoleColor => _player.ReferenceHub.serverRoles.Network_myColor;
     }
 }

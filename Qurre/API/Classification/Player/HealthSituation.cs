@@ -1,32 +1,29 @@
 ﻿using PlayerStatsSystem;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Qurre.API.Classification.Player
 {
-    public class HealthInfomation
+    using Qurre.API;
+    public struct HealthInfomation
     {
-        public Qurre.API.Player PlayerAPI;
+        private readonly Player _player;
+        internal HealthInfomation(Player pl) => _player = pl;
+
         public float Health
         {
-            get => ((HealthStat)PlayerAPI.ReferenceHub.playerStats.StatModules[0]).CurValue;
-            set => ((HealthStat)PlayerAPI.ReferenceHub.playerStats.StatModules[0]).CurValue = value;
+            get => ((HealthStat)_player.ReferenceHub.playerStats.StatModules[0]).CurValue;
+            set => ((HealthStat)_player.ReferenceHub.playerStats.StatModules[0]).CurValue = value;
         }
         public float MaxHealth
         {
-            get => ((HealthStat)PlayerAPI.ReferenceHub.playerStats.StatModules[0]).MaxValue;
+            get => ((HealthStat)_player.ReferenceHub.playerStats.StatModules[0]).MaxValue;
         }
         public float ArtificialHealth
         {
-            get => ((AhpStat)PlayerAPI.ReferenceHub.playerStats.StatModules[0]).CurValue;
-            set => ((AhpStat)PlayerAPI.ReferenceHub.playerStats.StatModules[0]).CurValue = value;
+            get => ((AhpStat)_player.ReferenceHub.playerStats.StatModules[0]).CurValue;
+            set => ((AhpStat)_player.ReferenceHub.playerStats.StatModules[0]).CurValue = value;
         }
         public float MaxArtificalHealth
         {
-            get => ((AhpStat)PlayerAPI.ReferenceHub.playerStats.StatModules[1]).MaxValue;
+            get => ((AhpStat)_player.ReferenceHub.playerStats.StatModules[1]).MaxValue;
         }
     }
 }

@@ -1,24 +1,21 @@
 ﻿using PlayerRoles;
 using Respawning;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Qurre.API.Classification.Player
 {
-    public class RoleInfomation
+    using Qurre.API;
+    public struct RoleInfomation
     {
-        private Qurre.API.Player PlayerAPI;
+        private readonly Player _player;
+        internal RoleInfomation(Player pl) => _player = pl;
+
         public RoleTypeId Role
         {
-            get => PlayerAPI.ReferenceHub.GetRoleId();
-            set => PlayerAPI.ReferenceHub.roleManager.ServerSetRole(value, RoleChangeReason.RemoteAdmin);
+            get => _player.ReferenceHub.GetRoleId();
+            set => _player.ReferenceHub.roleManager.ServerSetRole(value, RoleChangeReason.RemoteAdmin);
         }
         public Team Team
         {
-            get => PlayerAPI.ReferenceHub.GetTeam();
+            get => _player.ReferenceHub.GetTeam();
         }
         public float TimeForNextSequence
         {

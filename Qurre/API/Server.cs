@@ -4,9 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Qurre.Loader
+namespace Qurre.API
 {
-    internal class Manager
+    static public class Server
     {
+        static public ushort Port => ServerStatic.ServerPort;
     }
 }

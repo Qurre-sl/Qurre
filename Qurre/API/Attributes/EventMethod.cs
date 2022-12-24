@@ -1,5 +1,5 @@
 ﻿using System;
-namespace Qurre.Events
+namespace Qurre.API.Attributes
 {
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
     public class EventMethod : Attribute
