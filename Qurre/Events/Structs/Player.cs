@@ -4,7 +4,7 @@ using Qurre.Internal.EventsManager;
 namespace Qurre.Events.Structs
 {
     [Register(PlayerEvents.Preauth)]
-    public struct PreauthEvent
+    public struct PreauthEvent : IBaseEvent
     {
         public string UserId { get; }
         public string Ip { get; }
@@ -15,7 +15,7 @@ namespace Qurre.Events.Structs
     }
 
     [Register(PlayerEvents.Join)]
-    public struct JoinEvent
+    public struct JoinEvent : IBaseEvent
     {
         public Player Player { get; }
     }
@@ -27,8 +27,15 @@ namespace Qurre.Events.Structs
     }
 
     [Register(PlayerEvents.CheckReserveSlot)]
-    public struct CheckReserveSlotEvent
+    public struct CheckReserveSlotEvent : IBaseEvent
     {
-        public Player Player { get; }
+        public string UserId { get; }
+        public bool Allowed { get; set; }
+
+        internal CheckReserveSlotEvent(string userid, bool allowed = true)
+        {
+            UserId = userid;
+            Allowed = allowed;
+        }
     }
 }

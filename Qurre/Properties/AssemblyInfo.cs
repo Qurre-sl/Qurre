@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDescription("Framework for SCP:SL servers with unique functions & api")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Qurre Team")]
-[assembly: AssemblyProduct("Qurre SL [Lite]")]
+[assembly: AssemblyProduct("Qurre SL")]
 [assembly: AssemblyCopyright("Copyright © Qurre Team 2022")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]

@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using MEC;
 using Qurre.API;
 using Qurre.API.Attributes;
 using System;
@@ -73,7 +72,9 @@ namespace Qurre.Loader
                 try
                 {
                     Log.Debug($"Loading {plugin}");
-                    LoadPlugin(Assembly.Load(LoaderManager.ReadFile(plugin)));
+                    var assembly = Assembly.Load(LoaderManager.ReadFile(plugin));
+                    bool loaded = LoadPlugin(assembly);
+                    if (loaded) Internal.EventsManager.Loader.PluginPath(assembly);
                 }
                 catch (Exception ex)
                 {
@@ -82,7 +83,7 @@ namespace Qurre.Loader
             }
         }
 
-        static void LoadPlugin(Assembly assembly)
+        static bool LoadPlugin(Assembly assembly)
         {
             try
             {
@@ -116,11 +117,15 @@ namespace Qurre.Loader
                 }
 
                 if (!loaded) Log.Debug($"{assembly.FullName} doesn't have a class with [PluginInit] attribute");
+
+                return loaded;
             }
             catch (Exception ex)
             {
                 Log.Error($"An error occurred while loading {assembly.FullName}\n{ex}");
             }
+
+            return false;
 
             static int getPriority(MethodInfo method)
             {
@@ -142,6 +147,39 @@ namespace Qurre.Loader
                 {
                     Log.Error($"Plugin {method.Info.Name} [{method.MethodInfo.Name}] threw an exception while enabling\n{ex}");
                 }
+            }
+        }
+
+        static void Disable()
+        {
+            foreach (MethodStruct method in _plugins.SelectMany(x => x.EnableMethods))
+            {
+                try
+                {
+                    method.MethodInfo.Invoke(null, new object[] { });
+                    Log.Info($"Plugin {method.Info.Name} [{method.MethodInfo.Name}] disabled");
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Plugin {method.Info.Name} [{method.MethodInfo.Name}] threw an exception while disabling\n{ex}");
+                }
+            }
+        }
+
+        static internal void ReloadPlugins()
+        {
+            try
+            {
+                Log.Info("Plugins are reloading...");
+                Disable();
+                _plugins.Clear();
+                LoadPlugins();
+                EnablePlugins();
+                Log.Info("Plugins reloaded");
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"Reload Plugins error..\n{ex}");
             }
         }
     }
