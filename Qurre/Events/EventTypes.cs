@@ -4,7 +4,7 @@
     {
         //1000+ <- Network events
         public const uint Preauth = 1001;
-        public const uint Joined = 1002;
+        public const uint Join = 1002;
         public const uint Left = 1003;
         public const uint CheckReservedSlot = 1004;
 
