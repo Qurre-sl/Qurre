@@ -48,11 +48,12 @@
     <Reference Include="Mirror.Components">
       <HintPath>..\depedencies\Mirror.Components.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\depedencies\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\depedencies\NorthwoodLib.dll</HintPath>
-    </Reference>
-    <Reference Include="PluginAPI_public">
-      <HintPath>..\depedencies\PluginAPI_public.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -70,17 +71,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Addons\JsonConfig.cs" />
     <Compile Include="API\Addons\KillElement.cs" />
     <Compile Include="API\Classification\Player\HealthSituation.cs" />
     <Compile Include="API\Classification\Player\RoleInfomation.cs" />
     <Compile Include="API\Classification\Player\UserInfomation.cs" />
+    <Compile Include="API\Path.cs" />
+    <Compile Include="API\Log.cs" />
     <Compile Include="API\Player.cs" />
     <Compile Include="API\Extensions.cs" />
+    <Compile Include="Events\EventMethod.cs" />
     <Compile Include="Events\EventTypes.cs" />
     <Compile Include="Events\Structs\Player.cs" />
     <Compile Include="Internal\EventsCalled\Player.cs" />
+    <Compile Include="Internal\EventsManager\Register.cs" />
     <Compile Include="Internal\EventsManager\List.cs" />
     <Compile Include="Internal\Fields\Player.cs" />
+    <Compile Include="Loader\Manager.cs" />
     <Compile Include="Loader\EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
