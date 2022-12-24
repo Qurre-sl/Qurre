@@ -33,6 +33,9 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\depedencies\0Harmony.dll</HintPath>
+    </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\depedencies\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
@@ -73,19 +76,27 @@
   <ItemGroup>
     <Compile Include="API\Addons\JsonConfig.cs" />
     <Compile Include="API\Addons\KillElement.cs" />
+    <Compile Include="API\Attributes\PluginPriority.cs" />
+    <Compile Include="API\Attributes\PluginStartup.cs" />
+    <Compile Include="API\Attributes\PluginInit.cs" />
+    <Compile Include="API\Attributes\EventMethod.cs" />
+    <Compile Include="API\Classification\Player\RoleInfomation.cs" />
+    <Compile Include="API\Classification\Player\HealthSituation.cs" />
+    <Compile Include="API\Server.cs" />
     <Compile Include="API\Classification\Player\UserInfomation.cs" />
     <Compile Include="API\Path.cs" />
     <Compile Include="API\Log.cs" />
     <Compile Include="API\Player.cs" />
     <Compile Include="API\Extensions.cs" />
-    <Compile Include="Events\EventMethod.cs" />
     <Compile Include="Events\EventTypes.cs" />
     <Compile Include="Events\Structs\Player.cs" />
     <Compile Include="Internal\EventsCalled\Player.cs" />
     <Compile Include="Internal\EventsManager\Register.cs" />
     <Compile Include="Internal\EventsManager\List.cs" />
     <Compile Include="Internal\Fields\Player.cs" />
-    <Compile Include="Loader\Manager.cs" />
+    <Compile Include="Loader\PluginStruct.cs" />
+    <Compile Include="Loader\Configs.cs" />
+    <Compile Include="Loader\Plugins.cs" />
     <Compile Include="Loader\EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

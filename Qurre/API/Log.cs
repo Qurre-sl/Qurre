@@ -51,7 +51,7 @@ namespace Qurre.API
 				Directory.CreateDirectory(Path.Logs);
 				Custom($"Logs directory not found - creating: {Path.Logs}", "WARN", ConsoleColor.DarkYellow);
 			}
-			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Loader.Port}-log.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
+			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Server.Port}-log.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
 		}
 		static internal void AllLogsTxt(object message)
 		{
@@ -61,7 +61,7 @@ namespace Qurre.API
 				Directory.CreateDirectory(Path.Logs);
 				Custom($"Logs directory not found - creating: {Path.Logs}", "WARN", ConsoleColor.DarkYellow);
 			}
-			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Loader.Port}-all-logs.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
+			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Server.Port}-all-logs.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
 		}
 	}
 }

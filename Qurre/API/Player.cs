@@ -20,6 +20,9 @@ namespace Qurre.API
             ui = _rh.characterClassManager.UserId;
             try { _nick = _rh.nicknameSync.Network_myNickSync; } catch { }
 
+            UserInfomation = new(this);
+            RoleInfomation = new(this);
+            HealthInfomation = new(this);
         }
 
         private readonly ReferenceHub rh;
@@ -28,7 +31,11 @@ namespace Qurre.API
         private readonly string _nick = "";
         private string _tag = "";
         internal List<KillElement> _kills = new();
+
         public ReferenceHub ReferenceHub => rh;
-        public API.Classification.Player.UserInfomation UserInfomation;
+
+        public Classification.Player.UserInfomation UserInfomation { get; }
+        public Classification.Player.RoleInfomation RoleInfomation { get; }
+        public Classification.Player.HealthInfomation HealthInfomation { get; }
     }
 }
