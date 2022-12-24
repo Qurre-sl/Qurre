@@ -1,118 +1,124 @@
 ﻿namespace Qurre.Events
 {
-    public enum PlayerEvents : uint //1xxx
+    static public class PlayerEvents //1xxx
     {
         //1000+ <- Network events
-        Preauth = 1001,
-        Joined = 1002,
-        Left = 1003,
-        CheckReservedSlot = 1004,
+        public const uint Preauth = 1001;
+        public const uint Joined = 1002;
+        public const uint Left = 1003;
+        public const uint CheckReservedSlot = 1004;
 
         //1100+ <- Health events
-        Death = 1101,
+        public const uint Death = 1101;
 
         //1200+ <- Admins with Player
-        Banned = 1201,
-        Kicked = 1202,
-        Muted = 1203,
-        Unmuted = 1204,
+        public const uint Banned = 1201;
+        public const uint Kicked = 1202;
+        public const uint Muted = 1203;
+        public const uint Unmuted = 1204;
 
         //1300+ <- Items
-        CancelUsingItem = 1301,
-        ChangeItem = 1302,
-        UseItem = 1303,
-        UsedItem = 1304,
-        ChangeRadioRange = 1305,
-        ToggleFlashlight = 1306,
+        public const uint CancelUsingItem = 1301;
+        public const uint ChangeItem = 1302;
+        public const uint UseItem = 1303;
+        public const uint UsedItem = 1304;
+        public const uint ChangeRadioRange = 1305;
+        public const uint ToggleFlashlight = 1306;
 
         //1400+ <- Pickups
-        SearchPickup = 1401,
-        SearchedPickup = 1402,
-        ThrowItem = 1403,
-        DropAmmo = 1404,
-        DropItem = 1405,
-        PickupAmmo = 1406,
-        PickupArmor = 1407,
-        PickupScp330 = 1408,
+        public const uint SearchPickup = 1401;
+        public const uint SearchedPickup = 1402;
+        public const uint ThrowItem = 1403;
+        public const uint DropAmmo = 1404;
+        public const uint DropItem = 1405;
+        public const uint PickupAmmo = 1406;
+        public const uint PickupArmor = 1407;
+        public const uint PickupScp330 = 1408;
 
         //1500+ <- Interact
-        InteractGenerator = 1501,
-        InteractElevator = 1502,
-        InteractLocker = 1503,
-        InteractScp330 = 1504,
-        InteractShootingTarget = 1505,
+        public const uint InteractGenerator = 1501;
+        public const uint InteractElevator = 1502;
+        public const uint InteractLocker = 1503;
+        public const uint InteractScp330 = 1504;
+        public const uint InteractShootingTarget = 1505;
 
         //1600+ <- Gun
-        UnloadGun = 1601,
-        AimGun = 1602,
-        ReloadGun = 1603,
-        ShotGun = 1604,
-        DryfireGun = 1605,
+        public const uint UnloadGun = 1601;
+        public const uint AimGun = 1602;
+        public const uint ReloadGun = 1603;
+        public const uint ShotGun = 1604;
+        public const uint DryfireGun = 1605;
 
         //1700+ <- Player Role Events
-        Spawn = 1701,
-        ChangeRole = 1702,
-        Escape = 1703,
+        public const uint Spawn = 1701;
+        public const uint ChangeRole = 1702;
+        public const uint Escape = 1703;
 
         //1800+ <- Damage
-        Damage = 1801,
-        DamageWindow = 1802,
-        DamageShootingTarget = 1803,
+        public const uint Damage = 1801;
+        public const uint DamageWindow = 1802;
+        public const uint DamageShootingTarget = 1803;
 
         //1900+ <- Misc
-        ChangeSpectator = 1901,
-        Handcuff = 1902,
-        RemoveHandcuffs = 1903,
-        MakeNoise = 1904,
-        ReceiveEffect = 1905,
-        UseHotkey = 1906,
+        public const uint ChangeSpectator = 1901;
+        public const uint Handcuff = 1902;
+        public const uint RemoveHandcuffs = 1903;
+        public const uint MakeNoise = 1904;
+        public const uint ReceiveEffect = 1905;
+        public const uint UseHotkey = 1906;
     }
 
-    public enum MapEvents : uint //2xxx
+    static public class MapEvents //2xxx
     {
         //2000+ <- Main Map Events
-        MapGenerated = 2001,
-        LczDecontamination = 2002,
-        LczAnnounce = 2003,
-        GeneratorActivated = 2004,
+        public const uint MapGenerated = 2001;
+        public const uint LczDecontamination = 2002;
+        public const uint LczAnnounce = 2003;
+        public const uint GeneratorActivated = 2004;
 
         //2100+ <- Place/Spawn
-        PlaceBlood = 2101,
-        PlaceBulletHole = 2102,
-        ItemSpawned = 2103,
-        RagdollSpawn = 2104,
-        GrenadeExploded = 2105,
+        public const uint PlaceBlood = 2101;
+        public const uint PlaceBulletHole = 2102;
+        public const uint ItemSpawned = 2103;
+        public const uint RagdollSpawn = 2104;
+        public const uint GrenadeExploded = 2105;
 
         //2200+ <- Team Respawn
-        TeamRespawnSelected = 2201,
-        TeamRespawn = 2202,
+        public const uint TeamRespawnSelected = 2201;
+        public const uint TeamRespawn = 2202;
     }
 
-    public enum ServerEvents : uint //3xxx
+    static public class ServerEvents //3xxx
     {
         //3000+ <- 
 
         //3100+ <- Commands
-        RemoteAdminCommand = 3101,
-        GameConsoleCommand = 3102,
-        ServerConsoleCommand = 3103,
+        public const uint RemoteAdminCommand = 3101;
+        public const uint GameConsoleCommand = 3102;
+        public const uint ServerConsoleCommand = 3103;
 
         //3200+ <- Reports
-        CheaterReport = 3201,
-        LocalReport = 3202,
+        public const uint CheaterReport = 3201;
+        public const uint LocalReport = 3202;
     }
 
-    public enum RoundEvents : uint //4xxx
+    static public class RoundEvents //4xxx
     {
-        Waiting = 4001,
-        Start = 4002,
-        Restart = 4003,
-        End = 4004,
+        public const uint Waiting = 4001;
+        public const uint Start = 4002;
+        public const uint Restart = 4003;
+        public const uint End = 4004;
     }
-    public enum AlphaEvents : uint //5xxx
+
+    static public class AlphaEvents //5xxx
     {
-        Start = 5001,
-        Stop = 5002,
-        Detonation = 5003,
+        public const uint Start = 5001;
+        public const uint Stop = 5002;
+        public const uint Detonation = 5003;
+    }
+
+    static public class ScpEvents //6xxx
+    {
+
     }
 }
