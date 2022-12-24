@@ -1,12 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Qurre.API
 {
-    public static class Extensions
-    {
-    }
+	static public class Extensions
+	{
+		static public bool TryFind<TSource>(this IEnumerable<TSource> source, out TSource found, Func<TSource, bool> predicate)
+		{
+			foreach (TSource t in source)
+			{
+				if (predicate(t))
+				{
+					found = t;
+					return true;
+				}
+			}
+			found = default;
+			return false;
+		}
+	}
 }
