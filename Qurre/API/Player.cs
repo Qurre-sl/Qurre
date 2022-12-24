@@ -30,5 +30,7 @@ namespace Qurre.API
         internal List<KillElement> _kills = new();
         public ReferenceHub ReferenceHub => rh;
         public API.Classification.Player.UserInfomation UserInfomation;
+        public API.Classification.Player.RoleInfomation RoleInfomation;
+        public API.Classification.Player.HealthInfomation HealthInfomation;
     }
 }

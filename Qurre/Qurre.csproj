@@ -71,6 +71,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Addons\KillElement.cs" />
+    <Compile Include="API\Classification\Player\HealthSituation.cs" />
+    <Compile Include="API\Classification\Player\RoleInfomation.cs" />
     <Compile Include="API\Classification\Player\UserInfomation.cs" />
     <Compile Include="API\Player.cs" />
     <Compile Include="API\Extensions.cs" />
