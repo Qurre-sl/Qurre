@@ -5,8 +5,8 @@
         //1000+ <- Network events
         public const uint Preauth = 1001;
         public const uint Join = 1002;
-        public const uint Left = 1003;
-        public const uint CheckReservedSlot = 1004;
+        public const uint Leave = 1003;
+        public const uint CheckReserveSlot = 1004;
 
         //1100+ <- Health events
         public const uint Death = 1101;

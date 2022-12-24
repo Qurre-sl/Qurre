@@ -1,4 +1,5 @@
 ﻿using LiteNetLib;
+using Qurre.API;
 using Qurre.Internal.EventsManager;
 namespace Qurre.Events.Structs
 {
@@ -16,6 +17,18 @@ namespace Qurre.Events.Structs
     [Register(PlayerEvents.Join)]
     public struct JoinEvent
     {
+        public Player Player { get; }
+    }
 
+    [Register(PlayerEvents.Leave)]
+    public struct LeaveEvent
+    {
+        public Player Player { get; }
+    }
+
+    [Register(PlayerEvents.CheckReserveSlot)]
+    public struct CheckReserveSlotEvent
+    {
+        public Player Player { get; }
     }
 }
