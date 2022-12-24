@@ -21,7 +21,7 @@ namespace Qurre.Loader
         [PluginConfig]
         public MainConfig Config;
 
-        [PluginEntryPoint("Qurre", "2.0.0", "Framework for SCP:SL servers with unique functions & api.", "Qurre Team")]
+        [PluginEntryPoint("Qurre-Lite", "2.0.0", "Framework for SCP:SL servers with unique functions & api.", "Qurre Team")]
         private void Init()
         {
             Singleton = this;
