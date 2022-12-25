@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using Qurre.API;
 using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 using System;
 namespace Qurre.Internal.Patches.Player
 {
@@ -14,7 +15,10 @@ namespace Qurre.Internal.Patches.Player
             {
                 bool allow = ReservedSlot.Users.Contains(userId.Trim()) || !CharacterClassManager.OnlineMode;
 
-                CheckReserveSlotEvent ev = new(userId, allow);
+                CheckReserveSlotEvent ev = new(userId, true || allow);
+                ev.InvokeEvent();
+
+                Log.Info(ev.Allowed);
 
                 __result = ev.Allowed;
                 return false;

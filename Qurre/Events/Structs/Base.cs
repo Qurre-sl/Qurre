@@ -1,4 +1,7 @@
 ﻿namespace Qurre.Events.Structs
 {
-    internal interface IBaseEvent { }
+    internal interface IBaseEvent
+    {
+        uint EventId { get; }
+    }
 }

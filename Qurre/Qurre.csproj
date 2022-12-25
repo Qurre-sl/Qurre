@@ -96,7 +96,6 @@
     <Compile Include="Events\Structs\Player.cs" />
     <Compile Include="Internal\EventsCalled\Player.cs" />
     <Compile Include="Internal\EventsManager\Loader.cs" />
-    <Compile Include="Internal\EventsManager\Register.cs" />
     <Compile Include="Internal\EventsManager\List.cs" />
     <Compile Include="Internal\Fields\Player.cs" />
     <Compile Include="Internal\Patches\Player\ReserveSlot.cs" />

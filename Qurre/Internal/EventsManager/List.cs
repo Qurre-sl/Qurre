@@ -9,7 +9,7 @@ namespace Qurre.Internal.EventsManager
 {
     static internal class List
     {
-        static internal Dictionary<> Events = new();
         static internal Dictionary<uint, List<MethodInfo>> CallMethods = new();
+        static internal Dictionary<MethodInfo, object> ClassesOfNonStaticMethods = new();
     }
 }

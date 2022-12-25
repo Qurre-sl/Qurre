@@ -16,6 +16,8 @@ namespace Qurre.Loader
 
             CustomNetworkManager.Modded = true;
 
+            Internal.EventsManager.Loader.PathQurreEvents();
+
             Plugins.Init();
         }
     }

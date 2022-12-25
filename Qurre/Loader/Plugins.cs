@@ -100,8 +100,20 @@ namespace Qurre.Loader
 
                     PluginStruct plugin = new(attr);
 
-                    foreach (var methodInfo in instance.GetType().GetMethods())
+                    foreach (var methodInfo in instance.GetType()
+                        .GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
                     {
+                        if (methodInfo.IsAbstract)
+                        {
+                            Log.Debug($"Plugin Loader: '{methodInfo.Name}' is abstract, skip..");
+                            continue;
+                        }
+                        if (!methodInfo.IsStatic)
+                        {
+                            Log.Debug($"Plugin Loader: '{methodInfo.Name}' is non-static, skip..");
+                            continue;
+                        }
+
                         if (methodInfo.GetCustomAttribute<PluginEnable>() is not null)
                             plugin.EnableMethods.Add(new(methodInfo, attr, getPriority(methodInfo)));
 
@@ -172,6 +184,7 @@ namespace Qurre.Loader
             {
                 Log.Info("Plugins are reloading...");
                 Disable();
+                Internal.EventsManager.Loader.UnloadPlugins();
                 _plugins.Clear();
                 LoadPlugins();
                 EnablePlugins();
