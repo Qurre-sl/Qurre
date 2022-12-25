@@ -93,6 +93,7 @@
     <Compile Include="API\Extensions.cs" />
     <Compile Include="Events\EventTypes.cs" />
     <Compile Include="Events\Structs\Base.cs" />
+    <Compile Include="Events\Structs\Round.cs" />
     <Compile Include="Events\Structs\Player.cs" />
     <Compile Include="Internal\EventsCalled\Player.cs" />
     <Compile Include="Internal\EventsManager\Loader.cs" />
@@ -100,6 +101,7 @@
     <Compile Include="Internal\Fields\Player.cs" />
     <Compile Include="Internal\Patches\Player\ReserveSlot.cs" />
     <Compile Include="Internal\Patches\Player\Join.cs" />
+    <Compile Include="Internal\Patches\Round\Waiting.cs" />
     <Compile Include="Loader\PluginStruct.cs" />
     <Compile Include="Loader\Configs.cs" />
     <Compile Include="Loader\Plugins.cs" />

@@ -17,11 +17,7 @@ namespace Qurre.Internal.EventsCalled
 
         }
 
-        [EventMethod(PlayerEvents.CheckReserveSlot)]
-        static internal void CheckSlot(CheckReserveSlotEvent ev)
-        {
-            API.Log.Custom(ev.Allowed);
-            ev.Allowed = false;
-        }
+        [EventMethod(PlayerEvents.Join)]
+        static internal void Waiting(JoinEvent _) => API.Log.Info("joined: "+_.Player.UserInfomation.NickName);
     }
 }

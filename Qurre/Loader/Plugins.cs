@@ -16,6 +16,8 @@ namespace Qurre.Loader
 
         static internal void Init()
         {
+            Harmony.DEBUG = true;
+
             if (!Directory.Exists(Path.Plugins))
             {
                 Log.Warn($"Plugins directory not found. Creating: {Path.Plugins}");

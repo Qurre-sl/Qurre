@@ -34,7 +34,7 @@ namespace Qurre.Loader
             BetterHints = Config.SafeGetValue("BetterHints", false, "Enable Addon [BetterHints]?");
             ReloadAccess = Config.SafeGetValue("ReloadAccess", new string[] { "owner", "UserId64@steam", "UserDiscordId@discord" }, "Those who can use the \"reload\" command");
 
-            try { Patches.Events.Player.BanAndKick.SetUpConfigs(); } catch { }
+            //try { Patches.Events.Player.BanAndKick.SetUpConfigs(); } catch { }
 
             JsonConfig.UpdateFile();
         }

@@ -15,10 +15,8 @@ namespace Qurre.Internal.Patches.Player
             {
                 bool allow = ReservedSlot.Users.Contains(userId.Trim()) || !CharacterClassManager.OnlineMode;
 
-                CheckReserveSlotEvent ev = new(userId, true || allow);
+                CheckReserveSlotEvent ev = new(userId, allow);
                 ev.InvokeEvent();
-
-                Log.Info(ev.Allowed);
 
                 __result = ev.Allowed;
                 return false;
