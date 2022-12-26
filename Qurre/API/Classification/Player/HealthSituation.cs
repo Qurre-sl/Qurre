@@ -2,10 +2,16 @@
 namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
-    public struct HealthInfomation
+    public class HealthInfomation
     {
         private readonly Player _player;
         internal HealthInfomation(Player pl) => _player = pl;
+
+        public bool GodMode
+        {
+            get => _player.ClassManager.GodMode;
+            set => _player.ClassManager.GodMode = value;
+        }
 
         public float Health
         {

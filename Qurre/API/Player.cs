@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Field = Qurre.Internal.Fields.Player;
 
 namespace Qurre.API
 {
@@ -22,12 +23,15 @@ namespace Qurre.API
             UserInfomation = new(this);
             RoleInfomation = new(this);
             HealthInfomation = new(this);
+            PlayerStatsInfomation = new(this);
+
+            if (!Field.Dictionary.ContainsKey(go)) Field.Dictionary.Add(go, this);
+            else Field.Dictionary[go] = this;
         }
 
         private readonly ReferenceHub rh;
         private readonly GameObject go;
         private string _tag = "";
-        internal List<KillElement> _kills = new();
 
         public GameObject GameObject
         {
@@ -45,5 +49,6 @@ namespace Qurre.API
         public Classification.Player.UserInfomation UserInfomation { get; }
         public Classification.Player.RoleInfomation RoleInfomation { get; }
         public Classification.Player.HealthInfomation HealthInfomation { get; }
+        public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
     }
 }

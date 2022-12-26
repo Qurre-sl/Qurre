@@ -1,7 +1,7 @@
 ﻿namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
-    public struct UserInfomation
+    public class UserInfomation
     {
         private string _ui;
         private readonly string _nick = "";
@@ -13,6 +13,7 @@
             try { _nick = pl.ReferenceHub.nicknameSync.Network_myNickSync; } catch { }
         }
 
+        public string Ip => _player.ClassManager.connectionToClient.address;
         public int Id => _player.ReferenceHub.PlayerId;
         public string UserId
         {

@@ -1,6 +1,7 @@
 ﻿using LiteNetLib;
 using Qurre.API;
 using System.Net;
+
 namespace Qurre.Events.Structs
 {
     public class PreauthEvent : IBaseEvent

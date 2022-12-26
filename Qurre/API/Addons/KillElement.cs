@@ -1,9 +1,10 @@
-﻿using System;
+﻿using Qurre.API.Objects;
+using System;
 namespace Qurre.API.Addons
 {
     public struct KillElement
     {
-        internal KillElement(Player killer, Player target, object type, DateTime offset)
+        internal KillElement(Player killer, Player target, DamageTypes type, DateTime offset)
         {
             Killer = killer;
             Target = target;
@@ -13,7 +14,7 @@ namespace Qurre.API.Addons
 
         public Player Killer { get; }
         public Player Target { get; }
-        public object Type { get; } //DamageTypes
+        public DamageTypes Type { get; }
         public DateTime Time { get; }
 
         public override bool Equals(object obj)

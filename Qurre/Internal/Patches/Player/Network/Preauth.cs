@@ -32,8 +32,6 @@ namespace Qurre.Internal.Patches.Player
                     {
                         found = true;
 
-                        Log.Info("found");
-
                         yield return new CodeInstruction(OpCodes.Ldarg_1); // request
                         yield return new CodeInstruction(OpCodes.Ldloc_S, 10); // "text" (userid)
 

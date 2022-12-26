@@ -1,7 +1,7 @@
 ﻿using HarmonyLib;
 using System;
 
-namespace Qurre.Internal.Patches.Player
+namespace Qurre.Internal.Patches.Player.Network
 {
     using Qurre.API;
     using Qurre.Events.Structs;

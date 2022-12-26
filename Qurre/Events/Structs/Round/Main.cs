@@ -1,5 +1,4 @@
-﻿using Qurre.API;
-namespace Qurre.Events.Structs
+﻿namespace Qurre.Events.Structs
 {
     public class WaitingEvent : IBaseEvent
     {

@@ -3,7 +3,7 @@ using Respawning;
 namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
-    public struct RoleInfomation
+    public class RoleInfomation
     {
         private readonly Player _player;
         internal RoleInfomation(Player pl) => _player = pl;

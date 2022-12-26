@@ -9,7 +9,9 @@
         public const uint CheckReserveSlot = 1004;
 
         //1100+ <- Health events
-        public const uint Death = 1101;
+        public const uint Dead = 1101;
+        public const uint Dies = 1102;
+        public const uint Damage = 1103;
 
         //1200+ <- Admins with Player
         public const uint Banned = 1201;
@@ -54,10 +56,9 @@
         public const uint ChangeRole = 1702;
         public const uint Escape = 1703;
 
-        //1800+ <- Damage
-        public const uint Damage = 1801;
-        public const uint DamageWindow = 1802;
-        public const uint DamageShootingTarget = 1803;
+        //1800+ <- Damage objects
+        public const uint DamageWindow = 1801;
+        public const uint DamageShootingTarget = 1802;
 
         //1900+ <- Misc
         public const uint ChangeSpectator = 1901;

@@ -2,25 +2,24 @@
 using Qurre.Events;
 using Qurre.Events.Structs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qurre.Internal.EventsCalled
 {
-    static internal class Player
+    static class Player
     {
-        [EventMethod(PlayerEvents.Death)]
-        static internal void PatchDead()
+        [EventMethod(PlayerEvents.Join)]
+        static internal void JoinLog(JoinEvent ev)
         {
-
+            ServerConsole.AddLog($"Player {ev.Player?.UserInfomation.NickName} ({ev.Player?.UserInfomation.UserId}) " +
+                $"({ev.Player?.UserInfomation.Id}) connected. iP: {ev.Player?.UserInfomation.Ip}", ConsoleColor.Magenta);
         }
 
-        [EventMethod(PlayerEvents.Preauth)]
-        static internal void Waiting(PreauthEvent _)
+        [EventMethod(PlayerEvents.Damage)]
+        static internal void Waiting(DamageEvent ev)
         {
-            API.Log.Info($"userid: {_.UserId}; IP: {_.Ip}; Flags: {_.Flags}; Region: {_.Region}; Request: {_.Request}");
+            API.Log.Info($"attacker: {ev.Attacker.UserInfomation.NickName}; target: {ev.Target.UserInfomation.NickName}; " +
+                $"Amount: {ev.Damage}; DamageType: {ev.DamageType}; LiteDamage: {ev.LiteType}");
+            ev.Damage = 1;
         }
     }
 }
