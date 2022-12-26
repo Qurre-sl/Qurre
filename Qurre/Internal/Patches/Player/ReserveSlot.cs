@@ -1,12 +1,14 @@
 ﻿using HarmonyLib;
-using Qurre.API;
-using Qurre.Events.Structs;
-using Qurre.Internal.EventsManager;
 using System;
+
 namespace Qurre.Internal.Patches.Player
 {
+    using Qurre.API;
+    using Qurre.Events.Structs;
+    using Qurre.Internal.EventsManager;
+
     [HarmonyPatch(typeof(ReservedSlot), nameof(ReservedSlot.HasReservedSlot))]
-    static internal class ReserveSlot
+    static class ReserveSlot
     {
         [HarmonyPrefix]
         static bool Call(string userId, ref bool __result)

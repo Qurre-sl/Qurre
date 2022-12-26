@@ -1,5 +1,6 @@
 ﻿using LiteNetLib;
 using Qurre.API;
+using System.Net;
 namespace Qurre.Events.Structs
 {
     public class PreauthEvent : IBaseEvent
@@ -7,20 +8,21 @@ namespace Qurre.Events.Structs
         public uint EventId { get; } = PlayerEvents.Preauth;
 
         public string UserId { get; }
-        public string Ip { get; }
+        public IPAddress Ip { get; }
         public CentralAuthPreauthFlags Flags { get; }
         public string Region { get; }
         public ConnectionRequest Request { get; }
         public bool Allowed { get; set; }
 
-        internal PreauthEvent(string userid, string ip, CentralAuthPreauthFlags flags, string region, ConnectionRequest req, bool allowed = true)
+
+        internal PreauthEvent(string userid, IPAddress ip, CentralAuthPreauthFlags flags, string region, ConnectionRequest req)
         {
             UserId = userid;
             Ip = ip;
             Flags = flags;
             Region = region;
             Request = req;
-            Allowed = allowed;
+            Allowed = true;
         }
     }
 

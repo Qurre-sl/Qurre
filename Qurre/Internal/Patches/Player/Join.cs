@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using Qurre.Events.Structs;
 using System.Collections.Generic;
 using System.Reflection.Emit;
 using System.Reflection;
@@ -7,9 +6,10 @@ using System.Reflection;
 namespace Qurre.Internal.Patches.Player
 {
     using Qurre.API;
+    using Qurre.Events.Structs;
 
     [HarmonyPatch(typeof(ServerRoles), nameof(ServerRoles.UserCode_CmdServerSignatureComplete))]
-    static internal class Join
+    static class Join
     {
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)

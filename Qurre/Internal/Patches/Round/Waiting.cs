@@ -1,5 +1,4 @@
 ﻿using HarmonyLib;
-using Qurre.Events.Structs;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -7,8 +6,10 @@ using System.Reflection.Emit;
 
 namespace Qurre.Internal.Patches.Round
 {
+    using Qurre.Events.Structs;
+
     [HarmonyPatch]
-    static internal class Waiting
+    static class Waiting
     {
         static MethodBase TargetMethod() =>
             AccessTools.Method(AccessTools.FirstInner(typeof(CharacterClassManager), (Type x) => x.Name.Contains("<Init>")), "MoveNext");

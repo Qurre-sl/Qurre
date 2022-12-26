@@ -3,17 +3,47 @@
     using Qurre.API;
     public struct UserInfomation
     {
+        private string _ui;
+        private readonly string _nick = "";
         private readonly Player _player;
-        internal UserInfomation(Player pl) => _player = pl;
+        internal UserInfomation(Player pl)
+        {
+            _player = pl;
+            _ui = pl.ClassManager.UserId;
+            try { _nick = pl.ReferenceHub.nicknameSync.Network_myNickSync; } catch { }
+        }
 
+        public int Id => _player.ReferenceHub.PlayerId;
         public string UserId
         {
-            get => _player.ReferenceHub.characterClassManager.UserId;
-            set => _player.ReferenceHub.characterClassManager.UserId = value;
+            get
+            {
+                if (_player.Bot)
+                {
+                    if (_ui is null) _ui = $"7{UnityEngine.Random.Range(0, 99999999)}{UnityEngine.Random.Range(0, 99999999)}@bot";
+                    return _ui;
+                }
+                try
+                {
+                    string _ = _player.ClassManager.UserId;
+                    if (_.Contains("@"))
+                    {
+                        _ui = _;
+                        return _;
+                    }
+                    return _ui;
+                }
+                catch { return _ui; }
+            }
+            set => _player.ClassManager.UserId = value;
         }
         public string NickName
         {
-            get => _player.ReferenceHub.nicknameSync.Network_myNickSync;
+            get
+            {
+                try { return _player.ReferenceHub.nicknameSync.Network_myNickSync; }
+                catch { return _nick; }
+            }
             set => _player.ReferenceHub.nicknameSync.Network_myNickSync = value;
         }
         public string DisplayName => _player.ReferenceHub.nicknameSync.Network_displayName;

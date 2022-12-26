@@ -10,7 +10,7 @@ namespace Qurre.API
 {
     public class Player
     {
-        private readonly bool Bot = false;//time field
+        public readonly bool Bot = false;//time field
         public static IEnumerable<Player> List => Internal.Fields.Player.Dictionary.Values.Where(x => !x.Bot);
 
         internal Player(GameObject gameObject) => new Player(ReferenceHub.GetHub(gameObject));
@@ -18,8 +18,6 @@ namespace Qurre.API
         {
             rh = _rh;
             go = _rh.gameObject;
-            ui = _rh.characterClassManager.UserId;
-            try { _nick = _rh.nicknameSync.Network_myNickSync; } catch { }
 
             UserInfomation = new(this);
             RoleInfomation = new(this);
@@ -28,12 +26,21 @@ namespace Qurre.API
 
         private readonly ReferenceHub rh;
         private readonly GameObject go;
-        private string ui = "";
-        private readonly string _nick = "";
         private string _tag = "";
         internal List<KillElement> _kills = new();
 
+        public GameObject GameObject
+        {
+            get
+            {
+                if (rh is null || rh.gameObject is null) return go;
+                else return rh.gameObject;
+            }
+        }
         public ReferenceHub ReferenceHub => rh;
+        public CharacterClassManager ClassManager => rh.characterClassManager;
+
+        public bool IsHost => rh.isLocalPlayer;
 
         public Classification.Player.UserInfomation UserInfomation { get; }
         public Classification.Player.RoleInfomation RoleInfomation { get; }

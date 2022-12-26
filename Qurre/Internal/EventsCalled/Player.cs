@@ -17,7 +17,10 @@ namespace Qurre.Internal.EventsCalled
 
         }
 
-        [EventMethod(PlayerEvents.Join)]
-        static internal void Waiting(JoinEvent _) => API.Log.Info("joined: "+_.Player.UserInfomation.NickName);
+        [EventMethod(PlayerEvents.Preauth)]
+        static internal void Waiting(PreauthEvent _)
+        {
+            API.Log.Info($"userid: {_.UserId}; IP: {_.Ip}; Flags: {_.Flags}; Region: {_.Region}; Request: {_.Request}");
+        }
     }
 }

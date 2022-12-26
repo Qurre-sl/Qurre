@@ -99,6 +99,8 @@
     <Compile Include="Internal\EventsManager\Loader.cs" />
     <Compile Include="Internal\EventsManager\List.cs" />
     <Compile Include="Internal\Fields\Player.cs" />
+    <Compile Include="Internal\Patches\Player\Preauth.cs" />
+    <Compile Include="Internal\Patches\Player\Leave.cs" />
     <Compile Include="Internal\Patches\Player\ReserveSlot.cs" />
     <Compile Include="Internal\Patches\Player\Join.cs" />
     <Compile Include="Internal\Patches\Round\Waiting.cs" />
