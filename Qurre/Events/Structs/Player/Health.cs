@@ -100,4 +100,46 @@ namespace Qurre.Events.Structs
         }
 
     }
+
+    public class AttackEvent : IBaseEvent
+    {
+        public uint EventId { get; } = PlayerEvents.Attack;
+
+        public Player Attacker { get; }
+        public Player Target { get; }
+        public AttackerDamageHandler DamageInfo { get; }
+        public float Damage { get; set; }
+        public bool FriendlyFire { get; set; }
+        public bool Allowed { get; set; }
+
+        public DamageTypes DamageType
+        {
+            get
+            {
+                if (_type is DamageTypes.Unknow) _type = DamageInfo.GetDamageType();
+                return _type;
+            }
+        }
+        public LiteDamageTypes LiteType
+        {
+            get
+            {
+                if (_liteType is LiteDamageTypes.Unknow) _liteType = DamageInfo.GetLiteDamageTypes();
+                return _liteType;
+            }
+        }
+
+        private DamageTypes _type = DamageTypes.Unknow;
+        private LiteDamageTypes _liteType = LiteDamageTypes.Unknow;
+        internal AttackEvent(Player attacker, Player target, AttackerDamageHandler damageInfo, float damage, bool friendlyFire, bool allowed)
+        {
+            Attacker = attacker;
+            Target = target;
+            DamageInfo = damageInfo;
+            Damage = damage;
+            FriendlyFire = friendlyFire;
+            Allowed = allowed;
+        }
+
+    }
 }

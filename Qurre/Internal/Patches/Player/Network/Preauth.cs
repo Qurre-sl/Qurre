@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Reflection.Emit;
 using LiteNetLib;
 
-namespace Qurre.Internal.Patches.Player
+namespace Qurre.Internal.Patches.Player.Network
 {
     using Qurre.API;
     using Qurre.Events.Structs;
@@ -65,7 +65,7 @@ namespace Qurre.Internal.Patches.Player
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> [Preauth]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Network}} [Preauth]:{e}\n{e.StackTrace}");
             }
 
             return true;

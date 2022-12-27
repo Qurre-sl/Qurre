@@ -53,19 +53,25 @@ namespace Qurre.Internal.EventsManager
             {
                 try
                 {
-                    if (method.IsStatic) method.Invoke(null, new object[] { @event });
+                    if (method.IsStatic) Invoke(null);
                     else
                     {
                         if (List.ClassesOfNonStaticMethods.TryGetValue(method, out object @class))
-                            method.Invoke(@class, new object[] { @event });
+                            Invoke(@class);
                         else
                         {
                             Type type = method.DeclaringType;
                             ConstructorInfo constructor = type.GetConstructor(Type.EmptyTypes);
                             @class = constructor.Invoke(new object[] { });
                             List.ClassesOfNonStaticMethods.Add(method, @class);
-                            method.Invoke(@class, new object[] { @event });
+                            Invoke(@class);
                         }
+                    }
+
+                    void Invoke(object @class)
+                    {
+                        if (method.GetParameters().Length == 0) method.Invoke(@class, new object[] { });
+                        else method.Invoke(@class, new object[] { @event });
                     }
                 }
                 catch (Exception ex)

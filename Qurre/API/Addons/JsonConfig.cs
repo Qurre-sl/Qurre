@@ -87,7 +87,15 @@ namespace Qurre.API.Addons
                 stream.Write(content, 0, content.Length);
                 stream.Close();
             }
-            Cache = JObject.Parse(File.ReadAllText(ConfigPath));
+            try
+            {
+                Cache = JObject.Parse(File.ReadAllText(ConfigPath));
+            }
+            catch
+            {
+                File.WriteAllText(ConfigPath, "{\n    \n}");
+                Cache = JObject.Parse("{\n    \n}");
+            }
         }
 
         private JToken ConvertObject<T>(T obj)

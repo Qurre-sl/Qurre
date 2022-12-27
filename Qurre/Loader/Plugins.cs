@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Path = Qurre.API.Path;
+
 namespace Qurre.Loader
 {
     static internal class Plugins
@@ -16,8 +17,6 @@ namespace Qurre.Loader
 
         static internal void Init()
         {
-            Harmony.DEBUG = true;
-
             if (!Directory.Exists(Path.Plugins))
             {
                 Log.Warn($"Plugins directory not found. Creating: {Path.Plugins}");

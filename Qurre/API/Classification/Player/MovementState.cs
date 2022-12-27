@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using PlayerRoles.FirstPersonControl;
+using UnityEngine;
+using System;
 
 namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
-    using Qurre.API.Addons;
-    using UnityEngine;
 
     public class MovementState
     {
@@ -16,22 +12,33 @@ namespace Qurre.API.Classification.Player
         internal MovementState(Player pl)
         {
             _player = pl;
-            
         }
-        public Vector3 Postion
+        public Vector3 Position
         {
             get => _player.GameObject.transform.position;
-            set => _player.GameObject.transform.position = value;  
+            set => _player.ReferenceHub.TryOverridePosition(value, Vector3.zero);
         }
-        public Quaternion Rotation
+        public Vector3 Rotation
         {
-            get => _player.GameObject.transform.rotation;
-            set => _player.GameObject.transform.rotation = value;
+            get => _player.GameObject.transform.eulerAngles;
+            set => _player.ReferenceHub.TryOverridePosition(Position, value);
         }
         public Vector3 Scale
         {
-            get => _player.GameObject.transform.localScale;
-            set => _player.GameObject.transform.localScale = value;
+            get => _player.ReferenceHub.transform.localScale;
+            set
+            {
+                try
+                {
+                    _player.ReferenceHub.transform.localScale = value;
+                    foreach (Player target in Player.List)
+                        Server.SendSpawnMessage?.Invoke(null, new object[] { _player.ClassManager.netIdentity, target.Connection });
+                }
+                catch (Exception ex)
+                {
+                    Log.Error($"Scale error: {ex}");
+                }
+            }
         }
     }
 }

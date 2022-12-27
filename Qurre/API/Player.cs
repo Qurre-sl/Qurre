@@ -1,4 +1,5 @@
-﻿using Qurre.API.Addons;
+﻿using Mirror;
+using Qurre.API.Addons;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -43,8 +44,19 @@ namespace Qurre.API
         }
         public ReferenceHub ReferenceHub => rh;
         public CharacterClassManager ClassManager => rh.characterClassManager;
+        public NetworkConnection Connection => IsHost ? rh.networkIdentity.connectionToServer : rh.networkIdentity.connectionToClient;
 
         public bool IsHost => rh.isLocalPlayer;
+        public bool FriendlyFire { get; set; }
+        public string Tag
+        {
+            get => _tag;
+            set
+            {
+                if (value is null) return;
+                _tag = value;
+            }
+        }
 
         public Classification.Player.UserInfomation UserInfomation { get; }
         public Classification.Player.RoleInfomation RoleInfomation { get; }

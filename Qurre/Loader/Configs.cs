@@ -1,10 +1,6 @@
-﻿using Qurre.API;
+﻿using Newtonsoft.Json.Linq;
+using Qurre.API;
 using Qurre.API.Addons;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qurre.Loader
 {
@@ -17,6 +13,9 @@ namespace Qurre.Loader
         static internal bool Better268 { get; private set; } = false;
         static internal bool BetterHints { get; private set; } = false;
         static internal string[] ReloadAccess { get; private set; } = new string[] { };
+
+        static internal string Banned { get; private set; } = "You have been banned. Reason: ";
+        static internal string Kicked { get; private set; } = "You have been kicked. Reason: ";
 
         static internal void Setup()
         {
@@ -34,9 +33,22 @@ namespace Qurre.Loader
             BetterHints = Config.SafeGetValue("BetterHints", false, "Enable Addon [BetterHints]?");
             ReloadAccess = Config.SafeGetValue("ReloadAccess", new string[] { "owner", "UserId64@steam", "UserDiscordId@discord" }, "Those who can use the \"reload\" command");
 
-            //try { Patches.Events.Player.BanAndKick.SetUpConfigs(); } catch { }
+            SetupTranslations();
 
             JsonConfig.UpdateFile();
+        }
+
+        static internal void SetupTranslations()
+        {
+            var par = Config.JsonArray["Translations"];
+            if (par is null)
+            {
+                par = JObject.Parse("{ }");
+                Config.JsonArray["Translations"] = par;
+            }
+
+            Banned = Config.SafeGetValue("Banned", Banned, source: par);
+            Kicked = Config.SafeGetValue("Kicked", Kicked, source: par);
         }
     }
 }

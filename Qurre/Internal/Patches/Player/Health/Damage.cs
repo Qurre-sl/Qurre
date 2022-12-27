@@ -17,32 +17,32 @@ namespace Qurre.Internal.Patches.Player.Health
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            var found = false;
-
             Label retLabel = generator.DefineLabel();
             instructions.ElementAt(instructions.Count() - 1).labels.Add(retLabel);
 
-            foreach (var ins in instructions)
+            List<CodeInstruction> list = new(instructions);
+
+            int index = list.FindLastIndex(ins => ins.opcode == OpCodes.Callvirt && ins.operand is not null && ins.operand is MethodBase methodBase &&
+                methodBase.Name == nameof(DamageHandlerBase.ApplyDamage));
+
+            if (index < 3)
             {
-                if (!found)
-                {
-                    if (ins.opcode == OpCodes.Callvirt && ins.operand is not null && ins.operand is MethodBase methodBase &&
-                        methodBase.Name == nameof(DamageHandlerBase.ApplyDamage))
-                    {
-                        found = true;
-
-                        // before: handler, this._hub
-                        yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Damage), nameof(Damage.DamageCall)));
-                        yield return new CodeInstruction(OpCodes.Brfalse, retLabel);
-
-                        yield return new CodeInstruction(OpCodes.Ldarg_1);
-
-                        yield return new CodeInstruction(OpCodes.Ldarg_0);
-                        yield return new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(PlayerStats), nameof(PlayerStats._hub)));
-                    }
-                }
-                yield return ins;
+                Log.Error($"Creating Patch error: <Player> {{Health}} [Damage]: Index - {index} < 3");
+                return list.AsEnumerable();
             }
+
+            list.InsertRange(index - 3, new CodeInstruction[]
+            {
+                new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(list[index - 3]), // handler
+
+                new CodeInstruction(OpCodes.Ldarg_0), // this
+                new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(PlayerStats), nameof(PlayerStats._hub))),
+
+                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Damage), nameof(Damage.DamageCall))),
+                new CodeInstruction(OpCodes.Brfalse, retLabel),
+            });
+
+            return list.AsEnumerable();
         }
         /*
          * ...
