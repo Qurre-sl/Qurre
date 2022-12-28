@@ -13,6 +13,8 @@
             try { _nick = pl.ReferenceHub.nicknameSync.Network_myNickSync; } catch { }
         }
 
+        public NicknameSync NicknameSync => _player.ReferenceHub.nicknameSync;
+
         public string Ip => _player.ClassManager.connectionToClient.address;
         public int Id => _player.ReferenceHub.PlayerId;
         public string UserId
@@ -42,29 +44,16 @@
         {
             get
             {
-                try { return _player.ReferenceHub.nicknameSync.Network_myNickSync; }
+                try { return NicknameSync.Network_myNickSync; }
                 catch { return _nick; }
             }
-            set => _player.ReferenceHub.nicknameSync.Network_myNickSync = value;
+            set => NicknameSync.Network_myNickSync = value;
         }
-        public string DisplayName => _player.ReferenceHub.nicknameSync.Network_displayName;
-        public string CustomInfo => _player.ReferenceHub.nicknameSync.Network_customPlayerInfoString;
+        public string DisplayName => NicknameSync.Network_displayName;
+        public string CustomInfo => NicknameSync.Network_customPlayerInfoString;
         public string RoleName => _player.ReferenceHub.serverRoles.Network_myText;
         public string RoleColor => _player.ReferenceHub.serverRoles.Network_myColor;
-        public bool IsRemoteAdminAccess => _player.ReferenceHub.serverRoles.RemoteAdmin;
-        public NicknameSync NicknameSync => _player.ReferenceHub.nicknameSync;
-        public bool IsTrack
-        {
-            get
-            {
-                if (_player.ReferenceHub.serverRoles.DoNotTrack) return false;
-                else return true;
-            }
-            set
-            {
-                if (value) _player.ReferenceHub.serverRoles.DoNotTrack = false;
-                else _player.ReferenceHub.serverRoles.DoNotTrack = true;
-            }
-        }
+        public bool RemoteAdmin => _player.ReferenceHub.serverRoles.RemoteAdmin;
+        public bool DoNotTrack => _player.ReferenceHub.serverRoles.DoNotTrack;
     }
 }

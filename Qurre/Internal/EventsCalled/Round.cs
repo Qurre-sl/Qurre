@@ -9,6 +9,7 @@ namespace Qurre.Internal.EventsCalled
         static internal void Waiting()
         {
             API.Extensions.DamagesCached.Clear();
+            Patches.Player.Admins.Banned.Cached.Clear();
         }
     }
 }

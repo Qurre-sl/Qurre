@@ -11,7 +11,5 @@ namespace Qurre.API.Classification.Player
     {
         private readonly Player _player;
         internal Client(Player pl) => _player = pl;
-
-
     }
 }

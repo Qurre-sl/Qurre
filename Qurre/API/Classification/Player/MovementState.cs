@@ -6,16 +6,13 @@ namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
 
-    public class MoveStatement
+    public class MovementState
     {
         private readonly Player _player;
-        internal MoveStatement(Player pl)
+        internal MovementState(Player pl)
         {
             _player = pl;
         }
-
-        public Transform CameraReference => _player.ReferenceHub.PlayerCameraReference;
-        public Transform Transform => _player.ReferenceHub.transform;
         public Vector3 Position
         {
             get => _player.GameObject.transform.position;

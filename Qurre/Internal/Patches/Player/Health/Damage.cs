@@ -22,7 +22,7 @@ namespace Qurre.Internal.Patches.Player.Health
 
             List<CodeInstruction> list = new(instructions);
 
-            int index = list.FindLastIndex(ins => ins.opcode == OpCodes.Callvirt && ins.operand is not null && ins.operand is MethodBase methodBase &&
+            int index = list.FindIndex(ins => ins.opcode == OpCodes.Callvirt && ins.operand is not null && ins.operand is MethodBase methodBase &&
                 methodBase.Name == nameof(DamageHandlerBase.ApplyDamage));
 
             if (index < 3)

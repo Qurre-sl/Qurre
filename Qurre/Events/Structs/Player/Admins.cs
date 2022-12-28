@@ -79,13 +79,13 @@ namespace Qurre.Events.Structs
 
         public Player Player { get; }
         public bool Intercom { get; set; }
-        public bool IsAllowed { get; set; }
+        public bool Allowed { get; set; }
 
         internal UnMuteEvent(Player player, bool icom)
         {
             Player = player;
             Intercom = icom;
-            IsAllowed = true;
+            Allowed = true;
         }
     }
 }
