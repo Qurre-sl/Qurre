@@ -13,6 +13,9 @@ namespace Qurre.API.Classification.Player
         {
             _player = pl;
         }
+
+        public Transform CameraReference => _player.ReferenceHub.PlayerCameraReference;
+        public Transform Transform => _player.ReferenceHub.transform;
         public Vector3 Position
         {
             get => _player.GameObject.transform.position;

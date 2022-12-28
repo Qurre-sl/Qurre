@@ -80,6 +80,7 @@
     <Compile Include="API\Attributes\PluginStartup.cs" />
     <Compile Include="API\Attributes\PluginInit.cs" />
     <Compile Include="API\Attributes\EventMethod.cs" />
+    <Compile Include="API\Classification\Player\Client.cs" />
     <Compile Include="API\Classification\Player\GamePlay.cs" />
     <Compile Include="API\Classification\Player\MoveStatement.cs" />
     <Compile Include="API\Classification\Player\PlayerStatsInfomation.cs" />

@@ -52,6 +52,7 @@
         public string RoleName => _player.ReferenceHub.serverRoles.Network_myText;
         public string RoleColor => _player.ReferenceHub.serverRoles.Network_myColor;
         public bool IsRemoteAdminAccess => _player.ReferenceHub.serverRoles.RemoteAdmin;
+        public NicknameSync NicknameSync => _player.ReferenceHub.nicknameSync;
         public bool IsTrack
         {
             get

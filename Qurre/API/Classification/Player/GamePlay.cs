@@ -13,7 +13,9 @@ namespace Qurre.API.Classification.Player
     {
         private readonly Player _player;
         internal GamePlay(Player pl) => _player = pl;
-        public bool Cuffed => _player.ReferenceHub.inventory.IsDisarmed();
+
+        public Inventory Inventory => _player.ReferenceHub.inventory;
+        public bool IsDisarmed => _player.ReferenceHub.inventory.IsDisarmed();
         public bool Overwatch
         {
             get => _player.ReferenceHub.serverRoles.OverwatchEnabled;
