@@ -23,9 +23,9 @@
 
         //1300+ <- Items
         public const uint CancelUsingItem = 1301;
-        public const uint ChangeItem = 1302;
-        public const uint UseItem = 1303;
-        public const uint UsedItem = 1304;
+        public const uint UseItem = 1302;
+        public const uint UsedItem = 1303;
+        public const uint ChangeItem = 1304;
         public const uint ChangeRadioRange = 1305;
         public const uint ToggleFlashlight = 1306;
 
@@ -111,6 +111,7 @@
         public const uint Start = 4002;
         public const uint Restart = 4003;
         public const uint End = 4004;
+        public const uint Check = 4005;
     }
 
     static public class AlphaEvents //5xxx

@@ -2,98 +2,86 @@
 using Respawning;
 using RoundRestarting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
-using static RoundSummary;
-using static ServerStatic;
 
 namespace Qurre.API
 {
-    public static class Round
+    static public class Round
     {
-        internal static bool BotSpawned { get; set; } = false;
-        internal static bool ForceEnd { get; set; } = false;
-        public static TimeSpan ElapsedTime => RoundStart.RoundLength;
-        public static DateTime StartedTime => DateTime.Now - ElapsedTime;
-        public static int CurrentRound { get; internal set; } = 0;
-        public static int ActiveGenerators { get; internal set; } = 0;
-        public static float NextRespawn
+        static internal bool _forceEnd = false;
+
+        static public TimeSpan ElapsedTime => RoundStart.RoundLength;
+        static public DateTime StartedTime => DateTime.Now - ElapsedTime;
+
+        static public int CurrentRound { get; internal set; } = 0;
+        static public int ActiveGenerators { get; internal set; } = 0;
+
+        static public float NextRespawn
         {
             get => RespawnManager.Singleton._timeForNextSequence - (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
             set => RespawnManager.Singleton._timeForNextSequence = value + (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
         }
-        public static bool Started { get; } = RoundSummary.RoundInProgress();
-        public static bool Ended { get; } = RoundSummary.singleton._roundEnded;
-        public static bool Waiting => RoundStart.singleton is not null && !Started && !Ended;
-        public static bool Lock
+
+        static public bool Started { get; } = RoundSummary.RoundInProgress();
+        static public bool Ended { get; } = RoundSummary.singleton._roundEnded;
+        static public bool Waiting => RoundStart.singleton is not null && !Started && !Ended;
+
+        static public bool Lock
         {
             get => RoundSummary.RoundLock;
             set => RoundSummary.RoundLock = value;
         }
-        public static bool LobbyLock
+        static public bool LobbyLock
         {
             get => RoundStart.LobbyLock;
             set => RoundStart.LobbyLock = value;
         }
-        public static int EscapedDPersonnel
+
+        static public int EscapedClassD
         {
             get => RoundSummary.EscapedClassD;
             set => RoundSummary.EscapedClassD = value;
         }
-        public static int EscapedScientists
+        static public int EscapedScientists
         {
             get => RoundSummary.EscapedScientists;
             set => RoundSummary.EscapedScientists = value;
         }
-        public static int ScpKills
+        static public int ScpKills
         {
             get => RoundSummary.KilledBySCPs;
             set => RoundSummary.KilledBySCPs = value;
         }
-        public static int RoundKills
+        static public int RoundKills
         {
             get => RoundSummary.Kills;
             set => RoundSummary.Kills = value;
         }
-        public static int ChangedZombies
+        static public int ChangedZombies
         {
             get => RoundSummary.ChangedIntoZombies;
             set => RoundSummary.ChangedIntoZombies = value;
         }
-        public static void Restart(bool IsfastRestart = true, NextRoundAction action = NextRoundAction.DoNothing)
+
+        static public void Restart(bool fast = true, ServerStatic.NextRoundAction action = ServerStatic.NextRoundAction.DoNothing)
         {
             ServerStatic.StopNextRound = action;
-            bool oldfastRestartSetting = CustomNetworkManager.EnableFastRestart;
-            CustomNetworkManager.EnableFastRestart = IsfastRestart;
+            bool oldfast = CustomNetworkManager.EnableFastRestart;
+            CustomNetworkManager.EnableFastRestart = fast;
             RoundRestart.InitiateRoundRestart();
-            CustomNetworkManager.EnableFastRestart = oldfastRestartSetting;
+            CustomNetworkManager.EnableFastRestart = oldfast;
         }
-        public static void Start() => CharacterClassManager.ForceRoundStart();
-        public static void End()
-        {
-            RoundSummary.singleton.ForceEnd();
-            ForceEnd = true;
-        }
-        public static void DimScreen() => RoundSummary.singleton.RpcDimScreen();
-        public static void ShowRoundSummary(RoundSummary.SumInfo_ClassList remainingPlayers, LeadingTeam team)
-        {
-            RoundSummary.singleton.RpcShowRoundSummary
-            (
-            listStart:RoundSummary.singleton.classlistStart,
-            listFinish: remainingPlayers,
-            leadingTeam: team,
-            eDS: EscapedDPersonnel,
-            eSc: EscapedScientists,
-            scpKills: ScpKills,
-            roundCd: Mathf.Clamp(ConfigFile.ServerConfig.GetInt("auto_round_restart_time", 10), 5, 1000),
-            seconds: 10
-            );
-        } 
-        public static void ForceTeamRespawn(bool isCI) => RespawnManager.Singleton.ForceSpawnTeam(isCI ? SpawnableTeamType.ChaosInsurgency : SpawnableTeamType.NineTailedFox);
-        public static void CallCICar() => RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection, SpawnableTeamType.ChaosInsurgency);
-        public static void CallMTFHelicopter() => RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection, SpawnableTeamType.NineTailedFox);
+        static public void Start() => CharacterClassManager.ForceRoundStart();
+        static public void End() => _forceEnd = true;
+
+        static public void DimScreen() => RoundSummary.singleton.RpcDimScreen();
+        static public void ShowRoundSummary(RoundSummary.SumInfo_ClassList remainingPlayers, LeadingTeam team) =>
+            RoundSummary.singleton.RpcShowRoundSummary(RoundSummary.singleton.classlistStart, remainingPlayers, team,
+                EscapedClassD, EscapedScientists, ScpKills, seconds: (int)ElapsedTime.TotalSeconds,
+                roundCd: Mathf.Clamp(ConfigFile.ServerConfig.GetInt("auto_round_restart_time", 10), 5, 1000));
+
+        static public void ForceTeamRespawn(bool isCI) => RespawnManager.Singleton.ForceSpawnTeam(isCI ? SpawnableTeamType.ChaosInsurgency : SpawnableTeamType.NineTailedFox);
+        static public void CallCICar() => RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection, SpawnableTeamType.ChaosInsurgency);
+        static public void CallMTFHelicopter() => RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection, SpawnableTeamType.NineTailedFox);
     }
 }

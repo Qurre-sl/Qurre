@@ -80,6 +80,7 @@
     <Compile Include="API\Attributes\PluginStartup.cs" />
     <Compile Include="API\Attributes\PluginInit.cs" />
     <Compile Include="API\Attributes\EventMethod.cs" />
+    <Compile Include="API\Network.cs" />
     <Compile Include="API\Classification\Player\Client.cs" />
     <Compile Include="API\Classification\Player\GamePlay.cs" />
     <Compile Include="API\Classification\Player\MovementState.cs" />
@@ -120,6 +121,9 @@
     <Compile Include="Internal\Patches\Player\Network\Leave.cs" />
     <Compile Include="Internal\Patches\Player\Network\ReserveSlot.cs" />
     <Compile Include="Internal\Patches\Player\Network\Join.cs" />
+    <Compile Include="Internal\Patches\Round\Check.cs" />
+    <Compile Include="Internal\Patches\Round\Restart.cs" />
+    <Compile Include="Internal\Patches\Round\Start.cs" />
     <Compile Include="Internal\Patches\Round\Waiting.cs" />
     <Compile Include="Loader\PluginStruct.cs" />
     <Compile Include="Loader\Configs.cs" />

@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using RoundRestarting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -39,16 +40,14 @@ namespace Qurre.API
             }
         }
 
-        static MethodInfo sendSpawnMessage;
-        static public MethodInfo SendSpawnMessage
+        static public List<TObject> GetObjectsOf<TObject>() where TObject : UnityEngine.Object => UnityEngine.Object.FindObjectsOfType<TObject>().ToList();
+        static public TObject GetObjectOf<TObject>() where TObject : UnityEngine.Object => UnityEngine.Object.FindObjectOfType<TObject>();
+
+        static public void Restart()
         {
-            get
-            {
-                if (sendSpawnMessage is null)
-                    sendSpawnMessage = typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.Instance | BindingFlags.InvokeMethod
-                        | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public);
-                return sendSpawnMessage;
-            }
+            ServerStatic.StopNextRound = ServerStatic.NextRoundAction.Restart;
+            RoundRestart.ChangeLevel(true);
         }
+        static public void Exit() => Shutdown.Quit();
     }
 }
