@@ -25,6 +25,8 @@ namespace Qurre.API
             RoleInfomation = new(this);
             HealthInfomation = new(this);
             PlayerStatsInfomation = new(this);
+            MovementState = new(this);
+            GamePlay = new(this);
 
             if (!Field.Dictionary.ContainsKey(go)) Field.Dictionary.Add(go, this);
             else Field.Dictionary[go] = this;
@@ -62,5 +64,7 @@ namespace Qurre.API
         public Classification.Player.RoleInfomation RoleInfomation { get; }
         public Classification.Player.HealthInfomation HealthInfomation { get; }
         public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
+        public Classification.Player.MoveStatement MovementState { get; }
+        public Classification.Player.GamePlay GamePlay { get; }
     }
 }

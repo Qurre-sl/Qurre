@@ -6,10 +6,10 @@ namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
 
-    public class MovementState
+    public class MoveStatement
     {
         private readonly Player _player;
-        internal MovementState(Player pl)
+        internal MoveStatement(Player pl)
         {
             _player = pl;
         }

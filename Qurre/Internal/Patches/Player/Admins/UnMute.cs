@@ -23,7 +23,7 @@ namespace Qurre.Internal.Patches.Player.Admins
                 ev.InvokeEvent();
 
                 intercom = ev.Intercom;
-                return ev.Allowed;
+                return ev.IsAllowed;
             }
             catch (Exception e)
             {

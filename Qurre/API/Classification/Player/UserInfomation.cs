@@ -51,5 +51,19 @@
         public string CustomInfo => _player.ReferenceHub.nicknameSync.Network_customPlayerInfoString;
         public string RoleName => _player.ReferenceHub.serverRoles.Network_myText;
         public string RoleColor => _player.ReferenceHub.serverRoles.Network_myColor;
+        public bool IsRemoteAdminAccess => _player.ReferenceHub.serverRoles.RemoteAdmin;
+        public bool IsTrack
+        {
+            get
+            {
+                if (_player.ReferenceHub.serverRoles.DoNotTrack) return false;
+                else return true;
+            }
+            set
+            {
+                if (value) _player.ReferenceHub.serverRoles.DoNotTrack = false;
+                else _player.ReferenceHub.serverRoles.DoNotTrack = true;
+            }
+        }
     }
 }
