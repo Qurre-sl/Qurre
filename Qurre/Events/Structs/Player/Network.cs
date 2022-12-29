@@ -15,6 +15,11 @@ namespace Qurre.Events.Structs
         public ConnectionRequest Request { get; }
         public bool Allowed { get; set; }
 
+        public RejectionReason RejectionReason { get; set; }
+        public string RejectionCustomReason { get; set; }
+        public long RejectionExpiration { get; set; }
+        public ushort RejectionRedirectPort { get; set; }
+        public byte RejectionDelay { get; set; }
 
         internal PreauthEvent(string userid, IPAddress ip, CentralAuthPreauthFlags flags, string region, ConnectionRequest req)
         {
@@ -24,6 +29,12 @@ namespace Qurre.Events.Structs
             Region = region;
             Request = req;
             Allowed = true;
+
+            RejectionReason = RejectionReason.NotSpecified;
+            RejectionCustomReason = string.Empty;
+            RejectionExpiration = System.DateTime.UtcNow.Ticks;
+            RejectionRedirectPort = Server.Port;
+            RejectionDelay = 10;
         }
     }
 

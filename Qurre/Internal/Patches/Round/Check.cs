@@ -170,6 +170,7 @@ namespace Qurre.Internal.Patches.Round
                     Timing.CallDelayed(1f, () => RoundRestarting.RoundRestart.InitiateRoundRestart());
 
                     // optimization
+                    /*
                     try
                     {
                         foreach (var pl in Player.List)
@@ -196,7 +197,7 @@ namespace Qurre.Internal.Patches.Round
                         foreach (var doll in Map.Ragdolls.ToArray()) try { doll.Destroy(); } catch { }
                     }
                     catch { }
-
+                    */
                     yield break;
                 }
             }

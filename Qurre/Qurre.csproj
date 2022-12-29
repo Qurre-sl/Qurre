@@ -99,6 +99,7 @@
     <Compile Include="API\Player.cs" />
     <Compile Include="API\Extensions.cs" />
     <Compile Include="Events\EventTypes.cs" />
+    <Compile Include="Events\Structs\Alpha\Main.cs" />
     <Compile Include="Events\Structs\Base.cs" />
     <Compile Include="Events\Structs\Player\Admins.cs" />
     <Compile Include="Events\Structs\Player\Health.cs" />
@@ -109,6 +110,11 @@
     <Compile Include="Internal\EventsManager\Loader.cs" />
     <Compile Include="Internal\EventsManager\List.cs" />
     <Compile Include="Internal\Fields\Player.cs" />
+    <Compile Include="Internal\Patches\Alpha\UnlockPanel.cs" />
+    <Compile Include="Internal\Patches\Alpha\Detonate.cs" />
+    <Compile Include="Internal\Patches\Alpha\Stop.cs" />
+    <Compile Include="Internal\Patches\Alpha\Start.cs" />
+    <Compile Include="Internal\Patches\Misc\AddCredits.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Banned.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Ban.cs" />
     <Compile Include="Internal\Patches\Player\Admins\UnMute.cs" />

@@ -14,12 +14,11 @@ namespace Qurre.Internal.EventsCalled
                 $"({ev.Player?.UserInfomation.Id}) connected. iP: {ev.Player?.UserInfomation.Ip}", ConsoleColor.Magenta);
         }
 
-        [EventMethod(PlayerEvents.Attack)]
-        static internal void Waiting(AttackEvent ev)
+        [EventMethod(AlphaEvents.UnlockPanel)]
+        static internal void Test(UnlockPanelEvent ev)
         {
-            API.Log.Info($"attacker: {ev.Attacker.UserInfomation.NickName}; target: {ev.Target.UserInfomation.NickName}; " +
-                $"Amount: {ev.Damage}; DamageType: {ev.DamageType}; LiteDamage: {ev.LiteType}; FF: {ev.FriendlyFire}");
-            ev.Damage = 1;
+            API.Log.Info($"Player {ev.Player?.UserInfomation.NickName}");
+            ev.Allowed = false;
         }
     }
 }

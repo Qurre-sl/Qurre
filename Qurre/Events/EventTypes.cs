@@ -118,7 +118,8 @@
     {
         public const uint Start = 5001;
         public const uint Stop = 5002;
-        public const uint Detonation = 5003;
+        public const uint Detonate = 5003;
+        public const uint UnlockPanel = 5004;
     }
 
     static public class ScpEvents //6xxx

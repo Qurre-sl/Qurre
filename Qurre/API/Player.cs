@@ -12,6 +12,7 @@ namespace Qurre.API
 {
     public class Player
     {
+        internal bool Bot => false; // time field
         static public IEnumerable<Player> List => Field.Dictionary.Values;
 
         internal Player(GameObject gameObject) => new Player(ReferenceHub.GetHub(gameObject));

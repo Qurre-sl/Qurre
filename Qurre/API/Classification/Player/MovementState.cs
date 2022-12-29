@@ -36,7 +36,7 @@ namespace Qurre.API.Classification.Player
                 {
                     _player.ReferenceHub.transform.localScale = value;
                     foreach (Player target in Player.List)
-                        Server.SendSpawnMessage?.Invoke(null, new object[] { _player.ClassManager.netIdentity, target.Connection });
+                        Network.SendSpawnMessage?.Invoke(null, new object[] { _player.ClassManager.netIdentity, target.Connection });
                 }
                 catch (Exception ex)
                 {
