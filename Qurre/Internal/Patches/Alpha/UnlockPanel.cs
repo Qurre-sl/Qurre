@@ -50,5 +50,16 @@ namespace Qurre.Internal.Patches.Alpha
 
             return list.AsEnumerable();
         }
+        /*
+         * ...
+         * < if(...) return; >
+         * 
+         * var @event = new UnlockPanelEvent(this._hub.GetPlayer());
+         * @event.InvokeEvent();
+         * if(!@event.Allowed) return;
+         * 
+         * this.OnInteract();
+         * ...
+        */
     }
 }

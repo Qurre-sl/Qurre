@@ -96,9 +96,10 @@
         //3000+ <- 
 
         //3100+ <- Commands
-        public const uint RemoteAdminCommand = 3101;
-        public const uint GameConsoleCommand = 3102;
-        public const uint ServerConsoleCommand = 3103;
+        public const uint RequestPlayerListCommand = 3101;
+        public const uint RemoteAdminCommand = 3102;
+        public const uint GameConsoleCommand = 3103;
+        public const uint ServerConsoleCommand = 3104;
 
         //3200+ <- Reports
         public const uint CheaterReport = 3201;
