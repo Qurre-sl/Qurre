@@ -1,10 +1,7 @@
-﻿using Qurre.API.Controllers;
+﻿using InventorySystem.Items.Pickups;
+using Qurre.API.Controllers;
 using Qurre.API.Controllers.Structs;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qurre.API
 {
@@ -17,13 +14,28 @@ namespace Qurre.API
         static public List<ShootingTarget> ShootingTargets { get; } = new();
         static public List<WorkStation> WorkStations { get; } = new();
 
-        public static List<Door> Doors { get; } = new();
-        public static List<Generator> Generators { get; } = new();
-        public static List<Locker> Lockers { get; } = new();
-        public static List<Ragdoll> Ragdolls { get; } = new();
-        public static List<Sinkhole> Sinkholes { get; } = new();
+        static public List<Camera> Cameras { get; } = new();
+        static public List<Door> Doors { get; } = new();
+        static public List<Generator> Generators { get; } = new();
+        static public List<Locker> Lockers { get; } = new();
+        static public List<Ragdoll> Ragdolls { get; } = new();
+        static public List<Room> Rooms { get; } = new();
+        static public List<Sinkhole> Sinkholes { get; } = new();
         static public List<Tesla> Teslas { get; } = new();
-        public static List<Window> Windows { get; } = new();
+        static public List<Window> Windows { get; } = new();
+        static public List<Pickup> Pickups
+        {
+            get // not recommended, change later
+            {
+                List<Pickup> pickups = new();
+                foreach (ItemPickupBase itemPickupBase in UnityEngine.Object.FindObjectsOfType<ItemPickupBase>())
+                {
+                    if (Pickup.Get(itemPickupBase) is Pickup pickup)
+                        pickups.Add(pickup);
+                }
+                return pickups;
+            }
+        }
 
         static public AmbientSoundPlayer AmbientSoundPlayer { get; internal set; }
     }

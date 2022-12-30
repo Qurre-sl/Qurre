@@ -8,6 +8,7 @@ namespace Qurre.API
 		static internal bool Debugging { get; set; } = true;
 		static internal bool Logging { get; set; } = false;
 		static internal bool AllLogging { get; set; } = false;
+
 		static public void Info(object message)
 		{
 			string caller = "█████";
@@ -43,6 +44,7 @@ namespace Qurre.API
 			try { caller = Assembly.GetCallingAssembly().GetName().Name; } catch { }
 			ServerConsole.AddLog($"[{prefix}] [{caller}] {message}", color);
 		}
+
 		static internal void LogTxt(object message)
 		{
 			if (!Logging) return;

@@ -5,10 +5,12 @@ namespace Qurre.API.Classification.Player
 {
     using InventorySystem.Items;
     using InventorySystem.Items.Firearms.Attachments;
+    using MapGeneration;
     using Qurre.API;
     using Qurre.API.Controllers;
     using System.Collections.Generic;
     using System.Linq;
+    using UnityEngine;
 
     public class GamePlay
     {
@@ -22,6 +24,13 @@ namespace Qurre.API.Classification.Player
         {
             get => _player.ReferenceHub.serverRoles.OverwatchEnabled;
             set => _player.ReferenceHub.serverRoles.SetOverwatchStatus(value);
+        }
+
+        public Room Room
+        {
+            get => RoomIdUtils.RoomAtPosition(_player.MovementState.Position).GetRoom() ??
+                Map.Rooms.OrderBy(x => Vector3.Distance(x.Position, _player.MovementState.Position)).FirstOrDefault();
+            set => _player.MovementState.Position = value.Position + Vector3.up * 2;
         }
 
         public Item AddItem(ItemBase itemBase)

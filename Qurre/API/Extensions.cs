@@ -1,16 +1,19 @@
 ﻿using CustomPlayerEffects;
 using Interactables.Interobjects;
 using InventorySystem.Items;
+using MapGeneration;
 using Mirror;
 using NorthwoodLib;
 using PlayerRoles;
 using PlayerStatsSystem;
 using Qurre.API.Addons;
+using Qurre.API.Controllers;
 using Qurre.API.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using SinkHole = CustomPlayerEffects.Sinkhole;
 
 namespace Qurre.API
 {
@@ -343,7 +346,7 @@ namespace Qurre.API
 			EffectType.Scp1853 => typeof(Scp1853),
 			EffectType.Scp207 => typeof(Scp207),
 			EffectType.SeveredHands => typeof(SeveredHands),
-			EffectType.Sinkhole => typeof(Sinkhole),
+			EffectType.Sinkhole => typeof(SinkHole),
 			EffectType.SoundtrackMute => typeof(SoundtrackMute),
 			EffectType.SpawnProtected => typeof(SpawnProtected),
 			EffectType.Stained => typeof(Stained),
@@ -380,7 +383,7 @@ namespace Qurre.API
 			Scp1853 => EffectType.Scp1853,
 			Scp207 => EffectType.Scp207,
 			SeveredHands => EffectType.SeveredHands,
-			Sinkhole => EffectType.Sinkhole,
+			SinkHole => EffectType.Sinkhole,
 			SoundtrackMute => EffectType.SoundtrackMute,
 			SpawnProtected => EffectType.SpawnProtected,
 			Stained => EffectType.Stained,
@@ -388,6 +391,17 @@ namespace Qurre.API
 			Vitality => EffectType.Vitality,
 			_ => EffectType.None,
 		};
+		#endregion
+
+		#region GetRoom
+		static public Room GetRoom(this RoomName type) => Map.Rooms.FirstOrDefault(x => x.RoomName == type);
+		static public Room GetRoom(this RoomType type) => Map.Rooms.FirstOrDefault(x => x.Type == type);
+		static public Room GetRoom(this RoomIdentifier identifier) => Map.Rooms.FirstOrDefault(x => x.Identifier == identifier);
+		#endregion
+
+		#region GetTesla
+		static public Tesla GetTesla(this TeslaGate teslaGate) => Map.Teslas.FirstOrDefault(x => x.GameObject == teslaGate.gameObject);
+		static public Tesla GetTesla(this GameObject gameObject) => Map.Teslas.FirstOrDefault(x => x.GameObject == gameObject);
 		#endregion
 	}
 }

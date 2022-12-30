@@ -45,9 +45,6 @@
     <Reference Include="CommandSystem.Core">
       <HintPath>..\depedencies\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Mirror">
-      <HintPath>..\depedencies\Mirror.dll</HintPath>
-    </Reference>
     <Reference Include="Mirror.Components">
       <HintPath>..\depedencies\Mirror.Components.dll</HintPath>
     </Reference>
@@ -122,6 +119,7 @@
     <Compile Include="API\Controllers\Broadcast.cs" />
     <Compile Include="API\Controllers\Camera.cs" />
     <Compile Include="API\Controllers\Cassie.cs" />
+    <Compile Include="API\Controllers\GlobalLights.cs" />
     <Compile Include="API\Controllers\Pickup.cs" />
     <Compile Include="API\Controllers\Item.cs" />
     <Compile Include="API\Controllers\Lights.cs" />
@@ -153,6 +151,8 @@
     <Compile Include="API\Controllers\Alpha.cs" />
     <Compile Include="API\Map.cs" />
     <Compile Include="API\Objects\AmmoType.cs" />
+    <Compile Include="API\Objects\RoomType.cs" />
+    <Compile Include="API\Objects\ZoneType.cs" />
     <Compile Include="API\Objects\RadioStatus.cs" />
     <Compile Include="API\Objects\LockerType.cs" />
     <Compile Include="API\Objects\DoorType.cs" />
@@ -173,6 +173,7 @@
     <Compile Include="Events\EventTypes.cs" />
     <Compile Include="Events\Structs\Alpha\Main.cs" />
     <Compile Include="Events\Structs\Base.cs" />
+    <Compile Include="Events\Structs\Map\Place.cs" />
     <Compile Include="Events\Structs\Player\Admins.cs" />
     <Compile Include="Events\Structs\Player\Health.cs" />
     <Compile Include="Events\Structs\Player\Network.cs" />
@@ -189,7 +190,11 @@
     <Compile Include="Internal\Patches\Alpha\Detonate.cs" />
     <Compile Include="Internal\Patches\Alpha\Stop.cs" />
     <Compile Include="Internal\Patches\Alpha\Start.cs" />
+    <Compile Include="Internal\Patches\Map\Place\RagdollSpawn.cs" />
     <Compile Include="Internal\Patches\Misc\AddCredits.cs" />
+    <Compile Include="Internal\Patches\Misc\Creates\Ragdoll.cs" />
+    <Compile Include="Internal\Patches\Misc\Creates\Locker.cs" />
+    <Compile Include="Internal\Patches\Misc\Creates\Generator.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Banned.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Ban.cs" />
     <Compile Include="Internal\Patches\Player\Admins\UnMute.cs" />
