@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using InventorySystem;
+using Mirror;
 using Qurre.API.Addons;
 using System;
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace Qurre.API
             go = _rh.gameObject;
 
             UserInfomation = new(this);
+            InventoryInformation = new(this);
             RoleInfomation = new(this);
             HealthInfomation = new(this);
             PlayerStatsInfomation = new(this);
@@ -61,6 +63,7 @@ namespace Qurre.API
         }
 
         public Classification.Player.UserInfomation UserInfomation { get; }
+        public Classification.Player.InventoryInformation InventoryInformation { get; }
         public Classification.Player.RoleInfomation RoleInfomation { get; }
         public Classification.Player.HealthInfomation HealthInfomation { get; }
         public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }

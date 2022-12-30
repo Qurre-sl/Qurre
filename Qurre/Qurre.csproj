@@ -72,6 +72,9 @@
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\depedencies\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.PhysicsModule">
+      <HintPath>..\..\Qurre-Source\depedencies\UnityEngine.PhysicsModule.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="API\Addons\JsonConfig.cs" />
@@ -80,8 +83,19 @@
     <Compile Include="API\Attributes\PluginStartup.cs" />
     <Compile Include="API\Attributes\PluginInit.cs" />
     <Compile Include="API\Attributes\EventMethod.cs" />
+    <Compile Include="API\Classification\Player\InventoryInformation.cs" />
     <Compile Include="API\Controllers\Item.cs" />
-    <Compile Include="API\Controllers\Keycard.cs" />
+    <Compile Include="API\Addons\Items\Ammo.cs" />
+    <Compile Include="API\Addons\Items\Armor.cs" />
+    <Compile Include="API\Addons\Items\Firearm.cs" />
+    <Compile Include="API\Addons\Items\Flashlight.cs" />
+    <Compile Include="API\Addons\Items\GrenadeFlash.cs" />
+    <Compile Include="API\Addons\Items\GrenadeFrag.cs" />
+    <Compile Include="API\Addons\Items\Keycard.cs" />
+    <Compile Include="API\Addons\Items\Radio.cs" />
+    <Compile Include="API\Addons\Items\Throwable.cs" />
+    <Compile Include="API\Addons\Items\Usable.cs" />
+    <Compile Include="API\Controllers\Pickup.cs" />
     <Compile Include="API\Network.cs" />
     <Compile Include="API\Classification\Player\Client.cs" />
     <Compile Include="API\Classification\Player\GamePlay.cs" />
@@ -91,8 +105,12 @@
     <Compile Include="API\Classification\Player\HealthSituation.cs" />
     <Compile Include="API\Controllers\Alpha.cs" />
     <Compile Include="API\Map.cs" />
+    <Compile Include="API\Objects\AmmoType.cs" />
     <Compile Include="API\Objects\DamageTypesPrimitive.cs" />
     <Compile Include="API\Objects\DamageTypes.cs" />
+    <Compile Include="API\Classification\Player\InventoryItems.cs" />
+    <Compile Include="API\Addons\Items\MicroHID.cs" />
+    <Compile Include="API\Objects\RadioStatus.cs" />
     <Compile Include="API\Round.cs" />
     <Compile Include="API\Server.cs" />
     <Compile Include="API\Classification\Player\UserInfomation.cs" />

@@ -23,9 +23,9 @@
             {
                 if (_player.Bot)
                 {
-                    if (_ui is null) _ui = $"7{UnityEngine.Random.Range(0, 99999999)}{UnityEngine.Random.Range(0, 99999999)}@bot";
-                    return _ui;
+                    return _ui ??= $"7{UnityEngine.Random.Range(0, 99999999)}{UnityEngine.Random.Range(0, 99999999)}@bot";
                 }
+
                 try
                 {
                     string _ = _player.ClassManager.UserId;

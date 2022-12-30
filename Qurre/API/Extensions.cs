@@ -1,4 +1,6 @@
-﻿using NorthwoodLib;
+﻿using InventorySystem.Items;
+using Mirror;
+using NorthwoodLib;
 using PlayerRoles;
 using PlayerStatsSystem;
 using Qurre.API.Objects;
@@ -124,7 +126,6 @@ namespace Qurre.API
 		#endregion
 
 		#region Damages
-
 		static public LiteDamageTypes GetLiteDamageTypes(this DamageHandlerBase handler) => handler switch
 		{
 			CustomReasonDamageHandler _ => LiteDamageTypes.Custom,
@@ -216,6 +217,67 @@ namespace Qurre.API
 				_ => DamageTypes.Unknow,
 			};
 		}
-		#endregion
-	}
+        #endregion
+
+        #region Items
+		public static ItemCategory GetCategory(this ItemType itemType)
+		{
+			return itemType switch
+			{
+				ItemType.KeycardChaosInsurgency or ItemType.KeycardContainmentEngineer or ItemType.KeycardFacilityManager or ItemType.KeycardGuard or ItemType.KeycardJanitor or ItemType.KeycardNTFCommander or ItemType.KeycardNTFLieutenant or ItemType.KeycardNTFOfficer or ItemType.KeycardO5 or ItemType.KeycardResearchCoordinator or ItemType.KeycardScientist or ItemType.KeycardZoneManager => ItemCategory.Keycard,
+				ItemType.Medkit or ItemType.Adrenaline or ItemType.Painkillers => ItemCategory.Medical,
+				ItemType.Radio => ItemCategory.Radio,
+				ItemType.GunAK or ItemType.GunCOM15 or ItemType.GunCOM18 or ItemType.GunCrossvec or ItemType.GunE11SR or ItemType.GunFSP9 or ItemType.GunLogicer or ItemType.GunRevolver or ItemType.GunShotgun => ItemCategory.Firearm,
+				ItemType.GrenadeFlash or ItemType.GrenadeHE => ItemCategory.Grenade,
+				ItemType.SCP018 or ItemType.SCP207 or ItemType.SCP268 or ItemType.SCP500 or ItemType.SCP244a or ItemType.SCP244b or ItemType.SCP330 or ItemType.SCP2176 => ItemCategory.SCPItem,
+				ItemType.MicroHID => ItemCategory.MicroHID,
+				ItemType.Ammo12gauge or ItemType.Ammo44cal or ItemType.Ammo556x45 or ItemType.Ammo762x39 or ItemType.Ammo9x19 => ItemCategory.Ammo,
+				ItemType.ArmorCombat or ItemType.ArmorHeavy or ItemType.ArmorLight => ItemCategory.Armor,
+				_ => ItemCategory.None
+			};
+		}
+
+		internal static AmmoType GetAmmoType(this ItemType itemType)
+		{
+			return itemType switch
+			{
+				ItemType.Ammo556x45 => AmmoType.Ammo556,
+				ItemType.Ammo762x39 => AmmoType.Ammo762,
+				ItemType.Ammo9x19 => AmmoType.Ammo9,
+				ItemType.Ammo12gauge => AmmoType.Ammo12Gauge,
+				ItemType.Ammo44cal => AmmoType.Ammo44Cal,
+				_ => AmmoType.None
+			};
+		}
+
+		internal static ItemType GetItemType(this AmmoType ammoType)
+		{
+			return ammoType switch
+			{
+				AmmoType.Ammo556 => ItemType.Ammo556x45,
+				AmmoType.Ammo762 => ItemType.Ammo762x39,
+				AmmoType.Ammo9 => ItemType.Ammo9x19,
+				AmmoType.Ammo12Gauge => ItemType.Ammo12gauge,
+				AmmoType.Ammo44Cal => ItemType.Ammo44cal,
+				_ => ItemType.None,
+			};
+		}
+
+		internal static ItemBase CreateItemInstance(this ItemType itemType, Player owner = null)
+		{
+			if (owner != null)
+				owner.InventoryInformation.Base.CreateItemInstance(itemType, false);
+
+			return Server.Host.InventoryInformation.Base.CreateItemInstance(itemType, false);
+        }
+        #endregion
+
+        #region GameObjects
+        internal static void NetworkRespawn(this GameObject gameObject)
+		{
+			NetworkServer.UnSpawn(gameObject);
+			NetworkServer.Spawn(gameObject);
+		}
+        #endregion
+    }
 }
