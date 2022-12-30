@@ -1,4 +1,7 @@
-﻿using Mirror;
+﻿using Hints;
+using InventorySystem;
+using Mirror;
+using PlayerRoles;
 using RoundRestarting;
 using System;
 using System.Collections.Generic;
@@ -37,6 +40,15 @@ namespace Qurre.API
                 PlayerStatsSystem.AttackerDamageHandler.RefreshConfigs();
 
                 foreach (Player pl in Player.List) pl.FriendlyFire = value;
+            }
+        }
+
+        public static Inventory InventoryHost
+        {
+            get
+            {
+                if (hinv == null) hinv = ReferenceHub.GetHub(PlayerRoleManager.).inventory;
+                return hinv;
             }
         }
 

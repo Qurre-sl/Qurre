@@ -80,6 +80,8 @@
     <Compile Include="API\Attributes\PluginStartup.cs" />
     <Compile Include="API\Attributes\PluginInit.cs" />
     <Compile Include="API\Attributes\EventMethod.cs" />
+    <Compile Include="API\Controllers\Item.cs" />
+    <Compile Include="API\Controllers\Keycard.cs" />
     <Compile Include="API\Network.cs" />
     <Compile Include="API\Classification\Player\Client.cs" />
     <Compile Include="API\Classification\Player\GamePlay.cs" />

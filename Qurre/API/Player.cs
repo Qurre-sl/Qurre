@@ -66,5 +66,6 @@ namespace Qurre.API
         public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
         public Classification.Player.MovementState MovementState { get; }
         public Classification.Player.GamePlay GamePlay { get; }
+        
     }
 }
