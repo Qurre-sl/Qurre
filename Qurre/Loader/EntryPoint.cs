@@ -1,4 +1,6 @@
 ﻿using Qurre.API;
+using Qurre.API.Addons;
+
 namespace Qurre.Loader
 {
     internal class EntryPoint : ICharacterLoader
@@ -16,6 +18,8 @@ namespace Qurre.Loader
             Internal.EventsManager.Loader.PathQurreEvents();
 
             Plugins.Init();
+
+            Prefabs.Init();
 
             Log.Custom($"Qurre v{Version} enabled", "Loader", System.ConsoleColor.Green);
         }

@@ -3,11 +3,11 @@ using InventorySystem;
 
 namespace Qurre.API.Classification.Player
 {
-    using InventorySystem.Items.Firearms.Attachments;
     using InventorySystem.Items;
+    using InventorySystem.Items.Firearms.Attachments;
     using Qurre.API;
-    using System.Collections.Generic;
     using Qurre.API.Controllers;
+    using System.Collections.Generic;
     using System.Linq;
 
     public class GamePlay
@@ -23,6 +23,7 @@ namespace Qurre.API.Classification.Player
             get => _player.ReferenceHub.serverRoles.OverwatchEnabled;
             set => _player.ReferenceHub.serverRoles.SetOverwatchStatus(value);
         }
+
         public Item AddItem(ItemBase itemBase)
         {
             Item item = Item.Get(itemBase);
@@ -31,7 +32,6 @@ namespace Qurre.API.Classification.Player
             itemBase.OnAdded(itemBase.PickupDropModel);
             if (itemBase is InventorySystem.Items.Firearms.Firearm)
                 AttachmentsServerHandler.SetupProvidedWeapon(_player.ReferenceHub, itemBase);
-            ItemsValue.Add(item);
 
             Inventory.SendItemsNextFrame = true;
             return item;

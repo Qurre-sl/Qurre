@@ -1,28 +1,36 @@
-﻿using Hints;
-using InventorySystem;
-using Mirror;
-using PlayerRoles;
+﻿using InventorySystem;
 using RoundRestarting;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Qurre.API
 {
     static public class Server
     {
-        private static Player host;
+        static internal Player host;
+        static internal Inventory hinv;
 
         static public ushort Port => ServerStatic.ServerPort;
+
         static public Player Host
         {
             get
             {
-                if (host is null || host.ReferenceHub is null) host = new Player(ReferenceHub.HostHub);
+                if (host is null || host.ReferenceHub is null)
+                    host = new Player(ReferenceHub.HostHub);
+
                 return host;
+            }
+        }
+
+        static public Inventory InventoryHost
+        {
+            get
+            {
+                if (hinv is null)
+                    hinv = ReferenceHub.HostHub.inventory;
+
+                return hinv;
             }
         }
 
@@ -40,15 +48,6 @@ namespace Qurre.API
                 PlayerStatsSystem.AttackerDamageHandler.RefreshConfigs();
 
                 foreach (Player pl in Player.List) pl.FriendlyFire = value;
-            }
-        }
-
-        public static Inventory InventoryHost
-        {
-            get
-            {
-                if (hinv == null) hinv = ReferenceHub.GetHub(PlayerRoleManager.).inventory;
-                return hinv;
             }
         }
 

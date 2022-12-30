@@ -87,7 +87,7 @@
         public const uint GrenadeExploded = 2105;
 
         //2200+ <- Team Respawn
-        public const uint TeamRespawnSelected = 2201;
+        public const uint TeamRespawnSelect = 2201;
         public const uint TeamRespawn = 2202;
     }
 

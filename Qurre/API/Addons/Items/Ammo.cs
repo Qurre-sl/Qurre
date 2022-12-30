@@ -2,7 +2,7 @@
 using Qurre.API.Objects;
 using Qurre.API.Controllers;
 
-namespace Qurre.API.Addons.tems
+namespace Qurre.API.Addons.Items
 {
     public sealed class Ammo : Item
     {

@@ -9,7 +9,6 @@ namespace Qurre.Internal.Patches.Server
     using Qurre.API;
     using Qurre.Events.Structs;
 
-    [HarmonyDebug]
     [HarmonyPatch(typeof(global::CheaterReport), nameof(global::CheaterReport.UserCode_CmdReport))]
     static class LocalReport
     {

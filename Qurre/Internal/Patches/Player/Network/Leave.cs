@@ -23,7 +23,7 @@ namespace Qurre.Internal.Patches.Player.Network
                 if (player is null || player.IsHost) return;
 
                 ServerConsole.AddLog(
-                    $"Player {player.UserInfomation.NickName} ({player.UserInfomation.UserId}) ({player.UserInfomation.Id}) disconnected",
+                    $"Player {player.UserInfomation.Nickname} ({player.UserInfomation.UserId}) ({player.UserInfomation.Id}) disconnected",
                     ConsoleColor.DarkMagenta
                     );
 

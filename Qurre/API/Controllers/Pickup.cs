@@ -46,7 +46,7 @@ namespace Qurre.API.Controllers
         public ushort Serial
         {
             get => _bufferedSerial == 0 ?
-                   _bufferedSerial  = 0 :
+                   _bufferedSerial = 0 :
                    _bufferedSerial;
             set
             {

@@ -7,13 +7,12 @@ using InventorySystem.Items.Firearms.Modules;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
 using System;
-using FirearmBase = InventorySystem.Items.Firearms.Firearm;
 
-namespace Qurre.API.Addons.tems
+namespace Qurre.API.Addons.Items
 {
-    public sealed class Firearm : Item
+    public sealed class Gun : Item
     {
-        public new FirearmBase Base { get; }
+        public new Firearm Base { get; }
 
         public byte Ammo
         {
@@ -70,7 +69,7 @@ namespace Qurre.API.Addons.tems
         public AmmoType AmmoType => Base.AmmoType.GetAmmoType();
         public byte MaxAmmo => Base.AmmoManagerModule.MaxAmmo;
 
-        public Firearm(FirearmBase itemBase) : base(itemBase)
+        public Gun(Firearm itemBase) : base(itemBase)
         {
             Base = itemBase;
         }

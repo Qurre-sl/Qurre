@@ -2,7 +2,7 @@
 using InventorySystem.Items.Keycards;
 using Qurre.API.Controllers;
 
-namespace Qurre.API.Addons.tems
+namespace Qurre.API.Addons.Items
 {
     public sealed class Keycard : Item
     {

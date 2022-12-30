@@ -1,8 +1,11 @@
-﻿using InventorySystem.Items;
+﻿using CustomPlayerEffects;
+using Interactables.Interobjects;
+using InventorySystem.Items;
 using Mirror;
 using NorthwoodLib;
 using PlayerRoles;
 using PlayerStatsSystem;
+using Qurre.API.Addons;
 using Qurre.API.Objects;
 using System;
 using System.Collections.Generic;
@@ -85,10 +88,10 @@ namespace Qurre.API
 					string firstString = args.ToLower();
 					foreach (Player player in Internal.Fields.Player.Dictionary.Values)
 					{
-						if (player.UserInfomation.NickName is null) continue;
-						if (!player.UserInfomation.NickName.Contains(args, StringComparison.OrdinalIgnoreCase))
+						if (player.UserInfomation.Nickname is null) continue;
+						if (!player.UserInfomation.Nickname.Contains(args, StringComparison.OrdinalIgnoreCase))
 							continue;
-						string secondString = player.UserInfomation.NickName;
+						string secondString = player.UserInfomation.Nickname;
 						int nameDifference = secondString.Length - firstString.Length;
 						if (nameDifference < lastnameDifference)
 						{
@@ -126,6 +129,7 @@ namespace Qurre.API
 		#endregion
 
 		#region Damages
+
 		static public LiteDamageTypes GetLiteDamageTypes(this DamageHandlerBase handler) => handler switch
 		{
 			CustomReasonDamageHandler _ => LiteDamageTypes.Custom,
@@ -217,9 +221,38 @@ namespace Qurre.API
 				_ => DamageTypes.Unknow,
 			};
 		}
-        #endregion
+		#endregion
 
-        #region Items
+		#region Prefabs
+		static public BreakableDoor GetPrefab(this DoorPrefabs prefab)
+		{
+			if (Prefabs.Doors.TryGetValue(prefab, out var door)) return door;
+			return Prefabs.Doors.First().Value;
+		}
+		static public GameObject GetPrefab(this TargetPrefabs prefab)
+		{
+			if (Prefabs.Targets.TryGetValue(prefab, out var target)) return target;
+			return Prefabs.Targets.First().Value;
+		}
+		static public MapGeneration.Distributors.Locker GetPrefab(this LockerPrefabs prefab)
+		{
+			if (prefab is LockerPrefabs.Pedestal)
+			{
+				prefab = UnityEngine.Random.Range(0, 100) switch
+				{
+					> 80 => LockerPrefabs.Pedestal268,
+					> 60 => LockerPrefabs.Pedestal207,
+					> 40 => LockerPrefabs.Pedestal500,
+					> 20 => LockerPrefabs.Pedestal018,
+					_ => LockerPrefabs.Pedestal2176,
+				};
+			}
+			if (Prefabs.Lockers.TryGetValue(prefab, out var locker)) return locker;
+			return Prefabs.Lockers.First().Value;
+		}
+		#endregion
+
+		#region Items
 		public static ItemCategory GetCategory(this ItemType itemType)
 		{
 			return itemType switch
@@ -269,15 +302,92 @@ namespace Qurre.API
 				owner.InventoryInformation.Base.CreateItemInstance(itemType, false);
 
 			return Server.Host.InventoryInformation.Base.CreateItemInstance(itemType, false);
-        }
-        #endregion
+		}
+		#endregion
 
-        #region GameObjects
-        internal static void NetworkRespawn(this GameObject gameObject)
+		#region GameObjects
+		internal static void NetworkRespawn(this GameObject gameObject)
 		{
 			NetworkServer.UnSpawn(gameObject);
 			NetworkServer.Spawn(gameObject);
 		}
-        #endregion
-    }
+		#endregion
+
+		#region Effects
+		static public Type Type(this EffectType effect) => effect switch
+		{
+			EffectType.AmnesiaItems => typeof(AmnesiaItems),
+			EffectType.AmnesiaVision => typeof(AmnesiaVision),
+			EffectType.Asphyxiated => typeof(Asphyxiated),
+			EffectType.Bleeding => typeof(Bleeding),
+			EffectType.Blinded => typeof(Blinded),
+			EffectType.BodyshotReduction => typeof(BodyshotReduction),
+			EffectType.Burned => typeof(Burned),
+			EffectType.CardiacArrest => typeof(CardiacArrest),
+			EffectType.Concussed => typeof(Concussed),
+			EffectType.Corroding => typeof(Corroding),
+			EffectType.DamageReduction => typeof(DamageReduction),
+			EffectType.Deafened => typeof(Deafened),
+			EffectType.Decontaminating => typeof(Decontaminating),
+			EffectType.Disabled => typeof(Disabled),
+			EffectType.Ensnared => typeof(Ensnared),
+			EffectType.Exhausted => typeof(Exhausted),
+			EffectType.Flashed => typeof(Flashed),
+			EffectType.Hemorrhage => typeof(Hemorrhage),
+			EffectType.InsufficientLighting => typeof(InsufficientLighting),
+			EffectType.Invigorated => typeof(Invigorated),
+			EffectType.Invisible => typeof(Invisible),
+			EffectType.MovementBoost => typeof(MovementBoost),
+			EffectType.Poisoned => typeof(Poisoned),
+			EffectType.RainbowTaste => typeof(RainbowTaste),
+			EffectType.Scp1853 => typeof(Scp1853),
+			EffectType.Scp207 => typeof(Scp207),
+			EffectType.SeveredHands => typeof(SeveredHands),
+			EffectType.Sinkhole => typeof(Sinkhole),
+			EffectType.SoundtrackMute => typeof(SoundtrackMute),
+			EffectType.SpawnProtected => typeof(SpawnProtected),
+			EffectType.Stained => typeof(Stained),
+			EffectType.Traumatized => typeof(Traumatized),
+			EffectType.Vitality => typeof(Vitality),
+			_ => throw new InvalidOperationException("Invalid effect enum provided"),
+		};
+		static public EffectType GetEffectType(this StatusEffectBase ef) => ef switch
+		{
+			AmnesiaItems => EffectType.AmnesiaItems,
+			AmnesiaVision => EffectType.AmnesiaVision,
+			Asphyxiated => EffectType.Asphyxiated,
+			Bleeding => EffectType.Bleeding,
+			Blinded => EffectType.Blinded,
+			BodyshotReduction => EffectType.BodyshotReduction,
+			Burned => EffectType.Burned,
+			CardiacArrest => EffectType.CardiacArrest,
+			Concussed => EffectType.Concussed,
+			Corroding => EffectType.Corroding,
+			DamageReduction => EffectType.DamageReduction,
+			Deafened => EffectType.Deafened,
+			Decontaminating => EffectType.Decontaminating,
+			Disabled => EffectType.Disabled,
+			Ensnared => EffectType.Ensnared,
+			Exhausted => EffectType.Exhausted,
+			Flashed => EffectType.Flashed,
+			Hemorrhage => EffectType.Hemorrhage,
+			InsufficientLighting => EffectType.InsufficientLighting,
+			Invigorated => EffectType.Invigorated,
+			Invisible => EffectType.Invisible,
+			MovementBoost => EffectType.MovementBoost,
+			Poisoned => EffectType.Poisoned,
+			RainbowTaste => EffectType.RainbowTaste,
+			Scp1853 => EffectType.Scp1853,
+			Scp207 => EffectType.Scp207,
+			SeveredHands => EffectType.SeveredHands,
+			Sinkhole => EffectType.Sinkhole,
+			SoundtrackMute => EffectType.SoundtrackMute,
+			SpawnProtected => EffectType.SpawnProtected,
+			Stained => EffectType.Stained,
+			Traumatized => EffectType.Traumatized,
+			Vitality => EffectType.Vitality,
+			_ => EffectType.None,
+		};
+		#endregion
+	}
 }

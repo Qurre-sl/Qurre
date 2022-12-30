@@ -2,7 +2,7 @@
 using Qurre.API.Controllers;
 using PlayerRoles.FirstPersonControl;
 
-namespace Qurre.API.Addons.tems
+namespace Qurre.API.Addons.Items
 {
     public class Throwable : Item
     {
@@ -27,7 +27,7 @@ namespace Qurre.API.Addons.tems
             Base = itemBase;
         }
 
-        public Throwable(ItemType itemType, Player owner = null) : this ((ThrowableItem)itemType.CreateItemInstance(owner))
+        public Throwable(ItemType itemType, Player owner = null) : this((ThrowableItem)itemType.CreateItemInstance(owner))
         {
         }
 

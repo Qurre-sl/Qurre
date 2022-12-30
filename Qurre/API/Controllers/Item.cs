@@ -1,13 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using InventorySystem.Items;
-using firearm = InventorySystem.Items.Firearms.Firearm;
 using InventorySystem.Items.Pickups;
 using Mirror;
-using Qurre.API.Addons.tems;
+using Qurre.API.Addons.Items;
 using UnityEngine;
 using InventorySystem.Items.Firearms;
-using Firearm = Qurre.API.Addons.tems.Firearm;
 using InventorySystem.Items.Keycards;
 using InventorySystem.Items.Usables;
 using InventorySystem.Items.Radio;
@@ -113,14 +111,14 @@ namespace Qurre.API.Controllers
 
             switch (itemBase)
             {
-                case firearm gun:
-                    return new Firearm(gun);
+                case Firearm gun:
+                    return new Gun(gun);
                 case KeycardItem card:
                     return new Keycard(card);
                 case UsableItem usable:
                     {
-                        if (usable is Scp330Bag bag)
-                            return new Scp330(bag);
+                        //if (usable is Scp330Bag bag)
+                        //    return new Scp330(bag);
                         return new Usable(usable);
                     }
                 case RadioItem radio:
@@ -155,21 +153,21 @@ namespace Qurre.API.Controllers
             return Get(itemBase.First());
         }
 
-        public void Give(Player player) => player.AddItem(Base);
+        public void Give(Player player) => player.GamePlay.AddItem(Base);
 
         public virtual Pickup Spawn(Vector3 position, Quaternion rotation = default, Vector3 scale = default)
         {
             PickupSyncInfo syncInfo = Base.PickupDropModel.Info;
             syncInfo.ItemId = Type;
             syncInfo.Weight = Weight;
-            syncInfo.Position = position;
-            syncInfo.Rotation = new LowPrecisionQuaternion(rotation);
+            syncInfo._serverPosition = position;
+            syncInfo._serverRotation = rotation;
             Base.PickupDropModel.NetworkInfo = syncInfo;
 
             ItemPickupBase ipb = Object.Instantiate(Base.PickupDropModel, position, rotation);
             if (ipb is FirearmPickup firearmPickup)
             {
-                if (this is Firearm firearm)
+                if (this is Gun firearm)
                 {
                     firearmPickup.Status = new FirearmStatus(firearm.Ammo, FirearmStatusFlags.MagazineInserted, firearmPickup.Status.Attachments);
                 }

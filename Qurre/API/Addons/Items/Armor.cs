@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using static InventorySystem.Items.Armor.BodyArmor;
 
-namespace Qurre.API.Addons.tems
+namespace Qurre.API.Addons.Items
 {
     public sealed class Armor : Item
     {

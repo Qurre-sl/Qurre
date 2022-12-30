@@ -40,7 +40,7 @@
             }
             set => _player.ClassManager.UserId = value;
         }
-        public string NickName
+        public string Nickname
         {
             get
             {

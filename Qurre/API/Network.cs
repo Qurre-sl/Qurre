@@ -25,5 +25,27 @@ namespace Qurre.API
             MethodInfo info = type.GetMethod(methodName, flags);
             info?.Invoke(null, param);
         }
+
+
+        static public void UpdateData(this NetworkIdentity identity) => NetworkServer.SendToAll(identity.SpawnMessage());
+        static public SpawnMessage SpawnMessage(this NetworkIdentity identity)
+        {
+            var writer = NetworkWriterPool.GetWriter();
+            var writer2 = NetworkWriterPool.GetWriter();
+            var payload = NetworkServer.CreateSpawnMessagePayload(false, identity, writer, writer2);
+
+            return new SpawnMessage
+            {
+                netId = identity.netId,
+                isLocalPlayer = false,
+                isOwner = false,
+                sceneId = identity.sceneId,
+                assetId = identity.assetId,
+                position = identity.gameObject.transform.position,
+                rotation = identity.gameObject.transform.rotation,
+                scale = identity.gameObject.transform.localScale,
+                payload = payload
+            };
+        }
     }
 }

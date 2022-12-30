@@ -3,7 +3,7 @@ using Qurre.API.Controllers;
 using Qurre.API.Objects;
 using System;
 
-namespace Qurre.API.Addons.tems
+namespace Qurre.API.Addons.Items
 {
     public sealed class Radio : Item
     {

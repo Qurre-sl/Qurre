@@ -2,7 +2,7 @@
 using Qurre.API.Controllers;
 using Utils.Networking;
 
-namespace Qurre.API.Addons.tems
+namespace Qurre.API.Addons.Items
 {
     public sealed class Flashlight : Item
     {

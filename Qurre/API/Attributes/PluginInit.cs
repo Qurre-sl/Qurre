@@ -8,11 +8,11 @@ namespace Qurre.API.Attributes
         public string Developer { get; }
         public Version Version { get; }
 
-        public PluginInit(string name, string developer = "", Version version = default)
+        public PluginInit(string name, string developer = "", string version = "")
         {
             Name = name;
             Developer = developer;
-            Version = version;
+            Version = new(version);
         }
     }
 }

@@ -3,7 +3,7 @@ using Mirror;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Qurre.API.Addons.tems
+namespace Qurre.API.Addons.Items
 {
     public sealed class GrenadeFlash : Throwable
     {

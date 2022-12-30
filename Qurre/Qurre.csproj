@@ -51,6 +51,9 @@
     <Reference Include="Mirror.Components">
       <HintPath>..\depedencies\Mirror.Components.dll</HintPath>
     </Reference>
+    <Reference Include="Mirror_public">
+      <HintPath>..\depedencies\Mirror_public.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\depedencies\Newtonsoft.Json.dll</HintPath>
@@ -69,33 +72,77 @@
     <Reference Include="UnityEngine">
       <HintPath>..\depedencies\UnityEngine.dll</HintPath>
     </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\depedencies\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
     <Reference Include="UnityEngine.CoreModule">
       <HintPath>..\depedencies\UnityEngine.CoreModule.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\..\Qurre-Source\depedencies\UnityEngine.PhysicsModule.dll</HintPath>
+      <HintPath>..\depedencies\UnityEngine.PhysicsModule.dll</HintPath>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Addons\BetterHints\Manager.cs" />
+    <Compile Include="API\Addons\BetterHints\ISender.cs" />
+    <Compile Include="API\Addons\BetterHints\HintStruct.cs" />
+    <Compile Include="API\Addons\Items\Ammo.cs" />
+    <Compile Include="API\Addons\Items\Armor.cs" />
+    <Compile Include="API\Addons\Items\Usable.cs" />
+    <Compile Include="API\Addons\Items\Throwable.cs" />
+    <Compile Include="API\Addons\Items\Radio.cs" />
+    <Compile Include="API\Addons\Items\MicroHID.cs" />
+    <Compile Include="API\Addons\Items\Keycard.cs" />
+    <Compile Include="API\Addons\Items\GrenadeFrag.cs" />
+    <Compile Include="API\Addons\Items\GrenadeFlash.cs" />
+    <Compile Include="API\Addons\Items\Flashlight.cs" />
+    <Compile Include="API\Addons\Items\Gun.cs" />
+    <Compile Include="API\Addons\Models\ModelWorkStation.cs" />
+    <Compile Include="API\Addons\Models\ModelTarget.cs" />
+    <Compile Include="API\Addons\Models\ModelPrimitive.cs" />
+    <Compile Include="API\Addons\Models\ModelPickup.cs" />
+    <Compile Include="API\Addons\Models\ModelLocker.cs" />
+    <Compile Include="API\Addons\Models\ModelLight.cs" />
+    <Compile Include="API\Addons\Models\ModelGenerator.cs" />
+    <Compile Include="API\Addons\Models\ModelBot.cs" />
+    <Compile Include="API\Addons\Models\ModelEnums.cs" />
+    <Compile Include="API\Addons\Models\ModelDoor.cs" />
+    <Compile Include="API\Addons\Models\ModelBody.cs" />
+    <Compile Include="API\Addons\Models\Model.cs" />
+    <Compile Include="API\Addons\Models\CustomRoom.cs" />
+    <Compile Include="API\Addons\Prefabs.cs" />
     <Compile Include="API\Addons\JsonConfig.cs" />
     <Compile Include="API\Addons\KillElement.cs" />
     <Compile Include="API\Attributes\PluginPriority.cs" />
     <Compile Include="API\Attributes\PluginStartup.cs" />
     <Compile Include="API\Attributes\PluginInit.cs" />
     <Compile Include="API\Attributes\EventMethod.cs" />
+    <Compile Include="API\Classification\Player\InventoryItems.cs" />
     <Compile Include="API\Classification\Player\InventoryInformation.cs" />
-    <Compile Include="API\Controllers\Item.cs" />
-    <Compile Include="API\Addons\Items\Ammo.cs" />
-    <Compile Include="API\Addons\Items\Armor.cs" />
-    <Compile Include="API\Addons\Items\Firearm.cs" />
-    <Compile Include="API\Addons\Items\Flashlight.cs" />
-    <Compile Include="API\Addons\Items\GrenadeFlash.cs" />
-    <Compile Include="API\Addons\Items\GrenadeFrag.cs" />
-    <Compile Include="API\Addons\Items\Keycard.cs" />
-    <Compile Include="API\Addons\Items\Radio.cs" />
-    <Compile Include="API\Addons\Items\Throwable.cs" />
-    <Compile Include="API\Addons\Items\Usable.cs" />
+    <Compile Include="API\Controllers\Broadcast.cs" />
+    <Compile Include="API\Controllers\Camera.cs" />
+    <Compile Include="API\Controllers\Cassie.cs" />
     <Compile Include="API\Controllers\Pickup.cs" />
+    <Compile Include="API\Controllers\Item.cs" />
+    <Compile Include="API\Controllers\Lights.cs" />
+    <Compile Include="API\Controllers\Locker.cs" />
+    <Compile Include="API\Controllers\Generator.cs" />
+    <Compile Include="API\Controllers\Door.cs" />
+    <Compile Include="API\Controllers\Ragdoll.cs" />
+    <Compile Include="API\Controllers\Scp914.cs" />
+    <Compile Include="API\Controllers\Sinkhole.cs" />
+    <Compile Include="API\Controllers\Structs\Chamber.cs" />
+    <Compile Include="API\Controllers\Tesla.cs" />
+    <Compile Include="API\Controllers\Window.cs" />
+    <Compile Include="API\Controllers\WorkStation.cs" />
+    <Compile Include="API\Controllers\ShootingTarget.cs" />
+    <Compile Include="API\Controllers\Primitive.cs" />
+    <Compile Include="API\Controllers\LightPoint.cs" />
+    <Compile Include="API\Controllers\Decontamination.cs" />
+    <Compile Include="API\Controllers\Room.cs" />
+    <Compile Include="API\Controllers\Structs\BcComponent.cs" />
+    <Compile Include="API\Controllers\Structs\CassieList.cs" />
+    <Compile Include="API\Controllers\Structs\BroadcastsList.cs" />
     <Compile Include="API\Network.cs" />
     <Compile Include="API\Classification\Player\Client.cs" />
     <Compile Include="API\Classification\Player\GamePlay.cs" />
@@ -106,11 +153,16 @@
     <Compile Include="API\Controllers\Alpha.cs" />
     <Compile Include="API\Map.cs" />
     <Compile Include="API\Objects\AmmoType.cs" />
+    <Compile Include="API\Objects\RadioStatus.cs" />
+    <Compile Include="API\Objects\LockerType.cs" />
+    <Compile Include="API\Objects\DoorType.cs" />
+    <Compile Include="API\Objects\EffectType.cs" />
+    <Compile Include="API\Objects\WorkstationStatus.cs" />
+    <Compile Include="API\Objects\TargetPrefabs.cs" />
+    <Compile Include="API\Objects\LockerPrefabs.cs" />
+    <Compile Include="API\Objects\DoorPrefabs.cs" />
     <Compile Include="API\Objects\DamageTypesPrimitive.cs" />
     <Compile Include="API\Objects\DamageTypes.cs" />
-    <Compile Include="API\Classification\Player\InventoryItems.cs" />
-    <Compile Include="API\Addons\Items\MicroHID.cs" />
-    <Compile Include="API\Objects\RadioStatus.cs" />
     <Compile Include="API\Round.cs" />
     <Compile Include="API\Server.cs" />
     <Compile Include="API\Classification\Player\UserInfomation.cs" />
@@ -132,6 +184,7 @@
     <Compile Include="Internal\EventsManager\Loader.cs" />
     <Compile Include="Internal\EventsManager\List.cs" />
     <Compile Include="Internal\Fields\Player.cs" />
+    <Compile Include="Internal\Misc\DoorsUpdater.cs" />
     <Compile Include="Internal\Patches\Alpha\UnlockPanel.cs" />
     <Compile Include="Internal\Patches\Alpha\Detonate.cs" />
     <Compile Include="Internal\Patches\Alpha\Stop.cs" />

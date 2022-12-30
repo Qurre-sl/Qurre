@@ -10,14 +10,14 @@ namespace Qurre.Internal.EventsCalled
         [EventMethod(PlayerEvents.Join)]
         static internal void JoinLog(JoinEvent ev)
         {
-            ServerConsole.AddLog($"Player {ev.Player?.UserInfomation.NickName} ({ev.Player?.UserInfomation.UserId}) " +
+            ServerConsole.AddLog($"Player {ev.Player?.UserInfomation.Nickname} ({ev.Player?.UserInfomation.UserId}) " +
                 $"({ev.Player?.UserInfomation.Id}) connected. iP: {ev.Player?.UserInfomation.Ip}", ConsoleColor.Magenta);
         }
 
         [EventMethod(AlphaEvents.UnlockPanel)]
         static internal void Test(UnlockPanelEvent ev)
         {
-            API.Log.Info($"Player {ev.Player?.UserInfomation.NickName}");
+            API.Log.Info($"Player {ev.Player?.UserInfomation.Nickname}");
             ev.Allowed = false;
         }
     }

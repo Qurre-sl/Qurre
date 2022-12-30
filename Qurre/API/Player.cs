@@ -1,6 +1,6 @@
-﻿using InventorySystem;
-using Mirror;
+﻿using Mirror;
 using Qurre.API.Addons;
+using Qurre.API.Controllers.Structs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +21,8 @@ namespace Qurre.API
         {
             rh = _rh;
             go = _rh.gameObject;
+
+            Broadcasts = new();
 
             UserInfomation = new(this);
             InventoryInformation = new(this);
@@ -62,6 +64,8 @@ namespace Qurre.API
             }
         }
 
+        public BroadcastsList Broadcasts { get; }
+
         public Classification.Player.UserInfomation UserInfomation { get; }
         public Classification.Player.InventoryInformation InventoryInformation { get; }
         public Classification.Player.RoleInfomation RoleInfomation { get; }
@@ -69,6 +73,5 @@ namespace Qurre.API
         public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
         public Classification.Player.MovementState MovementState { get; }
         public Classification.Player.GamePlay GamePlay { get; }
-        
     }
 }

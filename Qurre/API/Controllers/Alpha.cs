@@ -1,45 +1,28 @@
 ﻿using Mirror;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 
 namespace Qurre.API.Controllers
 {
-    public static class Alpha
+    static public class Alpha
     {
-        public static AlphaWarheadController Controller { get; } = AlphaWarheadController.Singleton;
-        public static AlphaWarheadNukesitePanel InnerPanel => UnityEngine.Object.FindObjectOfType<AlphaWarheadNukesitePanel>();
-        public static AlphaWarheadOutsitePanel OutsidePanel => UnityEngine.Object.FindObjectOfType<AlphaWarheadOutsitePanel>();
-        public static GameObject InnerPanelever => InnerPanel.lever.gameObject;
-        public static bool InnerPaneleverStatus
+        static public AlphaWarheadController Controller => AlphaWarheadController.Singleton;
+        static public AlphaWarheadNukesitePanel InnerPanel => Object.FindObjectOfType<AlphaWarheadNukesitePanel>();
+        static public AlphaWarheadOutsitePanel OutsidePanel => Object.FindObjectOfType<AlphaWarheadOutsitePanel>();
+        static public GameObject InnerPanelLever => InnerPanel.lever.gameObject;
+        static public bool InnerPanelEnabled
         {
             get => InnerPanel.Networkenabled;
-            set
-            {
-                InnerPanel.Networkenabled = value;
-            }
+            set => InnerPanel.Networkenabled = value;
         }
-        public static bool Enabled
+        static public bool OutsidePanelEnabled
         {
             get => OutsidePanel.keycardEntered;
-            set => OutsidePanel.keycardEntered = value;
+            set => OutsidePanel.NetworkkeycardEntered = value;
         }
-        public static void Start(bool isAutomatic = true, bool suppressSubtitles = false)
-        {
-            Controller.InstantPrepare();
-            Controller.StartDetonation(isAutomatic, suppressSubtitles);
-        }
-        public static void InstantPrepare() => Controller.InstantPrepare();
-        public static void CancelDetonation() => Controller.CancelDetonation();
-        public static void Stop() => Controller.CancelDetonation();
-        public static void Detonate() => Controller.Detonate();
-        public static void Shake() => Controller.RpcShake(false);
-        public static bool Detonated { get; } = Controller._alreadyDetonated;
-        public static bool Active { get; } = Controller.Info.InProgress;
-        public static float TimeToDetonation
+
+        static public bool Detonated => Controller._alreadyDetonated;
+        static public bool Active => Controller.Info.InProgress;
+        static public float TimeToDetonation
         {
             get => AlphaWarheadController.TimeUntilDetonation;
             set
@@ -48,15 +31,26 @@ namespace Qurre.API.Controllers
                 Controller.ForceTime(value);
             }
         }
-        public static bool Locked
+        static public bool Locked
         {
             get => Controller.IsLocked;
             set => Controller.IsLocked = value;
         }
-        public static int Cooldown
+        static public int Cooldown
         {
             get => (int)Controller.CooldownEndTime;
             set => Controller.NetworkCooldownEndTime = value;
         }
+
+        static public void Start(bool isAutomatic = false, bool suppressSubtitles = false)
+        {
+            Controller.InstantPrepare();
+            Controller.StartDetonation(isAutomatic, suppressSubtitles);
+        }
+        static public void InstantPrepare() => Controller.InstantPrepare();
+        static public void CancelDetonation() => Controller.CancelDetonation();
+        static public void Stop() => Controller.CancelDetonation();
+        static public void Detonate() => Controller.Detonate();
+        static public void Shake() => Controller.RpcShake(false);
     }
 }
