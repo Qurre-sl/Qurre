@@ -33,6 +33,16 @@ namespace Qurre.API
 			return false;
 		}
 
+		static public void ForEach<T>(this IReadOnlyList<T> list, Action<T> action)
+        {
+			if (action is null) throw new ArgumentNullException("Action is null");
+
+			for(int i = 0; i < list.Count; i++)
+            {
+				action(list[i]);
+            }
+        }
+
 		#region Player.Get
 		public static IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInfomation.Team == team);
 		public static IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInfomation.Role == role);

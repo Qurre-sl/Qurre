@@ -119,6 +119,7 @@
     <Compile Include="API\Controllers\Broadcast.cs" />
     <Compile Include="API\Controllers\Camera.cs" />
     <Compile Include="API\Controllers\Cassie.cs" />
+    <Compile Include="API\Controllers\MapBroadcast.cs" />
     <Compile Include="API\Controllers\GlobalLights.cs" />
     <Compile Include="API\Controllers\Pickup.cs" />
     <Compile Include="API\Controllers\Item.cs" />

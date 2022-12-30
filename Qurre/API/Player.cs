@@ -1,6 +1,7 @@
 ﻿using Mirror;
 using Qurre.API.Addons;
 using Qurre.API.Controllers.Structs;
+using RemoteAdmin;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,7 +51,17 @@ namespace Qurre.API
         }
         public ReferenceHub ReferenceHub => rh;
         public CharacterClassManager ClassManager => rh.characterClassManager;
+        public QueryProcessor QueryProcessor => rh.queryProcessor;
         public NetworkConnection Connection => IsHost ? rh.networkIdentity.connectionToServer : rh.networkIdentity.connectionToClient;
+
+        public CommandSender Sender
+        {
+            get
+            {
+                if (IsHost) return ServerConsole.Scs;
+                return QueryProcessor._sender;
+            }
+        }
 
         public bool IsHost => rh.isLocalPlayer;
         public bool FriendlyFire { get; set; }
@@ -73,5 +84,14 @@ namespace Qurre.API
         public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
         public Classification.Player.MovementState MovementState { get; }
         public Classification.Player.GamePlay GamePlay { get; }
+
+
+        public Controllers.Broadcast Broadcast(string message, ushort time, bool instant = false) => Broadcast(time, message, instant);
+        public Controllers.Broadcast Broadcast(ushort time, string message, bool instant = false)
+        {
+            Controllers.Broadcast bc = new(this, message, time);
+            Broadcasts.Add(bc, instant);
+            return bc;
+        }
     }
 }
