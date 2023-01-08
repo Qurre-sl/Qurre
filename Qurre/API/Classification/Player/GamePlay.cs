@@ -8,6 +8,7 @@ namespace Qurre.API.Classification.Player
     using MapGeneration;
     using Qurre.API;
     using Qurre.API.Controllers;
+    using Qurre.API.Objects;
     using System.Collections.Generic;
     using System.Linq;
     using UnityEngine;
@@ -26,6 +27,11 @@ namespace Qurre.API.Classification.Player
             set => _player.ReferenceHub.serverRoles.SetOverwatchStatus(value);
         }
 
+        public bool GodMode
+        {
+            get => _player.ClassManager.GodMode;
+            set => _player.ClassManager.GodMode = value;
+        }
         public Room Room
         {
             get => RoomIdUtils.RoomAtPosition(_player.MovementState.Position).GetRoom() ??
@@ -59,5 +65,6 @@ namespace Qurre.API.Classification.Player
         }
         public void DropItem(Item item) => Inventory.ServerDropItem(item.Serial);
         public bool HasItem(ItemType item) => Inventory.UserInventory.Items.Any(tempItem => tempItem.Value.ItemTypeId == item);
+        public ZoneType CurrentZone => Room.Zone;
     }
 }

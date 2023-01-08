@@ -37,7 +37,7 @@
       <HintPath>..\depedencies\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\depedencies\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\..\..\SCPSL-libs\Qurre-Assembly\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp_public">
       <HintPath>..\depedencies\Assembly-CSharp_public.dll</HintPath>

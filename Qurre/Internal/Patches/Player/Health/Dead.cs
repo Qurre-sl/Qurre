@@ -40,7 +40,7 @@ namespace Qurre.Internal.Patches.Player.Health
 
                 if (attacker is null) attacker = target;
                 if ((target is not null && (target.RoleInfomation.Role != RoleTypeId.Spectator ||
-                    target.HealthInfomation.GodMode || target.IsHost)) || attacker is null) return;
+                    target.GamePlay.GodMode || target.IsHost)) || attacker is null) return;
 
                 var type = handler.GetDamageType();
                 var ev = new DeadEvent(attacker, target, handler, type);

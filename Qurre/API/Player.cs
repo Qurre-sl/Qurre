@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using Hints;
+using Mirror;
 using Qurre.API.Addons;
 using Qurre.API.Controllers.Structs;
 using RemoteAdmin;
