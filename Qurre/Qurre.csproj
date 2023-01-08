@@ -39,8 +39,9 @@
     <Reference Include="Assembly-CSharp-firstpass">
       <HintPath>..\..\..\SCPSL-libs\Qurre-Assembly\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp_public">
-      <HintPath>..\depedencies\Assembly-CSharp_public.dll</HintPath>
+    <Reference Include="Assembly-CSharp_public, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\SCPSL-libs\Qurre-Assembly\Assembly-CSharp_public.dll</HintPath>
     </Reference>
     <Reference Include="CommandSystem.Core">
       <HintPath>..\depedencies\CommandSystem.Core.dll</HintPath>
@@ -217,6 +218,7 @@
     <Compile Include="Internal\Patches\Server\ServerConsole.cs" />
     <Compile Include="Internal\Patches\Server\GameConsole.cs" />
     <Compile Include="Internal\Patches\Server\RemoteAdmin.cs" />
+    <Compile Include="Internal\Patches\Server\ServerName.cs" />
     <Compile Include="Loader\PluginStruct.cs" />
     <Compile Include="Loader\Configs.cs" />
     <Compile Include="Loader\Plugins.cs" />

@@ -12,6 +12,7 @@ namespace Qurre.Loader
         static internal bool SpawnBlood { get; private set; } = false;
         static internal bool Better268 { get; private set; } = false;
         static internal bool BetterHints { get; private set; } = false;
+        static internal bool NameTracked { get; private set; } = false;
         static internal string[] ReloadAccess { get; private set; } = new string[] { };
 
         static internal string Banned { get; private set; } = "You have been banned. Reason: ";
@@ -31,7 +32,9 @@ namespace Qurre.Loader
             SpawnBlood = Config.SafeGetValue("SpawnBlood", true, "Allow the appearance of blood?");
             Better268 = Config.SafeGetValue("Better268", false, "SCP 079 & SCP 096 will not see the wearer of SCP 268");
             BetterHints = Config.SafeGetValue("BetterHints", false, "Enable Addon [BetterHints]?");
+            NameTracked = Config.SafeGetValue("NameTracked", true, "Should I track the server name?");
             ReloadAccess = Config.SafeGetValue("ReloadAccess", new string[] { "owner", "UserId64@steam", "UserDiscordId@discord" }, "Those who can use the \"reload\" command");
+
 
             SetupTranslations();
 
