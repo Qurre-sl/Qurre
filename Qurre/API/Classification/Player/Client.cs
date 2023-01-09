@@ -9,6 +9,7 @@ using Mirror;
 namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
+    using Qurre.API.Controllers;
 
     public class Client
     {
@@ -49,6 +50,13 @@ namespace Qurre.API.Classification.Player
             };
             _player.Connection.Send(msg);
             NetworkWriterPool.Recycle(writer);
+        }
+        public Controllers.Broadcast Broadcast(string message, ushort time, bool instant = false) => Broadcast(time, message, instant);
+        public Controllers.Broadcast Broadcast(ushort time, string message, bool instant = false)
+        {
+            Controllers.Broadcast bc = new(_player, message, time);
+            _player.Broadcasts.Add(bc, instant);
+            return bc;
         }
     }
 }

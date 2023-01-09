@@ -208,6 +208,7 @@
     <Compile Include="Internal\Patches\Player\Admins\UnMute.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Mute.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Kick.cs" />
+    <Compile Include="Internal\Patches\Player\Class\FixSpawnPoint.cs" />
     <Compile Include="Internal\Patches\Player\Health\Attack.cs" />
     <Compile Include="Internal\Patches\Player\Health\Damage.cs" />
     <Compile Include="Internal\Patches\Player\Health\Dead.cs" />

@@ -54,7 +54,7 @@ namespace Qurre.API.Controllers
             {
                 foreach (Player pl in Player.List.Where(x => PermissionsHandler.IsPermitted(x.Sender.Permissions, PlayerPermissions.AdminChat)))
                 {
-                    var bc = pl.Broadcast(message, time, instant);
+                    var bc = pl.Client.Broadcast(message, time, instant);
                     list.Add(bc);
                 }
             }
@@ -62,7 +62,7 @@ namespace Qurre.API.Controllers
             {
                 foreach (Player pl in Player.List)
                 {
-                    var bc = pl.Broadcast(message, time, instant);
+                    var bc = pl.Client.Broadcast(message, time, instant);
                     list.Add(bc);
                 }
             }
