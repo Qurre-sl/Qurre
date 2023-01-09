@@ -171,5 +171,16 @@ namespace Qurre.API.Controllers
             Base.DestroySelf();
             BaseToItem.Remove(Base);
         }
+
+
+        static internal Pickup SafeGet(ItemPickupBase @base)
+        {
+            try { return Get(@base); }
+            catch (System.Exception e)
+            {
+                Log.Debug(e);
+                return null;
+            }
+        }
     }
 }

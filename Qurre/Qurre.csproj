@@ -37,11 +37,10 @@
       <HintPath>..\depedencies\0Harmony.dll</HintPath>
     </Reference>
     <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\..\..\SCPSL-libs\Qurre-Assembly\Assembly-CSharp-firstpass.dll</HintPath>
+      <HintPath>..\depedencies\Assembly-CSharp-firstpass.dll</HintPath>
     </Reference>
-    <Reference Include="Assembly-CSharp_public, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\SCPSL-libs\Qurre-Assembly\Assembly-CSharp_public.dll</HintPath>
+    <Reference Include="Assembly-CSharp_public">
+      <HintPath>..\depedencies\Assembly-CSharp_public.dll</HintPath>
     </Reference>
     <Reference Include="CommandSystem.Core">
       <HintPath>..\depedencies\CommandSystem.Core.dll</HintPath>
@@ -84,6 +83,7 @@
     <Compile Include="API\Addons\BetterHints\Manager.cs" />
     <Compile Include="API\Addons\BetterHints\ISender.cs" />
     <Compile Include="API\Addons\BetterHints\HintStruct.cs" />
+    <Compile Include="API\Addons\BetterColors.cs" />
     <Compile Include="API\Addons\Items\Ammo.cs" />
     <Compile Include="API\Addons\Items\Armor.cs" />
     <Compile Include="API\Addons\Items\Usable.cs" />
@@ -120,6 +120,7 @@
     <Compile Include="API\Controllers\Broadcast.cs" />
     <Compile Include="API\Controllers\Camera.cs" />
     <Compile Include="API\Controllers\Cassie.cs" />
+    <Compile Include="API\Controllers\Lift.cs" />
     <Compile Include="API\Controllers\MapBroadcast.cs" />
     <Compile Include="API\Controllers\GlobalLights.cs" />
     <Compile Include="API\Controllers\Pickup.cs" />
@@ -153,6 +154,7 @@
     <Compile Include="API\Controllers\Alpha.cs" />
     <Compile Include="API\Map.cs" />
     <Compile Include="API\Objects\AmmoType.cs" />
+    <Compile Include="API\Objects\GeneratorStatus.cs" />
     <Compile Include="API\Objects\RoomType.cs" />
     <Compile Include="API\Objects\ZoneType.cs" />
     <Compile Include="API\Objects\RadioStatus.cs" />
@@ -177,6 +179,9 @@
     <Compile Include="Events\Structs\Base.cs" />
     <Compile Include="Events\Structs\Map\Place.cs" />
     <Compile Include="Events\Structs\Player\Admins.cs" />
+    <Compile Include="Events\Structs\Player\Interact.cs" />
+    <Compile Include="Events\Structs\Player\Pickups.cs" />
+    <Compile Include="Events\Structs\Player\Items.cs" />
     <Compile Include="Events\Structs\Player\Health.cs" />
     <Compile Include="Events\Structs\Player\Network.cs" />
     <Compile Include="Events\Structs\Round\Main.cs" />
@@ -194,6 +199,7 @@
     <Compile Include="Internal\Patches\Alpha\Start.cs" />
     <Compile Include="Internal\Patches\Map\Place\RagdollSpawn.cs" />
     <Compile Include="Internal\Patches\Misc\AddCredits.cs" />
+    <Compile Include="Internal\Patches\Misc\Creates\Lift.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Ragdoll.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Locker.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Generator.cs" />
@@ -205,10 +211,28 @@
     <Compile Include="Internal\Patches\Player\Health\Attack.cs" />
     <Compile Include="Internal\Patches\Player\Health\Damage.cs" />
     <Compile Include="Internal\Patches\Player\Health\Dead.cs" />
+    <Compile Include="Internal\Patches\Player\Interact\InteractDoor.cs" />
+    <Compile Include="Internal\Patches\Player\Interact\InteractLocker.cs" />
+    <Compile Include="Internal\Patches\Player\Interact\InteractLift.cs" />
+    <Compile Include="Internal\Patches\Player\Interact\InteractGenerator.cs" />
+    <Compile Include="Internal\Patches\Player\Items\ChangeItem.cs" />
+    <Compile Include="Internal\Patches\Player\Items\UsingRadio.cs" />
+    <Compile Include="Internal\Patches\Player\Items\UpdateRadio.cs" />
+    <Compile Include="Internal\Patches\Player\Items\UsedItem.cs" />
+    <Compile Include="Internal\Patches\Player\Items\UseItem.cs" />
     <Compile Include="Internal\Patches\Player\Network\Preauth.cs" />
     <Compile Include="Internal\Patches\Player\Network\Leave.cs" />
     <Compile Include="Internal\Patches\Player\Network\ReserveSlot.cs" />
     <Compile Include="Internal\Patches\Player\Network\Join.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\DroppedItem.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\DropAmmo.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\DropItem.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\ThrowProjectile.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\PickupCandy.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\PickupArmor.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\PickupAmmo.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\PrePickupItem.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\PickupItem.cs" />
     <Compile Include="Internal\Patches\Round\Check.cs" />
     <Compile Include="Internal\Patches\Round\Restart.cs" />
     <Compile Include="Internal\Patches\Round\Start.cs" />
@@ -218,7 +242,6 @@
     <Compile Include="Internal\Patches\Server\ServerConsole.cs" />
     <Compile Include="Internal\Patches\Server\GameConsole.cs" />
     <Compile Include="Internal\Patches\Server\RemoteAdmin.cs" />
-    <Compile Include="Internal\Patches\Server\ServerName.cs" />
     <Compile Include="Loader\PluginStruct.cs" />
     <Compile Include="Loader\Configs.cs" />
     <Compile Include="Loader\Plugins.cs" />

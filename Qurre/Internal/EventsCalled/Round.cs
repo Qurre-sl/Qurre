@@ -74,6 +74,7 @@ namespace Qurre.Internal.EventsCalled
             Map.Cameras.Clear();
             Map.Doors.Clear();
             Map.Generators.Clear();
+            Map.Lifts.Clear();
             Map.Lockers.Clear();
             Map.Ragdolls.Clear();
             Map.Rooms.Clear();

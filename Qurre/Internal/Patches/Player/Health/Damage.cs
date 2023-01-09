@@ -53,18 +53,26 @@ namespace Qurre.Internal.Patches.Player.Health
 
         static internal bool DamageCall(DamageHandlerBase handler, ReferenceHub hub)
         {
-            var doDamage = GetDamage(handler);
-            Player attacker = null;
+            try
+            {
+                var doDamage = GetDamage(handler);
+                Player attacker = null;
 
-            if (handler is AttackerDamageHandler adh) attacker = adh.Attacker.Hub.GetPlayer();
-            if (attacker is null) attacker = Server.Host;
+                if (handler is AttackerDamageHandler adh) attacker = adh.Attacker.Hub.GetPlayer();
+                if (attacker is null) attacker = Server.Host;
 
-            DamageEvent ev = new(attacker, hub.GetPlayer(), handler, doDamage);
-            ev.InvokeEvent();
+                DamageEvent ev = new(attacker, hub.GetPlayer(), handler, doDamage);
+                ev.InvokeEvent();
 
-            if (!SetDamage(handler, ev.Damage)) ev.Damage = doDamage;
+                if (!SetDamage(handler, ev.Damage)) ev.Damage = doDamage;
 
-            return ev.Allowed;
+                return ev.Allowed;
+            }
+            catch (System.Exception e)
+            {
+                Log.Error($"Patch Error - <Player> {{Health}} [Damage]:{e}\n{e.StackTrace}");
+                return true;
+            }
 
             float GetDamage(DamageHandlerBase handler)
             {

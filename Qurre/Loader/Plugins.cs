@@ -30,7 +30,13 @@ namespace Qurre.Loader
 
             LoadPlugins();
 
-            EnablePlugins();
+            MEC.Timing.RunCoroutine(EnablePluginsInThread());
+
+            static IEnumerator<float> EnablePluginsInThread()
+            {
+                EnablePlugins();
+                yield break;
+            }
         }
 
         static void LoadDependencies()

@@ -28,7 +28,7 @@ namespace Qurre.Internal.Patches.Server
             {
                 var ins = list[i];
 
-                if (ins.opcode == OpCodes.Ldarg_S && $"{ins.operand}" == "4" &&
+                if (index < 0 && ins.opcode == OpCodes.Ldarg_S && $"{ins.operand}" == "4" &&
                     list[i + 1].opcode == OpCodes.Brtrue)
                     index = i + 2;
 

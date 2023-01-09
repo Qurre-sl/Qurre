@@ -42,6 +42,7 @@ namespace Qurre.Internal.Patches.Player.Health
             {
                 var ins = instructions.ElementAt(i);
 
+                // set "allowed = false" instant "ev.Damage = 0"
                 if (level == 0 || level == 1)
                 {
                     if (ins.opcode == OpCodes.Callvirt && ins.operand is not null && ins.operand is MethodBase methodBase &&
@@ -61,6 +62,7 @@ namespace Qurre.Internal.Patches.Player.Health
                         continue;
                     }
                 }
+                // remove "ev.Damage *= FFMultiplier"
                 else if (level == 2)
                 {
                     if (ins.opcode == OpCodes.Callvirt && ins.operand is not null && ins.operand is MethodBase methodBase &&
@@ -96,21 +98,28 @@ namespace Qurre.Internal.Patches.Player.Health
 
         static internal void HandlerDamage(AttackerDamageHandler handler, ReferenceHub target, bool allowed)
         {
-            Player attacker = handler.Attacker.Hub.GetPlayer();
-            if (attacker.FriendlyFire) handler.IsFriendlyFire = false;
-
-            AttackEvent ev = new(attacker, target.GetPlayer(), handler, handler.Damage, handler.IsFriendlyFire, allowed);
-            ev.InvokeEvent();
-
-            if (ev.Damage == -1) ev.Damage = ev.Target.HealthInfomation.Health + 1;
-            handler.Damage = ev.Damage;
-            handler.IsFriendlyFire = ev.FriendlyFire;
-
-            if (!ev.Allowed) handler.Damage = 0;
-            if (ev.FriendlyFire)
+            try
             {
-                if (!Server.FriendlyFire) handler.Damage = 0;
-                else handler.Damage *= AttackerDamageHandler._ffMultiplier;
+                Player attacker = handler.Attacker.Hub.GetPlayer();
+                if (attacker.FriendlyFire) handler.IsFriendlyFire = false;
+
+                AttackEvent ev = new(attacker, target.GetPlayer(), handler, handler.Damage, handler.IsFriendlyFire, allowed);
+                ev.InvokeEvent();
+
+                if (ev.Damage == -1) ev.Damage = ev.Target.HealthInfomation.Health + 1;
+                handler.Damage = ev.Damage;
+                handler.IsFriendlyFire = ev.FriendlyFire;
+
+                if (!ev.Allowed) handler.Damage = 0;
+                if (ev.FriendlyFire)
+                {
+                    if (!Server.FriendlyFire) handler.Damage = 0;
+                    else handler.Damage *= AttackerDamageHandler._ffMultiplier;
+                }
+            }
+            catch (System.Exception e)
+            {
+                Log.Error($"Patch Error - <Player> {{Health}} [Attack]:{e}\n{e.StackTrace}");
             }
         }
     }

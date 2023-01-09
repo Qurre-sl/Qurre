@@ -23,8 +23,8 @@ namespace Qurre.API.Classification.Player
         public bool Cuffed => _player.ReferenceHub.inventory.IsDisarmed();
         public bool Overwatch
         {
-            get => _player.ReferenceHub.serverRoles.OverwatchEnabled;
-            set => _player.ReferenceHub.serverRoles.SetOverwatchStatus(value);
+            get => _player.ReferenceHub.serverRoles.IsInOverwatch;
+            set => _player.ReferenceHub.serverRoles.IsInOverwatch = value;
         }
 
         public bool GodMode
@@ -32,6 +32,9 @@ namespace Qurre.API.Classification.Player
             get => _player.ClassManager.GodMode;
             set => _player.ClassManager.GodMode = value;
         }
+
+        public ZoneType CurrentZone => Room?.Zone ?? ZoneType.Unknown;
+
         public Room Room
         {
             get => RoomIdUtils.RoomAtPosition(_player.MovementState.Position).GetRoom() ??
@@ -65,6 +68,5 @@ namespace Qurre.API.Classification.Player
         }
         public void DropItem(Item item) => Inventory.ServerDropItem(item.Serial);
         public bool HasItem(ItemType item) => Inventory.UserInventory.Items.Any(tempItem => tempItem.Value.ItemTypeId == item);
-        public ZoneType CurrentZone => Room.Zone;
     }
 }

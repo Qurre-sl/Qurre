@@ -1,14 +1,19 @@
 ﻿using Qurre.API;
 using Qurre.API.Addons;
+using System;
+using System.Linq;
 
 namespace Qurre.Loader
 {
     internal class EntryPoint : ICharacterLoader
     {
-        static internal System.Version Version { get; private set; } = new(2, 0);
+        static internal Version Version { get; private set; } = new(2, 0);
 
         public void Init()
         {
+            if (StartupArgs.Args.Any(arg => string.Equals(arg, "-disableAnsiColors", StringComparison.OrdinalIgnoreCase)))
+                BetterColors.Enabled = false;
+
             Log.Info("Initializing Qurre...");
 
             Configs.Setup();
@@ -21,7 +26,56 @@ namespace Qurre.Loader
 
             Prefabs.Init();
 
-            Log.Custom($"Qurre v{Version} enabled", "Loader", System.ConsoleColor.Green);
+            Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{Version}")} enabled"), "Loader", ConsoleColor.Red);
+
+
+            if (!Configs.PrintLogo || Log.Errored) return;
+
+            MEC.Timing.CallDelayed(0.5f, () => ServerConsole.AddLog(BetterColors.Hidden("⠀") + @"
+                                                                                
+                                                                                
+           .:^:^:..:.                                         ..                
+          .^^^^^^:^!~~^:.                              .::..:^^^^~^.            
+         :~.:^^^~:.^:^^!7^.                          ^~~~^~!^^~^^^.~.           
+         :::^^::::^:!~^7~:!~:                      ^^!!~~~:^^^^:^^:^^           
+        .~..:^^~!~^^^^!!^!??7!~:                 .~!!~!7^!~^~~^:^^::::          
+        ^^..::.^7^~:^:~~??7^.::~               .^!!~^~~?7^:~~?!^::..^^          
+        ~^.^!~^....:!!!!~: :^.:~             .:~^^^~^..^~~~::^^:::~.:!.         
+        ~^~7!:::^:: ~7: .^^~77~~7!77!~: .~~^^!^~~^~~~^^:.:~~^!?~.^^.:!.         
+        .:~J!:    ::7?^ ..^!?7!~?JJJ?JJ?~???J7!~~~~~^~~^::!!^^^..:~~:^          
+         :~!^:.:..  :~~.::::!??????J?!J?!J7!JJJ?7~~~^:^^^.^.  ..:^~~::          
+         :!^^:^^:::      .:^~7??JJJJJ!!?7J77?JJ?7~^^::...  :..:..:~~~.          
+         .~:^~!^^^!       ~???????JJJ7?7!J?J??JJ?~7!^      ^^::~~~^!^           
+          :!^^^^.~!:     .???JJ?JJJJJ?7?!!JJJ7J?7?J??.     ~7^:~~!~!.           
+   :^::::..^^::^:^?~      :..:7J?JJJ?7?J!777JJJJJ!^:^:    .?7^^^~7?^   ....     
+ .^^^^^^^^^^^^^^^.!!:     ..  .!7?JJ7??7~?J7!JJ?7.        !?!:^:^!!:::^^^^^:.   
+ .^^::::^^^^^~~~~.:~~^    ~^  .77777!??!.?JJ!7~~~. .~~   ^!~^^^~~~^^:^^^^^:^:   
+ .^^:::::^^^^^^^~~:::~^   !7^:^7!?J?!?J!.!JJ7~:~!..~!:  ^^:::^^~^^~~~^^^::^~:   
+  ^!!: .::.^~~~^^^~~^:~.  .~~^^!^.7?!?J~^7?7!:!!^:^^.  :^:^^~~^^^^^^:::::^^~:   
+  .^~.    ..:~?7^~~~~~:~:      :~~^~!J?.!J7!~:^^      ..^!!~^^~7!~:...   ~~^.   
+   .~:        :~~!!!^^!!!.      ^!~!~J?:7?!~!!::     :~~~^^~7~!7^.      .~:.    
+     .          ^~!!?77~^^.     ^7!?^7?^^?7~!?!:    :~~!~~7!~^^.        ^:      
+                 :!~~77~:::     ^777^~?~:??!7^~.   .^.^7??!!~:         ..       
+                   :^^^^:..     .!^~~:7!^7:!^ :    .::^~~^^:.                   
+                                 :::! :.!! !^:       ...:..                     
+                                   :!   .  !^.                                  
+                                   ^7     .!:                                   
+                                   ^7  ....7^                                   
+                                   :7:.^!.:7.                                   
+                                    ^~:7?^^^                                    
+                                     :^^:^:                                     
+                                                                                
+" + BetterColors.Hidden("⠀"), ConsoleColor.Red));
+
+            ServerConsole.AddLog(BetterColors.Bold("Bold"));
+            ServerConsole.AddLog(BetterColors.Dim("Dim"));
+            ServerConsole.AddLog(BetterColors.Italic("Italic"));
+            ServerConsole.AddLog(BetterColors.Underline("Underline"));
+            ServerConsole.AddLog(BetterColors.Inverse("Inverse"));
+            ServerConsole.AddLog(BetterColors.Hidden("Hidden"));
+            ServerConsole.AddLog(BetterColors.Strikethrough("Strikethrough"));
+
+            ServerConsole.AddLog(BetterColors.BgCyan("BgCyan"));
         }
     }
 }

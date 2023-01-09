@@ -60,7 +60,7 @@ namespace Qurre.API.Controllers
                 if (Base == null || Base.PickupDropModel == null)
                     return;
                 Base.PickupDropModel.Info.Serial = value;
-                Base.PickupDropModel.NetworkInfo = Base.PickupDropModel.Info;
+                try { Base.PickupDropModel.NetworkInfo = Base.PickupDropModel.Info; } catch { }
             }
         }
 
@@ -97,8 +97,17 @@ namespace Qurre.API.Controllers
             BaseToItem.Add(itemBase, this);
         }
 
-        public Item(ItemType type) : this(Server.InventoryHost.CreateItemInstance(type, false))
+        public Item(ItemType type)
+            : this(Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), false)) { }
+
+        static internal Item SafeGet(ItemBase itemBase)
         {
+            try { return Get(itemBase); }
+            catch (System.Exception e)
+            {
+                Log.Debug(e);
+                return null;
+            }
         }
 
         public static Item Get(ItemBase itemBase)
@@ -143,14 +152,12 @@ namespace Qurre.API.Controllers
             }
         }
 
-        public static Item Get(ushort serial)
+        static public Item Get(ushort serial)
         {
-            IEnumerable<ItemBase> itemBase = Object.FindObjectsOfType<ItemBase>().Where(x => x.ItemSerial == serial);
+            if (Object.FindObjectsOfType<ItemBase>().TryFind(out var item, x => x.ItemSerial == serial))
+                return SafeGet(item);
 
-            if (itemBase.Count() == 0)
-                return null;
-
-            return Get(itemBase.First());
+            return null;
         }
 
         public void Give(Player player) => player.GamePlay.AddItem(Base);

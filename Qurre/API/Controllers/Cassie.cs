@@ -26,9 +26,6 @@ namespace Qurre.API.Controllers
             if (Map.Cassies.Count > 0) Map.Cassies[0].Send();
         }
 
-        static public void Play(string msg, bool makeHold = false, bool makeNoise = false, bool makeSubtitles = false) =>
-           RespawnEffectsController.PlayCassieAnnouncement(msg, makeHold, makeNoise, makeSubtitles);
-
         public Cassie(string message, bool makeHold, bool makeNoise)
         {
             Message = message;

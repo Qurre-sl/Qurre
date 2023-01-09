@@ -7,8 +7,6 @@ namespace Qurre.API.Classification.Player
         private readonly Player _player;
         internal HealthInfomation(Player pl) => _player = pl;
 
-
-
         public float Health
         {
             get => ((HealthStat)_player.ReferenceHub.playerStats.StatModules[0]).CurValue;

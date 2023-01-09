@@ -2,6 +2,7 @@
 using Interactables.Interobjects;
 using InventorySystem.Items;
 using MapGeneration;
+using MapGeneration.Distributors;
 using Mirror;
 using NorthwoodLib;
 using PlayerRoles;
@@ -34,31 +35,31 @@ namespace Qurre.API
 		}
 
 		static public void ForEach<T>(this IReadOnlyList<T> list, Action<T> action)
-        {
+		{
 			if (action is null) throw new ArgumentNullException("Action is null");
 
-			for(int i = 0; i < list.Count; i++)
-            {
+			for (int i = 0; i < list.Count; i++)
+			{
 				action(list[i]);
-            }
-        }
+			}
+		}
 
 		#region Player.Get
-		public static IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInfomation.Team == team);
-		public static IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInfomation.Role == role);
+		static public IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInfomation.Team == team);
+		static public IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInfomation.Role == role);
 
-		public static Player GetPlayer(this CommandSender sender) => sender is null ? null : GetPlayer(sender.SenderId);
-		public static Player GetPlayer(this ReferenceHub referenceHub) { try { return referenceHub is null ? null : GetPlayer(referenceHub.gameObject); } catch { return null; } }
-		public static Player GetPlayer(this uint netId) => ReferenceHub.TryGetHubNetID(netId, out ReferenceHub hub) ? GetPlayer(hub) : null;
+		static public Player GetPlayer(this CommandSender sender) => sender is null ? null : GetPlayer(sender.SenderId);
+		static public Player GetPlayer(this ReferenceHub referenceHub) { try { return referenceHub is null ? null : GetPlayer(referenceHub.gameObject); } catch { return null; } }
+		static public Player GetPlayer(this uint netId) => ReferenceHub.TryGetHubNetID(netId, out ReferenceHub hub) ? GetPlayer(hub) : null;
 
-		public static Player GetPlayer(this GameObject gameObject)
+		static public Player GetPlayer(this GameObject gameObject)
 		{
 			if (gameObject is null) return null;
 			Internal.Fields.Player.Dictionary.TryGetValue(gameObject, out Player player);
 			return player;
 		}
 
-		public static Player GetPlayer(this int playerId)
+		static public Player GetPlayer(this int playerId)
 		{
 			if (Internal.Fields.Player.IDs.TryGetValue(playerId, out var _pl)) return _pl;
 
@@ -71,7 +72,7 @@ namespace Qurre.API
 			return null;
 		}
 
-		public static Player GetPlayer(this string args)
+		static public Player GetPlayer(this string args)
 		{
 			try
 			{
@@ -266,7 +267,7 @@ namespace Qurre.API
 		#endregion
 
 		#region Items
-		public static ItemCategory GetCategory(this ItemType itemType)
+		static public ItemCategory GetCategory(this ItemType itemType)
 		{
 			return itemType switch
 			{
@@ -283,7 +284,7 @@ namespace Qurre.API
 			};
 		}
 
-		internal static AmmoType GetAmmoType(this ItemType itemType)
+		static internal AmmoType GetAmmoType(this ItemType itemType)
 		{
 			return itemType switch
 			{
@@ -296,7 +297,7 @@ namespace Qurre.API
 			};
 		}
 
-		internal static ItemType GetItemType(this AmmoType ammoType)
+		static internal ItemType GetItemType(this AmmoType ammoType)
 		{
 			return ammoType switch
 			{
@@ -309,17 +310,19 @@ namespace Qurre.API
 			};
 		}
 
-		internal static ItemBase CreateItemInstance(this ItemType itemType, Player owner = null)
+		static internal ItemBase CreateItemInstance(this ItemType type, Player owner = null)
 		{
-			if (owner != null)
-				owner.InventoryInformation.Base.CreateItemInstance(itemType, false);
+			ItemIdentifier identifier = new(type, ItemSerialGenerator.GenerateNext());
 
-			return Server.Host.InventoryInformation.Base.CreateItemInstance(itemType, false);
+			if (owner != null)
+				owner.InventoryInformation.Base.CreateItemInstance(identifier, false);
+
+			return Server.Host.InventoryInformation.Base.CreateItemInstance(identifier, false);
 		}
 		#endregion
 
 		#region GameObjects
-		internal static void NetworkRespawn(this GameObject gameObject)
+		static internal void NetworkRespawn(this GameObject gameObject)
 		{
 			NetworkServer.UnSpawn(gameObject);
 			NetworkServer.Spawn(gameObject);
@@ -412,6 +415,19 @@ namespace Qurre.API
 		#region GetTesla
 		static public Tesla GetTesla(this TeslaGate teslaGate) => Map.Teslas.FirstOrDefault(x => x.GameObject == teslaGate.gameObject);
 		static public Tesla GetTesla(this GameObject gameObject) => Map.Teslas.FirstOrDefault(x => x.GameObject == gameObject);
+		#endregion
+
+		#region GetGenerator
+		static public Generator GetGenerator(this GameObject gameObject) => Map.Generators.FirstOrDefault(x => x.GameObject == gameObject);
+		static public Generator GetGenerator(this Scp079Generator generator079) => Map.Generators.FirstOrDefault(x => x.GameObject == generator079.gameObject);
+		#endregion
+
+		#region GetLift
+		static public Lift GetLift(this ElevatorChamber elevator) => Map.Lifts.FirstOrDefault(x => x.Elevator == elevator);
+		#endregion
+
+		#region GetLocker
+		static public Controllers.Locker GetLocker(this MapGeneration.Distributors.Locker locker) => Map.Lockers.FirstOrDefault(x => x._locker == locker);
 		#endregion
 	}
 }

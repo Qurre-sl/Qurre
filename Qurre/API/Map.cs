@@ -17,6 +17,7 @@ namespace Qurre.API
         static public List<Camera> Cameras { get; } = new();
         static public List<Door> Doors { get; } = new();
         static public List<Generator> Generators { get; } = new();
+        static public List<Lift> Lifts { get; } = new();
         static public List<Locker> Lockers { get; } = new();
         static public List<Ragdoll> Ragdolls { get; } = new();
         static public List<Room> Rooms { get; } = new();
@@ -38,5 +39,11 @@ namespace Qurre.API
         }
 
         static public AmbientSoundPlayer AmbientSoundPlayer { get; internal set; }
+
+
+        static public MapBroadcast Broadcast(string message, ushort duration, bool instant = false) =>
+            new(message, duration, instant, false);
+        static public MapBroadcast BroadcastAdmin(string message, ushort duration, bool instant = false) =>
+            new(message, duration, instant, true);
     }
 }

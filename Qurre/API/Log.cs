@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Qurre.API.Addons;
+using System;
 using System.IO;
 using System.Reflection;
+
 namespace Qurre.API
 {
 	static public class Log
@@ -8,41 +10,46 @@ namespace Qurre.API
 		static internal bool Debugging { get; set; } = true;
 		static internal bool Logging { get; set; } = false;
 		static internal bool AllLogging { get; set; } = false;
+		static internal bool Errored { get; private set; } = false;
 
 		static public void Info(object message)
 		{
 			string caller = "█████";
 			try { caller = Assembly.GetCallingAssembly().GetName().Name; } catch { }
-			ServerConsole.AddLog($"[INFO] [{caller}] {message}", ConsoleColor.Yellow);
+			ServerConsole.AddLog(BetterColors.White($"[{BetterColors.BrightYellow("INFO")}] " +
+				$"[{BetterColors.BrightMagenta(caller)}] {message}"), ConsoleColor.Yellow);
 		}
 		static public void Debug(object message)
 		{
 			if (!Debugging) return;
 			string caller = "█████";
 			try { caller = Assembly.GetCallingAssembly().GetName().Name; } catch { }
-			ServerConsole.AddLog($"[DEBUG] [{caller}] {message}", ConsoleColor.DarkGreen);
+			ServerConsole.AddLog(BetterColors.White($"[{BetterColors.Green("DEBUG")}] " +
+				$"[{BetterColors.BrightMagenta(caller)}] {message}"), ConsoleColor.DarkGreen);
 		}
 		static public void Warn(object message)
 		{
 			string caller = "█████";
 			try { caller = Assembly.GetCallingAssembly().GetName().Name; } catch { }
-			string text = $"[WARN] [{caller}] {message}";
-			ServerConsole.AddLog(text, ConsoleColor.DarkYellow);
-			LogTxt(text);
+			ServerConsole.AddLog(BetterColors.White($"[{BetterColors.Yellow("WARN")}] " +
+				$"[{BetterColors.BrightMagenta(caller)}] {message}"), ConsoleColor.DarkYellow);
+			LogTxt($"[WARN] [{caller}] {message}");
 		}
 		static public void Error(object message)
 		{
+			Errored = true;
 			string caller = "█████";
 			try { caller = Assembly.GetCallingAssembly().GetName().Name; } catch { }
-			string text = $"[ERROR] [{caller}] {message}";
-			ServerConsole.AddLog(text, ConsoleColor.Red);
-			LogTxt(text);
+			ServerConsole.AddLog(BetterColors.White($"[{BetterColors.Red("ERROR")}] " +
+				$"[{BetterColors.BrightMagenta(caller)}] {BetterColors.BrightRed(message)}"), ConsoleColor.Red);
+			LogTxt($"[ERROR] [{caller}] {message}");
 		}
 		static public void Custom(object message, string prefix = "Custom", ConsoleColor color = ConsoleColor.Gray)
 		{
 			string caller = "█████";
 			try { caller = Assembly.GetCallingAssembly().GetName().Name; } catch { }
-			ServerConsole.AddLog($"[{prefix}] [{caller}] {message}", color);
+			ServerConsole.AddLog(BetterColors.White($"[{BetterColors.BrightBlue(prefix)}] " +
+				$"[{BetterColors.BrightMagenta(caller)}] {message}"), color);
 		}
 
 		static internal void LogTxt(object message)
@@ -51,7 +58,7 @@ namespace Qurre.API
 			if (!Directory.Exists(Path.Logs))
 			{
 				Directory.CreateDirectory(Path.Logs);
-				Custom($"Logs directory not found - creating: {Path.Logs}", "WARN", ConsoleColor.DarkYellow);
+				Custom($"Logs directory not found. Creating: {Path.Logs}", BetterColors.Yellow("WARN"), ConsoleColor.DarkYellow);
 			}
 			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Server.Port}-log.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
 		}
@@ -61,7 +68,7 @@ namespace Qurre.API
 			if (!Directory.Exists(Path.Logs))
 			{
 				Directory.CreateDirectory(Path.Logs);
-				Custom($"Logs directory not found - creating: {Path.Logs}", "WARN", ConsoleColor.DarkYellow);
+				Custom($"Logs directory not found. Creating: {Path.Logs}", BetterColors.Yellow("WARN"), ConsoleColor.DarkYellow);
 			}
 			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Server.Port}-all-logs.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
 		}

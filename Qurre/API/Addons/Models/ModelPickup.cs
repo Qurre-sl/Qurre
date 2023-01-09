@@ -19,7 +19,7 @@ namespace Qurre.API.Addons.Models
         {
             try
             {
-                var item = Server.InventoryHost.CreateItemInstance(type, false);
+                var item = Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), false);
                 ushort ser = ItemSerialGenerator.GenerateNext();
 
                 item.PickupDropModel.Info.Serial = ser;

@@ -22,10 +22,13 @@ namespace Qurre.Internal.EventsManager
                 .SelectMany(x => x.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic)))
             {
                 if (method.IsAbstract) continue;
-                var attr = method.GetCustomAttribute<EventMethod>();
-                if (attr is null) continue;
-                if (List.CallMethods.TryGetValue(attr.Type, out var list)) list.Add(method);
-                else List.CallMethods.Add(attr.Type, new() { method });
+                var attrs = method.GetCustomAttributes<EventMethod>();
+                if (attrs is null) continue;
+                foreach (var attr in attrs)
+                {
+                    if (List.CallMethods.TryGetValue(attr.Type, out var list)) list.Add(method);
+                    else List.CallMethods.Add(attr.Type, new() { method });
+                }
             }
         }
 
@@ -39,10 +42,13 @@ namespace Qurre.Internal.EventsManager
                     Log.Debug($"Events Loader: '{method.Name}' is abstract, skip..");
                     continue;
                 }
-                var attr = method.GetCustomAttribute<EventMethod>();
-                if (attr is null) continue;
-                if (List.CallMethods.TryGetValue(attr.Type, out var list)) list.Add(method);
-                else List.CallMethods.Add(attr.Type, new() { method });
+                var attrs = method.GetCustomAttributes<EventMethod>();
+                if (attrs is null) continue;
+                foreach (var attr in attrs)
+                {
+                    if (List.CallMethods.TryGetValue(attr.Type, out var list)) list.Add(method);
+                    else List.CallMethods.Add(attr.Type, new() { method });
+                }
             }
         }
 

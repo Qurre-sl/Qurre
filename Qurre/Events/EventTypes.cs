@@ -22,29 +22,31 @@
         public const uint Unmute = 1205;
 
         //1300+ <- Items
-        public const uint CancelUsingItem = 1301;
+        public const uint CancelUseItem = 1301;
         public const uint UseItem = 1302;
         public const uint UsedItem = 1303;
         public const uint ChangeItem = 1304;
-        public const uint ChangeRadioRange = 1305;
-        public const uint ToggleFlashlight = 1306;
+        public const uint UpdateRadio = 1305;
+        public const uint UsingRadio = 1306;
 
         //1400+ <- Pickups
-        public const uint SearchPickup = 1401;
-        public const uint SearchedPickup = 1402;
-        public const uint ThrowItem = 1403;
-        public const uint DropAmmo = 1404;
-        public const uint DropItem = 1405;
-        public const uint PickupAmmo = 1406;
-        public const uint PickupArmor = 1407;
-        public const uint PickupScp330 = 1408;
+        public const uint PrePickupItem = 1401;
+        public const uint PickupItem = 1411;
+        public const uint PickupAmmo = 1412;
+        public const uint PickupArmor = 1413;
+        public const uint PickupCandy = 1414;
+        public const uint ThrowProjectile = 1421;
+        public const uint DropItem = 1422;
+        public const uint DroppedItem = 1423;
+        public const uint DropAmmo = 1424;
 
         //1500+ <- Interact
-        public const uint InteractGenerator = 1501;
-        public const uint InteractElevator = 1502;
-        public const uint InteractLocker = 1503;
-        public const uint InteractScp330 = 1504;
-        public const uint InteractShootingTarget = 1505;
+        public const uint InteractDoor = 1501;
+        public const uint InteractGenerator = 1502;
+        public const uint InteractLift = 1503;
+        public const uint InteractLocker = 1504;
+        public const uint InteractScp330 = 1505;
+        public const uint InteractShootingTarget = 1506;
 
         //1600+ <- Gun
         public const uint UnloadGun = 1601;
@@ -52,6 +54,7 @@
         public const uint ReloadGun = 1603;
         public const uint ShotGun = 1604;
         public const uint DryfireGun = 1605;
+        public const uint GunToggleFlashlight = 1606;
 
         //1700+ <- Player Role Events
         public const uint Spawn = 1701;

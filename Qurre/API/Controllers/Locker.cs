@@ -10,7 +10,7 @@ namespace Qurre.API.Controllers
 {
     public class Locker
     {
-        private readonly BaseLocker _locker;
+        internal readonly BaseLocker _locker;
         private LockerType _typeCached = LockerType.Unknown;
 
         public GameObject GameObject => _locker.gameObject;

@@ -1,8 +1,8 @@
 ﻿using PlayerRoles;
 using Respawning;
+
 namespace Qurre.API.Classification.Player
 {
-    using PlayerRoles.Spectating;
     using Qurre.API;
     using RemoteAdmin;
 
@@ -10,6 +10,14 @@ namespace Qurre.API.Classification.Player
     {
         private readonly Player _player;
         internal RoleInfomation(Player pl) => _player = pl;
+
+        public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
+        public QueryProcessor QueryProcessor => _player.ReferenceHub.queryProcessor;
+
+        public bool IsAlive => _player.ReferenceHub.IsAlive();
+        public bool IsScp => _player.ReferenceHub.IsSCP();
+        public bool IsHuman => _player.ReferenceHub.IsHuman();
+        public bool IsDirty => _player.ReferenceHub.IsDirty();
 
         public RoleTypeId Role
         {
@@ -24,12 +32,7 @@ namespace Qurre.API.Classification.Player
         {
             get => RespawnManager.Singleton._timeForNextSequence;
         }
-        public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
-        public QueryProcessor QueryProcessor => _player.ReferenceHub.queryProcessor;
+
         public void SetNew(RoleTypeId newRole, RoleChangeReason reason) => _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason);
-        public bool IsAlive => _player.ReferenceHub.IsAlive();
-        public bool IsScp => _player.ReferenceHub.IsSCP();
-        public bool IsHuman => _player.ReferenceHub.IsHuman();
-        public bool IsDirty => _player.ReferenceHub.IsDirty();
     }
 }

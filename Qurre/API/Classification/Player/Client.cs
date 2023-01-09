@@ -3,16 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Hints;
+using Mirror;
 
 namespace Qurre.API.Classification.Player
 {
-    using Hints;
-    using Mirror;
     using Qurre.API;
+
     public class Client
     {
         private readonly Player _player;
         internal Client(Player pl) => _player = pl;
+
+        public HintDisplay HintDisplay => _player.ReferenceHub.hints;
+
+        public void ShowHint(string text, float duration = 1f, HintEffect[] effect = null) =>
+            HintDisplay.Show(new TextHint(text, new HintParameter[] { new StringHintParameter("") }, effect, duration));
+
         public void DimScreen()
         {
             var component = RoundSummary.singleton;
@@ -43,8 +50,5 @@ namespace Qurre.API.Classification.Player
             _player.Connection.Send(msg);
             NetworkWriterPool.Recycle(writer);
         }
-        public HintDisplay HintDisplay => _player.ReferenceHub.hints;
-        public void ShowHint(string text, float duration = 1f, HintEffect[] effect = null) =>
-            HintDisplay.Show(new TextHint(text, new HintParameter[] { new StringHintParameter("") }, effect, duration));
     }
 }
