@@ -44,6 +44,9 @@ namespace Qurre.API
 			}
 		}
 
+		static public float Difference(this float first, float second)
+			=> Math.Abs(first - second);
+
 		#region Player.Get
 		static public IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInfomation.Team == team);
 		static public IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInfomation.Role == role);

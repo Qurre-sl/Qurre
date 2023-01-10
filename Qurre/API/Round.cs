@@ -22,8 +22,8 @@ namespace Qurre.API
             set => RespawnManager.Singleton._timeForNextSequence = value + (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
         }
 
-        static public bool Started { get; } = RoundSummary.RoundInProgress();
-        static public bool Ended { get; } = RoundSummary.singleton._roundEnded;
+        static public bool Started => ReferenceHub.LocalHub.characterClassManager.RoundStarted;
+        static public bool Ended => RoundSummary.singleton._roundEnded;
         static public bool Waiting => RoundStart.singleton is not null && !Started && !Ended;
 
         static public bool Lock

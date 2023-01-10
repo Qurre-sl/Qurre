@@ -1,6 +1,8 @@
-﻿using Qurre.API.Attributes;
+﻿using Qurre.API;
+using Qurre.API.Attributes;
 using Qurre.Events;
 using Qurre.Events.Structs;
+using RoundRestarting;
 using System;
 
 namespace Qurre.Internal.EventsCalled
@@ -30,18 +32,11 @@ namespace Qurre.Internal.EventsCalled
             }
         }
 
-        [EventMethod(PlayerEvents.ThrowProjectile)]
-        static internal void Test(ThrowProjectileEvent ev)
+        [EventMethod(PlayerEvents.Spawn)]
+        static internal void Test(SpawnEvent ev)
         {
-            API.Log.Info($"Throw; Pl: {ev.Player?.UserInfomation.Nickname}; Item: {ev.Item?.Serial}");
-            //ev.Allowed = false;
-        }
-
-        [EventMethod(PlayerEvents.DropAmmo)]
-        static internal void Test(DropAmmoEvent ev)
-        {
-            API.Log.Info($"Drop; Pl: {ev.Player?.UserInfomation.Nickname}; Type: {ev.Type}; Amount: {ev.Amount}");
-            //ev.Allowed = false;
+            API.Log.Info($"Spawn; Pl: {ev.Player?.UserInfomation.Nickname}; Role: {ev.Role}; Position: {ev.Position}; Rot: {ev.Rotation}");
+            //ev.Position = UnityEngine.Vector3.zero;
         }
     }
 }

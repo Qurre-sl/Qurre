@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace Qurre.Internal.Patches.Player.Interact
 {
-    [HarmonyDebug]
+    //[HarmonyDebug]
     [HarmonyPatch(typeof(DoorVariant), nameof(DoorVariant.ServerInteract))]
     static class InteractDoor
     {

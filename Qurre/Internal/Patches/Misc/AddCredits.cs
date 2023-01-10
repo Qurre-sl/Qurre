@@ -18,7 +18,8 @@ namespace Qurre.Internal.Patches.Misc
             for (int i = 0; i < list.Count; i++)
             {
                 var ins = list[i];
-                if (ins.opcode == OpCodes.Ret && list[i - 1].opcode == OpCodes.Ldloc_0) index = i;
+                if (ins.opcode == OpCodes.Ret && list[i - 1].opcode == OpCodes.Ldloc_0)
+                    index = i;
             }
 
             if (index < 1)
