@@ -32,7 +32,11 @@ namespace Qurre.API.Classification.Player
         {
             get => RespawnManager.Singleton._timeForNextSequence;
         }
-
+        public void SetSyncModel(RoleTypeId roleTypeId)
+        {
+            foreach (global::ReferenceHub referenceHub in global::ReferenceHub.AllHubs)
+                _player.ReferenceHub.connectionToClient.Send<RoleSyncInfo>(new RoleSyncInfo(_player.ReferenceHub, roleTypeId, referenceHub), 0);
+        }
         public void SetNew(RoleTypeId newRole, RoleChangeReason reason) => _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason);
     }
 }

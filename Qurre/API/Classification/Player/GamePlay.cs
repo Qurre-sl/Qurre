@@ -6,6 +6,7 @@ namespace Qurre.API.Classification.Player
     using InventorySystem.Items;
     using InventorySystem.Items.Firearms.Attachments;
     using MapGeneration;
+    using PlayerRoles;
     using Qurre.API;
     using Qurre.API.Controllers;
     using Qurre.API.Objects;
@@ -68,5 +69,6 @@ namespace Qurre.API.Classification.Player
         }
         public void DropItem(Item item) => Inventory.ServerDropItem(item.Serial);
         public bool HasItem(ItemType item) => Inventory.UserInventory.Items.Any(tempItem => tempItem.Value.ItemTypeId == item);
+     
     }
 }
