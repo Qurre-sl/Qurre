@@ -128,6 +128,6 @@
 
     static public class ScpEvents //6xxx
     {
-
+        public const uint Blink = 6001;
     }
 }
