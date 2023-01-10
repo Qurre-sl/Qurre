@@ -62,5 +62,15 @@ namespace Qurre.API.Controllers
 
             Map.ShootingTargets.Add(this);
         }
+
+        internal ShootingTarget(AdminToys.ShootingTarget @base)
+        {
+            try { Type = (TargetPrefabs)System.Enum.Parse(typeof(TargetPrefabs), @base._targetName); }
+            catch { Type = TargetPrefabs.Binary; }
+
+            Base = @base;
+
+            Map.ShootingTargets.Add(this);
+        }
     }
 }

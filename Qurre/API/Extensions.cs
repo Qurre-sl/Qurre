@@ -1,5 +1,6 @@
 ﻿using CustomPlayerEffects;
 using Interactables.Interobjects;
+using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items;
 using MapGeneration;
 using MapGeneration.Distributors;
@@ -431,6 +432,10 @@ namespace Qurre.API
 
 		#region GetLocker
 		static public Controllers.Locker GetLocker(this MapGeneration.Distributors.Locker locker) => Map.Lockers.FirstOrDefault(x => x._locker == locker);
+		#endregion
+
+		#region GetDoor
+		static public Door GetDoor(this DoorVariant variant) => Map.Doors.FirstOrDefault(x => x.DoorVariant == variant);
 		#endregion
 	}
 }

@@ -39,6 +39,7 @@ namespace Qurre.Internal.Patches.Player.Interact
 				bool allow = ply.serverRoles.BypassMode || instance.CheckPerms(chamber.RequiredPermissions, ply);
 
 				var locker = instance.GetLocker();
+
 				locker.Chambers.TryFind(out var chmbr, x => x.LockerChamber == chamber);
 
 				InteractLockerEvent ev = new(ply.GetPlayer(), locker, chmbr, allow);
@@ -55,7 +56,7 @@ namespace Qurre.Internal.Patches.Player.Interact
 			}
 			catch (Exception e)
 			{
-				Log.Error($"Patch Error - <Player> {{Interact}} [Locker]:{e}\n{e.StackTrace}");
+				Log.Error($"Patch Error - <Player> {{Interact}} [Locker]: {e}\n{e.StackTrace}");
 			}
 		}
 	}

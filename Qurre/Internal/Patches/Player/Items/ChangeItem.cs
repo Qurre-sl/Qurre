@@ -28,7 +28,7 @@ namespace Qurre.Internal.Patches.Player.Items
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Items}} [ChangeItem]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Items}} [ChangeItem]: {e}\n{e.StackTrace}");
             }
             return true;
         }

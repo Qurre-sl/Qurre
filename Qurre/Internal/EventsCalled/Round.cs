@@ -5,6 +5,7 @@ using Qurre.API;
 using Qurre.API.Attributes;
 using Qurre.API.Controllers;
 using Qurre.Events;
+using UnityEngine.SceneManagement;
 
 namespace Qurre.Internal.EventsCalled
 {
@@ -31,8 +32,6 @@ namespace Qurre.Internal.EventsCalled
 
         static void MapRoundInit()
         {
-            MapClearLists();
-
             Map.AmbientSoundPlayer = Server.Host.GameObject.GetComponent<AmbientSoundPlayer>();
 
             foreach (var room in RoomIdentifier.AllRoomIdentifiers)
@@ -92,6 +91,20 @@ namespace Qurre.Internal.EventsCalled
 
             Item.BaseToItem.Clear();
             Pickup.BaseToItem.Clear();
+        }
+
+        static void SceneUnloaded(Scene _)
+        {
+            MapClearLists();
+            Fields.Player.IDs.Clear();
+            Fields.Player.UserIDs.Clear();
+            Fields.Player.Args.Clear();
+            Fields.Player.Dictionary.Clear();
+        }
+
+        static Round()
+        {
+            SceneManager.sceneUnloaded += SceneUnloaded;
         }
     }
 }

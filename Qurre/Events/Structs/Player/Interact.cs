@@ -1,10 +1,27 @@
-﻿using Qurre.API;
+﻿using Interactables.Interobjects;
+using Qurre.API;
 using Qurre.API.Controllers;
 using Qurre.API.Controllers.Structs;
 using Qurre.API.Objects;
 
 namespace Qurre.Events.Structs
 {
+    public class InteractDoorEvent : IBaseEvent
+    {
+        public uint EventId { get; } = PlayerEvents.InteractDoor;
+
+        public Player Player { get; }
+        public Door Door { get; }
+        public bool Allowed { get; set; }
+
+        internal InteractDoorEvent(Player player, Door door, bool allowed)
+        {
+            Player = player;
+            Door = door;
+            Allowed = allowed;
+        }
+    }
+
     public class InteractGeneratorEvent : IBaseEvent
     {
         public uint EventId { get; } = PlayerEvents.InteractGenerator;
@@ -54,6 +71,40 @@ namespace Qurre.Events.Structs
             Locker = locker;
             Chamber = chamber;
             Allowed = allow;
+        }
+    }
+
+    public class InteractScp330Event : IBaseEvent
+    {
+        public uint EventId { get; } = PlayerEvents.InteractScp330;
+
+        public Player Player { get; }
+        public Scp330Interobject Scp330 { get; }
+        public bool Allowed { get; set; }
+
+        internal InteractScp330Event(Player player, Scp330Interobject scp330)
+        {
+            Player = player;
+            Scp330 = scp330;
+            Allowed = true;
+        }
+    }
+
+    public class InteractShootingTargetEvent : IBaseEvent
+    {
+        public uint EventId { get; } = PlayerEvents.InteractShootingTarget;
+
+        public Player Player { get; }
+        public ShootingTarget ShootingTarget { get; }
+        public AdminToys.ShootingTarget.TargetButton Button { get; set; }
+        public bool Allowed { get; set; }
+
+        internal InteractShootingTargetEvent(Player player, ShootingTarget shootingTarget, AdminToys.ShootingTarget.TargetButton button)
+        {
+            Player = player;
+            ShootingTarget = shootingTarget;
+            Button = button;
+            Allowed = true;
         }
     }
 }

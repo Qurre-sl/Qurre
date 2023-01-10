@@ -2,7 +2,6 @@
 using Qurre.API.Attributes;
 using Qurre.Events;
 using Qurre.Events.Structs;
-using RoundRestarting;
 using System;
 
 namespace Qurre.Internal.EventsCalled
@@ -32,11 +31,11 @@ namespace Qurre.Internal.EventsCalled
             }
         }
 
-        [EventMethod(PlayerEvents.Spawn)]
-        static internal void Test(SpawnEvent ev)
+        [EventMethod(PlayerEvents.InteractGenerator)]
+        static internal void Test(InteractGeneratorEvent ev)
         {
-            API.Log.Info($"Spawn; Pl: {ev.Player?.UserInfomation.Nickname}; Role: {ev.Role}; Position: {ev.Position}; Rot: {ev.Rotation}");
-            //ev.Position = UnityEngine.Vector3.zero;
+            Log.Info($"Generator; Pl: {ev.Player?.UserInfomation.Nickname}; Generator: {ev.Generator}; Status: {ev.Status};");
+            //ev.Allowed = false;
         }
     }
 }

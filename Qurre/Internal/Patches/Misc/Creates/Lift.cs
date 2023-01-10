@@ -19,7 +19,7 @@ namespace Qurre.Internal.Patches.Misc.Creates
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Misc> {{Creates}} [Lift]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Misc> {{Creates}} [Lift]: {e}\n{e.StackTrace}");
             }
         }
     }
