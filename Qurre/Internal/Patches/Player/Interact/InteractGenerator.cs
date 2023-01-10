@@ -133,7 +133,7 @@ namespace Qurre.Internal.Patches.Player.Interact
 			}
 			catch (Exception e)
 			{
-				Log.Error($"Patch Error - <Player> {{Interact}} [Generator]:{e}\n{e.StackTrace}");
+				Log.Error($"Patch Error - <Player> {{Interact}} [Generator]: {e}\n{e.StackTrace}");
 			}
 		}
 	}

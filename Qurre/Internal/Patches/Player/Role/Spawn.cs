@@ -1,9 +1,5 @@
 ﻿using HarmonyLib;
 using PlayerRoles;
-using Qurre.API;
-using Qurre.Events.Structs;
-using Qurre.Internal.EventsManager;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
@@ -11,6 +7,10 @@ using UnityEngine;
 
 namespace Qurre.Internal.Patches.Player.Role
 {
+    using Qurre.API;
+    using Qurre.Events.Structs;
+    using Qurre.Internal.EventsManager;
+
     [HarmonyPatch(typeof(PlayerRoleManager), nameof(PlayerRoleManager.InitializeNewRole))]
     static class Spawn
     {

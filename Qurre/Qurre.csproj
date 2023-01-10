@@ -213,6 +213,8 @@
     <Compile Include="Internal\Patches\Player\Health\Attack.cs" />
     <Compile Include="Internal\Patches\Player\Health\Damage.cs" />
     <Compile Include="Internal\Patches\Player\Health\Dead.cs" />
+    <Compile Include="Internal\Patches\Player\Interact\InteractShootingTarget.cs" />
+    <Compile Include="Internal\Patches\Player\Interact\InteractScp330.cs" />
     <Compile Include="Internal\Patches\Player\Interact\InteractDoor.cs" />
     <Compile Include="Internal\Patches\Player\Interact\InteractLocker.cs" />
     <Compile Include="Internal\Patches\Player\Interact\InteractLift.cs" />
