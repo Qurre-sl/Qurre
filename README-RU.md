@@ -63,32 +63,32 @@ using Qurre.Events.Structs;
 [PluginInit("MyPlugin", "Qurre Team", "1.0.0")]
 static class Plugin
 {
-        [PluginEnable] // Аналогично можно подключить [PluginDisable]
-        static internal void Enabled()
+    [PluginEnable] // Аналогично можно подключить [PluginDisable]
+    static internal void Enabled()
+    {
+        Log.Info("Plugin Enabled");
+    }
+    
+    [EventMethod(PlayerEvents.Join)]
+    static internal void Join(JoinEvent ev)
+    {
+        Log.Info($"Player {ev.Player?.UserInfomation.Nickname} joined");
+    }
+    
+    [EventMethod(PlayerEvents.PickupArmor)]
+    [EventMethod(PlayerEvents.PickupItem)]
+    static internal void TestMultiple(IBaseEvent ev)
+    {
+        if (ev is PickupArmorEvent ev1)
         {
-                Log.Info("Plugin Enabled");
+            Log.Info($"Armor; Pl: {ev1.Player?.UserInfomation.Nickname}; Item: {ev1.Pickup?.Serial}");
+            //ev1.Allowed = false;
         }
-        
-        [EventMethod(PlayerEvents.Join)]
-        static internal void Join(JoinEvent ev)
+        else if (ev is PickupItemEvent ev2)
         {
-                Log.Info($"Player {ev.Player?.UserInfomation.Nickname} joined");
+            Log.Info($"Item; Pl: {ev2.Player?.UserInfomation.Nickname}; Item: {ev2.Pickup?.Serial}");
+            //ev2.Allowed = false;
         }
-
-        [EventMethod(PlayerEvents.PickupArmor)]
-        [EventMethod(PlayerEvents.PickupItem)]
-        static internal void TestMultiple(IBaseEvent ev)
-        {
-            if (ev is PickupArmorEvent ev1)
-            {
-                Log.Info($"Armor; Pl: {ev1.Player?.UserInfomation.Nickname}; Item: {ev1.Pickup?.Serial}");
-                //ev1.Allowed = false;
-            }
-            else if (ev is PickupItemEvent ev2)
-            {
-                Log.Info($"Item; Pl: {ev2.Player?.UserInfomation.Nickname}; Item: {ev2.Pickup?.Serial}");
-                //ev2.Allowed = false;
-            }
-        }
+    }
 }
 ```
