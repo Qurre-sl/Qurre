@@ -35,6 +35,9 @@ namespace Qurre.API
             RoleInfomation = new(this);
             UserInfomation = new(this);
 
+            if (_rh.isLocalPlayer)
+                return;
+
             if (!Field.Dictionary.ContainsKey(go)) Field.Dictionary.Add(go, this);
             else Field.Dictionary[go] = this;
         }

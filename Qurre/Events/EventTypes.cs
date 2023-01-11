@@ -61,17 +61,18 @@
         public const uint ChangeRole = 1702;
         public const uint Escape = 1703;
 
-        //1800+ <- Damage objects
-        public const uint DamageWindow = 1801;
-        public const uint DamageShootingTarget = 1802;
+        //1800+ <- Socialization
+        public const uint Cuff = 1801;
+        public const uint UnCuff = 1802;
 
         //1900+ <- Misc
         public const uint ChangeSpectator = 1901;
-        public const uint Handcuff = 1902;
-        public const uint RemoveHandcuffs = 1903;
-        public const uint MakeNoise = 1904;
-        public const uint ReceiveEffect = 1905;
-        public const uint UseHotkey = 1906;
+        public const uint MakeNoise = 1902;
+        public const uint ReceiveEffect = 1903;
+        public const uint UseHotkey = 1904;
+
+        public const uint DamageWindow = 1951;
+        public const uint DamageShootingTarget = 1952;
     }
 
     static public class MapEvents //2xxx
@@ -128,6 +129,6 @@
 
     static public class ScpEvents //6xxx
     {
-        public const uint Blink = 6001;
+
     }
 }

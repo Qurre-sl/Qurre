@@ -21,21 +21,21 @@ namespace Qurre.Internal.EventsCalled
         {
             if (ev is PickupArmorEvent ev1)
             {
-                API.Log.Info($"Armor; Pl: {ev1.Player?.UserInfomation.Nickname}; Item: {ev1.Pickup?.Serial}");
+                Log.Info($"Armor; Pl: {ev1.Player?.UserInfomation.Nickname}; Item: {ev1.Pickup?.Serial}");
                 //ev1.Allowed = false;
             }
             else if (ev is PickupItemEvent ev2)
             {
-                API.Log.Info($"Item; Pl: {ev2.Player?.UserInfomation.Nickname}; Item: {ev2.Pickup?.Serial}");
+                Log.Info($"Item; Pl: {ev2.Player?.UserInfomation.Nickname}; Item: {ev2.Pickup?.Serial}");
                 //ev2.Allowed = false;
             }
         }
 
-        [EventMethod(PlayerEvents.InteractGenerator)]
-        static internal void Test(InteractGeneratorEvent ev)
+        [EventMethod(PlayerEvents.Escape)]
+        static internal void Test(EscapeEvent ev)
         {
-            Log.Info($"Generator; Pl: {ev.Player?.UserInfomation.Nickname}; Generator: {ev.Generator}; Status: {ev.Status};");
-            //ev.Allowed = false;
+            Log.Info($"Pl: {ev.Player?.UserInfomation.Nickname}; Role: {ev.Role};");
+            //ev.Role = PlayerRoles.RoleTypeId.Tutorial;
         }
     }
 }
