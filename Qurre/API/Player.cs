@@ -29,7 +29,6 @@ namespace Qurre.API
             GamePlay = new(this);
             HealthInfomation = new(this);
             InventoryInformation = new(this);
-            InventoryItems = new(rh.inventory);
             MovementState = new(this);
             PlayerStatsInfomation = new(this);
             RoleInfomation = new(this);
@@ -84,7 +83,6 @@ namespace Qurre.API
         public Classification.Player.GamePlay GamePlay { get; }
         public Classification.Player.HealthInfomation HealthInfomation { get; }
         public Classification.Player.InventoryInformation InventoryInformation { get; }
-        public Classification.Player.InventoryItems InventoryItems { get; }
         public Classification.Player.MovementState MovementState { get; }
         public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
         public Classification.Player.RoleInfomation RoleInfomation { get; }
