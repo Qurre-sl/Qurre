@@ -77,7 +77,7 @@ namespace Qurre.API.Controllers
             get
             {
                 if (DoorVariant is PryableDoor pry)
-                    return pry.TryPryGate();
+                    return pry.TryPryGate(ReferenceHub.HostHub);
                 else return false;
             }
         }
