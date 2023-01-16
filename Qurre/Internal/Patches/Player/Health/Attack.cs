@@ -106,7 +106,7 @@ namespace Qurre.Internal.Patches.Player.Health
                 AttackEvent ev = new(attacker, target.GetPlayer(), handler, handler.Damage, handler.IsFriendlyFire, allowed);
                 ev.InvokeEvent();
 
-                if (ev.Damage == -1) ev.Damage = ev.Target.HealthInfomation.Health + 1;
+                if (ev.Damage == -1) ev.Damage = ev.Target.HealthInfomation.Hp + 1;
                 handler.Damage = ev.Damage;
                 handler.IsFriendlyFire = ev.FriendlyFire;
 

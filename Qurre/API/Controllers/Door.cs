@@ -5,13 +5,15 @@ using Mirror;
 using System.Linq;
 using Qurre.API.Objects;
 using Qurre.Internal.Misc;
+using System.Collections.Generic;
 
 namespace Qurre.API.Controllers
 {
     public class Door
     {
-        private string name;
-        private DoorType type;
+        string name;
+        DoorType type;
+        List<Room> _rooms = new();
 
         public DoorVariant DoorVariant { get; internal set; }
         public GameObject GameObject => DoorVariant?.gameObject;
@@ -24,6 +26,18 @@ namespace Qurre.API.Controllers
                 return name;
             }
             set => name = value;
+        }
+        public List<Room> Rooms
+        {
+            get
+            {
+                if (_rooms.Count > 0)
+                    return _rooms;
+
+                _rooms = DoorVariant.Rooms.Select(x => x.GetRoom()).ToList();
+
+                return _rooms;
+            }
         }
 
         public Vector3 Position
@@ -134,10 +148,11 @@ namespace Qurre.API.Controllers
         internal Door(DoorVariant _)
         {
             DoorVariant = _;
+
             if (DoorVariant.TryGetComponent<DoorNametagExtension>(out var nametag))
                 Name = nametag.GetName;
         }
-        internal Door(Vector3 position, DoorPrefabs prefab, Quaternion? rotation = null, DoorPermissions permissions = null)
+        public Door(Vector3 position, DoorPrefabs prefab, Quaternion? rotation = null, DoorPermissions permissions = null)
         {
             DoorVariant = Object.Instantiate(prefab.GetPrefab());
 

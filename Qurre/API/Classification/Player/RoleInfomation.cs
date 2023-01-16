@@ -4,6 +4,7 @@ using Respawning;
 namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
+    using Qurre.API.Classification.Roles;
     using RemoteAdmin;
 
     public class RoleInfomation
@@ -18,6 +19,8 @@ namespace Qurre.API.Classification.Player
         public bool IsScp => _player.ReferenceHub.IsSCP();
         public bool IsHuman => _player.ReferenceHub.IsHuman();
         public bool IsDirty => _player.ReferenceHub.IsDirty();
+
+        public Scp079 Scp079 { get; internal set; }
 
         public RoleTypeId Role
         {

@@ -27,7 +27,7 @@ namespace Qurre.Internal.Patches.Misc
 
             list.InsertRange(index, new CodeInstruction[]
             {
-                new CodeInstruction(OpCodes.Ldstr, $"<color=#00000000><size=1> Qurre v{Qurre.Loader.EntryPoint.Version}-alpha</size></color>"),
+                new CodeInstruction(OpCodes.Ldstr, $"<color=#00000000><size=1> Qurre v{API.Core.Version}-beta</size></color>"),
                 new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(System.String), nameof(System.String.Concat), new[] { typeof(object), typeof(object) }))
             });
 

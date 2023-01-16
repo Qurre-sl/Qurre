@@ -7,11 +7,14 @@ using System.Collections.Generic;
 
 namespace Qurre.API.Classification.Player
 {
+    using InventorySystem.Items.Firearms;
+    using InventorySystem.Items.Firearms.Attachments;
     using Qurre.API;
+    using Qurre.API.Addons.Items;
 
-    public sealed class InventoryInformation
+    public sealed class Inventory
     {
-        public Inventory Base { get; }
+        public InventorySystem.Inventory Base { get; }
 
         public Dictionary<ushort, Item> Items
         {
@@ -32,13 +35,16 @@ namespace Qurre.API.Classification.Player
             }
         }
 
-        private readonly GamePlay _gamePlay;
+        private readonly Player _player;
 
-        internal InventoryInformation(Player player)
+        internal Inventory(Player player)
         {
             Base = player.ReferenceHub.inventory;
-            _gamePlay = player.GamePlay;
+            _player = player;
         }
+
+        public bool HasItem(ItemType item)
+            => Base.UserInventory.Items.Any(tempItem => tempItem.Value.ItemTypeId == item);
 
         public void Reset(IEnumerable<Item> newItems)
         {
@@ -47,12 +53,13 @@ namespace Qurre.API.Classification.Player
             foreach (Item item in newItems)
             {
                 AddItem(item);
-            }    
+            }
         }
 
         public void Clear()
         {
-            _gamePlay.ClearInventory();
+            while (Base.UserInventory.Items.Count > 0)
+                Base.ServerRemoveItem(Base.UserInventory.Items.ElementAt(0).Key, null);
         }
 
         public void DropAllAmmo()
@@ -105,12 +112,23 @@ namespace Qurre.API.Classification.Player
             Base.ServerDropItem(item.Serial);
         }
 
-        public void AddItem(ItemBase itemBase)
+        public Item AddItem(ItemBase itemBase)
         {
             if (itemBase == null)
-                return;
+                return null;
 
-            _gamePlay.AddItem(itemBase);
+            if (itemBase?.PickupDropModel == null)
+                return null;
+
+            Base.UserInventory.Items[itemBase.PickupDropModel.NetworkInfo.Serial] = itemBase;
+
+            itemBase.OnAdded(itemBase.PickupDropModel);
+            if (itemBase is Firearm)
+                AttachmentsServerHandler.SetupProvidedWeapon(_player.ReferenceHub, itemBase);
+
+            Base.SendItemsNextFrame = true;
+
+            return Item.Get(itemBase);
         }
 
         public void AddItem(Item item)
@@ -118,25 +136,56 @@ namespace Qurre.API.Classification.Player
             if (item == null)
                 return;
 
-            _gamePlay.AddItem(item.Base);
+            AddItem(item.Base);
         }
 
         public void AddItem(Item item, int amount)
         {
-            if (item == null)
+            if (item == null || amount < 0)
                 return;
 
-            _gamePlay.AddItem(item, amount);
+            for (int i = 0; i < amount; i++)
+            {
+                AddItem(item.Base);
+            }
         }
 
-        public void AddItem(ItemType itemType)
+        public Item AddItem(ItemType itemType)
         {
-            _gamePlay.AddItem(itemType);
+            Item item = Item.Get(Base.ServerAddItem(itemType));
+            if (item is Gun gun)
+            {
+                if (AttachmentsServerHandler.PlayerPreferences.TryGetValue(_player.ReferenceHub, out Dictionary<ItemType, uint> _d)
+                    && _d.TryGetValue(itemType, out uint _y))
+                    gun.Base.ApplyAttachmentsCode(_y, true);
+                FirearmStatusFlags status = FirearmStatusFlags.MagazineInserted;
+                if (gun.Base.HasAdvantageFlag(AttachmentDescriptiveAdvantages.Flashlight))
+                    status |= FirearmStatusFlags.FlashlightEnabled;
+                gun.Base.Status = new FirearmStatus(gun.MaxAmmo, status, gun.Base.GetCurrentAttachmentsCode());
+            }
+            return item;
+        }
+
+        public void AddItem(ItemType itemType, int amount)
+        {
+            if (amount < 0)
+                return;
+
+            for (int i = 0; i < amount; i++)
+            {
+                AddItem(itemType);
+            }
         }
 
         public void AddItem(IEnumerable<Item> items)
         {
-            _gamePlay.AddItem(items);
+            if (items == null || items.Count() == 0)
+                return;
+
+            foreach (Item item in items)
+            {
+                AddItem(item.Base);
+            }
         }
 
         public void RemoveItem(ushort serial, ItemPickupBase itemPickupBase)

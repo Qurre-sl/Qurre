@@ -1,10 +1,14 @@
 ﻿using Hazards;
 using Interactables.Interobjects.DoorUtils;
+using InventorySystem.Items.Firearms.Attachments;
 using MapGeneration;
+using PlayerRoles.PlayableScps.Scp079;
 using Qurre.API;
 using Qurre.API.Attributes;
 using Qurre.API.Controllers;
 using Qurre.Events;
+using System.Linq;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Qurre.Internal.EventsCalled
@@ -52,6 +56,21 @@ namespace Qurre.Internal.EventsCalled
 
             foreach (var window in Server.GetObjectsOf<BreakableWindow>())
                 Map.Windows.Add(new(window));
+
+            foreach (var station in WorkstationController.AllWorkstations)
+                Map.WorkStations.Add(new(station));
+
+
+            foreach (var door in Map.Doors)
+            {
+                foreach (var room in door.Rooms)
+                {
+                    room.Doors.Add(door);
+                }
+            }
+
+
+            API.Controllers.Scp914.Controller = Object.FindObjectOfType<Scp914.Scp914Controller>();
         }
 
         static void MapClearLists()

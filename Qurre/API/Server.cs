@@ -11,6 +11,7 @@ namespace Qurre.API
         static internal Inventory hinv;
 
         static public ushort Port => ServerStatic.ServerPort;
+        static public string Ip => ServerConsole.Ip;
 
         static public Player Host
         {

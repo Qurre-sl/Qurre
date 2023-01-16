@@ -1,12 +1,7 @@
 ﻿using Mirror;
-using Qurre.API.Addons;
 using Qurre.API.Controllers.Structs;
 using RemoteAdmin;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Field = Qurre.Internal.Fields.Player;
 
@@ -25,14 +20,18 @@ namespace Qurre.API
 
             Broadcasts = new();
 
+            Administrative = new(this);
             Client = new(this);
             GamePlay = new(this);
             HealthInfomation = new(this);
-            InventoryInformation = new(this);
+            Inventory = new(this);
             MovementState = new(this);
             PlayerStatsInfomation = new(this);
             RoleInfomation = new(this);
             UserInfomation = new(this);
+
+            if (_rh.isLocalPlayer)
+                return;
 
             if (!Field.Dictionary.ContainsKey(go)) Field.Dictionary.Add(go, this);
             else Field.Dictionary[go] = this;
@@ -79,10 +78,11 @@ namespace Qurre.API
 
         public BroadcastsList Broadcasts { get; }
 
+        public Classification.Player.Administrative Administrative { get; }
         public Classification.Player.Client Client { get; }
         public Classification.Player.GamePlay GamePlay { get; }
         public Classification.Player.HealthInfomation HealthInfomation { get; }
-        public Classification.Player.InventoryInformation InventoryInformation { get; }
+        public Classification.Player.Inventory Inventory { get; }
         public Classification.Player.MovementState MovementState { get; }
         public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
         public Classification.Player.RoleInfomation RoleInfomation { get; }

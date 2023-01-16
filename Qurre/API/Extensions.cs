@@ -14,6 +14,7 @@ using Qurre.API.Objects;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using UnityEngine;
 using SinkHole = CustomPlayerEffects.Sinkhole;
 
@@ -42,6 +43,21 @@ namespace Qurre.API
 			for (int i = 0; i < list.Count; i++)
 			{
 				action(list[i]);
+			}
+		}
+
+		static public void Shuffle<T>(this IList<T> list)
+		{
+			RNGCryptoServiceProvider provider = new();
+			int n = list.Count;
+			while (n > 1)
+			{
+				byte[] box = new byte[1];
+				do provider.GetBytes(box);
+				while (!(box[0] < n * (byte.MaxValue / n)));
+				int k = (box[0] % n);
+				n--;
+				(list[n], list[k]) = (list[k], list[n]);
 			}
 		}
 
@@ -144,6 +160,13 @@ namespace Qurre.API
 				_ => null,
 			};
 		}
+
+		static public float DistanceTo(this Player source, Player player)
+			=> Vector3.Distance(source.MovementState.Position, player.MovementState.Position);
+		static public float DistanceTo(this Player source, Vector3 position)
+			=> Vector3.Distance(source.MovementState.Position, position);
+		static public float DistanceTo(this Player source, GameObject Object)
+			=> Vector3.Distance(source.MovementState.Position, Object.transform.position);
 		#endregion
 
 		#region Damages
@@ -319,9 +342,9 @@ namespace Qurre.API
 			ItemIdentifier identifier = new(type, ItemSerialGenerator.GenerateNext());
 
 			if (owner != null)
-				owner.InventoryInformation.Base.CreateItemInstance(identifier, false);
+				owner.Inventory.Base.CreateItemInstance(identifier, false);
 
-			return Server.Host.InventoryInformation.Base.CreateItemInstance(identifier, false);
+			return Server.Host.Inventory.Base.CreateItemInstance(identifier, false);
 		}
 		#endregion
 
@@ -436,6 +459,7 @@ namespace Qurre.API
 
 		#region GetDoor
 		static public Door GetDoor(this DoorVariant variant) => Map.Doors.FirstOrDefault(x => x.DoorVariant == variant);
+		static public Door GetDoor(this DoorType type) => Map.Doors.FirstOrDefault(x => x.Type == type);
 		#endregion
 	}
 }

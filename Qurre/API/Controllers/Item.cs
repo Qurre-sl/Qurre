@@ -160,7 +160,7 @@ namespace Qurre.API.Controllers
             return null;
         }
 
-        public void Give(Player player) => player.GamePlay.AddItem(Base);
+        public void Give(Player player) => player.Inventory.AddItem(Base);
 
         public virtual Pickup Spawn(Vector3 position, Quaternion rotation = default, Vector3 scale = default)
         {
