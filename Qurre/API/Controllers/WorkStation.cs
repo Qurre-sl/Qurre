@@ -1,5 +1,6 @@
 ﻿using InventorySystem.Items.Firearms.Attachments;
 using Mirror;
+using Qurre.API.Addons;
 using Qurre.API.Objects;
 using UnityEngine;
 
@@ -8,6 +9,18 @@ namespace Qurre.API.Controllers
     public class WorkStation
     {
         internal readonly WorkstationController workStation;
+
+        internal WorkStation(WorkstationController station) => workStation = station;
+
+        public WorkStation(Vector3 position, Vector3 rotation, Vector3 scale)
+        {
+            workStation = Object.Instantiate(Prefabs.WorkStation, position, Quaternion.Euler(rotation));
+
+            workStation.gameObject.transform.localScale = scale;
+            NetworkServer.Spawn(workStation.gameObject);
+
+            Map.WorkStations.Add(this);
+        }
 
         public GameObject GameObject => workStation.gameObject;
         public Transform Transform => GameObject.transform;
@@ -24,6 +37,7 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(GameObject);
             }
         }
+
         public Vector3 Scale
         {
             get => Transform.localScale;
@@ -34,6 +48,7 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(GameObject);
             }
         }
+
         public Quaternion Rotation
         {
             get => Transform.rotation;
@@ -50,26 +65,17 @@ namespace Qurre.API.Controllers
             get => workStation._knownUser.GetPlayer();
             set => workStation._knownUser = value.ReferenceHub;
         }
+
         public WorkstationStatus Status
         {
             get => (WorkstationStatus)workStation.Status;
             set => workStation.NetworkStatus = (byte)value;
         }
+
         public bool Activated
         {
             get => Status == WorkstationStatus.Online;
             set => Status = value ? WorkstationStatus.Online : WorkstationStatus.Offline;
-        }
-
-        internal WorkStation(WorkstationController station) => workStation = station;
-        public WorkStation(Vector3 position, Vector3 rotation, Vector3 scale)
-        {
-            workStation = Object.Instantiate(Addons.Prefabs.WorkStation, position, Quaternion.Euler(rotation));
-
-            workStation.gameObject.transform.localScale = scale;
-            NetworkServer.Spawn(workStation.gameObject);
-
-            Map.WorkStations.Add(this);
         }
     }
 }

@@ -5,35 +5,35 @@ namespace Qurre.API.Controllers
 {
     public class Lift
     {
-        public ElevatorChamber Elevator => _elevator;
+        internal Lift(ElevatorChamber elevator) => Elevator = elevator;
 
-        public GameObject GameObject => _elevator.gameObject;
-        public Transform Transform => _elevator.transform;
+        public ElevatorChamber Elevator { get; }
+
+        public GameObject GameObject => Elevator.gameObject;
+        public Transform Transform => Elevator.transform;
 
         public Vector3 Position
         {
             get => Transform.position;
             set => Transform.position = value;
         }
+
         public Quaternion Rotation
         {
             get => Transform.rotation;
             set => Transform.rotation = value;
         }
+
         public Vector3 Scale => Transform.localScale;
 
         public ElevatorChamber.ElevatorSequence Status
         {
-            get => _elevator._curSequence;
-            set => _elevator._curSequence = value;
+            get => Elevator._curSequence;
+            set => Elevator._curSequence = value;
         }
 
-        public ElevatorManager.ElevatorGroup Type => _elevator.AssignedGroup;
+        public ElevatorManager.ElevatorGroup Type => Elevator.AssignedGroup;
 
         public void Use() => Status = ElevatorChamber.ElevatorSequence.Ready;
-
-
-        private readonly ElevatorChamber _elevator;
-        internal Lift(ElevatorChamber elevator) => _elevator = elevator;
     }
 }

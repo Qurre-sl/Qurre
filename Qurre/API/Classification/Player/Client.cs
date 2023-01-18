@@ -3,12 +3,11 @@ using Mirror;
 
 namespace Qurre.API.Classification.Player
 {
-    using Qurre.API;
-
     public class Client
     {
-        private readonly Player _player;
-        internal Client(Player pl) => _player = pl;
+        private readonly API.Player _player;
+
+        internal Client(API.Player pl) => _player = pl;
 
         public HintDisplay HintDisplay => _player.ReferenceHub.hints;
 
@@ -16,23 +15,30 @@ namespace Qurre.API.Classification.Player
             HintDisplay.Show(new TextHint(text, new HintParameter[] { new StringHintParameter("") }, effect, duration));
 
         public Controllers.Broadcast Broadcast(string message, ushort time, bool instant = false) => Broadcast(time, message, instant);
+
         public Controllers.Broadcast Broadcast(ushort time, string message, bool instant = false)
         {
-            Controllers.Broadcast bc = new(_player, message, time);
+            Controllers.Broadcast bc = new (_player, message, time);
             _player.Broadcasts.Add(bc, instant);
             return bc;
         }
 
         public void SendConsole(string message, string color)
         {
-            try { _player.ClassManager.ConsolePrint(message, color); }
-            catch { _player.ReferenceHub.GetComponent<GameConsoleTransmission>().SendToClient(_player.Connection, message, color); }
+            try
+            {
+                _player.ClassManager.ConsolePrint(message, color);
+            }
+            catch
+            {
+                _player.ReferenceHub.GetComponent<GameConsoleTransmission>().SendToClient(_player.Connection, message, color);
+            }
         }
 
         public void DimScreen()
         {
-            var component = RoundSummary.singleton;
-            var writer = NetworkWriterPool.GetWriter();
+            RoundSummary component = RoundSummary.singleton;
+            PooledNetworkWriter writer = NetworkWriterPool.GetWriter();
             var msg = new RpcMessage
             {
                 netId = component.netId,
@@ -46,8 +52,8 @@ namespace Qurre.API.Classification.Player
 
         public void ShakeScreen(bool achieve = false)
         {
-            var component = AlphaWarheadController.Singleton;
-            var writer = NetworkWriterPool.GetWriter();
+            AlphaWarheadController component = AlphaWarheadController.Singleton;
+            PooledNetworkWriter writer = NetworkWriterPool.GetWriter();
             writer.WriteBoolean(achieve);
             var msg = new RpcMessage
             {

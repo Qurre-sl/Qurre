@@ -5,6 +5,11 @@ namespace Qurre.API.Addons.Items
 {
     public sealed class Usable : Item
     {
+        public Usable(UsableItem itemBase) : base(itemBase)
+            => Base = itemBase;
+
+        public Usable(ItemType type) : this((UsableItem)type.CreateItemInstance()) { }
+
         public new UsableItem Base { get; }
 
         public bool Equippable => Base.AllowEquip;
@@ -32,15 +37,6 @@ namespace Qurre.API.Addons.Items
         {
             get => Base.RemainingCooldown;
             set => Base.RemainingCooldown = value;
-        }
-
-        public Usable(UsableItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public Usable(ItemType type) : this((UsableItem)type.CreateItemInstance())
-        {
         }
     }
 }

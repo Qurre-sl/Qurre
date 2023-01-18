@@ -1,21 +1,47 @@
-﻿using InventorySystem.Items.Pickups;
-using InventorySystem.Items;
-using InventorySystem;
+﻿using System;
 using System.Collections.Generic;
+using InventorySystem;
+using InventorySystem.Items;
+using InventorySystem.Items.Pickups;
 using UnityEngine;
 
 namespace Qurre.API.Controllers
 {
     public sealed class Pickup
     {
-        internal static readonly Dictionary<ItemPickupBase, Pickup> BaseToItem = new();
+        internal static readonly Dictionary<ItemPickupBase, Pickup> BaseToItem = new ();
+
+        private string _tag;
+        private ushort _bufferedSerial;
+        private ItemCategory _bufferedCategory;
+
+        public Pickup(ItemPickupBase pickupBase)
+        {
+            Base = pickupBase;
+            Serial = pickupBase.NetworkInfo.Serial;
+            _bufferedCategory = Type.GetCategory();
+
+            BaseToItem.Add(pickupBase, this);
+        }
+
+        public Pickup(ItemType type)
+        {
+            if (!InventoryItemLoader.AvailableItems.TryGetValue(type, out ItemBase itemBase))
+            {
+                return;
+            }
+
+            Base = itemBase.PickupDropModel;
+            Serial = itemBase.PickupDropModel.NetworkInfo.Serial;
+
+            BaseToItem.Add(itemBase.PickupDropModel, this);
+        }
 
         public ItemPickupBase Base { get; }
 
         public GameObject GameObject => Base.gameObject;
-        public ItemCategory Category => _bufferedCategory == ItemCategory.None ?
-                                        _bufferedCategory = Type.GetCategory() :
-                                        _bufferedCategory;
+
+        public ItemCategory Category => _bufferedCategory == ItemCategory.None ? _bufferedCategory = Type.GetCategory() : _bufferedCategory;
 
         public string Tag
         {
@@ -23,7 +49,9 @@ namespace Qurre.API.Controllers
             set
             {
                 if (value is null)
+                {
                     return;
+                }
 
                 _tag = value;
             }
@@ -45,16 +73,18 @@ namespace Qurre.API.Controllers
 
         public ushort Serial
         {
-            get => _bufferedSerial == 0 ?
-                   _bufferedSerial = 0 :
-                   _bufferedSerial;
+            get => _bufferedSerial == 0 ? _bufferedSerial = 0 : _bufferedSerial;
             set
             {
                 if (Base == null)
+                {
                     return;
+                }
 
                 if (value == 0)
+                {
                     value = ItemSerialGenerator.GenerateNext();
+                }
 
                 PickupSyncInfo syncInfo = Base.Info;
 
@@ -137,34 +167,10 @@ namespace Qurre.API.Controllers
             }
         }
 
-        private string _tag;
-        private ushort _bufferedSerial;
-        private ItemCategory _bufferedCategory;
-
-        public Pickup(ItemPickupBase pickupBase)
-        {
-            Base = pickupBase;
-            Serial = pickupBase.NetworkInfo.Serial;
-            _bufferedCategory = Type.GetCategory();
-
-            BaseToItem.Add(pickupBase, this);
-        }
-
-        public Pickup(ItemType type)
-        {
-            if (!InventoryItemLoader.AvailableItems.TryGetValue(type, out ItemBase itemBase))
-                return;
-
-            Base = itemBase.PickupDropModel;
-            Serial = itemBase.PickupDropModel.NetworkInfo.Serial;
-
-            BaseToItem.Add(itemBase.PickupDropModel, this);
-        }
-
         public static Pickup Get(ItemPickupBase pickupBase) =>
             pickupBase == null ? null :
             BaseToItem.ContainsKey(pickupBase) ? BaseToItem[pickupBase] :
-            new Pickup(pickupBase);
+            new (pickupBase);
 
         public void Destroy()
         {
@@ -173,10 +179,13 @@ namespace Qurre.API.Controllers
         }
 
 
-        static internal Pickup SafeGet(ItemPickupBase @base)
+        internal static Pickup SafeGet(ItemPickupBase @base)
         {
-            try { return Get(@base); }
-            catch (System.Exception e)
+            try
+            {
+                return Get(@base);
+            }
+            catch (Exception e)
             {
                 Log.Debug(e);
                 return null;

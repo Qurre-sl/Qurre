@@ -1,40 +1,48 @@
-﻿using Mirror;
-using System;
+﻿using System;
 using System.Reflection;
+using Mirror;
 
 namespace Qurre.API
 {
-    static public class Network // rename later
+    public static class Network // rename later
     {
-        static MethodInfo sendSpawnMessage;
-        static public MethodInfo SendSpawnMessage
+        private static MethodInfo sendSpawnMessage;
+
+        public static MethodInfo SendSpawnMessage
         {
             get
             {
                 if (sendSpawnMessage is null)
-                    sendSpawnMessage = typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.Instance | BindingFlags.InvokeMethod
-                        | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public);
+                {
+                    sendSpawnMessage = typeof(NetworkServer).GetMethod(
+                        "SendSpawnMessage", BindingFlags.Instance
+                                            | BindingFlags.InvokeMethod
+                                            | BindingFlags.NonPublic
+                                            | BindingFlags.Static
+                                            | BindingFlags.Public);
+                }
+
                 return sendSpawnMessage;
             }
         }
 
-        static public void InvokeStaticMethod(this Type type, string methodName, object[] param)
+        public static void InvokeStaticMethod(this Type type, string methodName, object[] param)
         {
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic |
-                                 BindingFlags.Static | BindingFlags.Public;
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public;
             MethodInfo info = type.GetMethod(methodName, flags);
             info?.Invoke(null, param);
         }
 
 
-        static public void UpdateData(this NetworkIdentity identity) => NetworkServer.SendToAll(identity.SpawnMessage());
-        static public SpawnMessage SpawnMessage(this NetworkIdentity identity)
-        {
-            var writer = NetworkWriterPool.GetWriter();
-            var writer2 = NetworkWriterPool.GetWriter();
-            var payload = NetworkServer.CreateSpawnMessagePayload(false, identity, writer, writer2);
+        public static void UpdateData(this NetworkIdentity identity) => NetworkServer.SendToAll(identity.SpawnMessage());
 
-            return new SpawnMessage
+        public static SpawnMessage SpawnMessage(this NetworkIdentity identity)
+        {
+            PooledNetworkWriter writer = NetworkWriterPool.GetWriter();
+            PooledNetworkWriter writer2 = NetworkWriterPool.GetWriter();
+            ArraySegment<byte> payload = NetworkServer.CreateSpawnMessagePayload(false, identity, writer, writer2);
+
+            return new()
             {
                 netId = identity.netId,
                 isLocalPlayer = false,

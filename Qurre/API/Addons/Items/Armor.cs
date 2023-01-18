@@ -1,14 +1,19 @@
-﻿using InventorySystem.Items.Armor;
-using Qurre.API.Controllers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using InventorySystem.Items.Armor;
+using Qurre.API.Controllers;
 using static InventorySystem.Items.Armor.BodyArmor;
 
 namespace Qurre.API.Addons.Items
 {
     public sealed class Armor : Item
     {
+        public Armor(BodyArmor itemBase) : base(itemBase)
+            => Base = itemBase;
+
+        public Armor(ItemType itemType) : this((BodyArmor)itemType.CreateItemInstance()) { }
+
         public new BodyArmor Base { get; }
 
         public bool Equippable => Base.AllowEquip;
@@ -85,15 +90,6 @@ namespace Qurre.API.Addons.Items
         {
             get => Base.AmmoLimits.ToList();
             set => Base.AmmoLimits = value.ToArray();
-        }
-
-        public Armor(BodyArmor itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public Armor(ItemType itemType) : this((BodyArmor)itemType.CreateItemInstance())
-        {
         }
     }
 }

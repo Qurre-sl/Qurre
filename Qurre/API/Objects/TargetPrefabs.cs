@@ -4,6 +4,6 @@
     {
         Sport,
         Dboy,
-        Binary,
+        Binary
     }
 }

@@ -6,6 +6,6 @@
         Short,
         Medium,
         Long,
-        Ultra,
+        Ultra
     }
 }

@@ -2,9 +2,6 @@
 
 namespace Qurre.API.Attributes
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class EventsIgnore : Attribute
-    {
-        public EventsIgnore() { }
-    }
+    [AttributeUsage(AttributeTargets.Method)]
+    public class EventsIgnore : Attribute { }
 }

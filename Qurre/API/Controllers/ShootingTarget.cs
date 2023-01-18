@@ -1,12 +1,47 @@
-﻿using AdminToys;
+﻿using System;
+using AdminToys;
 using Mirror;
 using Qurre.API.Objects;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Qurre.API.Controllers
 {
     public class ShootingTarget
     {
+        public ShootingTarget(TargetPrefabs type, Vector3 position, Quaternion rotation = default, Vector3 size = default)
+        {
+            if (!type.GetPrefab().TryGetComponent<AdminToyBase>(out AdminToyBase primitiveToyBase))
+            {
+                return;
+            }
+
+            AdminToyBase prim = Object.Instantiate(primitiveToyBase, position, rotation);
+
+            Type = type;
+            Base = (AdminToys.ShootingTarget)prim;
+            Base.transform.localScale = size == default ? Vector3.one : size;
+            NetworkServer.Spawn(Base.gameObject);
+
+            Map.ShootingTargets.Add(this);
+        }
+
+        internal ShootingTarget(AdminToys.ShootingTarget @base)
+        {
+            try
+            {
+                Type = (TargetPrefabs)Enum.Parse(typeof(TargetPrefabs), @base._targetName);
+            }
+            catch
+            {
+                Type = TargetPrefabs.Binary;
+            }
+
+            Base = @base;
+
+            Map.ShootingTargets.Add(this);
+        }
+
         public Vector3 Position
         {
             get => Base.transform.position;
@@ -17,6 +52,7 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(Base.gameObject);
             }
         }
+
         public Vector3 Scale
         {
             get => Base.transform.localScale;
@@ -27,6 +63,7 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(Base.gameObject);
             }
         }
+
         public Quaternion Rotation
         {
             get => Base.transform.localRotation;
@@ -40,37 +77,14 @@ namespace Qurre.API.Controllers
 
         public TargetPrefabs Type { get; }
 
+        public AdminToys.ShootingTarget Base { get; }
+
         public void Clear() => Base.ClearTarget();
+
         public void Destroy()
         {
             NetworkServer.Destroy(Base.gameObject);
             Map.ShootingTargets.Remove(this);
-        }
-
-        public AdminToys.ShootingTarget Base { get; }
-
-        public ShootingTarget(TargetPrefabs type, Vector3 position, Quaternion rotation = default, Vector3 size = default)
-        {
-            if (!type.GetPrefab().TryGetComponent<AdminToyBase>(out var primitiveToyBase)) return;
-
-            var prim = Object.Instantiate(primitiveToyBase, position, rotation);
-
-            Type = type;
-            Base = (AdminToys.ShootingTarget)prim;
-            Base.transform.localScale = size == default ? Vector3.one : size;
-            NetworkServer.Spawn(Base.gameObject);
-
-            Map.ShootingTargets.Add(this);
-        }
-
-        internal ShootingTarget(AdminToys.ShootingTarget @base)
-        {
-            try { Type = (TargetPrefabs)System.Enum.Parse(typeof(TargetPrefabs), @base._targetName); }
-            catch { Type = TargetPrefabs.Binary; }
-
-            Base = @base;
-
-            Map.ShootingTargets.Add(this);
         }
     }
 }

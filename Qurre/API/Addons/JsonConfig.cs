@@ -1,173 +1,261 @@
-﻿using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+using Newtonsoft.Json.Linq;
+using UnityEngine;
+
 namespace Qurre.API.Addons
 {
     public class JsonConfig
     {
+        private static JObject _cache;
+        private static string _path;
+
+        public JsonConfig(string name) => Name = name;
+
         public string Name { get; }
-        public JsonConfig(string name)
-        {
-            Name = name;
-        }
 
         public JToken JsonArray
         {
             get
             {
-                try
+                JToken obj = _cache?[Name];
+
+                if (obj is not null)
                 {
-                    var obj = Cache[Name];
-                    if (obj is not null) return obj;
+                    return obj;
                 }
-                catch { }
-                Cache[Name] = JObject.Parse("{ }");
-                return Cache[Name];
+
+                _cache![Name] = JObject.Parse("{ }");
+
+                return _cache[Name];
             }
         }
+
+        public static JsonConfig Register(string name) => new (name);
+
+        public static void Save() => File.WriteAllText(_path, _cache.ToString());
+
+        public static void Refresh() => Init();
 
         public JToken GetValue(string name, JToken source = null) => (source ?? JsonArray)[name];
+
+        public JToken TrySafeGetTokenValue(string name, JToken value, string desc = null, JToken source = null)
+        {
+            try
+            {
+                return SafeGetTokenValue(name, value, desc, source);
+            }
+            catch (Exception e)
+            {
+                string assembly = Assembly.GetCallingAssembly().GetName().Name;
+                var text = $"[JsonConfig] Occurred error in [SafeGetTokenValue]:\n{e}\n{e.StackTrace}";
+
+                Extensions.TryAction(Log.LogTxt, text, text);
+
+                e.PrintError(text, string.Empty);
+
+                return value;
+            }
+        }
+
+        public T TrySafeGetValue<T>(string name, T value, string desc = null, JToken source = null)
+        {
+            try
+            {
+                return SafeGetValue(name, value, desc, source);
+            }
+            catch (Exception error)
+            {
+                string assemblyName = Assembly.GetCallingAssembly().GetName().Name;
+                var text = $"[ERROR] [JsonConfig] Occurred error in [SafeGetValue]:\n{error}\n{error.StackTrace}";
+
+                Extensions.TryAction(Log.LogTxt, text, text);
+
+                error.PrintError(text, string.Empty);
+
+                return value;
+            }
+        }
+
         public JToken SafeGetTokenValue(string name, JToken value, string desc = null, JToken source = null)
         {
-            try
+            JToken parent = source ?? JsonArray;
+            JToken val = parent[name];
+
+            if (val is not null)
             {
-                var par = source ?? JsonArray;
-                var val = par[name];
-                if (val is not null) return val;
-                if (desc is not null && desc.Trim() != string.Empty) par[name + "_desc"] = desc.Trim();
-                par[name] = value;
-                return value;
+                return val;
             }
-            catch (Exception e)
+
+            if (desc is not null && desc.Trim() != string.Empty)
             {
-                string assembly = Assembly.GetCallingAssembly().GetName().Name;
-                string text = $"[ERROR] [{assembly} => JsonConfig] Occurred error in [SafeGetTokenValue]:\n{e}\n{e.StackTrace}";
-                ServerConsole.AddLog(text, ConsoleColor.Red);
-                try { Log.LogTxt(text); } catch { }
-                return value;
+                parent[name + "_desc"] = desc.Trim();
             }
+
+            parent[name] = value;
+
+            return value;
         }
+
         public T SafeGetValue<T>(string name, T value, string desc = null, JToken source = null)
         {
-            try
+            JToken parent = source ?? JsonArray;
+            JToken token = parent[name];
+
+            if (token is not null)
             {
-                var par = source ?? JsonArray;
-                var val = par[name];
-                if (val is not null) return val.ToObject<T>();
-                if (desc is not null && desc.Trim() != string.Empty) par[name + "_desc"] = desc.Trim();
-                par[name] = ConvertObject(value);
-                return value;
+                return token.ToObject<T>();
             }
-            catch (Exception e)
+
+            if (desc is not null && desc.Trim() != string.Empty)
             {
-                string assembly = Assembly.GetCallingAssembly().GetName().Name;
-                string text = $"[ERROR] [{assembly} => JsonConfig] Occurred error in [SafeGetValue]:\n{e}\n{e.StackTrace}";
-                ServerConsole.AddLog(text, ConsoleColor.Red);
-                try { Log.LogTxt(text); } catch { }
-                return value;
+                parent[name + "_desc"] = desc.Trim();
             }
+
+            parent[name] = ConvertObject(value);
+
+            return value;
         }
 
-        public static JsonConfig Register(string name) => new(name);
-        public static void UpdateFile() => File.WriteAllText(ConfigPath, Cache.ToString());
-        public static void RefreshConfig() => Init();
-
-        internal static JObject Cache;
-        internal static string ConfigPath = string.Empty;
         internal static void Init()
         {
-            ConfigPath = Path.Combine(Pathes.Configs, $"{Server.Port}.json");
-            if (!File.Exists(ConfigPath))
+            _path = Path.Combine(Paths.Configs, $"{Server.Port}.json");
+
+            if (!File.Exists(_path))
             {
-                byte[] content = new UTF8Encoding(true).GetBytes("{\n    \n}");
-                var stream = File.Create(ConfigPath);
+                byte[] content = Encoding.UTF8.GetBytes("{\n    \n}");
+
+                FileStream stream = File.Create(_path);
+
                 stream.Write(content, 0, content.Length);
+
                 stream.Close();
             }
+
             try
             {
-                Cache = JObject.Parse(File.ReadAllText(ConfigPath));
+                _cache = JObject.Parse(File.ReadAllText(_path));
             }
             catch
             {
-                File.WriteAllText(ConfigPath, "{\n    \n}");
-                Cache = JObject.Parse("{\n    \n}");
+                File.WriteAllText(_path, "{\n    \n}");
+
+                _cache = JObject.Parse("{\n    \n}");
             }
         }
 
-        private JToken ConvertObject<T>(T obj)
+        private static JToken ConvertObject<T>(T obj)
+            => obj switch
+            {
+                string stringValue => stringValue,
+                bool boolValue => boolValue,
+                long longValue => longValue,
+                IEnumerable<object> enumerable => MergeArray(enumerable),
+                float floatValue => floatValue,
+                double doubleValue => doubleValue,
+                decimal decimalValue => decimalValue,
+                char charValue => charValue,
+                byte byteValue => byteValue,
+                short shortValue => shortValue,
+                ushort ushortValue => ushortValue,
+                sbyte sbyteValue => sbyteValue,
+                ulong ulongValue => ulongValue,
+                Version version => new JObject
+                {
+                    ["major"] = version.Major,
+                    ["Build"] = version.Build,
+                    ["Minor"] = version.Minor
+                },
+                Quaternion quaternion => new JObject
+                {
+                    ["w"] = quaternion.w,
+                    ["x"] = quaternion.x,
+                    ["y"] = quaternion.y,
+                    ["z"] = quaternion.z
+                },
+                Vector3 vector3 => new JObject
+                {
+                    ["x"] = vector3.x,
+                    ["y"] = vector3.y,
+                    ["z"] = vector3.z
+                },
+                Vector2 vector2 => new JObject
+                {
+                    ["x"] = vector2.x,
+                    ["y"] = vector2.y
+                },
+                _ => JObject.FromObject(obj)
+            };
+
+        private static JToken CreateFromContent(object content)
+            => content switch
+            {
+                JToken token => token,
+                Version version => new JObject
+                {
+                    ["major"] = version.Major,
+                    ["Build"] = version.Build,
+                    ["Minor"] = version.Minor
+                },
+                Quaternion quaternion => new JObject
+                {
+                    ["w"] = quaternion.w,
+                    ["x"] = quaternion.x,
+                    ["y"] = quaternion.y,
+                    ["z"] = quaternion.z
+                },
+                Vector3 vector3 => new JObject
+                {
+                    ["x"] = vector3.x,
+                    ["y"] = vector3.y,
+                    ["z"] = vector3.z
+                },
+                Vector2 vector2 => new JObject
+                {
+                    ["x"] = vector2.x,
+                    ["y"] = vector2.y
+                },
+                _ => new JValue(content)
+            };
+
+        private static JArray MergeArray(IEnumerable<object> arr)
         {
-            if (obj is string str) return str;
-            if (obj is bool bl) return bl;
-            if (obj is IEnumerable<object> list)
-            {
-                JArray jt = new();
-                MergeArray(jt, list);
-                return jt;
-            }
-            if (obj is UnityEngine.Vector3 vec)
-                return new JObject()
-                {
-                    ["x"] = vec.x,
-                    ["y"] = vec.y,
-                    ["z"] = vec.z
-                };
-            try
-            {
-                long numb = long.Parse(obj.ToString());
-                return numb;
-            }
-            catch
-            {
-                try
-                {
-                    float numb = float.Parse(obj.ToString());
-                    if (!float.IsNaN(numb)) return numb;
-                }
-                catch { }
-            }
-            return JObject.FromObject(obj);
+            JArray array = new ();
 
-            static void MergeArray(JArray jt, IEnumerable<object> arr)
+            var i = 0;
+
+            foreach (object targetItem in arr)
             {
-                int i = 0;
-                foreach (object targetItem in arr)
+                if (i < array.Count)
                 {
-                    if (i < jt.Count)
+                    JToken sourceItem = array[i];
+
+                    if (sourceItem is JContainer existingContainer)
                     {
-                        JToken sourceItem = jt[i];
+                        existingContainer.Merge(targetItem);
+                    }
+                    else if (targetItem is not null)
+                    {
+                        JToken contentValue = CreateFromContent(targetItem);
 
-                        if (sourceItem is JContainer existingContainer)
+                        if (contentValue.Type is not JTokenType.Null)
                         {
-                            existingContainer.Merge(targetItem);
-                        }
-                        else if (targetItem is not null)
-                        {
-                            JToken contentValue = CreateFromContent(targetItem);
-                            if (contentValue.Type is not JTokenType.Null)
-                                jt[i] = contentValue;
+                            array[i] = contentValue;
                         }
                     }
-                    else jt.Add(targetItem);
-
-                    i++;
                 }
+                else
+                {
+                    array.Add(targetItem);
+                }
+
+                i++;
             }
-            static JToken CreateFromContent(object content)
-            {
-                if (content is JToken token) return token;
-                if (content is UnityEngine.Vector3 vec)
-                    return new JObject()
-                    {
-                        ["x"] = vec.x,
-                        ["y"] = vec.y,
-                        ["z"] = vec.z
-                    };
-                return new JValue(content);
-            }
+
+            return array;
         }
     }
 }

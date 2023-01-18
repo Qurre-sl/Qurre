@@ -1,19 +1,21 @@
-﻿using UnityEngine;
-using Mirror;
-using System;
+﻿using System;
 using Hazards;
+using Mirror;
+using UnityEngine;
 
 namespace Qurre.API.Controllers
 {
     public class Sinkhole
     {
-        private readonly SinkholeEnvironmentalHazard sinkhole;
+        internal Sinkhole(SinkholeEnvironmentalHazard hole) => EnvironmentalHazard = hole;
 
-        public SinkholeEnvironmentalHazard EnvironmentalHazard => sinkhole;
-        public GameObject GameObject => sinkhole.gameObject;
+        public SinkholeEnvironmentalHazard EnvironmentalHazard { get; }
+
+        public GameObject GameObject => EnvironmentalHazard.gameObject;
         public Transform Transform => GameObject.transform;
 
         public string Name => GameObject.name;
+
         public Vector3 Position
         {
             get => Transform.position;
@@ -24,6 +26,7 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(GameObject);
             }
         }
+
         public Quaternion Rotation
         {
             get => Transform.localRotation;
@@ -34,6 +37,7 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(GameObject);
             }
         }
+
         public Vector3 Scale
         {
             get => Transform.localScale;
@@ -46,40 +50,58 @@ namespace Qurre.API.Controllers
         }
 
         public bool ImmunityScps { get; set; }
+
         public float MaxDistance
         {
-            get => sinkhole.MaxDistance;
-            set => sinkhole.MaxDistance = value;
-        }
-        public float MaxHeightDistance
-        {
-            get => sinkhole.MaxHeightDistance;
-            set => sinkhole.MaxHeightDistance = value;
+            get => EnvironmentalHazard.MaxDistance;
+            set => EnvironmentalHazard.MaxDistance = value;
         }
 
-        static public bool operator ==(Sinkhole First, Sinkhole Next)
+        public float MaxHeightDistance
         {
-            if (First is null && Next is null) return true;
-            else if (First is null && Next is not null) return false;
-            else if (First is not null && Next is null) return false;
-            else return First.GameObject == Next.GameObject;
+            get => EnvironmentalHazard.MaxHeightDistance;
+            set => EnvironmentalHazard.MaxHeightDistance = value;
         }
-        static public bool operator !=(Sinkhole First, Sinkhole Next) => !(First == Next);
+
+        public static bool operator ==(Sinkhole First, Sinkhole Next)
+        {
+            if (First is null && Next is null)
+            {
+                return true;
+            }
+
+            if (First is null && Next is not null)
+            {
+                return false;
+            }
+
+            if (First is not null && Next is null)
+            {
+                return false;
+            }
+
+            return First.GameObject == Next.GameObject;
+        }
+
+        public static bool operator !=(Sinkhole First, Sinkhole Next) => !(First == Next);
+
         public override bool Equals(object obj)
         {
             if (obj is Sinkhole)
             {
                 return this == obj as Sinkhole;
             }
-            else
-            {
-                Sinkhole hole = obj as Sinkhole;
-                if (obj is not null) return this == hole;
-                else return false;
-            }
-        }
-        public override int GetHashCode() => Tuple.Create(this, GameObject).GetHashCode();
 
-        internal Sinkhole(SinkholeEnvironmentalHazard hole) => sinkhole = hole;
+            var hole = obj as Sinkhole;
+
+            if (obj is not null)
+            {
+                return this == hole;
+            }
+
+            return false;
+        }
+
+        public override int GetHashCode() => Tuple.Create(this, GameObject).GetHashCode();
     }
 }

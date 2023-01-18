@@ -2,23 +2,25 @@
 
 namespace Qurre.API.Controllers
 {
-    static public class Decontamination
+    public static class Decontamination
     {
-        static public DecontaminationController Controller => DecontaminationController.Singleton;
+        public static DecontaminationController Controller => DecontaminationController.Singleton;
 
-        static public DecontaminationController.DecontaminationStatus Status
+        public static DecontaminationController.DecontaminationStatus Status
         {
             get => Controller.NetworkDecontaminationOverride;
             set => Controller.NetworkDecontaminationOverride = value;
         }
-        static public bool Locked
+
+        public static bool Locked
         {
             get => Controller._stopUpdating;
             set => Controller._stopUpdating = value;
         }
 
-        static public bool Begun => Controller.IsDecontaminating;
-        static public bool InProgress => Controller._decontaminationBegun;
-        static public void InstantStart() => Controller.FinishDecontamination();
+        public static bool Begun => Controller.IsDecontaminating;
+        public static bool InProgress => Controller._decontaminationBegun;
+
+        public static void InstantStart() => Controller.FinishDecontamination();
     }
 }

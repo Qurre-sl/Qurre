@@ -1,18 +1,15 @@
-﻿using PlayerRoles.FirstPersonControl;
+﻿using System;
+using PlayerRoles.FirstPersonControl;
 using UnityEngine;
-using System;
 
 namespace Qurre.API.Classification.Player
 {
-    using Qurre.API;
-
     public class MovementState
     {
-        private readonly Player _player;
-        internal MovementState(Player pl)
-        {
-            _player = pl;
-        }
+        private readonly API.Player _player;
+
+        internal MovementState(API.Player pl)
+            => _player = pl;
 
         public Transform CameraReference => _player.ReferenceHub.PlayerCameraReference;
         public Transform Transform => _player.ReferenceHub.transform;
@@ -22,11 +19,13 @@ namespace Qurre.API.Classification.Player
             get => _player.GameObject.transform.position;
             set => _player.ReferenceHub.TryOverridePosition(value, Vector3.zero);
         }
+
         public Vector3 Rotation
         {
             get => _player.GameObject.transform.eulerAngles;
             set => _player.ReferenceHub.TryOverridePosition(Position, value);
         }
+
         public Vector3 Scale
         {
             get => _player.ReferenceHub.transform.localScale;
@@ -35,8 +34,11 @@ namespace Qurre.API.Classification.Player
                 try
                 {
                     _player.ReferenceHub.transform.localScale = value;
-                    foreach (Player target in Player.List)
+
+                    foreach (API.Player target in API.Player.List)
+                    {
                         Network.SendSpawnMessage?.Invoke(null, new object[] { _player.ClassManager.netIdentity, target.Connection });
+                    }
                 }
                 catch (Exception ex)
                 {

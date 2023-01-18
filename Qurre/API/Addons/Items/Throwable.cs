@@ -1,11 +1,16 @@
 ﻿using InventorySystem.Items.ThrowableProjectiles;
-using Qurre.API.Controllers;
 using PlayerRoles.FirstPersonControl;
+using Qurre.API.Controllers;
 
 namespace Qurre.API.Addons.Items
 {
     public class Throwable : Item
     {
+        public Throwable(ThrowableItem itemBase) : base(itemBase)
+            => Base = itemBase;
+
+        public Throwable(ItemType itemType, Player owner = null) : this((ThrowableItem)itemType.CreateItemInstance(owner)) { }
+
         public new ThrowableItem Base { get; }
 
         public ThrownProjectile Projectile => Base.Projectile;
@@ -22,19 +27,11 @@ namespace Qurre.API.Addons.Items
             set => Base._pinPullTime = value;
         }
 
-        public Throwable(ThrowableItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public Throwable(ItemType itemType, Player owner = null) : this((ThrowableItem)itemType.CreateItemInstance(owner))
-        {
-        }
-
         public void Throw(bool fullForce = true)
         {
             ThrowableItem.ProjectileSettings projectileSettings = fullForce ? Base.FullThrowSettings : Base.WeakThrowSettings;
-            Base.ServerThrow(projectileSettings.StartVelocity, projectileSettings.UpwardsFactor, projectileSettings.StartTorque,
+            Base.ServerThrow(
+                projectileSettings.StartVelocity, projectileSettings.UpwardsFactor, projectileSettings.StartTorque,
                 ThrowableNetworkHandler.GetLimitedVelocity(Base.Owner.GetVelocity()));
         }
     }

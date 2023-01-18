@@ -58,6 +58,6 @@
         Surface,
         Pocket,
 
-        Unknown = 0,
+        Unknown = 0
     }
 }

@@ -1,7 +1,13 @@
-﻿using CustomPlayerEffects;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Reflection;
+using System.Security.Cryptography;
+using CustomPlayerEffects;
 using Interactables.Interobjects;
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items;
+using JetBrains.Annotations;
 using MapGeneration;
 using MapGeneration.Distributors;
 using Mirror;
@@ -11,455 +17,548 @@ using PlayerStatsSystem;
 using Qurre.API.Addons;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Cryptography;
 using UnityEngine;
+using Locker = MapGeneration.Distributors.Locker;
+using Random = UnityEngine.Random;
 using SinkHole = CustomPlayerEffects.Sinkhole;
 
 namespace Qurre.API
 {
-	static public class Extensions
-	{
-		static public bool TryFind<TSource>(this IEnumerable<TSource> source, out TSource found, Func<TSource, bool> predicate)
-		{
-			foreach (TSource t in source)
-			{
-				if (predicate(t))
-				{
-					found = t;
-					return true;
-				}
-			}
-			found = default;
-			return false;
-		}
+    public static class Extensions
+    {
+        internal static readonly Dictionary<DamageHandlerBase, DamageTypes> DamagesCached = new ();
 
-		static public void ForEach<T>(this IReadOnlyList<T> list, Action<T> action)
-		{
-			if (action is null) throw new ArgumentNullException("Action is null");
+        public static bool TryFind<TSource>(this IEnumerable<TSource> source, out TSource found, Func<TSource, bool> predicate)
+        {
+            foreach (TSource t in source)
+            {
+                if (predicate(t))
+                {
+                    found = t;
+                    return true;
+                }
+            }
 
-			for (int i = 0; i < list.Count; i++)
-			{
-				action(list[i]);
-			}
-		}
+            found = default;
+            return false;
+        }
 
-		static public void Shuffle<T>(this IList<T> list)
-		{
-			RNGCryptoServiceProvider provider = new();
-			int n = list.Count;
-			while (n > 1)
-			{
-				byte[] box = new byte[1];
-				do provider.GetBytes(box);
-				while (!(box[0] < n * (byte.MaxValue / n)));
-				int k = (box[0] % n);
-				n--;
-				(list[n], list[k]) = (list[k], list[n]);
-			}
-		}
+        public static void ForEach<T>(this IReadOnlyList<T> list, Action<T> action)
+        {
+            if (action is null)
+            {
+                throw new ArgumentNullException("Action is null");
+            }
 
-		static public float Difference(this float first, float second)
-			=> Math.Abs(first - second);
+            for (var i = 0; i < list.Count; i++) action(list[i]);
+        }
 
-		#region Player.Get
-		static public IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInfomation.Team == team);
-		static public IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInfomation.Role == role);
+        public static void Shuffle<T>(this IList<T> list)
+        {
+            RNGCryptoServiceProvider provider = new ();
+            int n = list.Count;
 
-		static public Player GetPlayer(this CommandSender sender) => sender is null ? null : GetPlayer(sender.SenderId);
-		static public Player GetPlayer(this ReferenceHub referenceHub) { try { return referenceHub is null ? null : GetPlayer(referenceHub.gameObject); } catch { return null; } }
-		static public Player GetPlayer(this uint netId) => ReferenceHub.TryGetHubNetID(netId, out ReferenceHub hub) ? GetPlayer(hub) : null;
+            while (n > 1)
+            {
+                var box = new byte[1];
 
-		static public Player GetPlayer(this GameObject gameObject)
-		{
-			if (gameObject is null) return null;
-			Internal.Fields.Player.Dictionary.TryGetValue(gameObject, out Player player);
-			return player;
-		}
+                do
+                {
+                    provider.GetBytes(box);
+                } while (!(box[0] < n * (byte.MaxValue / n)));
 
-		static public Player GetPlayer(this int playerId)
-		{
-			if (Internal.Fields.Player.IDs.TryGetValue(playerId, out var _pl)) return _pl;
+                int k = box[0] % n;
+                n--;
+                (list[n], list[k]) = (list[k], list[n]);
+            }
+        }
 
-			foreach (Player pl in Player.List.Where(x => x.UserInfomation.Id == playerId))
-			{
-				Internal.Fields.Player.IDs.Add(playerId, pl);
-				return pl;
-			}
+        public static float Difference(this float first, float second)
+            => Math.Abs(first - second);
 
-			return null;
-		}
+        public static IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInfomation.Team == team);
 
-		static public Player GetPlayer(this string args)
-		{
-			try
-			{
-				if (string.IsNullOrWhiteSpace(args))
-					return null;
+        public static IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInfomation.Role == role);
 
-				if (Internal.Fields.Player.Args.TryGetValue(args, out Player playerFound) && playerFound?.ReferenceHub is not null)
-					return playerFound;
+        public static Player GetPlayer(this CommandSender sender) => sender is null ? null : GetPlayer(sender.SenderId);
 
-				if (int.TryParse(args, out int id))
-					return GetPlayer(id);
+        public static Player GetPlayer(this ReferenceHub referenceHub)
+        {
+            try
+            {
+                return referenceHub is null ? null : GetPlayer(referenceHub.gameObject);
+            }
+            catch
+            {
+                return null;
+            }
+        }
 
-				if (args.EndsWith("@steam") || args.EndsWith("@discord") || args.EndsWith("@northwood") || args.EndsWith("@patreon"))
-				{
-					foreach (Player player in Internal.Fields.Player.Dictionary.Values)
-					{
-						if (player.UserInfomation.UserId == args)
-						{
-							playerFound = player;
-							break;
-						}
-					}
-				}
-				else
-				{
-					int lastnameDifference = 31;
-					string firstString = args.ToLower();
-					foreach (Player player in Internal.Fields.Player.Dictionary.Values)
-					{
-						if (player.UserInfomation.Nickname is null) continue;
-						if (!player.UserInfomation.Nickname.Contains(args, StringComparison.OrdinalIgnoreCase))
-							continue;
-						string secondString = player.UserInfomation.Nickname;
-						int nameDifference = secondString.Length - firstString.Length;
-						if (nameDifference < lastnameDifference)
-						{
-							lastnameDifference = nameDifference;
-							playerFound = player;
-						}
-					}
-				}
+        public static Player GetPlayer(this uint netId) => ReferenceHub.TryGetHubNetID(netId, out ReferenceHub hub) ? GetPlayer(hub) : null;
 
-				if (playerFound is not null)
-					Internal.Fields.Player.Args[args] = playerFound;
+        public static Player GetPlayer(this GameObject gameObject)
+        {
+            if (gameObject is null)
+            {
+                return null;
+            }
 
-				return playerFound;
-			}
-			catch (Exception ex)
-			{
-				Log.Error($"[API.Player.Get(string)] umm, error: {ex}");
-				return null;
-			}
-		}
-		#endregion
+            Internal.Fields.Player.Dictionary.TryGetValue(gameObject, out Player player);
+            return player;
+        }
 
-		#region Player
-		static public Player GetAttacker(this DamageHandlerBase handler)
-		{
-			var atc = _getHandler();
-			if (atc is null) return null;
-			return atc.Attacker.Hub.GetPlayer();
-			AttackerDamageHandler _getHandler() => handler switch
-			{
-				AttackerDamageHandler adh2 => adh2,
-				_ => null,
-			};
-		}
+        public static Player GetPlayer(this int playerId)
+        {
+            if (Internal.Fields.Player.IDs.TryGetValue(playerId, out Player _pl))
+            {
+                return _pl;
+            }
 
-		static public float DistanceTo(this Player source, Player player)
-			=> Vector3.Distance(source.MovementState.Position, player.MovementState.Position);
-		static public float DistanceTo(this Player source, Vector3 position)
-			=> Vector3.Distance(source.MovementState.Position, position);
-		static public float DistanceTo(this Player source, GameObject Object)
-			=> Vector3.Distance(source.MovementState.Position, Object.transform.position);
-		#endregion
+            foreach (Player pl in Player.List.Where(x => x.UserInfomation.Id == playerId))
+            {
+                Internal.Fields.Player.IDs.Add(playerId, pl);
+                return pl;
+            }
 
-		#region Damages
+            return null;
+        }
 
-		static public LiteDamageTypes GetLiteDamageTypes(this DamageHandlerBase handler) => handler switch
-		{
-			CustomReasonDamageHandler _ => LiteDamageTypes.Custom,
-			DisruptorDamageHandler _ => LiteDamageTypes.Disruptor,
-			ExplosionDamageHandler _ => LiteDamageTypes.Explosion,
-			FirearmDamageHandler _ => LiteDamageTypes.Gun,
-			MicroHidDamageHandler _ => LiteDamageTypes.MicroHid,
-			RecontainmentDamageHandler _ => LiteDamageTypes.Recontainment,
-			Scp018DamageHandler _ => LiteDamageTypes.Scp018,
-			Scp049DamageHandler _ => LiteDamageTypes.Scp049,
-			Scp096DamageHandler _ => LiteDamageTypes.Scp096,
-			ScpDamageHandler _ => LiteDamageTypes.ScpDamage,
-			UniversalDamageHandler _ => LiteDamageTypes.Universal,
-			WarheadDamageHandler _ => LiteDamageTypes.Warhead,
-			_ => LiteDamageTypes.Unknow,
-		};
+        public static Player GetPlayer(this string args)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(args))
+                {
+                    return null;
+                }
 
-		static internal readonly Dictionary<DamageHandlerBase, DamageTypes> DamagesCached = new();
-		static public DamageTypes GetDamageType(this DamageHandlerBase handler)
-		{
-			if (DamagesCached.TryGetValue(handler, out var damageType)) return damageType;
+                if (Internal.Fields.Player.Args.TryGetValue(args, out Player playerFound) && playerFound?.ReferenceHub is not null)
+                {
+                    return playerFound;
+                }
 
-			var _type = _get();
-			DamagesCached.Add(handler, _type);
-			return _type;
+                if (int.TryParse(args, out int id))
+                {
+                    return GetPlayer(id);
+                }
 
-			DamageTypes _get() => handler switch
-			{
-				CustomReasonDamageHandler _ => DamageTypes.Custom,
-				DisruptorDamageHandler _ => DamageTypes.Disruptor,
-				ExplosionDamageHandler _ => DamageTypes.Explosion,
+                if (args.EndsWith("@steam") || args.EndsWith("@discord") || args.EndsWith("@northwood") || args.EndsWith("@patreon"))
+                {
+                    foreach (Player player in Internal.Fields.Player.Dictionary.Values)
+                    {
+                        if (player.UserInfomation.UserId == args)
+                        {
+                            playerFound = player;
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    var lastnameDifference = 31;
+                    string firstString = args.ToLower();
 
-				FirearmDamageHandler fr => fr.WeaponType switch
-				{
-					ItemType.GunCOM15 => DamageTypes.Com15,
-					ItemType.GunCOM18 => DamageTypes.Com18,
-					ItemType.GunCom45 => DamageTypes.Com45,
-					ItemType.GunRevolver => DamageTypes.Revolver,
+                    foreach (Player player in Internal.Fields.Player.Dictionary.Values)
+                    {
+                        if (player.UserInfomation.Nickname is null)
+                        {
+                            continue;
+                        }
 
-					ItemType.GunFSP9 => DamageTypes.FSP9,
-					ItemType.GunCrossvec => DamageTypes.CrossVec,
+                        if (!player.UserInfomation.Nickname.Contains(args, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
 
-					ItemType.GunAK => DamageTypes.AK,
-					ItemType.GunE11SR => DamageTypes.E11SR,
-					ItemType.GunLogicer => DamageTypes.Logicer,
-					ItemType.GunShotgun => DamageTypes.Shotgun,
+                        string secondString = player.UserInfomation.Nickname;
+                        int nameDifference = secondString.Length - firstString.Length;
 
-					ItemType.ParticleDisruptor => DamageTypes.Disruptor,
+                        if (nameDifference < lastnameDifference)
+                        {
+                            lastnameDifference = nameDifference;
+                            playerFound = player;
+                        }
+                    }
+                }
 
-					_ => DamageTypes.Unknow,
-				},
+                if (playerFound is not null)
+                {
+                    Internal.Fields.Player.Args[args] = playerFound;
+                }
 
-				MicroHidDamageHandler _ => DamageTypes.MicroHid,
-				RecontainmentDamageHandler _ => DamageTypes.Recontainment,
-				Scp018DamageHandler _ => DamageTypes.Scp018,
-				Scp049DamageHandler _ => DamageTypes.Scp049,
-				Scp096DamageHandler _ => DamageTypes.Scp096,
-				ScpDamageHandler sr => parseTranslation(sr._translationId),
-				UniversalDamageHandler tr => parseTranslation(tr.TranslationId),
-				WarheadDamageHandler _ => DamageTypes.Warhead,
-				_ => DamageTypes.Unknow,
-			};
+                return playerFound;
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[API.Player.Get(string)] umm, error: {ex}");
+                return null;
+            }
+        }
 
-			DamageTypes parseTranslation(byte _translationId) => _translationId switch
-			{
-				0 => DamageTypes.Recontainment,
-				1 => DamageTypes.Warhead,
-				2 => DamageTypes.Scp049,
-				4 => DamageTypes.Asphyxiation,
-				5 => DamageTypes.Bleeding,
-				6 => DamageTypes.Falldown,
-				7 => DamageTypes.Pocket,
-				8 => DamageTypes.Decontamination,
-				9 => DamageTypes.Poison,
-				10 => DamageTypes.Scp207,
-				11 => DamageTypes.SeveredHands,
-				12 => DamageTypes.MicroHid,
-				13 => DamageTypes.Tesla,
-				14 => DamageTypes.Explosion,
-				15 => DamageTypes.Scp096,
-				16 => DamageTypes.Scp173,
-				17 => DamageTypes.Scp939Lunge,
-				18 => DamageTypes.Zombie,
-				20 => DamageTypes.Crushed,
-				22 => DamageTypes.FriendlyFireDetector,
-				23 => DamageTypes.Hypothermia,
-				24 => DamageTypes.CardiacArrest,
-				25 => DamageTypes.Scp939,
-				_ => DamageTypes.Unknow,
-			};
-		}
-		#endregion
+        public static Player GetAttacker(this DamageHandlerBase handler)
+        {
+            AttackerDamageHandler atc = _getHandler();
 
-		#region Prefabs
-		static public BreakableDoor GetPrefab(this DoorPrefabs prefab)
-		{
-			if (Prefabs.Doors.TryGetValue(prefab, out var door)) return door;
-			return Prefabs.Doors.First().Value;
-		}
-		static public GameObject GetPrefab(this TargetPrefabs prefab)
-		{
-			if (Prefabs.Targets.TryGetValue(prefab, out var target)) return target;
-			return Prefabs.Targets.First().Value;
-		}
-		static public MapGeneration.Distributors.Locker GetPrefab(this LockerPrefabs prefab)
-		{
-			if (prefab is LockerPrefabs.Pedestal)
-			{
-				prefab = UnityEngine.Random.Range(0, 100) switch
-				{
-					> 80 => LockerPrefabs.Pedestal268,
-					> 60 => LockerPrefabs.Pedestal207,
-					> 40 => LockerPrefabs.Pedestal500,
-					> 20 => LockerPrefabs.Pedestal018,
-					_ => LockerPrefabs.Pedestal2176,
-				};
-			}
-			if (Prefabs.Lockers.TryGetValue(prefab, out var locker)) return locker;
-			return Prefabs.Lockers.First().Value;
-		}
-		#endregion
+            if (atc is null)
+            {
+                return null;
+            }
 
-		#region Items
-		static public ItemCategory GetCategory(this ItemType itemType)
-		{
-			return itemType switch
-			{
-				ItemType.KeycardChaosInsurgency or ItemType.KeycardContainmentEngineer or ItemType.KeycardFacilityManager or ItemType.KeycardGuard or ItemType.KeycardJanitor or ItemType.KeycardNTFCommander or ItemType.KeycardNTFLieutenant or ItemType.KeycardNTFOfficer or ItemType.KeycardO5 or ItemType.KeycardResearchCoordinator or ItemType.KeycardScientist or ItemType.KeycardZoneManager => ItemCategory.Keycard,
-				ItemType.Medkit or ItemType.Adrenaline or ItemType.Painkillers => ItemCategory.Medical,
-				ItemType.Radio => ItemCategory.Radio,
-				ItemType.GunAK or ItemType.GunCOM15 or ItemType.GunCOM18 or ItemType.GunCrossvec or ItemType.GunE11SR or ItemType.GunFSP9 or ItemType.GunLogicer or ItemType.GunRevolver or ItemType.GunShotgun => ItemCategory.Firearm,
-				ItemType.GrenadeFlash or ItemType.GrenadeHE => ItemCategory.Grenade,
-				ItemType.SCP018 or ItemType.SCP207 or ItemType.SCP268 or ItemType.SCP500 or ItemType.SCP244a or ItemType.SCP244b or ItemType.SCP330 or ItemType.SCP2176 => ItemCategory.SCPItem,
-				ItemType.MicroHID => ItemCategory.MicroHID,
-				ItemType.Ammo12gauge or ItemType.Ammo44cal or ItemType.Ammo556x45 or ItemType.Ammo762x39 or ItemType.Ammo9x19 => ItemCategory.Ammo,
-				ItemType.ArmorCombat or ItemType.ArmorHeavy or ItemType.ArmorLight => ItemCategory.Armor,
-				_ => ItemCategory.None
-			};
-		}
+            return atc.Attacker.Hub.GetPlayer();
 
-		static internal AmmoType GetAmmoType(this ItemType itemType)
-		{
-			return itemType switch
-			{
-				ItemType.Ammo556x45 => AmmoType.Ammo556,
-				ItemType.Ammo762x39 => AmmoType.Ammo762,
-				ItemType.Ammo9x19 => AmmoType.Ammo9,
-				ItemType.Ammo12gauge => AmmoType.Ammo12Gauge,
-				ItemType.Ammo44cal => AmmoType.Ammo44Cal,
-				_ => AmmoType.None
-			};
-		}
+            AttackerDamageHandler _getHandler()
+            {
+                return handler switch
+                {
+                    AttackerDamageHandler adh2 => adh2,
+                    _ => null
+                };
+            }
+        }
 
-		static internal ItemType GetItemType(this AmmoType ammoType)
-		{
-			return ammoType switch
-			{
-				AmmoType.Ammo556 => ItemType.Ammo556x45,
-				AmmoType.Ammo762 => ItemType.Ammo762x39,
-				AmmoType.Ammo9 => ItemType.Ammo9x19,
-				AmmoType.Ammo12Gauge => ItemType.Ammo12gauge,
-				AmmoType.Ammo44Cal => ItemType.Ammo44cal,
-				_ => ItemType.None,
-			};
-		}
+        public static float DistanceTo(this Player source, Player player)
+            => Vector3.Distance(source.MovementState.Position, player.MovementState.Position);
 
-		static internal ItemBase CreateItemInstance(this ItemType type, Player owner = null)
-		{
-			ItemIdentifier identifier = new(type, ItemSerialGenerator.GenerateNext());
+        public static float DistanceTo(this Player source, Vector3 position)
+            => Vector3.Distance(source.MovementState.Position, position);
 
-			if (owner != null)
-				owner.Inventory.Base.CreateItemInstance(identifier, false);
+        public static float DistanceTo(this Player source, GameObject Object)
+            => Vector3.Distance(source.MovementState.Position, Object.transform.position);
 
-			return Server.Host.Inventory.Base.CreateItemInstance(identifier, false);
-		}
-		#endregion
+        public static LiteDamageTypes GetLiteDamageTypes(this DamageHandlerBase handler) => handler switch
+        {
+            CustomReasonDamageHandler _ => LiteDamageTypes.Custom,
+            DisruptorDamageHandler _ => LiteDamageTypes.Disruptor,
+            ExplosionDamageHandler _ => LiteDamageTypes.Explosion,
+            FirearmDamageHandler _ => LiteDamageTypes.Gun,
+            MicroHidDamageHandler _ => LiteDamageTypes.MicroHid,
+            RecontainmentDamageHandler _ => LiteDamageTypes.Recontainment,
+            Scp018DamageHandler _ => LiteDamageTypes.Scp018,
+            Scp049DamageHandler _ => LiteDamageTypes.Scp049,
+            Scp096DamageHandler _ => LiteDamageTypes.Scp096,
+            ScpDamageHandler _ => LiteDamageTypes.ScpDamage,
+            UniversalDamageHandler _ => LiteDamageTypes.Universal,
+            WarheadDamageHandler _ => LiteDamageTypes.Warhead,
+            _ => LiteDamageTypes.Unknow
+        };
 
-		#region GameObjects
-		static internal void NetworkRespawn(this GameObject gameObject)
-		{
-			NetworkServer.UnSpawn(gameObject);
-			NetworkServer.Spawn(gameObject);
-		}
-		#endregion
+        public static DamageTypes GetDamageType(this DamageHandlerBase handler)
+        {
+            if (DamagesCached.TryGetValue(handler, out DamageTypes damageType))
+            {
+                return damageType;
+            }
 
-		#region Effects
-		static public Type Type(this EffectType effect) => effect switch
-		{
-			EffectType.AmnesiaItems => typeof(AmnesiaItems),
-			EffectType.AmnesiaVision => typeof(AmnesiaVision),
-			EffectType.Asphyxiated => typeof(Asphyxiated),
-			EffectType.Bleeding => typeof(Bleeding),
-			EffectType.Blinded => typeof(Blinded),
-			EffectType.BodyshotReduction => typeof(BodyshotReduction),
-			EffectType.Burned => typeof(Burned),
-			EffectType.CardiacArrest => typeof(CardiacArrest),
-			EffectType.Concussed => typeof(Concussed),
-			EffectType.Corroding => typeof(Corroding),
-			EffectType.DamageReduction => typeof(DamageReduction),
-			EffectType.Deafened => typeof(Deafened),
-			EffectType.Decontaminating => typeof(Decontaminating),
-			EffectType.Disabled => typeof(Disabled),
-			EffectType.Ensnared => typeof(Ensnared),
-			EffectType.Exhausted => typeof(Exhausted),
-			EffectType.Flashed => typeof(Flashed),
-			EffectType.Hemorrhage => typeof(Hemorrhage),
-			EffectType.InsufficientLighting => typeof(InsufficientLighting),
-			EffectType.Invigorated => typeof(Invigorated),
-			EffectType.Invisible => typeof(Invisible),
-			EffectType.MovementBoost => typeof(MovementBoost),
-			EffectType.Poisoned => typeof(Poisoned),
-			EffectType.RainbowTaste => typeof(RainbowTaste),
-			EffectType.Scp1853 => typeof(Scp1853),
-			EffectType.Scp207 => typeof(Scp207),
-			EffectType.SeveredHands => typeof(SeveredHands),
-			EffectType.Sinkhole => typeof(SinkHole),
-			EffectType.SoundtrackMute => typeof(SoundtrackMute),
-			EffectType.SpawnProtected => typeof(SpawnProtected),
-			EffectType.Stained => typeof(Stained),
-			EffectType.Traumatized => typeof(Traumatized),
-			EffectType.Vitality => typeof(Vitality),
-			_ => throw new InvalidOperationException("Invalid effect enum provided"),
-		};
-		static public EffectType GetEffectType(this StatusEffectBase ef) => ef switch
-		{
-			AmnesiaItems => EffectType.AmnesiaItems,
-			AmnesiaVision => EffectType.AmnesiaVision,
-			Asphyxiated => EffectType.Asphyxiated,
-			Bleeding => EffectType.Bleeding,
-			Blinded => EffectType.Blinded,
-			BodyshotReduction => EffectType.BodyshotReduction,
-			Burned => EffectType.Burned,
-			CardiacArrest => EffectType.CardiacArrest,
-			Concussed => EffectType.Concussed,
-			Corroding => EffectType.Corroding,
-			DamageReduction => EffectType.DamageReduction,
-			Deafened => EffectType.Deafened,
-			Decontaminating => EffectType.Decontaminating,
-			Disabled => EffectType.Disabled,
-			Ensnared => EffectType.Ensnared,
-			Exhausted => EffectType.Exhausted,
-			Flashed => EffectType.Flashed,
-			Hemorrhage => EffectType.Hemorrhage,
-			InsufficientLighting => EffectType.InsufficientLighting,
-			Invigorated => EffectType.Invigorated,
-			Invisible => EffectType.Invisible,
-			MovementBoost => EffectType.MovementBoost,
-			Poisoned => EffectType.Poisoned,
-			RainbowTaste => EffectType.RainbowTaste,
-			Scp1853 => EffectType.Scp1853,
-			Scp207 => EffectType.Scp207,
-			SeveredHands => EffectType.SeveredHands,
-			SinkHole => EffectType.Sinkhole,
-			SoundtrackMute => EffectType.SoundtrackMute,
-			SpawnProtected => EffectType.SpawnProtected,
-			Stained => EffectType.Stained,
-			Traumatized => EffectType.Traumatized,
-			Vitality => EffectType.Vitality,
-			_ => EffectType.None,
-		};
-		#endregion
+            DamageTypes _type = _get();
+            DamagesCached.Add(handler, _type);
+            return _type;
 
-		#region GetRoom
-		static public Room GetRoom(this RoomName type) => Map.Rooms.FirstOrDefault(x => x.RoomName == type);
-		static public Room GetRoom(this RoomType type) => Map.Rooms.FirstOrDefault(x => x.Type == type);
-		static public Room GetRoom(this RoomIdentifier identifier) => Map.Rooms.FirstOrDefault(x => x.Identifier == identifier);
-		#endregion
+            DamageTypes _get()
+            {
+                return handler switch
+                {
+                    CustomReasonDamageHandler _ => DamageTypes.Custom,
+                    DisruptorDamageHandler _ => DamageTypes.Disruptor,
+                    ExplosionDamageHandler _ => DamageTypes.Explosion,
 
-		#region GetTesla
-		static public Tesla GetTesla(this TeslaGate teslaGate) => Map.Teslas.FirstOrDefault(x => x.GameObject == teslaGate.gameObject);
-		static public Tesla GetTesla(this GameObject gameObject) => Map.Teslas.FirstOrDefault(x => x.GameObject == gameObject);
-		#endregion
+                    FirearmDamageHandler fr => fr.WeaponType switch
+                    {
+                        ItemType.GunCOM15 => DamageTypes.Com15,
+                        ItemType.GunCOM18 => DamageTypes.Com18,
+                        ItemType.GunCom45 => DamageTypes.Com45,
+                        ItemType.GunRevolver => DamageTypes.Revolver,
 
-		#region GetGenerator
-		static public Generator GetGenerator(this GameObject gameObject) => Map.Generators.FirstOrDefault(x => x.GameObject == gameObject);
-		static public Generator GetGenerator(this Scp079Generator generator079) => Map.Generators.FirstOrDefault(x => x.GameObject == generator079.gameObject);
-		#endregion
+                        ItemType.GunFSP9 => DamageTypes.FSP9,
+                        ItemType.GunCrossvec => DamageTypes.CrossVec,
 
-		#region GetLift
-		static public Lift GetLift(this ElevatorChamber elevator) => Map.Lifts.FirstOrDefault(x => x.Elevator == elevator);
-		#endregion
+                        ItemType.GunAK => DamageTypes.AK,
+                        ItemType.GunE11SR => DamageTypes.E11SR,
+                        ItemType.GunLogicer => DamageTypes.Logicer,
+                        ItemType.GunShotgun => DamageTypes.Shotgun,
 
-		#region GetLocker
-		static public Controllers.Locker GetLocker(this MapGeneration.Distributors.Locker locker) => Map.Lockers.FirstOrDefault(x => x._locker == locker);
-		#endregion
+                        ItemType.ParticleDisruptor => DamageTypes.Disruptor,
 
-		#region GetDoor
-		static public Door GetDoor(this DoorVariant variant) => Map.Doors.FirstOrDefault(x => x.DoorVariant == variant);
-		static public Door GetDoor(this DoorType type) => Map.Doors.FirstOrDefault(x => x.Type == type);
-		#endregion
-	}
+                        _ => DamageTypes.Unknow
+                    },
+
+                    MicroHidDamageHandler _ => DamageTypes.MicroHid,
+                    RecontainmentDamageHandler _ => DamageTypes.Recontainment,
+                    Scp018DamageHandler _ => DamageTypes.Scp018,
+                    Scp049DamageHandler _ => DamageTypes.Scp049,
+                    Scp096DamageHandler _ => DamageTypes.Scp096,
+                    ScpDamageHandler sr => parseTranslation(sr._translationId),
+                    UniversalDamageHandler tr => parseTranslation(tr.TranslationId),
+                    WarheadDamageHandler _ => DamageTypes.Warhead,
+                    _ => DamageTypes.Unknow
+                };
+            }
+
+            DamageTypes parseTranslation(byte _translationId)
+            {
+                return _translationId switch
+                {
+                    0 => DamageTypes.Recontainment,
+                    1 => DamageTypes.Warhead,
+                    2 => DamageTypes.Scp049,
+                    4 => DamageTypes.Asphyxiation,
+                    5 => DamageTypes.Bleeding,
+                    6 => DamageTypes.Falldown,
+                    7 => DamageTypes.Pocket,
+                    8 => DamageTypes.Decontamination,
+                    9 => DamageTypes.Poison,
+                    10 => DamageTypes.Scp207,
+                    11 => DamageTypes.SeveredHands,
+                    12 => DamageTypes.MicroHid,
+                    13 => DamageTypes.Tesla,
+                    14 => DamageTypes.Explosion,
+                    15 => DamageTypes.Scp096,
+                    16 => DamageTypes.Scp173,
+                    17 => DamageTypes.Scp939Lunge,
+                    18 => DamageTypes.Zombie,
+                    20 => DamageTypes.Crushed,
+                    22 => DamageTypes.FriendlyFireDetector,
+                    23 => DamageTypes.Hypothermia,
+                    24 => DamageTypes.CardiacArrest,
+                    25 => DamageTypes.Scp939,
+                    _ => DamageTypes.Unknow
+                };
+            }
+        }
+
+        public static BreakableDoor GetPrefab(this DoorPrefabs prefab)
+        {
+            if (Prefabs.Doors.TryGetValue(prefab, out BreakableDoor door))
+            {
+                return door;
+            }
+
+            return Prefabs.Doors.First().Value;
+        }
+
+        public static GameObject GetPrefab(this TargetPrefabs prefab)
+        {
+            if (Prefabs.Targets.TryGetValue(prefab, out GameObject target))
+            {
+                return target;
+            }
+
+            return Prefabs.Targets.First().Value;
+        }
+
+        public static Locker GetPrefab(this LockerPrefabs prefab)
+        {
+            if (prefab is LockerPrefabs.Pedestal)
+            {
+                prefab = Random.Range(0, 100) switch
+                {
+                    > 80 => LockerPrefabs.Pedestal268,
+                    > 60 => LockerPrefabs.Pedestal207,
+                    > 40 => LockerPrefabs.Pedestal500,
+                    > 20 => LockerPrefabs.Pedestal018,
+                    _ => LockerPrefabs.Pedestal2176
+                };
+            }
+
+            if (Prefabs.Lockers.TryGetValue(prefab, out Locker locker))
+            {
+                return locker;
+            }
+
+            return Prefabs.Lockers.First().Value;
+        }
+
+        public static ItemCategory GetCategory(this ItemType itemType)
+            => itemType switch
+            {
+                ItemType.KeycardChaosInsurgency or ItemType.KeycardContainmentEngineer or ItemType.KeycardFacilityManager or ItemType.KeycardGuard or ItemType.KeycardJanitor
+                    or ItemType.KeycardNTFCommander or ItemType.KeycardNTFLieutenant or ItemType.KeycardNTFOfficer or ItemType.KeycardO5 or ItemType.KeycardResearchCoordinator
+                    or ItemType.KeycardScientist or ItemType.KeycardZoneManager => ItemCategory.Keycard,
+                ItemType.Medkit or ItemType.Adrenaline or ItemType.Painkillers => ItemCategory.Medical,
+                ItemType.Radio => ItemCategory.Radio,
+                ItemType.GunAK or ItemType.GunCOM15 or ItemType.GunCOM18 or ItemType.GunCrossvec or ItemType.GunE11SR or ItemType.GunFSP9 or ItemType.GunLogicer or ItemType.GunRevolver
+                    or ItemType.GunShotgun => ItemCategory.Firearm,
+                ItemType.GrenadeFlash or ItemType.GrenadeHE => ItemCategory.Grenade,
+                ItemType.SCP018 or ItemType.SCP207 or ItemType.SCP268 or ItemType.SCP500 or ItemType.SCP244a or ItemType.SCP244b or ItemType.SCP330 or ItemType.SCP2176 => ItemCategory.SCPItem,
+                ItemType.MicroHID => ItemCategory.MicroHID,
+                ItemType.Ammo12gauge or ItemType.Ammo44cal or ItemType.Ammo556x45 or ItemType.Ammo762x39 or ItemType.Ammo9x19 => ItemCategory.Ammo,
+                ItemType.ArmorCombat or ItemType.ArmorHeavy or ItemType.ArmorLight => ItemCategory.Armor,
+                _ => ItemCategory.None
+            };
+
+        public static Type Type(this EffectType effect) => effect switch
+        {
+            EffectType.AmnesiaItems => typeof(AmnesiaItems),
+            EffectType.AmnesiaVision => typeof(AmnesiaVision),
+            EffectType.Asphyxiated => typeof(Asphyxiated),
+            EffectType.Bleeding => typeof(Bleeding),
+            EffectType.Blinded => typeof(Blinded),
+            EffectType.BodyshotReduction => typeof(BodyshotReduction),
+            EffectType.Burned => typeof(Burned),
+            EffectType.CardiacArrest => typeof(CardiacArrest),
+            EffectType.Concussed => typeof(Concussed),
+            EffectType.Corroding => typeof(Corroding),
+            EffectType.DamageReduction => typeof(DamageReduction),
+            EffectType.Deafened => typeof(Deafened),
+            EffectType.Decontaminating => typeof(Decontaminating),
+            EffectType.Disabled => typeof(Disabled),
+            EffectType.Ensnared => typeof(Ensnared),
+            EffectType.Exhausted => typeof(Exhausted),
+            EffectType.Flashed => typeof(Flashed),
+            EffectType.Hemorrhage => typeof(Hemorrhage),
+            EffectType.InsufficientLighting => typeof(InsufficientLighting),
+            EffectType.Invigorated => typeof(Invigorated),
+            EffectType.Invisible => typeof(Invisible),
+            EffectType.MovementBoost => typeof(MovementBoost),
+            EffectType.Poisoned => typeof(Poisoned),
+            EffectType.RainbowTaste => typeof(RainbowTaste),
+            EffectType.Scp1853 => typeof(Scp1853),
+            EffectType.Scp207 => typeof(Scp207),
+            EffectType.SeveredHands => typeof(SeveredHands),
+            EffectType.Sinkhole => typeof(SinkHole),
+            EffectType.SoundtrackMute => typeof(SoundtrackMute),
+            EffectType.SpawnProtected => typeof(SpawnProtected),
+            EffectType.Stained => typeof(Stained),
+            EffectType.Traumatized => typeof(Traumatized),
+            EffectType.Vitality => typeof(Vitality),
+            _ => throw new InvalidOperationException("Invalid effect enum provided")
+        };
+
+        public static EffectType GetEffectType(this StatusEffectBase ef) => ef switch
+        {
+            AmnesiaItems => EffectType.AmnesiaItems,
+            AmnesiaVision => EffectType.AmnesiaVision,
+            Asphyxiated => EffectType.Asphyxiated,
+            Bleeding => EffectType.Bleeding,
+            Blinded => EffectType.Blinded,
+            BodyshotReduction => EffectType.BodyshotReduction,
+            Burned => EffectType.Burned,
+            CardiacArrest => EffectType.CardiacArrest,
+            Concussed => EffectType.Concussed,
+            Corroding => EffectType.Corroding,
+            DamageReduction => EffectType.DamageReduction,
+            Deafened => EffectType.Deafened,
+            Decontaminating => EffectType.Decontaminating,
+            Disabled => EffectType.Disabled,
+            Ensnared => EffectType.Ensnared,
+            Exhausted => EffectType.Exhausted,
+            Flashed => EffectType.Flashed,
+            Hemorrhage => EffectType.Hemorrhage,
+            InsufficientLighting => EffectType.InsufficientLighting,
+            Invigorated => EffectType.Invigorated,
+            Invisible => EffectType.Invisible,
+            MovementBoost => EffectType.MovementBoost,
+            Poisoned => EffectType.Poisoned,
+            RainbowTaste => EffectType.RainbowTaste,
+            Scp1853 => EffectType.Scp1853,
+            Scp207 => EffectType.Scp207,
+            SeveredHands => EffectType.SeveredHands,
+            SinkHole => EffectType.Sinkhole,
+            SoundtrackMute => EffectType.SoundtrackMute,
+            SpawnProtected => EffectType.SpawnProtected,
+            Stained => EffectType.Stained,
+            Traumatized => EffectType.Traumatized,
+            Vitality => EffectType.Vitality,
+            _ => EffectType.None
+        };
+
+        public static Room GetRoom(this RoomName type) => Map.Rooms.FirstOrDefault(x => x.RoomName == type);
+
+        public static Room GetRoom(this RoomType type) => Map.Rooms.FirstOrDefault(x => x.Type == type);
+
+        public static Room GetRoom(this RoomIdentifier identifier) => Map.Rooms.FirstOrDefault(x => x.Identifier == identifier);
+
+        public static Tesla GetTesla(this TeslaGate teslaGate) => Map.Teslas.FirstOrDefault(x => x.GameObject == teslaGate.gameObject);
+
+        public static Tesla GetTesla(this GameObject gameObject) => Map.Teslas.FirstOrDefault(x => x.GameObject == gameObject);
+
+        public static Generator GetGenerator(this GameObject gameObject) => Map.Generators.FirstOrDefault(x => x.GameObject == gameObject);
+
+        public static Generator GetGenerator(this Scp079Generator generator079) => Map.Generators.FirstOrDefault(x => x.GameObject == generator079.gameObject);
+
+        public static Lift GetLift(this ElevatorChamber elevator) => Map.Lifts.FirstOrDefault(x => x.Elevator == elevator);
+
+        public static Controllers.Locker GetLocker(this Locker locker) => Map.Lockers.FirstOrDefault(x => x._locker == locker);
+
+        public static Door GetDoor(this DoorVariant variant) => Map.Doors.FirstOrDefault(x => x.DoorVariant == variant);
+
+        public static Door GetDoor(this DoorType type) => Map.Doors.FirstOrDefault(x => x.Type == type);
+
+        public static void TryAction([NotNull] Action action, [CanBeNull] string customErrorText)
+        {
+            try
+            {
+                action.Invoke();
+            }
+            catch (Exception error)
+            {
+                error.PrintError($"{customErrorText ?? "An error occurred:"} {error.Message}\n{error.TargetSite}\n{error.StackTrace}", Assembly.GetCallingAssembly().GetName().Name);
+            }
+        }
+
+        public static void TryAction<T1>([NotNull] Action<T1> action, [CanBeNull] string customErrorText, T1 arg1)
+        {
+            try
+            {
+                action.Invoke(arg1);
+            }
+            catch (Exception error)
+            {
+                error.PrintError($"{customErrorText ?? "An error occurred:"} {error.Message}\n{error.TargetSite}\n{error.StackTrace}", Assembly.GetCallingAssembly().GetName().Name);
+            }
+        }
+
+        public static void TryAction<T1, T2, T3, T4>([NotNull] Action<T1, T2, T3, T4> action, [CanBeNull] string customErrorText, T1 arg1, T2 arg2, T3 arg3, T4 arg4)
+        {
+            try
+            {
+                action.Invoke(arg1, arg2, arg3, arg4);
+            }
+            catch (Exception error)
+            {
+                error.PrintError($"{customErrorText ?? "An error occurred:"} {error.Message}\n{error.TargetSite}\n{error.StackTrace}", Assembly.GetCallingAssembly().GetName().Name);
+            }
+        }
+
+        public static void PrintError(this Exception error, in string text, in string caller) => Log.Error(text, caller);
+
+        internal static AmmoType GetAmmoType(this ItemType itemType)
+            => itemType switch
+            {
+                ItemType.Ammo556x45 => AmmoType.Ammo556,
+                ItemType.Ammo762x39 => AmmoType.Ammo762,
+                ItemType.Ammo9x19 => AmmoType.Ammo9,
+                ItemType.Ammo12gauge => AmmoType.Ammo12Gauge,
+                ItemType.Ammo44cal => AmmoType.Ammo44Cal,
+                _ => AmmoType.None
+            };
+
+        internal static ItemType GetItemType(this AmmoType ammoType)
+            => ammoType switch
+            {
+                AmmoType.Ammo556 => ItemType.Ammo556x45,
+                AmmoType.Ammo762 => ItemType.Ammo762x39,
+                AmmoType.Ammo9 => ItemType.Ammo9x19,
+                AmmoType.Ammo12Gauge => ItemType.Ammo12gauge,
+                AmmoType.Ammo44Cal => ItemType.Ammo44cal,
+                _ => ItemType.None
+            };
+
+        internal static ItemBase CreateItemInstance(this ItemType type, Player owner = null)
+        {
+            ItemIdentifier identifier = new (type, ItemSerialGenerator.GenerateNext());
+
+            if (owner != null)
+            {
+                owner.Inventory.Base.CreateItemInstance(identifier, false);
+            }
+
+            return Server.Host.Inventory.Base.CreateItemInstance(identifier, false);
+        }
+
+        internal static void NetworkRespawn(this GameObject gameObject)
+        {
+            NetworkServer.UnSpawn(gameObject);
+            NetworkServer.Spawn(gameObject);
+        }
+    }
 }

@@ -1,26 +1,45 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using InventorySystem.Items;
+using InventorySystem.Items.Armor;
+using InventorySystem.Items.Firearms;
+using InventorySystem.Items.Firearms.Ammo;
+using InventorySystem.Items.Flashlight;
+using InventorySystem.Items.Keycards;
+using InventorySystem.Items.MicroHID;
 using InventorySystem.Items.Pickups;
+using InventorySystem.Items.Radio;
+using InventorySystem.Items.ThrowableProjectiles;
+using InventorySystem.Items.Usables;
 using Mirror;
 using Qurre.API.Addons.Items;
 using UnityEngine;
-using InventorySystem.Items.Firearms;
-using InventorySystem.Items.Keycards;
-using InventorySystem.Items.Usables;
-using InventorySystem.Items.Radio;
-using InventorySystem.Items.MicroHID;
-using InventorySystem.Items.Armor;
-using InventorySystem.Items.Firearms.Ammo;
-using InventorySystem.Items.Flashlight;
-using InventorySystem.Items.ThrowableProjectiles;
-using InventorySystem.Items.Usables.Scp330;
+using Object = UnityEngine.Object;
 
 namespace Qurre.API.Controllers
 {
     public class Item
     {
-        internal static readonly Dictionary<ItemBase, Item> BaseToItem = new();
+        internal static readonly Dictionary<ItemBase, Item> BaseToItem = new ();
+
+        private string _tag;
+
+        public Item(ItemBase itemBase)
+        {
+            Base = itemBase;
+            Serial = Base.OwnerInventory.UserInventory.Items.FirstOrDefault(i => i.Value == Base).Key;
+
+            if (Serial == 0)
+            {
+                Serial = ItemSerialGenerator.GenerateNext();
+            }
+
+            BaseToItem.Add(itemBase, this);
+        }
+
+        public Item(ItemType type)
+            : this(Server.InventoryHost.CreateItemInstance(new (type, ItemSerialGenerator.GenerateNext()), false)) { }
 
         public ItemBase Base { get; }
 
@@ -33,7 +52,9 @@ namespace Qurre.API.Controllers
             set
             {
                 if (value is null)
+                {
                     return;
+                }
 
                 _tag = value;
             }
@@ -50,17 +71,26 @@ namespace Qurre.API.Controllers
 
         public ushort Serial
         {
-            get
-            {
-                return Base.OwnerInventory.UserInventory.Items.FirstOrDefault(i => i.Value == Base).Key;
-            }
+            get => Base.OwnerInventory.UserInventory.Items.FirstOrDefault(i => i.Value == Base).Key;
             internal set
             {
-                if (value == 0) value = ItemSerialGenerator.GenerateNext();
+                if (value == 0)
+                {
+                    value = ItemSerialGenerator.GenerateNext();
+                }
+
                 if (Base == null || Base.PickupDropModel == null)
+                {
                     return;
+                }
+
                 Base.PickupDropModel.Info.Serial = value;
-                try { Base.PickupDropModel.NetworkInfo = Base.PickupDropModel.Info; } catch { }
+
+                try
+                {
+                    Base.PickupDropModel.NetworkInfo = Base.PickupDropModel.Info;
+                }
+                catch { }
             }
         }
 
@@ -69,54 +99,29 @@ namespace Qurre.API.Controllers
             get
             {
                 if (Base?.Owner != null)
+                {
                     return Base.Owner.GetPlayer();
+                }
 
                 return Server.Host;
             }
         }
 
-        public Pickup Pickup
-        {
-            get
-            {
-                // TODO
-
-                return null;
-            }
-        }
-
-        private string _tag;
-
-        public Item(ItemBase itemBase)
-        {
-            Base = itemBase;
-            Serial = Base.OwnerInventory.UserInventory.Items.FirstOrDefault(i => i.Value == Base).Key;
-            if (Serial == 0)
-                Serial = ItemSerialGenerator.GenerateNext();
-
-            BaseToItem.Add(itemBase, this);
-        }
-
-        public Item(ItemType type)
-            : this(Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), false)) { }
-
-        static internal Item SafeGet(ItemBase itemBase)
-        {
-            try { return Get(itemBase); }
-            catch (System.Exception e)
-            {
-                Log.Debug(e);
-                return null;
-            }
-        }
+        public Pickup Pickup =>
+            // TODO
+            null;
 
         public static Item Get(ItemBase itemBase)
         {
             if (itemBase == null)
+            {
                 return null;
+            }
 
             if (BaseToItem.ContainsKey(itemBase))
+            {
                 return BaseToItem[itemBase];
+            }
 
             switch (itemBase)
             {
@@ -125,11 +130,11 @@ namespace Qurre.API.Controllers
                 case KeycardItem card:
                     return new Keycard(card);
                 case UsableItem usable:
-                    {
-                        //if (usable is Scp330Bag bag)
-                        //    return new Scp330(bag);
-                        return new Usable(usable);
-                    }
+                {
+                    //if (usable is Scp330Bag bag)
+                    //    return new Scp330(bag);
+                    return new Usable(usable);
+                }
                 case RadioItem radio:
                     return new Radio(radio);
                 case MicroHIDItem hid:
@@ -145,20 +150,28 @@ namespace Qurre.API.Controllers
                     {
                         FlashbangGrenade _ => new GrenadeFlash(throwable),
                         ExplosionGrenade _ => new GrenadeFrag(throwable),
-                        _ => new Throwable(throwable),
+                        _ => new Throwable(throwable)
                     };
                 default:
-                    return new Item(itemBase);
+                    return new (itemBase);
             }
         }
 
-        static public Item Get(ushort serial)
+        public static Item Get(ushort serial)
         {
-            if (Object.FindObjectsOfType<ItemBase>().TryFind(out var item, x => x.ItemSerial == serial))
+            if (Object.FindObjectsOfType<ItemBase>().TryFind(out ItemBase item, x => x.ItemSerial == serial))
+            {
                 return SafeGet(item);
+            }
 
             return null;
         }
+
+        public static bool operator ==(Item a, Item b)
+            => a?.Serial == b?.Serial;
+
+        public static bool operator !=(Item a, Item b)
+            => !(a == b);
 
         public void Give(Player player) => player.Inventory.AddItem(Base);
 
@@ -172,11 +185,12 @@ namespace Qurre.API.Controllers
             Base.PickupDropModel.NetworkInfo = syncInfo;
 
             ItemPickupBase ipb = Object.Instantiate(Base.PickupDropModel, position, rotation);
+
             if (ipb is FirearmPickup firearmPickup)
             {
                 if (this is Gun firearm)
                 {
-                    firearmPickup.Status = new FirearmStatus(firearm.Ammo, FirearmStatusFlags.MagazineInserted, firearmPickup.Status.Attachments);
+                    firearmPickup.Status = new (firearm.Ammo, FirearmStatusFlags.MagazineInserted, firearmPickup.Status.Attachments);
                 }
                 else
                 {
@@ -185,9 +199,9 @@ namespace Qurre.API.Controllers
                         AutomaticFirearm auto => auto._baseMaxAmmo,
                         Shotgun shotgun => shotgun._ammoCapacity,
                         Revolver _ => 6,
-                        _ => 0,
+                        _ => 0
                     };
-                    firearmPickup.Status = new FirearmStatus(ammo, FirearmStatusFlags.MagazineInserted, firearmPickup.Status.Attachments);
+                    firearmPickup.Status = new (ammo, FirearmStatusFlags.MagazineInserted, firearmPickup.Status.Attachments);
                 }
 
                 firearmPickup.NetworkStatus = firearmPickup.Status;
@@ -195,29 +209,28 @@ namespace Qurre.API.Controllers
 
             NetworkServer.Spawn(ipb.gameObject);
             ipb.InfoReceived(default, Base.PickupDropModel.NetworkInfo);
-            Pickup pickup = Pickup.Get(ipb);
+            var pickup = Pickup.Get(ipb);
             pickup.Scale = scale == default ? Vector3.one : scale;
             return pickup;
         }
 
         public override bool Equals(object obj)
-        {
-            return obj is Item item && Serial == item?.Serial;
-        }
+            => obj is Item item && Serial == item?.Serial;
 
         public override int GetHashCode()
-        {
-            return -29014143 + Serial.GetHashCode();
-        }
+            => -29014143 + Serial.GetHashCode();
 
-        public static bool operator ==(Item a, Item b)
+        internal static Item SafeGet(ItemBase itemBase)
         {
-            return a?.Serial == b?.Serial;
-        }
-
-        public static bool operator !=(Item a, Item b)
-        {
-            return !(a == b);
+            try
+            {
+                return Get(itemBase);
+            }
+            catch (Exception e)
+            {
+                Log.Debug(e);
+                return null;
+            }
         }
     }
 }

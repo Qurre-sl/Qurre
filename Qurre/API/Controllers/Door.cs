@@ -1,19 +1,57 @@
-﻿using UnityEngine;
-using Interactables.Interobjects.DoorUtils;
-using Interactables.Interobjects;
-using Mirror;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Interactables.Interobjects;
+using Interactables.Interobjects.DoorUtils;
+using Mirror;
 using Qurre.API.Objects;
 using Qurre.Internal.Misc;
-using System.Collections.Generic;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Qurre.API.Controllers
 {
     public class Door
     {
-        string name;
-        DoorType type;
-        List<Room> _rooms = new();
+        private string name;
+        private DoorType type;
+        private List<Room> _rooms = new ();
+
+        internal Door(DoorVariant _)
+        {
+            DoorVariant = _;
+
+            if (DoorVariant.TryGetComponent<DoorNametagExtension>(out DoorNametagExtension nametag))
+            {
+                Name = nametag.GetName;
+            }
+        }
+
+        public Door(Vector3 position, DoorPrefabs prefab, Quaternion? rotation = null, DoorPermissions permissions = null)
+        {
+            DoorVariant = Object.Instantiate(prefab.GetPrefab());
+
+            DoorVariant.transform.position = position;
+            DoorVariant.transform.rotation = rotation ?? new ();
+            DoorVariant.RequiredPermissions = permissions ?? new ();
+
+            if (DoorVariant.TryGetComponent<DoorNametagExtension>(out DoorNametagExtension nametag))
+            {
+                Name = nametag.GetName;
+            }
+
+            NetworkServer.Spawn(DoorVariant.gameObject);
+
+            DoorVariant.netIdentity.UpdateData();
+            DoorsUpdater comp = GameObject.AddComponent<DoorsUpdater>();
+
+            if (comp)
+            {
+                comp.Door = DoorVariant;
+            }
+
+            Map.Doors.Add(this);
+        }
 
         public DoorVariant DoorVariant { get; internal set; }
         public GameObject GameObject => DoorVariant?.gameObject;
@@ -22,17 +60,24 @@ namespace Qurre.API.Controllers
         {
             get
             {
-                if (string.IsNullOrEmpty(name)) return GameObject.name;
+                if (string.IsNullOrEmpty(name))
+                {
+                    return GameObject.name;
+                }
+
                 return name;
             }
             set => name = value;
         }
+
         public List<Room> Rooms
         {
             get
             {
                 if (_rooms.Count > 0)
+                {
                     return _rooms;
+                }
 
                 _rooms = DoorVariant.Rooms.Select(x => x.GetRoom()).ToList();
 
@@ -50,6 +95,7 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(GameObject);
             }
         }
+
         public Quaternion Rotation
         {
             get => GameObject.transform.rotation;
@@ -60,6 +106,7 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(GameObject);
             }
         }
+
         public Vector3 Scale
         {
             get => GameObject.transform.localScale;
@@ -72,38 +119,70 @@ namespace Qurre.API.Controllers
         }
 
         public bool Breakable => DoorVariant is BreakableDoor;
+
         public bool Pryable
         {
             get
             {
                 if (DoorVariant is PryableDoor pry)
+                {
                     return pry.TryPryGate(ReferenceHub.HostHub);
-                else return false;
+                }
+
+                return false;
             }
         }
+
         public DoorPermissions Permissions
         {
             get => DoorVariant.RequiredPermissions;
             set => DoorVariant.RequiredPermissions = value;
         }
+
         public DoorType Type
         {
             get
             {
-                if (type != DoorType.Unknown) return type;
+                if (type != DoorType.Unknown)
+                {
+                    return type;
+                }
 
-                foreach (var _type in (System.Enum.GetValues(typeof(DoorType)) as DoorType[])
-                    .Where(_type => _type.ToString().ToUpper().Contains(Name.ToUpper())))
+                foreach (DoorType _type in (Enum.GetValues(typeof(DoorType)) as DoorType[])
+                         .Where(_type => _type.ToString().ToUpper().Contains(Name.ToUpper())))
+                {
                     return type = _type;
+                }
 
                 // if else if else if else if else if else if ; yes, yes, i know, yandere my sensei
-                if (Name.Contains("EZ BreakableDoor")) type = DoorType.EZ_Door;
-                else if (Name.Contains("LCZ BreakableDoor")) type = DoorType.LCZ_Door;
-                else if (Name.Contains("HCZ BreakableDoor")) type = DoorType.HCZ_Door;
-                else if (Name.Contains("Prison BreakableDoor")) type = DoorType.PrisonDoor;
-                else if (Name.Contains("LCZ PortallessBreakableDoor")) type = DoorType.Airlock;
-                else if (Name.Contains("Unsecured Pryable GateDoor")) type = DoorType.HCZ_049_Gate;
-                else type = DoorType.Unknown;
+                if (Name.Contains("EZ BreakableDoor"))
+                {
+                    type = DoorType.EZ_Door;
+                }
+                else if (Name.Contains("LCZ BreakableDoor"))
+                {
+                    type = DoorType.LCZ_Door;
+                }
+                else if (Name.Contains("HCZ BreakableDoor"))
+                {
+                    type = DoorType.HCZ_Door;
+                }
+                else if (Name.Contains("Prison BreakableDoor"))
+                {
+                    type = DoorType.PrisonDoor;
+                }
+                else if (Name.Contains("LCZ PortallessBreakableDoor"))
+                {
+                    type = DoorType.Airlock;
+                }
+                else if (Name.Contains("Unsecured Pryable GateDoor"))
+                {
+                    type = DoorType.HCZ_049_Gate;
+                }
+                else
+                {
+                    type = DoorType.Unknown;
+                }
 
                 return type;
             }
@@ -114,18 +193,23 @@ namespace Qurre.API.Controllers
             get => DoorVariant.IsConsideredOpen();
             set => DoorVariant.NetworkTargetState = value;
         }
+
         public bool Lock
         {
             get => DoorVariant.ActiveLocks > 0;
             set => DoorVariant.ServerChangeLock(DoorLockReason.SpecialDoorFeature, value);
         }
+
         public bool Destroyed
         {
             get
             {
                 if (DoorVariant is BreakableDoor damageableDoor)
+                {
                     return damageableDoor.IsDestroyed;
-                else return false;
+                }
+
+                return false;
             }
         }
 
@@ -136,40 +220,15 @@ namespace Qurre.API.Controllers
                 damageableDoor.IsDestroyed = true;
                 return true;
             }
-            else return false;
+
+            return false;
         }
+
         public void Destroy()
         {
             NetworkServer.UnSpawn(GameObject);
             Map.Doors.Remove(this);
             Object.Destroy(GameObject);
-        }
-
-        internal Door(DoorVariant _)
-        {
-            DoorVariant = _;
-
-            if (DoorVariant.TryGetComponent<DoorNametagExtension>(out var nametag))
-                Name = nametag.GetName;
-        }
-        public Door(Vector3 position, DoorPrefabs prefab, Quaternion? rotation = null, DoorPermissions permissions = null)
-        {
-            DoorVariant = Object.Instantiate(prefab.GetPrefab());
-
-            DoorVariant.transform.position = position;
-            DoorVariant.transform.rotation = rotation ?? new();
-            DoorVariant.RequiredPermissions = permissions ?? new();
-
-            if (DoorVariant.TryGetComponent<DoorNametagExtension>(out var nametag))
-                Name = nametag.GetName;
-
-            NetworkServer.Spawn(DoorVariant.gameObject);
-
-            DoorVariant.netIdentity.UpdateData();
-            var comp = GameObject.AddComponent<DoorsUpdater>();
-            if (comp) comp.Door = DoorVariant;
-
-            Map.Doors.Add(this);
         }
     }
 }

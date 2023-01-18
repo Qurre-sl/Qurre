@@ -4,6 +4,6 @@
     {
         DoorLCZ,
         DoorHCZ,
-        DoorEZ,
+        DoorEZ
     }
 }

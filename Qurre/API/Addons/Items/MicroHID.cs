@@ -7,6 +7,11 @@ namespace Qurre.API.Addons.Items
     {
         private const ItemType MicroHIDItemType = ItemType.MicroHID;
 
+        public MicroHID(MicroHIDItem itemBase) : base(itemBase)
+            => Base = itemBase;
+
+        public MicroHID() : this((MicroHIDItem)MicroHIDItemType.CreateItemInstance()) { }
+
         public new MicroHIDItem Base { get; }
 
         public float Energy
@@ -16,30 +21,18 @@ namespace Qurre.API.Addons.Items
         }
 
         /// <summary>
-        /// 0 - 255
+        ///     0 - 255
         /// </summary>
         public byte EnergyPercent
         {
             get => Base.EnergyToByte;
-            set
-            {
-                Base.RemainingEnergy = value / 225f;
-            }
+            set => Base.RemainingEnergy = value / 225f;
         }
 
         public HidState State
         {
             get => Base.State;
             set => Base.State = value;
-        }
-
-        public MicroHID(MicroHIDItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public MicroHID() : this((MicroHIDItem)MicroHIDItemType.CreateItemInstance())
-        {
         }
 
         public void Fire()

@@ -8,6 +8,6 @@
         Pedestal,
         MiscLocker,
         RifleRack,
-        LargeGun,
+        LargeGun
     }
 }

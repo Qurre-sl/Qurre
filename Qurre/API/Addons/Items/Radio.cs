@@ -1,13 +1,18 @@
-﻿using InventorySystem.Items.Radio;
+﻿using System;
+using InventorySystem.Items.Radio;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
-using System;
 
 namespace Qurre.API.Addons.Items
 {
     public sealed class Radio : Item
     {
         private const ItemType RadioItemType = ItemType.Radio;
+
+        public Radio(RadioItem itemBase) : base(itemBase)
+            => Base = itemBase;
+
+        public Radio() : this((RadioItem)RadioItemType.CreateItemInstance()) { }
 
         public new RadioItem Base { get; }
 
@@ -37,7 +42,9 @@ namespace Qurre.API.Addons.Items
                 Base._enabled = value != RadioStatus.Disabled;
 
                 if (value != RadioStatus.Disabled)
+                {
                     Base._rangeId = (byte)value;
+                }
             }
         }
 
@@ -45,15 +52,6 @@ namespace Qurre.API.Addons.Items
         {
             get => Base.Ranges[Base._rangeId];
             set => Base.Ranges[Base._rangeId] = value;
-        }
-
-        public Radio(RadioItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public Radio() : this((RadioItem)RadioItemType.CreateItemInstance())
-        {
         }
     }
 }

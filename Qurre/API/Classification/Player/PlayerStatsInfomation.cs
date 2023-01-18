@@ -1,19 +1,18 @@
 ﻿using System.Collections.Generic;
+using Qurre.API.Addons;
+
 namespace Qurre.API.Classification.Player
 {
-    using Qurre.API;
-    using Qurre.API.Addons;
-
     public class PlayerStatsInfomation
     {
-        private readonly Player _player;
-        internal PlayerStatsInfomation(Player pl)
+        internal List<KillElement> _kills = new ();
+        private readonly API.Player _player;
+
+        internal PlayerStatsInfomation(API.Player pl)
         {
             _player = pl;
             DeathsCount = 0;
         }
-
-        internal List<KillElement> _kills = new();
 
         public IReadOnlyCollection<KillElement> Kills => _kills.AsReadOnly();
         public int KillsCount => _kills.Count;

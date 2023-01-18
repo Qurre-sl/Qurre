@@ -35,6 +35,6 @@
         Stained,
         Traumatized,
         Vitality,
-        None,
+        None
     }
 }

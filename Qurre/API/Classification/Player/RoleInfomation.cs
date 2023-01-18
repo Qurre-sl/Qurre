@@ -1,16 +1,15 @@
 ﻿using PlayerRoles;
+using Qurre.API.Classification.Roles;
+using RemoteAdmin;
 using Respawning;
 
 namespace Qurre.API.Classification.Player
 {
-    using Qurre.API;
-    using Qurre.API.Classification.Roles;
-    using RemoteAdmin;
-
     public class RoleInfomation
     {
-        private readonly Player _player;
-        internal RoleInfomation(Player pl) => _player = pl;
+        private readonly API.Player _player;
+
+        internal RoleInfomation(API.Player pl) => _player = pl;
 
         public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
         public QueryProcessor QueryProcessor => _player.ReferenceHub.queryProcessor;
@@ -27,14 +26,10 @@ namespace Qurre.API.Classification.Player
             get => _player.ReferenceHub.GetRoleId();
             set => _player.ReferenceHub.roleManager.ServerSetRole(value, RoleChangeReason.RemoteAdmin);
         }
-        public Team Team
-        {
-            get => _player.ReferenceHub.GetTeam();
-        }
-        public float TimeForNextSequence
-        {
-            get => RespawnManager.Singleton._timeForNextSequence;
-        }
+
+        public Team Team => _player.ReferenceHub.GetTeam();
+
+        public float TimeForNextSequence => RespawnManager.Singleton._timeForNextSequence;
 
         public void SetNew(RoleTypeId newRole, RoleChangeReason reason)
             => _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason);
@@ -42,7 +37,9 @@ namespace Qurre.API.Classification.Player
         public void SetSyncModel(RoleTypeId roleTypeId)
         {
             foreach (ReferenceHub referenceHub in ReferenceHub.AllHubs)
-                _player.ReferenceHub.connectionToClient.Send(new RoleSyncInfo(_player.ReferenceHub, roleTypeId, referenceHub), 0);
+            {
+                _player.ReferenceHub.connectionToClient.Send(new RoleSyncInfo(_player.ReferenceHub, roleTypeId, referenceHub));
+            }
         }
     }
 }

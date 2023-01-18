@@ -7,6 +7,12 @@ namespace Qurre.API.Controllers
     {
         internal readonly Scp079Camera _camera;
 
+        internal Camera(Scp079Camera camera, Room room)
+        {
+            _camera = camera;
+            Room = room;
+        }
+
         public Scp079Camera Base => _camera;
         public GameObject GameObject => _camera.gameObject;
 
@@ -15,14 +21,9 @@ namespace Qurre.API.Controllers
             get => _camera.IsActive;
             set => _camera.IsActive = value;
         }
+
         public bool Main => _camera.IsMain;
 
-        public Room Room { get; private set; }
-
-        internal Camera(Scp079Camera camera, Room room)
-        {
-            _camera = camera;
-            Room = room;
-        }
+        public Room Room { get; }
     }
 }

@@ -15,6 +15,6 @@
         Pedestal2176,
         MiscLocker,
         RifleRack,
-        LargeGun,
+        LargeGun
     }
 }

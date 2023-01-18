@@ -1,12 +1,12 @@
-﻿namespace Qurre.API.Classification.Player
-{
-    using Qurre.API;
-    using Qurre.Internal.Misc;
+﻿using Qurre.Internal.Misc;
 
+namespace Qurre.API.Classification.Player
+{
     public class Administrative
     {
-        private readonly Player _player;
-        internal Administrative(Player pl) => _player = pl;
+        private readonly API.Player _player;
+
+        internal Administrative(API.Player pl) => _player = pl;
 
         public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
 
@@ -24,11 +24,13 @@
             get => ServerStatic.GetPermissionsHandler()._members.TryGetValue(_player.UserInfomation.UserId, out string groupName) ? groupName : null;
             set => ServerStatic.GetPermissionsHandler()._members[_player.UserInfomation.UserId] = value;
         }
+
         public string RoleName
         {
             get => ServerRoles.Network_myText;
             set => ServerRoles.Network_myText = value;
         }
+
         public string RoleColor
         {
             get => ServerRoles.Network_myColor;
@@ -42,6 +44,7 @@
             ServerRoles.RemoteAdminMode = GlobalRemoteAdmin ? ServerRoles.AccessMode.GlobalAccess : ServerRoles.AccessMode.PasswordOverride;
             ServerRoles.TargetOpenRemoteAdmin(false);
         }
+
         public void RaLogout()
         {
             ServerRoles.RemoteAdmin = false;
@@ -51,6 +54,7 @@
 
         public void Ban(long duration, string reason, string issuer = "API")
             => BanPlayer.BanUser(_player.ReferenceHub, new BanSender(issuer), reason, duration);
+
         public void Kick(string reason, string issuer = "API")
             => BanPlayer.KickUser(_player.ReferenceHub, new BanSender(issuer), reason);
     }

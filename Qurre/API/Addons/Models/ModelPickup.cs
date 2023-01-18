@@ -1,25 +1,19 @@
-﻿using UnityEngine;
-using System;
-using Mirror;
-using Object = UnityEngine.Object;
+﻿using System;
 using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
+using Mirror;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
 namespace Qurre.API.Addons.Models
 {
     public class ModelPickup
     {
-        private readonly GameObject gameObject;
-        private readonly ItemPickupBase pickup;
-
-        public GameObject GameObject => gameObject;
-        public ItemPickupBase Pickup => pickup;
-
         public ModelPickup(Model model, ItemType type, Vector3 position, Vector3 rotation, Vector3 size = default, bool kinematic = true)
         {
             try
             {
-                var item = Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), false);
+                ItemBase item = Server.InventoryHost.CreateItemInstance(new (type, ItemSerialGenerator.GenerateNext()), false);
                 ushort ser = ItemSerialGenerator.GenerateNext();
 
                 item.PickupDropModel.Info.Serial = ser;
@@ -31,7 +25,7 @@ namespace Qurre.API.Addons.Models
 
                 ItemPickupBase ipb = Object.Instantiate(item.PickupDropModel);
 
-                gameObject = ipb.gameObject;
+                GameObject = ipb.gameObject;
                 GameObject.GetComponent<Rigidbody>().isKinematic = kinematic;
                 GameObject.transform.parent = model.GameObject.transform;
                 GameObject.transform.localPosition = position;
@@ -40,12 +34,16 @@ namespace Qurre.API.Addons.Models
                 NetworkServer.Spawn(GameObject);
 
                 ipb.InfoReceived(default, item.PickupDropModel.NetworkInfo);
-                pickup = ipb;
+                Pickup = ipb;
             }
             catch (Exception ex)
             {
                 Log.Warn($"{ex}\n{ex.StackTrace}");
             }
         }
+
+        public GameObject GameObject { get; }
+
+        public ItemPickupBase Pickup { get; }
     }
 }

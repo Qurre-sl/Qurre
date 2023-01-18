@@ -1,65 +1,78 @@
-﻿using InventorySystem;
-using RoundRestarting;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using InventorySystem;
+using PlayerStatsSystem;
+using RoundRestarting;
+using UnityEngine;
 
 namespace Qurre.API
 {
-    static public class Server
+    public static class Server
     {
-        static internal Player host;
-        static internal Inventory hinv;
+        internal static Player host;
+        internal static Inventory hinv;
 
-        static public ushort Port => ServerStatic.ServerPort;
-        static public string Ip => ServerConsole.Ip;
+        public static ushort Port => ServerStatic.ServerPort;
+        public static string Ip => ServerConsole.Ip;
 
-        static public Player Host
+        public static Player Host
         {
             get
             {
                 if (host is null || host.ReferenceHub is null)
-                    host = new Player(ReferenceHub.HostHub);
+                {
+                    host = new (ReferenceHub.HostHub);
+                }
 
                 return host;
             }
         }
 
-        static public Inventory InventoryHost
+        public static Inventory InventoryHost
         {
             get
             {
                 if (hinv is null)
+                {
                     hinv = ReferenceHub.HostHub.inventory;
+                }
 
                 return hinv;
             }
         }
 
-        static public bool FriendlyFire
+        public static bool FriendlyFire
         {
             get => ServerConsole.FriendlyFire;
             set
             {
                 if (FriendlyFire == value)
+                {
                     return;
+                }
 
                 ServerConsole.FriendlyFire = value;
                 ServerConfigSynchronizer.Singleton.RefreshMainBools();
                 ServerConfigSynchronizer.OnRefreshed?.Invoke();
-                PlayerStatsSystem.AttackerDamageHandler.RefreshConfigs();
+                AttackerDamageHandler.RefreshConfigs();
 
-                foreach (Player pl in Player.List) pl.FriendlyFire = value;
+                foreach (Player pl in Player.List)
+                {
+                    pl.FriendlyFire = value;
+                }
             }
         }
 
-        static public List<TObject> GetObjectsOf<TObject>() where TObject : UnityEngine.Object => UnityEngine.Object.FindObjectsOfType<TObject>().ToList();
-        static public TObject GetObjectOf<TObject>() where TObject : UnityEngine.Object => UnityEngine.Object.FindObjectOfType<TObject>();
+        public static List<TObject> GetObjectsOf<TObject>() where TObject : Object => Object.FindObjectsOfType<TObject>().ToList();
 
-        static public void Restart()
+        public static TObject GetObjectOf<TObject>() where TObject : Object => Object.FindObjectOfType<TObject>();
+
+        public static void Restart()
         {
             ServerStatic.StopNextRound = ServerStatic.NextRoundAction.Restart;
             RoundRestart.ChangeLevel(true);
         }
-        static public void Exit() => Shutdown.Quit();
+
+        public static void Exit() => Shutdown.Quit();
     }
 }

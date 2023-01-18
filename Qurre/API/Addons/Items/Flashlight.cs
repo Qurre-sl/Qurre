@@ -8,6 +8,11 @@ namespace Qurre.API.Addons.Items
     {
         private const ItemType FlashlightItemType = ItemType.Flashlight;
 
+        public Flashlight(FlashlightItem itemBase) : base(itemBase)
+            => Base = itemBase;
+
+        public Flashlight() : this((FlashlightItem)FlashlightItemType.CreateItemInstance()) { }
+
         public new FlashlightItem Base { get; }
 
         public bool Active
@@ -16,17 +21,8 @@ namespace Qurre.API.Addons.Items
             set
             {
                 Base.IsEmittingLight = value;
-                NetworkUtils.SendToAuthenticated(new FlashlightNetworkHandler.FlashlightMessage(base.Serial, value));
+                new FlashlightNetworkHandler.FlashlightMessage(Serial, value).SendToAuthenticated();
             }
-        }
-
-        public Flashlight(FlashlightItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public Flashlight() : this((FlashlightItem)FlashlightItemType.CreateItemInstance())
-        {
         }
     }
 }

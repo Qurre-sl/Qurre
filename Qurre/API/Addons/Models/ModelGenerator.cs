@@ -1,24 +1,18 @@
-﻿using Qurre.API.Controllers;
-using UnityEngine;
-using System;
+﻿using System;
 using Mirror;
+using Qurre.API.Controllers;
+using UnityEngine;
 
 namespace Qurre.API.Addons.Models
 {
     public class ModelGenerator
     {
-        private readonly GameObject gameObject;
-        private readonly Generator generator;
-
-        public GameObject GameObject => gameObject;
-        public Generator Generator => generator;
-
         public ModelGenerator(Model model, Vector3 position, Vector3 rotation, Vector3 size = default)
         {
             try
             {
-                generator = new(position);
-                gameObject = Generator.GameObject;
+                Generator = new (position);
+                GameObject = Generator.GameObject;
                 NetworkServer.UnSpawn(GameObject);
                 GameObject.transform.parent = model?.GameObject?.transform;
                 GameObject.transform.localPosition = position;
@@ -31,5 +25,9 @@ namespace Qurre.API.Addons.Models
                 Log.Warn($"{ex}\n{ex.StackTrace}");
             }
         }
+
+        public GameObject GameObject { get; }
+
+        public Generator Generator { get; }
     }
 }

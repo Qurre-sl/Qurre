@@ -1,23 +1,21 @@
-﻿using Qurre.API.Addons.Models;
+﻿using System.Collections.Generic;
 using System.Reflection;
+using Qurre.API.Addons.Models;
 using UnityEngine;
 
 namespace Qurre.API.Controllers
 {
     public class Lights
     {
-        readonly Room _room;
-        readonly CustomRoom _custom;
+        internal Lights(Room room) => Room = room;
 
-#nullable enable
-        public Room? Room => _room;
-        public CustomRoom? CustomRoom => _custom;
-#nullable disable
+        internal Lights(CustomRoom room) => CustomRoom = room;
 
         public bool LockChange { get; set; } = false;
+
         public bool Override
         {
-            get => _room is null || _room._light.WarheadLightOverride;
+            get => Room is null || Room._light.WarheadLightOverride;
             set
             {
                 if (LockChange)
@@ -26,18 +24,30 @@ namespace Qurre.API.Controllers
                     return;
                 }
 
-                if (_room is not null) _room._light.WarheadLightOverride = value;
-                else if (_custom is not null)
+                if (Room is not null)
                 {
-                    if (value) Log.Debug($"Override.set = true is not supported in Custom Room. Called from {Assembly.GetCallingAssembly().GetName().Name}");
-                    else foreach (var light in _custom._colors) light.Key.Light.Color = light.Value;
+                    Room._light.WarheadLightOverride = value;
+                }
+                else if (CustomRoom is not null)
+                {
+                    if (value)
+                    {
+                        Log.Debug($"Override.set = true is not supported in Custom Room. Called from {Assembly.GetCallingAssembly().GetName().Name}");
+                    }
+                    else
+                    {
+                        foreach (KeyValuePair<ModelLight, Color> light in CustomRoom._colors)
+                        {
+                            light.Key.Light.Color = light.Value;
+                        }
+                    }
                 }
             }
         }
 
         public float Intensity
         {
-            get => _room is not null ? _room._light.LightIntensityMultiplier : _custom._intensity;
+            get => Room is not null ? Room._light.LightIntensityMultiplier : CustomRoom._intensity;
             set
             {
                 if (LockChange)
@@ -46,18 +56,25 @@ namespace Qurre.API.Controllers
                     return;
                 }
 
-                if (_room is not null) _room._light.UpdateLightsIntensity(_room._light.LightIntensityMultiplier, value);
-                else if (_custom is not null)
+                if (Room is not null)
                 {
-                    _custom._intensity = value;
-                    foreach (var light in _custom.Lights) light.Light.Intensivity = value;
+                    Room._light.UpdateLightsIntensity(Room._light.LightIntensityMultiplier, value);
+                }
+                else if (CustomRoom is not null)
+                {
+                    CustomRoom._intensity = value;
+
+                    foreach (ModelLight light in CustomRoom.Lights)
+                    {
+                        light.Light.Intensivity = value;
+                    }
                 }
             }
         }
 
         public Color Color
         {
-            get => _room is not null ? _room._light.Network_warheadLightColor : _custom._lastColor;
+            get => Room is not null ? Room._light.Network_warheadLightColor : CustomRoom._lastColor;
             set
             {
                 if (LockChange)
@@ -66,20 +83,27 @@ namespace Qurre.API.Controllers
                     return;
                 }
 
-                if (_room is not null)
+                if (Room is not null)
                 {
-                    _room._light.Network_warheadLightColor = value;
+                    Room._light.Network_warheadLightColor = value;
                     Override = true;
                 }
-                else if (_custom is not null)
+                else if (CustomRoom is not null)
                 {
-                    foreach (var light in _custom.Lights) light.Light.Color = value;
-                    _custom._lastColor = value;
+                    foreach (ModelLight light in CustomRoom.Lights)
+                    {
+                        light.Light.Color = value;
+                    }
+
+                    CustomRoom._lastColor = value;
                 }
             }
         }
 
-        internal Lights(Room room) => _room = room;
-        internal Lights(CustomRoom room) => _custom = room;
+#nullable enable
+        public Room? Room { get; }
+
+        public CustomRoom? CustomRoom { get; }
+#nullable disable
     }
 }

@@ -1,30 +1,47 @@
-﻿using MapGeneration;
+﻿using System.Collections.Generic;
+using System.Linq;
+using MapGeneration;
 using Mirror;
 using PlayerRoles.PlayableScps.Scp079.Cameras;
 using Qurre.API.Objects;
-using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 namespace Qurre.API.Controllers
 {
     public class Room
     {
+        internal static readonly List<NetworkIdentity> NetworkIdentities = new ();
         internal readonly FlickerableLightController _light;
-        ZoneType zone = ZoneType.Unknown;
+        private ZoneType zone = ZoneType.Unknown;
 
-#nullable enable
-        public Lights Lights { get; private set; }
-        public GameObject GameObject { get; }
-        public RoomIdentifier Identifier { get; }
-        public NetworkIdentity? NetworkIdentity { get; }
-        public Tesla? Tesla => GameObject.GetComponentInChildren<TeslaGate>()?.GetTesla();
-        public Transform Transform => GameObject.transform;
-#nullable restore
+        internal Room(RoomIdentifier identifier)
+        {
+            Identifier = identifier;
+
+            if (Identifier is null)
+            {
+                return;
+            }
+
+            RoomName = Identifier.Name;
+            Shape = Identifier.Shape;
+            GameObject = identifier.gameObject;
+
+            _light = GameObject.GetComponentInChildren<FlickerableLightController>();
+
+            foreach (Scp079Camera cam in GameObject.GetComponentsInChildren<Scp079Camera>())
+            {
+                Cameras.Add(new (cam, this));
+            }
+
+            NetworkIdentity = GetNetworkIdentity();
+
+            Lights = new (this);
+        }
 
         public string Name => GameObject.name;
-        public List<Door> Doors { get; } = new();
-        public List<Camera> Cameras { get; } = new();
+        public List<Door> Doors { get; } = new ();
+        public List<Camera> Cameras { get; } = new ();
         public List<Player> Players => Player.List.Where(x => !x.IsHost && x.GamePlay.Room.Name == Name).ToList();
 
         public Vector3 Position
@@ -32,27 +49,41 @@ namespace Qurre.API.Controllers
             get => Transform.position;
             set
             {
-                if (NetworkIdentity is null) return;
+                if (NetworkIdentity is null)
+                {
+                    return;
+                }
+
                 NetworkIdentity.transform.position = value;
                 NetworkIdentity.UpdateData();
             }
         }
+
         public Quaternion Rotation
         {
             get => Transform.rotation;
             set
             {
-                if (NetworkIdentity is null) return;
+                if (NetworkIdentity is null)
+                {
+                    return;
+                }
+
                 NetworkIdentity.transform.rotation = value;
                 NetworkIdentity.UpdateData();
             }
         }
+
         public Vector3 Scale
         {
             get => Transform.localScale;
             set
             {
-                if (NetworkIdentity is null) return;
+                if (NetworkIdentity is null)
+                {
+                    return;
+                }
+
                 NetworkIdentity.transform.localScale = value;
                 NetworkIdentity.UpdateData();
             }
@@ -66,28 +97,46 @@ namespace Qurre.API.Controllers
             get
             {
                 if (zone != ZoneType.Unknown)
+                {
                     return zone;
+                }
 
                 zone = ZoneType.Unknown;
+
                 if (Position.y >= 0f && Position.y < 500f)
+                {
                     zone = ZoneType.Light;
+                }
                 else if (Name.Contains("EZ") || Name.Contains("INTERCOM"))
+                {
                     zone = ZoneType.Office;
+                }
                 else if (Position.y < -100 && Position.y > -1015f)
+                {
                     zone = ZoneType.Heavy;
+                }
                 else if (Position.y >= 5)
+                {
                     zone = ZoneType.Surface;
+                }
+
                 return zone;
             }
         }
+
         public bool LightsDisabled => _light && !_light.NetworkLightsEnabled;
+
         public RoomType Type
         {
             get
             {
-                var rawName = Name;
-                var arr = rawName.IndexOf('(') - 1;
-                if (arr > 0) rawName = rawName.Remove(arr, rawName.Length - arr).Trim();
+                string rawName = Name;
+                int arr = rawName.IndexOf('(') - 1;
+
+                if (arr > 0)
+                {
+                    rawName = rawName.Remove(arr, rawName.Length - arr).Trim();
+                }
 
                 return rawName switch
                 {
@@ -147,37 +196,30 @@ namespace Qurre.API.Controllers
                     "Outside" => RoomType.Surface,
                     "PocketWorld" => RoomType.Pocket,
 
-                    _ => RoomType.Unknown,
+                    _ => RoomType.Unknown
                 };
             }
         }
 
         public void LightsOff(float duration) => _light.ServerFlickerLights(duration);
 
-        internal Room(RoomIdentifier identifier)
-        {
-            Identifier = identifier;
-            if (Identifier is null) return;
-            RoomName = Identifier.Name;
-            Shape = Identifier.Shape;
-            GameObject = identifier.gameObject;
-
-            _light = GameObject.GetComponentInChildren<FlickerableLightController>();
-
-            foreach (var cam in GameObject.GetComponentsInChildren<Scp079Camera>())
-                Cameras.Add(new Camera(cam, this));
-
-            NetworkIdentity = GetNetworkIdentity();
-
-            Lights = new(this);
-        }
-
-        static internal readonly List<NetworkIdentity> NetworkIdentities = new();
         private NetworkIdentity GetNetworkIdentity()
         {
             if (NetworkIdentities.Count == 0)
+            {
                 NetworkIdentities.AddRange(Object.FindObjectsOfType<NetworkIdentity>().Where(x => x.name.Contains("All")));
+            }
+
             return NetworkIdentities.FirstOrDefault(x => Vector3.Distance(x.transform.position, Position) < 0.1f);
         }
+
+#nullable enable
+        public Lights Lights { get; }
+        public GameObject GameObject { get; }
+        public RoomIdentifier Identifier { get; }
+        public NetworkIdentity? NetworkIdentity { get; }
+        public Tesla? Tesla => GameObject.GetComponentInChildren<TeslaGate>()?.GetTesla();
+        public Transform Transform => GameObject.transform;
+#nullable restore
     }
 }

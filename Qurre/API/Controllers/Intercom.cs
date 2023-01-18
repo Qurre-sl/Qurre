@@ -4,29 +4,32 @@ using BaseIntercom = PlayerRoles.Voice.Intercom;
 
 namespace Qurre.API.Controllers
 {
-    static public class Intercom
+    public static class Intercom
     {
-        static public IntercomDisplay Display => IntercomDisplay._singleton;
-        static public BaseIntercom Base => BaseIntercom._singleton;
+        public static IntercomDisplay Display => IntercomDisplay._singleton;
+        public static BaseIntercom Base => BaseIntercom._singleton;
 
-        static public Player Speaker => Base._curSpeaker.GetPlayer();
+        public static Player Speaker => Base._curSpeaker.GetPlayer();
 
-        static public string Text
+        public static string Text
         {
             get => Display._overrideText;
             set => Display._overrideText = value;
         }
-        static public IntercomState Status
+
+        public static IntercomState Status
         {
             get => BaseIntercom.State;
             set => BaseIntercom.State = value;
         }
-        static public float RechargeCooldown
+
+        public static float RechargeCooldown
         {
             get => Base._cooldownTime;
             set => Base._cooldownTime = value;
         }
-        static public float SpeechRemaining
+
+        public static float SpeechRemaining
         {
             get => Base.RemainingTime;
             set => Base._nextTime = NetworkTime.time + value;

@@ -6,19 +6,26 @@ namespace Qurre.API.Controllers
 {
     public class Window
     {
-        private readonly BreakableWindow bw;
         private string name;
 
-        public BreakableWindow Breakable => bw;
-        public GameObject GameObject => bw.gameObject;
-        public Transform Transform => bw.transform;
+        internal Window(BreakableWindow window) => Breakable = window;
+
+        public BreakableWindow Breakable { get; }
+
+        public GameObject GameObject => Breakable.gameObject;
+        public Transform Transform => Breakable.transform;
 
         public bool AllowBreak { get; set; } = true;
+
         public string Name
         {
             get
             {
-                if (string.IsNullOrEmpty(name)) name = "Window";
+                if (string.IsNullOrEmpty(name))
+                {
+                    name = "Window";
+                }
+
                 return name;
             }
             set => name = value;
@@ -29,7 +36,7 @@ namespace Qurre.API.Controllers
             get => Status.position;
             set
             {
-                var _status = Status;
+                BreakableWindow.BreakableWindowStatus _status = Status;
                 _status.position = value;
                 Status = _status;
 
@@ -38,12 +45,13 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(GameObject);
             }
         }
+
         public Quaternion Rotation
         {
             get => Status.rotation;
             set
             {
-                var _status = Status;
+                BreakableWindow.BreakableWindowStatus _status = Status;
                 _status.rotation = value;
                 Status = _status;
 
@@ -52,6 +60,7 @@ namespace Qurre.API.Controllers
                 NetworkServer.Spawn(GameObject);
             }
         }
+
         public Vector3 Scale
         {
             get => Transform.localScale;
@@ -63,20 +72,20 @@ namespace Qurre.API.Controllers
             }
         }
 
-        public Vector3 Size => bw.size;
-        public Footprint LastAttacker => bw.LastAttacker;
-        public bool Destroyed => bw.isBroken;
+        public Vector3 Size => Breakable.size;
+        public Footprint LastAttacker => Breakable.LastAttacker;
+        public bool Destroyed => Breakable.isBroken;
+
         public float Hp
         {
-            get => bw.health;
-            set => bw.health = value;
-        }
-        public BreakableWindow.BreakableWindowStatus Status
-        {
-            get => bw.NetworksyncStatus;
-            set => bw.UpdateStatus(value);
+            get => Breakable.health;
+            set => Breakable.health = value;
         }
 
-        internal Window(BreakableWindow window) => bw = window;
+        public BreakableWindow.BreakableWindowStatus Status
+        {
+            get => Breakable.NetworksyncStatus;
+            set => Breakable.UpdateStatus(value);
+        }
     }
 }
