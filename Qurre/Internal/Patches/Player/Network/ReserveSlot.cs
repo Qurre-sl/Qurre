@@ -1,23 +1,22 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
+using HarmonyLib;
+using Qurre.API;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.Player.Network
 {
-    using Qurre.API;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
     [HarmonyPatch(typeof(ReservedSlot), nameof(ReservedSlot.HasReservedSlot))]
-    static class ReserveSlot
+    internal static class ReserveSlot
     {
         [HarmonyPrefix]
-        static bool Call(string userId, ref bool __result)
+        private static bool Call(string userId, ref bool __result)
         {
             try
             {
                 bool allow = ReservedSlot.Users.Contains(userId.Trim()) || !CharacterClassManager.OnlineMode;
 
-                CheckReserveSlotEvent ev = new(userId, allow);
+                CheckReserveSlotEvent ev = new (userId, allow);
                 ev.InvokeEvent();
 
                 __result = ev.Allowed;

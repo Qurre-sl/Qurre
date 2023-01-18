@@ -1,30 +1,30 @@
-﻿using HarmonyLib;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection.Emit;
+using HarmonyLib;
+using Qurre.Events.Structs;
 
 namespace Qurre.Internal.Patches.Alpha
 {
-    using Qurre.Events.Structs;
-
     [HarmonyPatch(typeof(AlphaWarheadController), nameof(AlphaWarheadController.Detonate))]
-    static class Detonate
+    internal static class Detonate
     {
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
+        private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            List<CodeInstruction> list = new(instructions);
+            List<CodeInstruction> list = new (instructions);
 
             int index = list.FindIndex(ins => ins.opcode == OpCodes.Ldarg_0);
 
             list[index].ExtractLabels();
             list.RemoveRange(0, index);
 
-            list.InsertRange(0, new CodeInstruction[]
-            {
-                new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(AlphaDetonateEvent))[0]),
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(EventsManager.Loader), nameof(EventsManager.Loader.InvokeEvent))),
-            });
+            list.InsertRange(
+                0, new[]
+                {
+                    new (OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(AlphaDetonateEvent))[0]),
+                    new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(EventsManager.Loader), nameof(EventsManager.Loader.InvokeEvent)))
+                });
 
             return list.AsEnumerable();
         }

@@ -1,14 +1,13 @@
 ﻿using HarmonyLib;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.Round
 {
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
     [HarmonyPatch(typeof(CharacterClassManager), nameof(CharacterClassManager.UserCode_RpcRoundStarted))]
-    static class Start
+    internal static class Start
     {
         [HarmonyPostfix]
-        static void Call() => new RoundStartedEvent().InvokeEvent();
+        private static void Call() => new RoundStartedEvent().InvokeEvent();
     }
 }

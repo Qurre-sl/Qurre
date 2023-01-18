@@ -2,30 +2,37 @@
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items.Firearms.Attachments;
 using MapGeneration;
-using PlayerRoles.PlayableScps.Scp079;
 using Qurre.API;
+using Qurre.API.Addons;
+using Qurre.API.Addons.Models;
 using Qurre.API.Attributes;
 using Qurre.API.Controllers;
 using Qurre.Events;
-using System.Linq;
+using Qurre.Internal.Patches.Player.Admins;
+using Scp914;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 namespace Qurre.Internal.EventsCalled
 {
-    static class Round
+    internal static class Round
     {
+        static Round()
+            => SceneManager.sceneUnloaded += SceneUnloaded;
+
         [EventMethod(RoundEvents.Waiting)]
-        static internal void Waiting()
+        internal static void Waiting()
         {
             Server.host = null;
             Server.hinv = null;
 
-            API.Extensions.DamagesCached.Clear();
-            Patches.Player.Admins.Banned.Cached.Clear();
+            Extensions.DamagesCached.Clear();
+            Banned.Cached.Clear();
 
             if (API.Round.CurrentRound == 0)
-                API.Addons.Prefabs.InitLate();
+            {
+                Prefabs.InitLate();
+            }
 
             API.Round.CurrentRound++;
 
@@ -34,50 +41,64 @@ namespace Qurre.Internal.EventsCalled
             MapRoundInit();
         }
 
-        static void MapRoundInit()
+        private static void MapRoundInit()
         {
             Map.AmbientSoundPlayer = Server.Host.GameObject.GetComponent<AmbientSoundPlayer>();
 
-            foreach (var room in RoomIdentifier.AllRoomIdentifiers)
+            foreach (RoomIdentifier room in RoomIdentifier.AllRoomIdentifiers)
             {
-                Room _room = new(room);
+                Room _room = new (room);
                 Map.Rooms.Add(_room);
                 Map.Cameras.AddRange(_room.Cameras);
             }
 
-            foreach (var door in Server.GetObjectsOf<DoorVariant>())
-                Map.Doors.Add(new(door));
-
-            foreach (var hole in Server.GetObjectsOf<SinkholeEnvironmentalHazard>())
-                Map.Sinkholes.Add(new(hole));
-
-            foreach (var tesla in Server.GetObjectsOf<TeslaGate>())
-                Map.Teslas.Add(new(tesla));
-
-            foreach (var window in Server.GetObjectsOf<BreakableWindow>())
-                Map.Windows.Add(new(window));
-
-            foreach (var station in WorkstationController.AllWorkstations)
-                Map.WorkStations.Add(new(station));
-
-
-            foreach (var door in Map.Doors)
+            foreach (DoorVariant door in Server.GetObjectsOf<DoorVariant>())
             {
-                foreach (var room in door.Rooms)
+                Map.Doors.Add(new (door));
+            }
+
+            foreach (SinkholeEnvironmentalHazard hole in Server.GetObjectsOf<SinkholeEnvironmentalHazard>())
+            {
+                Map.Sinkholes.Add(new (hole));
+            }
+
+            foreach (TeslaGate tesla in Server.GetObjectsOf<TeslaGate>())
+            {
+                Map.Teslas.Add(new (tesla));
+            }
+
+            foreach (BreakableWindow window in Server.GetObjectsOf<BreakableWindow>())
+            {
+                Map.Windows.Add(new (window));
+            }
+
+            foreach (WorkstationController station in WorkstationController.AllWorkstations)
+            {
+                Map.WorkStations.Add(new (station));
+            }
+
+
+            foreach (Door door in Map.Doors)
+            {
+                foreach (Room room in door.Rooms)
                 {
                     room.Doors.Add(door);
                 }
             }
 
 
-            API.Controllers.Scp914.Controller = Object.FindObjectOfType<Scp914.Scp914Controller>();
+            API.Controllers.Scp914.Controller = Object.FindObjectOfType<Scp914Controller>();
         }
 
-        static void MapClearLists()
+        private static void MapClearLists()
         {
-            foreach (var x in Map.Teslas)
+            foreach (Tesla x in Map.Teslas)
             {
-                if (x is null) continue;
+                if (x is null)
+                {
+                    continue;
+                }
+
                 x.ImmunityRoles.Clear();
                 x.ImmunityPlayers.Clear();
             }
@@ -102,28 +123,27 @@ namespace Qurre.Internal.EventsCalled
 
             Room.NetworkIdentities.Clear();
 
-            Patches.Player.Admins.Banned.Cached.Clear();
+            Banned.Cached.Clear();
 
             Extensions.DamagesCached.Clear();
 
-            try { API.Addons.Models.Model.ClearCache(); } catch { }
+            try
+            {
+                Model.ClearCache();
+            }
+            catch { }
 
             Item.BaseToItem.Clear();
             Pickup.BaseToItem.Clear();
         }
 
-        static void SceneUnloaded(Scene _)
+        private static void SceneUnloaded(Scene _)
         {
             MapClearLists();
             Fields.Player.IDs.Clear();
             Fields.Player.UserIDs.Clear();
             Fields.Player.Args.Clear();
             Fields.Player.Dictionary.Clear();
-        }
-
-        static Round()
-        {
-            SceneManager.sceneUnloaded += SceneUnloaded;
         }
     }
 }

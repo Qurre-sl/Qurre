@@ -1,24 +1,27 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using PlayerRoles.Ragdolls;
-using System;
+using Qurre.API;
 
 namespace Qurre.Internal.Patches.Misc.Creates
 {
-    using Qurre.API;
     using Controller = API.Controllers.Ragdoll;
 
     [HarmonyPatch(typeof(RagdollManager), nameof(RagdollManager.ServerSpawnRagdoll))]
-    static class Ragdoll
+    internal static class Ragdoll
     {
         [HarmonyPostfix]
-        static void Call(ReferenceHub owner, BasicRagdoll __result)
+        private static void Call(ReferenceHub owner, BasicRagdoll __result)
         {
             try
             {
-                if (__result is null) return;
+                if (__result is null)
+                {
+                    return;
+                }
 
-                Controller ragdoll = new(__result, owner.GetPlayer());
-                Map.Ragdolls.Add(ragdoll);
+                Controller ragdoll = new (__result, owner.GetPlayer());
+                API.Map.Ragdolls.Add(ragdoll);
             }
             catch (Exception e)
             {

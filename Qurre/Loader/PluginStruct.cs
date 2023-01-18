@@ -1,12 +1,13 @@
-﻿using Qurre.API.Attributes;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection;
+using Qurre.API.Attributes;
+
 namespace Qurre.Loader
 {
     internal struct PluginStruct
     {
-        internal readonly List<MethodStruct> EnableMethods = new();
-        internal readonly List<MethodStruct> DisableMethods = new();
+        internal readonly List<MethodStruct> EnableMethods = new ();
+        internal readonly List<MethodStruct> DisableMethods = new ();
         internal readonly PluginInit Info;
 
         internal PluginStruct(PluginInit info) => Info = info;

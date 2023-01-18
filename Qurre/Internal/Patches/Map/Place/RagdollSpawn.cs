@@ -1,25 +1,27 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
-using System;
+using Qurre.API;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.Map.Place
 {
-    using Qurre.API;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
     [HarmonyPatch(typeof(RagdollManager), nameof(RagdollManager.ServerSpawnRagdoll))]
-    static class RagdollSpawn
+    internal static class RagdollSpawn
     {
         [HarmonyPrefix]
-        static bool Call(ReferenceHub owner, DamageHandlerBase handler)
+        private static bool Call(ReferenceHub owner, DamageHandlerBase handler)
         {
             try
             {
-                if (owner is null) return false;
+                if (owner is null)
+                {
+                    return false;
+                }
 
-                RagdollSpawnEvent ev = new(owner.GetPlayer(), handler);
+                RagdollSpawnEvent ev = new (owner.GetPlayer(), handler);
                 ev.InvokeEvent();
 
                 return ev.Allowed;

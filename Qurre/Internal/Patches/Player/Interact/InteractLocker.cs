@@ -1,63 +1,67 @@
-﻿using HarmonyLib;
-using MapGeneration.Distributors;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Reflection.Emit;
+using HarmonyLib;
+using MapGeneration.Distributors;
+using Qurre.API;
+using Qurre.API.Controllers.Structs;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.Player.Interact
 {
-	using Qurre.API;
-	using Qurre.Events.Structs;
-	using Qurre.Internal.EventsManager;
+    [HarmonyPatch(typeof(Locker), nameof(Locker.ServerInteract))]
+    internal static class InteractLocker
+    {
+        [HarmonyTranspiler]
+        private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
+        {
+            yield return new (OpCodes.Ldarg_0); // Locker [instance]
+            yield return new (OpCodes.Ldarg_1); // ReferenceHub [ply]
+            yield return new (OpCodes.Ldarg_2); // byte [colliderId]
+            yield return new (OpCodes.Call, AccessTools.Method(typeof(InteractLocker), nameof(Invoke)));
+            yield return new (OpCodes.Ret);
+        }
 
-	[HarmonyPatch(typeof(Locker), nameof(Locker.ServerInteract))]
-	static class InteractLocker
-	{
-		[HarmonyTranspiler]
-		static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
-		{
-			yield return new CodeInstruction(OpCodes.Ldarg_0); // Locker [instance]
-			yield return new CodeInstruction(OpCodes.Ldarg_1); // ReferenceHub [ply]
-			yield return new CodeInstruction(OpCodes.Ldarg_2); // byte [colliderId]
-			yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(InteractLocker), nameof(InteractLocker.Invoke)));
-			yield return new CodeInstruction(OpCodes.Ret);
-		}
+        // full rewrite for small optimization
+        private static void Invoke(Locker instance, ReferenceHub ply, byte colliderId)
+        {
+            try
+            {
+                if (colliderId >= instance.Chambers.Length)
+                {
+                    return;
+                }
 
-		// full rewrite for small optimization
-		static void Invoke(Locker instance, ReferenceHub ply, byte colliderId)
-		{
-			try
-			{
-				if (colliderId >= instance.Chambers.Length)
-					return;
+                LockerChamber chamber = instance.Chambers[colliderId];
 
-				var chamber = instance.Chambers[colliderId];
+                if (!chamber.CanInteract)
+                {
+                    return;
+                }
 
-				if (!chamber.CanInteract)
-					return;
+                bool allow = ply.serverRoles.BypassMode || instance.CheckPerms(chamber.RequiredPermissions, ply);
 
-				bool allow = ply.serverRoles.BypassMode || instance.CheckPerms(chamber.RequiredPermissions, ply);
+                API.Controllers.Locker locker = instance.GetLocker();
 
-				var locker = instance.GetLocker();
+                locker.Chambers.TryFind(out Chamber chmbr, x => x.LockerChamber == chamber);
 
-				locker.Chambers.TryFind(out var chmbr, x => x.LockerChamber == chamber);
+                InteractLockerEvent ev = new (ply.GetPlayer(), locker, chmbr, allow);
+                ev.InvokeEvent();
 
-				InteractLockerEvent ev = new(ply.GetPlayer(), locker, chmbr, allow);
-				ev.InvokeEvent();
+                if (!ev.Allowed)
+                {
+                    instance.RpcPlayDenied(colliderId);
+                    return;
+                }
 
-				if (!ev.Allowed)
-				{
-					instance.RpcPlayDenied(colliderId);
-					return;
-				}
-
-				chamber.SetDoor(!chamber.IsOpen, instance._grantedBeep);
-				instance.RefreshOpenedSyncvar();
-			}
-			catch (Exception e)
-			{
-				Log.Error($"Patch Error - <Player> {{Interact}} [Locker]: {e}\n{e.StackTrace}");
-			}
-		}
-	}
+                chamber.SetDoor(!chamber.IsOpen, instance._grantedBeep);
+                instance.RefreshOpenedSyncvar();
+            }
+            catch (Exception e)
+            {
+                Log.Error($"Patch Error - <Player> {{Interact}} [Locker]: {e}\n{e.StackTrace}");
+            }
+        }
+    }
 }

@@ -1,22 +1,21 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using PlayerRoles;
-using System;
+using Qurre.API;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.Player.Role
 {
-    using Qurre.API;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
     [HarmonyPatch(typeof(PlayerRoleManager), nameof(PlayerRoleManager.ServerSetRole))]
-    static class ChangeRole
+    internal static class ChangeRole
     {
         [HarmonyPrefix]
-        static bool Call(PlayerRoleManager __instance, ref RoleTypeId newRole, ref RoleChangeReason reason)
+        private static bool Call(PlayerRoleManager __instance, ref RoleTypeId newRole, ref RoleChangeReason reason)
         {
             try
             {
-                ChangeRoleEvent ev = new(__instance.Hub.GetPlayer(), __instance.CurrentRole, newRole, reason);
+                ChangeRoleEvent ev = new (__instance.Hub.GetPlayer(), __instance.CurrentRole, newRole, reason);
                 ev.InvokeEvent();
 
                 newRole = ev.Role;

@@ -1,4 +1,5 @@
-﻿using Qurre.API;
+﻿using PlayerRoles;
+using Qurre.API;
 using Qurre.API.Attributes;
 using Qurre.Events;
 using Qurre.Events.Structs;
@@ -6,16 +7,18 @@ using RoundRestarting;
 
 namespace Qurre.Internal.EventsCalled
 {
-    static class SpawnCrashFix
+    internal static class SpawnCrashFix
     {
         //static GameObject PositionObject;
         //static Room ClassDRoom;
 
         [EventMethod(PlayerEvents.Spawn)]
-        static internal void CrashNotify(SpawnEvent ev)
+        internal static void CrashNotify(SpawnEvent ev)
         {
-            if (ev.Role != PlayerRoles.RoleTypeId.ClassD)
+            if (ev.Role != RoleTypeId.ClassD)
+            {
                 return;
+            }
 
             /*
             if (PositionObject is null)
@@ -38,9 +41,10 @@ namespace Qurre.Internal.EventsCalled
             */
 
             // idk why exactly global 76 & 91
-            if (ev.Position.x.Difference(76) > 1 &&
-                ev.Position.x.Difference(91) > 1)
+            if (ev.Position.x.Difference(76) > 1 && ev.Position.x.Difference(91) > 1)
+            {
                 return;
+            }
 
             ev.Player.Client.Broadcast("<color=red>Crash Detected\nReconnecting..</color>", 15, true);
             ev.Player.Client.SendConsole("Crash Detected. Reconnecting...", "red");

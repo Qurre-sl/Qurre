@@ -1,21 +1,20 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using MapGeneration.Distributors;
-using System;
+using Qurre.API;
 
 namespace Qurre.Internal.Patches.Misc.Creates
 {
-    using Qurre.API;
-
     [HarmonyPatch(typeof(Locker), nameof(Locker.Start))]
-    static class Locker1
+    internal static class Locker1
     {
         [HarmonyPostfix]
-        static void Call(Locker __instance)
+        private static void Call(Locker __instance)
         {
             try
             {
-                Map.Lockers.RemoveAll(x => x.GameObject == null);
-                Map.Lockers.Add(new(__instance));
+                API.Map.Lockers.RemoveAll(x => x.GameObject == null);
+                API.Map.Lockers.Add(new (__instance));
             }
             catch (Exception e)
             {

@@ -1,21 +1,20 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
+using HarmonyLib;
+using Qurre.API;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.Server
 {
-    using Qurre.API;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
     [HarmonyPatch(typeof(global::CheaterReport), nameof(global::CheaterReport.IssueReport))]
-    static class CheaterReport
+    internal static class CheaterReport
     {
         [HarmonyPrefix]
-        static bool Call(string reporterUserId, string reportedUserId, string reason)
+        private static bool Call(string reporterUserId, string reportedUserId, string reason)
         {
             try
             {
-                CheaterReportEvent ev = new(reporterUserId.GetPlayer(), reportedUserId.GetPlayer(), reason);
+                CheaterReportEvent ev = new (reporterUserId.GetPlayer(), reportedUserId.GetPlayer(), reason);
                 ev.InvokeEvent();
 
                 return ev.Allowed;

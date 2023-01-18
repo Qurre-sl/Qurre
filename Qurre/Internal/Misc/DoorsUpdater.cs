@@ -7,10 +7,19 @@ namespace Qurre.Internal.Misc
     internal class DoorsUpdater : MonoBehaviour
     {
         internal DoorVariant Door;
+
         internal void Update()
         {
-            if (Door is null) return;
-            try { Door.netIdentity.UpdateData(); } catch { }
+            if (Door is null)
+            {
+                return;
+            }
+
+            try
+            {
+                Door.netIdentity.UpdateData();
+            }
+            catch { }
         }
     }
 }

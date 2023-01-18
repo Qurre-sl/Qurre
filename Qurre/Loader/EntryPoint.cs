@@ -1,7 +1,8 @@
-﻿using Qurre.API;
-using Qurre.API.Addons;
-using System;
+﻿using System;
 using System.Linq;
+using MEC;
+using Qurre.API;
+using Qurre.API.Addons;
 
 namespace Qurre.Loader
 {
@@ -10,7 +11,9 @@ namespace Qurre.Loader
         public void Init()
         {
             if (StartupArgs.Args.Any(arg => string.Equals(arg, "-disableAnsiColors", StringComparison.OrdinalIgnoreCase)))
+            {
                 BetterColors.Enabled = false;
+            }
 
             Log.Info("Initializing Qurre...");
 
@@ -27,9 +30,15 @@ namespace Qurre.Loader
             Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{Core.Version}")} enabled"), "Loader", ConsoleColor.Red);
 
 
-            if (!Configs.PrintLogo || Log.Errored) return;
+            if (!Configs.PrintLogo || Log.Errored)
+            {
+                return;
+            }
 
-            MEC.Timing.CallDelayed(0.5f, () => ServerConsole.AddLog(BetterColors.Hidden("⠀") + @"
+            Timing.CallDelayed(
+                0.5f, () => ServerConsole.AddLog(
+                    BetterColors.Hidden("⠀")
+                    + @"
                                                                                 
                                                                                 
            .:^:^:..:.                                         ..                
@@ -63,7 +72,8 @@ namespace Qurre.Loader
                                     ^~:7?^^^                                    
                                      :^^:^:                                     
                                                                                 
-" + BetterColors.Hidden("⠀"), ConsoleColor.Red));
+"
+                    + BetterColors.Hidden("⠀"), ConsoleColor.Red));
 
             ServerConsole.AddLog(BetterColors.Bold("Bold"));
             ServerConsole.AddLog(BetterColors.Dim("Dim"));

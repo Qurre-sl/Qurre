@@ -1,18 +1,18 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
 using System.Linq;
+using HarmonyLib;
+using Qurre.API;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
+using Console = GameCore.Console;
 
 namespace Qurre.Internal.Patches.Server
 {
-    using Qurre.API;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
-    [HarmonyPatch(typeof(GameCore.Console), nameof(GameCore.Console.TypeCommand))]
-    static class ServerConsole
+    [HarmonyPatch(typeof(Console), nameof(Console.TypeCommand))]
+    internal static class ServerConsole
     {
         [HarmonyPrefix]
-        static bool Call(string cmd, ref string __result)
+        private static bool Call(string cmd, ref string __result)
         {
             try
             {
@@ -20,7 +20,7 @@ namespace Qurre.Internal.Patches.Server
                 string name = arr[0].ToLower();
                 string[] args = arr.Skip(1).ToArray();
 
-                ServerConsoleCommandEvent ev = new(cmd, name, args);
+                ServerConsoleCommandEvent ev = new (cmd, name, args);
                 ev.InvokeEvent();
 
                 __result = ev.Reply;

@@ -1,24 +1,23 @@
-﻿using HarmonyLib;
-using System;
+﻿using System;
+using HarmonyLib;
 using PlayerRoles;
 using PlayerStatsSystem;
+using Qurre.API;
+using Qurre.API.Objects;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.Player.Health
 {
-    using Qurre.API;
-    using Qurre.API.Addons;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
     [HarmonyPatch(typeof(PlayerStats), nameof(PlayerStats.KillPlayer))]
-    static class Dead
+    internal static class Dead
     {
         [HarmonyPrefix]
-        static bool CallPre(PlayerStats __instance, DamageHandlerBase handler)
+        private static bool CallPre(PlayerStats __instance, DamageHandlerBase handler)
         {
             try
             {
-                DiesEvent ev = new(handler.GetAttacker(), __instance.gameObject.GetPlayer(), handler);
+                DiesEvent ev = new (handler.GetAttacker(), __instance.gameObject.GetPlayer(), handler);
                 ev.InvokeEvent();
 
                 return ev.Allowed;
@@ -27,28 +26,35 @@ namespace Qurre.Internal.Patches.Player.Health
             {
                 Log.Error($"Patch Error - <Player> {{Health}} [Dies]:{e}\n{e.StackTrace}");
             }
+
             return true;
         }
 
         [HarmonyPostfix]
-        static void Call(PlayerStats __instance, DamageHandlerBase handler)
+        private static void Call(PlayerStats __instance, DamageHandlerBase handler)
         {
             try
             {
-                Player attacker = handler.GetAttacker();
-                Player target = __instance.gameObject.GetPlayer();
+                API.Player attacker = handler.GetAttacker();
+                API.Player target = __instance.gameObject.GetPlayer();
 
-                if (attacker is null) attacker = target;
-                if ((target is not null && (target.RoleInfomation.Role != RoleTypeId.Spectator ||
-                    target.GamePlay.GodMode || target.IsHost)) || attacker is null) return;
+                if (attacker is null)
+                {
+                    attacker = target;
+                }
 
-                var type = handler.GetDamageType();
+                if (target is not null && (target.RoleInfomation.Role != RoleTypeId.Spectator || target.GamePlay.GodMode || target.IsHost) || attacker is null)
+                {
+                    return;
+                }
+
+                DamageTypes type = handler.GetDamageType();
                 var ev = new DeadEvent(attacker, target, handler, type);
                 ev.InvokeEvent();
 
                 if (attacker != target && attacker is not null && target is not null)
                 {
-                    attacker.PlayerStatsInfomation._kills.Add(new KillElement(attacker, target, type, DateTime.Now));
+                    attacker.PlayerStatsInfomation._kills.Add(new (attacker, target, type, DateTime.Now));
                     target.PlayerStatsInfomation.DeathsCount++;
                 }
                 //if (target.Bot && API.Map.Bots.TryFind(out var _bot, x => x.Player == target)) _bot.Destroy();

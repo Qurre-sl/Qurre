@@ -1,28 +1,27 @@
-﻿using HarmonyLib;
-using InventorySystem.Items.Radio;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Reflection.Emit;
+using HarmonyLib;
+using InventorySystem.Items.Radio;
+using Qurre.API;
+using Qurre.API.Objects;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.Player.Items
 {
-    using Qurre.API;
-    using Qurre.API.Objects;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
     [HarmonyPatch(typeof(RadioItem), nameof(RadioItem.ServerProcessCmd))]
-    static class UpdateRadio
+    internal static class UpdateRadio
     {
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
+        private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
         {
-            yield return new CodeInstruction(OpCodes.Ldarg_0); // RadioItem
-            yield return new CodeInstruction(OpCodes.Ldarg_1); // RadioCommand
-            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(UpdateRadio), nameof(UpdateRadio.Invoke)));
-            yield return new CodeInstruction(OpCodes.Ret);
+            yield return new (OpCodes.Ldarg_0); // RadioItem
+            yield return new (OpCodes.Ldarg_1); // RadioCommand
+            yield return new (OpCodes.Call, AccessTools.Method(typeof(UpdateRadio), nameof(Invoke)));
+            yield return new (OpCodes.Ret);
         }
 
-        static void Invoke(RadioItem instance, RadioMessages.RadioCommand command)
+        private static void Invoke(RadioItem instance, RadioMessages.RadioCommand command)
         {
             byte range = instance._rangeId;
             bool enabled = instance._enabled;
@@ -31,7 +30,10 @@ namespace Qurre.Internal.Patches.Player.Items
             {
                 case RadioMessages.RadioCommand.Enable:
                     if (instance._battery > 0f)
+                    {
                         enabled = true;
+                    }
+
                     break;
 
                 case RadioMessages.RadioCommand.Disable:
@@ -39,20 +41,26 @@ namespace Qurre.Internal.Patches.Player.Items
                     break;
 
                 case RadioMessages.RadioCommand.ChangeRange:
-                    {
-                        byte b = (byte)(range + 1);
-                        if (b >= instance.Ranges.Length)
-                            b = 0;
+                {
+                    var b = (byte)(range + 1);
 
-                        range = b;
-                        break;
+                    if (b >= instance.Ranges.Length)
+                    {
+                        b = 0;
                     }
+
+                    range = b;
+                    break;
+                }
             }
 
-            UpdateRadioEvent ev = new(instance.Owner.GetPlayer(), instance, (RadioStatus)range, enabled);
+            UpdateRadioEvent ev = new (instance.Owner.GetPlayer(), instance, (RadioStatus)range, enabled);
             ev.InvokeEvent();
 
-            if (!ev.Allowed) return;
+            if (!ev.Allowed)
+            {
+                return;
+            }
 
             instance._rangeId = (byte)ev.Range;
             instance._enabled = ev.Enabled;

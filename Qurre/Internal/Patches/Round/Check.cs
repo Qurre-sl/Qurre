@@ -1,49 +1,57 @@
-﻿using HarmonyLib;
-using MEC;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Collections.Generic;
+using GameCore;
+using HarmonyLib;
+using MEC;
+using PlayerRoles;
+using Qurre.API.Controllers;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
+using RoundRestarting;
 using UnityEngine;
 
 namespace Qurre.Internal.Patches.Round
 {
-    using PlayerRoles;
-    using Qurre.API;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
     [HarmonyPatch(typeof(RoundSummary), nameof(RoundSummary.Start))]
-    static class Check
+    internal static class Check
     {
         [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instr)
+        private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instr)
         {
             var codes = new List<CodeInstruction>(instr);
+
             foreach (var code in codes.Select((x, i) => new { Value = x, Index = i }))
             {
-                if (code.Value.opcode != OpCodes.Call) continue;
-                if (code.Value.operand is not null && code.Value.operand is MethodBase methodBase &&
-                    methodBase.Name == nameof(RoundSummary._ProcessServerSideCode))
-                    codes[code.Index].operand = AccessTools.Method(typeof(Check), nameof(Check.ProcessServerSide));
+                if (code.Value.opcode != OpCodes.Call)
+                {
+                    continue;
+                }
+
+                if (code.Value.operand is not null && code.Value.operand is MethodBase methodBase && methodBase.Name == nameof(RoundSummary._ProcessServerSideCode))
+                {
+                    codes[code.Index].operand = AccessTools.Method(typeof(Check), nameof(ProcessServerSide));
+                }
             }
+
             return codes.AsEnumerable();
         }
 
-        static IEnumerator<float> ProcessServerSide(RoundSummary instance)
+        private static IEnumerator<float> ProcessServerSide(RoundSummary instance)
         {
             float time = Time.unscaledTime;
+
             while (instance is not null)
             {
                 yield return Timing.WaitForSeconds(2.5f);
-                while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || Time.unscaledTime - time < 15f ||
-                    (instance.KeepRoundOnOne && Player.List.Count() < 2))
+                while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || Time.unscaledTime - time < 15f || instance.KeepRoundOnOne && API.Player.List.Count() < 2)
                     yield return Timing.WaitForSeconds(1);
 
                 RoundSummary.SumInfo_ClassList list = default;
-                bool end = false;
+                var end = false;
 
-                foreach (var pl in Player.List)
+                foreach (API.Player pl in API.Player.List)
                 {
                     switch (pl.RoleInfomation.Team)
                     {
@@ -60,11 +68,18 @@ namespace Qurre.Internal.Patches.Round
                             list.mtf_and_guards++;
                             break;
                         case Team.SCPs:
+                        {
+                            if (pl.RoleInfomation.Role is RoleTypeId.Scp0492)
                             {
-                                if (pl.RoleInfomation.Role is RoleTypeId.Scp0492) list.zombies++;
-                                else list.scps_except_zombies++;
-                                break;
+                                list.zombies++;
                             }
+                            else
+                            {
+                                list.scps_except_zombies++;
+                            }
+
+                            break;
+                        }
                     }
                 }
 
@@ -82,9 +97,9 @@ namespace Qurre.Internal.Patches.Round
                 bool DClassAlive = list.class_ds > 0;
                 bool ScientistsAlive = list.scientists > 0;
 
-                int chaos_cf = 0;
-                int mtf_cf = 0;
-                int scp_cf = 0;
+                var chaos_cf = 0;
+                var mtf_cf = 0;
+                var scp_cf = 0;
 
                 if (ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
                 {
@@ -107,36 +122,75 @@ namespace Qurre.Internal.Patches.Round
                 }
 
                 // real winner of the round
-                var winner = LeadingTeam.Draw;
+                LeadingTeam winner = LeadingTeam.Draw;
 
-                if (dboys > scientists) chaos_cf++;
-                else if (dboys < scientists) mtf_cf++;
-                else if (scp > dboys + scientists) scp_cf++;
+                if (dboys > scientists)
+                {
+                    chaos_cf++;
+                }
+                else if (dboys < scientists)
+                {
+                    mtf_cf++;
+                }
+                else if (scp > dboys + scientists)
+                {
+                    scp_cf++;
+                }
 
-                if (list.chaos_insurgents > list.mtf_and_guards) chaos_cf++;
-                else if (list.chaos_insurgents < list.mtf_and_guards) mtf_cf++;
-                else if (scp > list.chaos_insurgents + list.mtf_and_guards) scp_cf++;
+                if (list.chaos_insurgents > list.mtf_and_guards)
+                {
+                    chaos_cf++;
+                }
+                else if (list.chaos_insurgents < list.mtf_and_guards)
+                {
+                    mtf_cf++;
+                }
+                else if (scp > list.chaos_insurgents + list.mtf_and_guards)
+                {
+                    scp_cf++;
+                }
 
                 if (chaos_cf > mtf_cf)
                 {
-                    if (chaos_cf > scp_cf) winner = LeadingTeam.ChaosInsurgency;
-                    else if (mtf_cf < scp_cf) winner = LeadingTeam.Anomalies;
-                    else winner = LeadingTeam.Draw;
+                    if (chaos_cf > scp_cf)
+                    {
+                        winner = LeadingTeam.ChaosInsurgency;
+                    }
+                    else if (mtf_cf < scp_cf)
+                    {
+                        winner = LeadingTeam.Anomalies;
+                    }
+                    else
+                    {
+                        winner = LeadingTeam.Draw;
+                    }
                 }
                 else if (mtf_cf > chaos_cf)
                 {
-                    if (mtf_cf > scp_cf) winner = LeadingTeam.FacilityForces;
-                    else if (chaos_cf < scp_cf) winner = LeadingTeam.Anomalies;
-                    else winner = LeadingTeam.Draw;
+                    if (mtf_cf > scp_cf)
+                    {
+                        winner = LeadingTeam.FacilityForces;
+                    }
+                    else if (chaos_cf < scp_cf)
+                    {
+                        winner = LeadingTeam.Anomalies;
+                    }
+                    else
+                    {
+                        winner = LeadingTeam.Draw;
+                    }
                 }
-                else winner = LeadingTeam.Draw;
+                else
+                {
+                    winner = LeadingTeam.Draw;
+                }
 
                 {
-                    RoundCheckEvent ev = new(winner, list, end);
+                    RoundCheckEvent ev = new (winner, list, end);
                     ev.InvokeEvent();
 
                     list = ev.Info;
-                    instance._roundEnded = ev.End || Round._forceEnd;
+                    instance._roundEnded = ev.End || API.Round._forceEnd;
                     winner = ev.Winner;
                 }
 
@@ -144,14 +198,15 @@ namespace Qurre.Internal.Patches.Round
                 {
                     FriendlyFireConfig.PauseDetector = true;
 
-                    string text = $"Round finished! Anomalies: {scp} | Chaos: {list.chaos_insurgents} | " +
-                        $"Facility Forces: {list.mtf_and_guards} | D escaped: {dboys} | Scientists escaped: {scientists}";
-                    GameCore.Console.AddLog(text, Color.gray);
+                    string text = $"Round finished! Anomalies: {scp} | Chaos: {list.chaos_insurgents} | "
+                                  + $"Facility Forces: {list.mtf_and_guards} | D escaped: {dboys} | Scientists escaped: {scientists}";
+                    Console.AddLog(text, Color.gray);
                     ServerLogs.AddLog(ServerLogs.Modules.Logger, text, ServerLogs.ServerLogType.GameEvent);
 
                     yield return Timing.WaitForSeconds(0.5f);
 
-                    int wait = Mathf.Clamp(GameCore.ConfigFile.ServerConfig.GetInt("auto_round_restart_time", 10), 5, 1000);
+                    int wait = Mathf.Clamp(ConfigFile.ServerConfig.GetInt("auto_round_restart_time", 10), 5, 1000);
+
                     if (instance is not null)
                     {
                         var ev = new RoundEndEvent(winner, list, wait);
@@ -160,19 +215,20 @@ namespace Qurre.Internal.Patches.Round
                         winner = ev.Winner;
                         wait = Mathf.Clamp(ev.ToRestart, 5, 1000);
 
-                        instance.RpcShowRoundSummary(instance.classlistStart, list, winner, RoundSummary.EscapedClassD,
-                            RoundSummary.EscapedScientists, RoundSummary.KilledBySCPs, wait, (int)GameCore.RoundStart.RoundLength.TotalSeconds);
+                        instance.RpcShowRoundSummary(
+                            instance.classlistStart, list, winner, RoundSummary.EscapedClassD,
+                            RoundSummary.EscapedScientists, RoundSummary.KilledBySCPs, wait, (int)RoundStart.RoundLength.TotalSeconds);
                     }
 
                     yield return Timing.WaitForSeconds(wait - 1);
 
                     instance.RpcDimScreen();
-                    Timing.CallDelayed(1f, () => RoundRestarting.RoundRestart.InitiateRoundRestart());
+                    Timing.CallDelayed(1f, () => RoundRestart.InitiateRoundRestart());
 
                     // optimization
                     try
                     {
-                        foreach (var pl in Player.List)
+                        foreach (API.Player pl in API.Player.List)
                         {
                             try
                             {
@@ -186,16 +242,33 @@ namespace Qurre.Internal.Patches.Round
                         }
                     }
                     catch { }
+
                     try
                     {
-                        foreach (var p in Map.Pickups.ToArray()) try { p.Destroy(); } catch { }
+                        foreach (Pickup p in API.Map.Pickups.ToArray())
+                        {
+                            try
+                            {
+                                p.Destroy();
+                            }
+                            catch { }
+                        }
                     }
                     catch { }
+
                     try
                     {
-                        foreach (var doll in Map.Ragdolls.ToArray()) try { doll.Destroy(); } catch { }
+                        foreach (Ragdoll doll in API.Map.Ragdolls.ToArray())
+                        {
+                            try
+                            {
+                                doll.Destroy();
+                            }
+                            catch { }
+                        }
                     }
                     catch { }
+
                     yield break;
                 }
             }

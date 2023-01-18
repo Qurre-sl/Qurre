@@ -3,10 +3,10 @@ using System.Reflection;
 
 namespace Qurre.Internal.EventsManager
 {
-    static internal class Lists
+    internal static class Lists
     {
-        static internal Dictionary<uint, List<MethodInfo>> QurreMethods = new();
-        static internal Dictionary<uint, List<EventCallMethod>> CallMethods = new();
-        static internal Dictionary<MethodInfo, object> ClassesOfNonStaticMethods = new();
+        internal static Dictionary<uint, List<MethodInfo>> QurreMethods = new ();
+        internal static Dictionary<uint, List<EventCallMethod>> CallMethods = new ();
+        internal static Dictionary<MethodInfo, object> ClassesOfNonStaticMethods = new ();
     }
 }

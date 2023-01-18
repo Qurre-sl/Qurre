@@ -9,10 +9,10 @@ using Qurre.Internal.EventsManager;
 namespace Qurre.Internal.Patches.Player.Pickups
 {
     [HarmonyPatch(typeof(InventoryExtensions), nameof(InventoryExtensions.ServerDropItem))]
-    static class DroppedItem
+    internal static class DroppedItem
     {
         [HarmonyPostfix]
-        static void Call(Inventory inv, ItemPickupBase __result) =>
+        private static void Call(Inventory inv, ItemPickupBase __result) =>
             new DroppedItemEvent(inv._hub.GetPlayer(), Pickup.SafeGet(__result)).InvokeEvent();
     }
 }

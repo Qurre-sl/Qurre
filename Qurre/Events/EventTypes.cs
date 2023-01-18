@@ -1,6 +1,6 @@
 ﻿namespace Qurre.Events
 {
-    static public class PlayerEvents //1xxx
+    public static class PlayerEvents //1xxx
     {
         //1000+ <- Network events
         public const uint Preauth = 1001;
@@ -75,7 +75,7 @@
         public const uint DamageShootingTarget = 1952;
     }
 
-    static public class MapEvents //2xxx
+    public static class MapEvents //2xxx
     {
         //2000+ <- Main Map Events
         public const uint MapGenerated = 2001;
@@ -95,7 +95,7 @@
         public const uint TeamRespawn = 2202;
     }
 
-    static public class ServerEvents //3xxx
+    public static class ServerEvents //3xxx
     {
         //3000+ <- 
 
@@ -110,7 +110,7 @@
         public const uint LocalReport = 3202;
     }
 
-    static public class RoundEvents //4xxx
+    public static class RoundEvents //4xxx
     {
         public const uint Waiting = 4001;
         public const uint Start = 4002;
@@ -119,7 +119,7 @@
         public const uint Check = 4005;
     }
 
-    static public class AlphaEvents //5xxx
+    public static class AlphaEvents //5xxx
     {
         public const uint Start = 5001;
         public const uint Stop = 5002;
@@ -127,8 +127,6 @@
         public const uint UnlockPanel = 5004;
     }
 
-    static public class ScpEvents //6xxx
-    {
-
-    }
+    public static class ScpEvents //6xxx
+    { }
 }

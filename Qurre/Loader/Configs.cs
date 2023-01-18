@@ -1,56 +1,66 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System;
+using Newtonsoft.Json.Linq;
 using Qurre.API;
 using Qurre.API.Addons;
 
 namespace Qurre.Loader
 {
-    static internal class Configs
+    internal static class Configs
     {
-        static internal JsonConfig Config { get; private set; }
-        static internal bool AllUnits { get; private set; } = true;
-        static internal bool OnlyTutorialUnit { get; private set; } = false;
-        static internal bool SpawnBlood { get; private set; } = false;
-        static internal bool Better268 { get; private set; } = false;
-        static internal bool BetterHints { get; private set; } = false;
-        static internal bool PrintLogo { get; private set; } = false;
-        static internal string[] ReloadAccess { get; private set; } = new string[] { };
+        internal static JsonConfig Config { get; private set; }
 
-        static internal string Banned { get; private set; } = "You have been banned. Reason: ";
-        static internal string Kicked { get; private set; } = "You have been kicked. Reason: ";
+        internal static bool AllUnits { get; private set; } = true;
 
-        static internal void Setup()
+        internal static bool OnlyTutorialUnit { get; private set; }
+
+        internal static bool SpawnBlood { get; private set; }
+
+        internal static bool Better268 { get; private set; }
+
+        internal static bool BetterHints { get; private set; }
+
+        internal static bool PrintLogo { get; private set; }
+
+        internal static string[] ReloadAccess { get; private set; } = Array.Empty<string>();
+
+        internal static string Banned { get; private set; } = "You have been banned. Reason: ";
+
+        internal static string Kicked { get; private set; } = "You have been kicked. Reason: ";
+
+        internal static void Setup()
         {
             JsonConfig.Init();
-            Config = new("Qurre");
+            Config = new ("Qurre");
 
-            Log.Debugging = Config.SafeGetValue("Debug", false, "Are Debug logs enabled?");
-            Log.Logging = Config.SafeGetValue("Logging", true, "Are errors saved to the log file?");
-            Log.AllLogging = Config.SafeGetValue("AllLogging", false, "Are all console output being saved to a log file?");
+            Log.Debugging = Config.TrySafeGetValue("Debug", false, "Are Debug logs enabled?");
+            Log.Logging = Config.TrySafeGetValue("Logging", true, "Are errors saved to the log file?");
+            Log.AllLogging = Config.TrySafeGetValue("AllLogging", false, "Are all console output being saved to a log file?");
 
-            AllUnits = Config.SafeGetValue("AllUnit", true, "Should I show the Qurre version on Units for all roles?");
-            OnlyTutorialUnit = Config.SafeGetValue("OnlyTutorialsUnit", false, "Should I show the Qurre version on Units only for the Tutorial role?");
-            SpawnBlood = Config.SafeGetValue("SpawnBlood", true, "Allow the appearance of blood?");
-            Better268 = Config.SafeGetValue("Better268", false, "SCP 079 & SCP 096 will not see the wearer of SCP 268");
-            BetterHints = Config.SafeGetValue("BetterHints", false, "Enable Addon [BetterHints]?");
-            PrintLogo = Config.SafeGetValue("PrintLogo", true, "Print Qurre Logo?");
-            ReloadAccess = Config.SafeGetValue("ReloadAccess", new string[] { "owner", "UserId64@steam", "UserDiscordId@discord" }, "Those who can use the \"reload\" command");
+            AllUnits = Config.TrySafeGetValue("AllUnit", true, "Should I show the Qurre version on Units for all roles?");
+            OnlyTutorialUnit = Config.TrySafeGetValue("OnlyTutorialsUnit", false, "Should I show the Qurre version on Units only for the Tutorial role?");
+            SpawnBlood = Config.TrySafeGetValue("SpawnBlood", true, "Allow the appearance of blood?");
+            Better268 = Config.TrySafeGetValue("Better268", false, "SCP 079 & SCP 096 will not see the wearer of SCP 268");
+            BetterHints = Config.TrySafeGetValue("BetterHints", false, "Enable Addon [BetterHints]?");
+            PrintLogo = Config.TrySafeGetValue("PrintLogo", true, "Print Qurre Logo?");
+            ReloadAccess = Config.TrySafeGetValue("ReloadAccess", new[] { "owner", "UserId64@steam", "UserDiscordId@discord" }, "Those who can use the \"reload\" command");
 
             SetupTranslations();
 
-            JsonConfig.UpdateFile();
+            JsonConfig.Save();
         }
 
-        static internal void SetupTranslations()
+        internal static void SetupTranslations()
         {
-            var par = Config.JsonArray["Translations"];
-            if (par is null)
+            JToken parent = Config.JsonArray["Translations"];
+
+            if (parent is null)
             {
-                par = JObject.Parse("{ }");
-                Config.JsonArray["Translations"] = par;
+                parent = JObject.Parse("{ }");
+                Config.JsonArray["Translations"] = parent;
             }
 
-            Banned = Config.SafeGetValue("Banned", Banned, source: par);
-            Kicked = Config.SafeGetValue("Kicked", Kicked, source: par);
+            Banned = Config.SafeGetValue("Banned", Banned, source: parent);
+            Kicked = Config.SafeGetValue("Kicked", Kicked, source: parent);
         }
     }
 }

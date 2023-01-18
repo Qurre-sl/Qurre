@@ -1,26 +1,28 @@
-﻿using HarmonyLib;
+﻿using System;
+using HarmonyLib;
 using InventorySystem;
-using System;
+using Qurre.API;
+using Qurre.API.Controllers;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.Player.Items
 {
-    using Qurre.API;
-    using Qurre.API.Controllers;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
     [HarmonyPatch(typeof(Inventory), nameof(Inventory.ServerSelectItem))]
-    static class ChangeItem
+    internal static class ChangeItem
     {
         [HarmonyPrefix]
-        static bool Call(Inventory __instance, ushort itemSerial)
+        private static bool Call(Inventory __instance, ushort itemSerial)
         {
             try
             {
                 if (itemSerial == __instance.CurItem.SerialNumber)
+                {
                     return false;
+                }
 
-                ChangeItemEvent ev = new(__instance._hub.GetPlayer(), Item.SafeGet(__instance.CurInstance),
+                ChangeItemEvent ev = new (
+                    __instance._hub.GetPlayer(), Item.SafeGet(__instance.CurInstance),
                     itemSerial == 0 ? null : Item.Get(itemSerial));
                 ev.InvokeEvent();
 
@@ -30,6 +32,7 @@ namespace Qurre.Internal.Patches.Player.Items
             {
                 Log.Error($"Patch Error - <Player> {{Items}} [ChangeItem]: {e}\n{e.StackTrace}");
             }
+
             return true;
         }
     }
