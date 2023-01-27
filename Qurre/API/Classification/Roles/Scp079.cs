@@ -1,4 +1,4 @@
-﻿using PlayerRoles.PlayableScps.Scp079;
+using PlayerRoles.PlayableScps.Scp079;
 
 namespace Qurre.API.Classification.Roles
 {
