@@ -32,7 +32,7 @@
 
 # Установка
 ### Ручная установка
-1. Скачайте файл `Qurre.zip` из [релизов](https://github.com/Qurre-sl/Qurre/releases/latest)
+1. Скачайте файл `Qurre.tar.gz` из [релизов](https://github.com/Qurre-sl/Qurre/releases/latest)
 2. Поместите папку `Qurre` в `%appdata%` (На линукс: `~/.config`)
 3. Поместите `Assembly-CSharp.dll` в папку с игрой: `SCPSL_Data/Managed` (с заменой файлов)
 4. На этом все, вы успешно установили **Qurre**

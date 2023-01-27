@@ -88,4 +88,20 @@ namespace Qurre.Events.Structs
             Allowed = true;
         }
     }
+
+    public class ChangeGroupEvent : IBaseEvent
+    {
+        public uint EventId { get; } = PlayerEvents.ChangeGroup;
+
+        public Player Player { get; }
+        public UserGroup Group { get; set; }
+        public bool Allowed { get; set; }
+
+        internal ChangeGroupEvent(Player player, UserGroup group)
+        {
+            Player = player;
+            Group = group;
+            Allowed = true;
+        }
+    }
 }

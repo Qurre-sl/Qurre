@@ -20,6 +20,7 @@
         Exhausted,
         Flashed,
         Hemorrhage,
+        Hypothermia,
         InsufficientLighting,
         Invigorated,
         Invisible,

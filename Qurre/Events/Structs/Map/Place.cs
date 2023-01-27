@@ -1,5 +1,8 @@
-﻿using PlayerStatsSystem;
+﻿using InventorySystem;
+using InventorySystem.Items.Pickups;
+using PlayerStatsSystem;
 using Qurre.API;
+using Qurre.API.Controllers;
 
 namespace Qurre.Events.Structs
 {

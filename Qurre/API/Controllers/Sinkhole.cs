@@ -80,6 +80,6 @@ namespace Qurre.API.Controllers
         }
         public override int GetHashCode() => Tuple.Create(this, GameObject).GetHashCode();
 
-        public Sinkhole(SinkholeEnvironmentalHazard hole) => sinkhole = hole;
+        internal Sinkhole(SinkholeEnvironmentalHazard hole) => sinkhole = hole;
     }
 }

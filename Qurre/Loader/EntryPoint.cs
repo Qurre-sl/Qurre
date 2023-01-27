@@ -7,8 +7,6 @@ namespace Qurre.Loader
 {
     internal class EntryPoint : ICharacterLoader
     {
-        static internal Version Version { get; private set; } = new(2, 0);
-
         public void Init()
         {
             if (StartupArgs.Args.Any(arg => string.Equals(arg, "-disableAnsiColors", StringComparison.OrdinalIgnoreCase)))
@@ -26,7 +24,7 @@ namespace Qurre.Loader
 
             Prefabs.Init();
 
-            Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{Version}")} enabled"), "Loader", ConsoleColor.Red);
+            Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{Core.Version}")} enabled"), "Loader", ConsoleColor.Red);
 
 
             if (!Configs.PrintLogo || Log.Errored) return;

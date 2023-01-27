@@ -9,10 +9,10 @@ namespace Qurre.API.Controllers
         readonly Room _room;
         readonly CustomRoom _custom;
 
-#pragma warning disable CS8632
+#nullable enable
         public Room? Room => _room;
         public CustomRoom? CustomRoom => _custom;
-#pragma warning restore CS8632
+#nullable disable
 
         public bool LockChange { get; set; } = false;
         public bool Override

@@ -25,7 +25,7 @@ namespace Qurre.Internal.Patches.Player.Health
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Health}} [Dies]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Health}} [Dies]: {e}\n{e.StackTrace}");
             }
             return true;
         }
@@ -55,7 +55,7 @@ namespace Qurre.Internal.Patches.Player.Health
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Health}} [Dead]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Health}} [Dead]: {e}\n{e.StackTrace}");
             }
         }
     }

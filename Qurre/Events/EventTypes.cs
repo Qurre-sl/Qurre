@@ -13,6 +13,7 @@
         public const uint Dies = 1102;
         public const uint Damage = 1103;
         public const uint Attack = 1104;
+        public const uint Heal = 1105;
 
         //1200+ <- Admins with Player
         public const uint Ban = 1201;
@@ -20,6 +21,7 @@
         public const uint Kick = 1203;
         public const uint Mute = 1204;
         public const uint Unmute = 1205;
+        public const uint ChangeGroup = 1206;
 
         //1300+ <- Items
         public const uint CancelUseItem = 1301;
@@ -49,12 +51,6 @@
         public const uint InteractShootingTarget = 1506;
 
         //1600+ <- Gun
-        public const uint UnloadGun = 1601;
-        public const uint AimGun = 1602;
-        public const uint ReloadGun = 1603;
-        public const uint ShotGun = 1604;
-        public const uint DryfireGun = 1605;
-        public const uint GunToggleFlashlight = 1606;
 
         //1700+ <- Player Role Events
         public const uint Spawn = 1701;
@@ -66,33 +62,18 @@
         public const uint UnCuff = 1802;
 
         //1900+ <- Misc
-        public const uint ChangeSpectator = 1901;
-        public const uint MakeNoise = 1902;
-        public const uint ReceiveEffect = 1903;
-        public const uint UseHotkey = 1904;
-
-        public const uint DamageWindow = 1951;
-        public const uint DamageShootingTarget = 1952;
     }
 
     static public class MapEvents //2xxx
     {
         //2000+ <- Main Map Events
-        public const uint MapGenerated = 2001;
-        public const uint LczDecontamination = 2002;
-        public const uint LczAnnounce = 2003;
-        public const uint GeneratorActivated = 2004;
 
         //2100+ <- Place/Spawn
-        public const uint PlaceBlood = 2101;
-        public const uint PlaceBulletHole = 2102;
-        public const uint ItemSpawned = 2103;
         public const uint RagdollSpawn = 2104;
-        public const uint GrenadeExploded = 2105;
 
         //2200+ <- Team Respawn
-        public const uint TeamRespawnSelect = 2201;
-        public const uint TeamRespawn = 2202;
+
+        //2300+ <- Objects
     }
 
     static public class ServerEvents //3xxx
@@ -127,8 +108,32 @@
         public const uint UnlockPanel = 5004;
     }
 
-    static public class ScpEvents //6xxx
+    static public class EffectEvents //6xxx
     {
+        //6000+ <- Main
 
+        //6100+ <- Player
+    }
+
+    static public class ScpEvents //7xxx
+    {
+        //7000+ <- Main
+
+        //7100+ <- Scp049
+
+        //7200+ <- Scp079
+
+        //7300+ <- Scp096
+
+        //7400+ <- Scp106
+
+        //7500+ <- Scp173
+
+        //7600+ <- Scp939
+
+
+        // Non-game SCPs
+
+        //7700+ <- Scp914
     }
 }

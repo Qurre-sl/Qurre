@@ -26,7 +26,7 @@ namespace Qurre.Internal.Patches.Map.Place
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Map> {{Place}} [RagdollSpawn]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Map> {{Place}} [RagdollSpawn]: {e}\n{e.StackTrace}");
                 return true;
             }
         }

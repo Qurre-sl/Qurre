@@ -5,7 +5,7 @@ namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
 
-    public class Client
+    public sealed class Client
     {
         private readonly Player _player;
         internal Client(Player pl) => _player = pl;
@@ -28,6 +28,9 @@ namespace Qurre.API.Classification.Player
             try { _player.ClassManager.ConsolePrint(message, color); }
             catch { _player.ReferenceHub.GetComponent<GameConsoleTransmission>().SendToClient(_player.Connection, message, color); }
         }
+
+        public void Disconnect(string reason = null)
+            => ServerConsole.Disconnect(_player.GameObject, string.IsNullOrEmpty(reason) ? "" : reason);
 
         public void DimScreen()
         {

@@ -1,12 +1,7 @@
 ﻿using Mirror;
-using Qurre.API.Addons;
 using Qurre.API.Controllers.Structs;
 using RemoteAdmin;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using UnityEngine;
 using Field = Qurre.Internal.Fields.Player;
 
@@ -15,6 +10,7 @@ namespace Qurre.API
     public class Player
     {
         internal bool Bot => false; // time field
+        internal bool Invisible => false; // time field
         static public IEnumerable<Player> List => Field.Dictionary.Values;
 
         internal Player(GameObject gameObject) => new Player(ReferenceHub.GetHub(gameObject));
@@ -25,11 +21,12 @@ namespace Qurre.API
 
             Broadcasts = new();
 
+            Administrative = new(this);
             Client = new(this);
+            Effects = new(this);
             GamePlay = new(this);
             HealthInfomation = new(this);
-            InventoryInformation = new(this);
-            InventoryItems = new(rh.inventory);
+            Inventory = new(this);
             MovementState = new(this);
             PlayerStatsInfomation = new(this);
             RoleInfomation = new(this);
@@ -58,6 +55,7 @@ namespace Qurre.API
         public CharacterClassManager ClassManager => rh.characterClassManager;
         public QueryProcessor QueryProcessor => rh.queryProcessor;
         public NetworkConnection Connection => IsHost ? rh.networkIdentity.connectionToServer : rh.networkIdentity.connectionToClient;
+        public Transform Transform => rh.transform;
 
         public CommandSender Sender
         {
@@ -83,11 +81,12 @@ namespace Qurre.API
 
         public BroadcastsList Broadcasts { get; }
 
+        public Classification.Player.Administrative Administrative { get; }
         public Classification.Player.Client Client { get; }
+        public Classification.Player.EffectsManager Effects { get; }
         public Classification.Player.GamePlay GamePlay { get; }
         public Classification.Player.HealthInfomation HealthInfomation { get; }
-        public Classification.Player.InventoryInformation InventoryInformation { get; }
-        public Classification.Player.InventoryItems InventoryItems { get; }
+        public Classification.Player.Inventory Inventory { get; }
         public Classification.Player.MovementState MovementState { get; }
         public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
         public Classification.Player.RoleInfomation RoleInfomation { get; }

@@ -66,7 +66,7 @@ namespace Qurre.Internal.Patches.Player.Pickups
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Pickups}} [PickupItem]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Pickups}} [PickupItem]: {e}\n{e.StackTrace}");
                 return true;
             }
         }
