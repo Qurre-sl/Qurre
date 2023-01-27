@@ -1,4 +1,5 @@
-﻿using InventorySystem;
+﻿using CustomPlayerEffects;
+using InventorySystem;
 using RoundRestarting;
 using System.Collections.Generic;
 using System.Linq;
@@ -50,6 +51,12 @@ namespace Qurre.API
 
                 foreach (Player pl in Player.List) pl.FriendlyFire = value;
             }
+        }
+
+        static public float SpawnProtectDuration
+        {
+            get => SpawnProtected.SpawnDuration;
+            set => SpawnProtected.SpawnDuration = value;
         }
 
         static public List<TObject> GetObjectsOf<TObject>() where TObject : UnityEngine.Object => UnityEngine.Object.FindObjectsOfType<TObject>().ToList();

@@ -119,7 +119,7 @@ namespace Qurre.Internal.Patches.Player.Health
             }
             catch (System.Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Health}} [Attack]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Health}} [Attack]: {e}\n{e.StackTrace}");
             }
         }
     }

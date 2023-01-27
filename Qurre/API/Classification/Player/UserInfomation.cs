@@ -1,7 +1,7 @@
 ﻿namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
-    public class UserInfomation
+    public sealed class UserInfomation
     {
         private string _ui;
         private readonly string _nick = "";

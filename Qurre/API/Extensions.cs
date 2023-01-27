@@ -2,6 +2,7 @@
 using Interactables.Interobjects;
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items;
+using InventorySystem.Items.Usables.Scp244.Hypothermia;
 using MapGeneration;
 using MapGeneration.Distributors;
 using Mirror;
@@ -377,6 +378,7 @@ namespace Qurre.API
 			EffectType.Exhausted => typeof(Exhausted),
 			EffectType.Flashed => typeof(Flashed),
 			EffectType.Hemorrhage => typeof(Hemorrhage),
+			EffectType.Hypothermia => typeof(Hypothermia),
 			EffectType.InsufficientLighting => typeof(InsufficientLighting),
 			EffectType.Invigorated => typeof(Invigorated),
 			EffectType.Invisible => typeof(Invisible),
@@ -414,6 +416,7 @@ namespace Qurre.API
 			Exhausted => EffectType.Exhausted,
 			Flashed => EffectType.Flashed,
 			Hemorrhage => EffectType.Hemorrhage,
+			Hypothermia => EffectType.Hypothermia,
 			InsufficientLighting => EffectType.InsufficientLighting,
 			Invigorated => EffectType.Invigorated,
 			Invisible => EffectType.Invisible,
@@ -460,6 +463,10 @@ namespace Qurre.API
 		#region GetDoor
 		static public Door GetDoor(this DoorVariant variant) => Map.Doors.FirstOrDefault(x => x.DoorVariant == variant);
 		static public Door GetDoor(this DoorType type) => Map.Doors.FirstOrDefault(x => x.Type == type);
+		#endregion
+
+		#region GetRagdoll
+		static public Ragdoll GetRagdoll(this BasicRagdoll basic) => Map.Ragdolls.FirstOrDefault(x => x.ragdoll == basic);
 		#endregion
 	}
 }

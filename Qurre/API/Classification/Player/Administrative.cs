@@ -3,7 +3,7 @@
     using Qurre.API;
     using Qurre.Internal.Misc;
 
-    public class Administrative
+    public sealed class Administrative
     {
         private readonly Player _player;
         internal Administrative(Player pl) => _player = pl;

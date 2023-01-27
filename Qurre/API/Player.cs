@@ -10,6 +10,7 @@ namespace Qurre.API
     public class Player
     {
         internal bool Bot => false; // time field
+        internal bool Invisible => false; // time field
         static public IEnumerable<Player> List => Field.Dictionary.Values;
 
         internal Player(GameObject gameObject) => new Player(ReferenceHub.GetHub(gameObject));
@@ -22,6 +23,7 @@ namespace Qurre.API
 
             Administrative = new(this);
             Client = new(this);
+            Effects = new(this);
             GamePlay = new(this);
             HealthInfomation = new(this);
             Inventory = new(this);
@@ -53,6 +55,7 @@ namespace Qurre.API
         public CharacterClassManager ClassManager => rh.characterClassManager;
         public QueryProcessor QueryProcessor => rh.queryProcessor;
         public NetworkConnection Connection => IsHost ? rh.networkIdentity.connectionToServer : rh.networkIdentity.connectionToClient;
+        public Transform Transform => rh.transform;
 
         public CommandSender Sender
         {
@@ -80,6 +83,7 @@ namespace Qurre.API
 
         public Classification.Player.Administrative Administrative { get; }
         public Classification.Player.Client Client { get; }
+        public Classification.Player.EffectsManager Effects { get; }
         public Classification.Player.GamePlay GamePlay { get; }
         public Classification.Player.HealthInfomation HealthInfomation { get; }
         public Classification.Player.Inventory Inventory { get; }

@@ -99,16 +99,16 @@ namespace Qurre.Loader
                 foreach (Type type in assembly.GetTypes())
                 {
                     var attr = type.GetCustomAttribute<PluginInit>();
-                    if (attr is null) continue;
+                    if (attr is null)
+                        continue;
 
                     Log.Debug($"Loading plugin {attr.Name} ({type.FullName})");
 
                     loaded = true;
-                    var instance = Activator.CreateInstance(type);
 
                     PluginStruct plugin = new(attr);
 
-                    foreach (var methodInfo in instance.GetType()
+                    foreach (var methodInfo in type
                         .GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
                     {
                         if (methodInfo.IsAbstract)
@@ -136,7 +136,8 @@ namespace Qurre.Loader
                     Log.Custom($"Plugin {plugin.Info.Name} written by {plugin.Info.Developer} loaded. v{plugin.Info.Version}", "Loader", ConsoleColor.Magenta);
                 }
 
-                if (!loaded) Log.Debug($"{assembly.FullName} doesn't have a class with [PluginInit] attribute");
+                if (!loaded)
+                    Log.Debug($"{assembly.FullName} doesn't have a class with [PluginInit] attribute");
 
                 return loaded;
             }

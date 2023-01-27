@@ -1,26 +1,24 @@
 ﻿using InventorySystem.Disarming;
-using InventorySystem;
+using MapGeneration;
+using System.Linq;
+using UnityEngine;
 
 namespace Qurre.API.Classification.Player
 {
-    using InventorySystem.Items;
-    using InventorySystem.Items.Firearms;
-    using InventorySystem.Items.Firearms.Attachments;
-    using MapGeneration;
     using Qurre.API;
-    using Qurre.API.Addons.Items;
     using Qurre.API.Controllers;
     using Qurre.API.Objects;
-    using System.Collections.Generic;
-    using System.Linq;
-    using UnityEngine;
 
-    public class GamePlay
+    public sealed class GamePlay
     {
         private readonly Player _player;
-        internal GamePlay(Player pl) => _player = pl;
+        internal GamePlay(Player pl)
+        {
+            _player = pl;
+            BlockSpawnTeleport = false;
+        }
 
-        public InventorySystem.Inventory Inventory => _player.ReferenceHub.inventory;
+        public bool BlockSpawnTeleport { get; set; }
 
         public Player Cuffer
         {
@@ -36,7 +34,7 @@ namespace Qurre.API.Classification.Player
             {
                 for (int i = 0; i < DisarmedPlayers.Entries.Count; i++)
                 {
-                    if (DisarmedPlayers.Entries[i].DisarmedPlayer == Inventory.netId)
+                    if (DisarmedPlayers.Entries[i].DisarmedPlayer == _player.Inventory.Base.netId)
                     {
                         DisarmedPlayers.Entries.RemoveAt(i);
                         break;
@@ -44,7 +42,7 @@ namespace Qurre.API.Classification.Player
                 }
 
                 if (value != null)
-                    Inventory.SetDisarmedStatus(value.GamePlay.Inventory);
+                    _player.Inventory.Base.SetDisarmedStatus(value.Inventory.Base);
             }
         }
         public bool Cuffed => _player.ReferenceHub.inventory.IsDisarmed();

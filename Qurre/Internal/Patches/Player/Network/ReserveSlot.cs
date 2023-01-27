@@ -25,7 +25,7 @@ namespace Qurre.Internal.Patches.Player.Network
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Network}} [ReserveSlot]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Network}} [ReserveSlot]: {e}\n{e.StackTrace}");
                 return true;
             }
         }

@@ -19,9 +19,9 @@ namespace Qurre.Internal.EventsManager
         {
             foreach (var item in Lists.CallMethods)
             {
-                var onetime = item.Value.OrderByDescending(x => x.Priority);
+                var onetime = item.Value.ToList().OrderByDescending(x => x.Priority);
                 item.Value.Clear();
-                item.Value.AddRange(onetime);
+                item.Value.InsertRange(0, onetime);
             }
         }
 
@@ -57,7 +57,7 @@ namespace Qurre.Internal.EventsManager
                 if (attrs is null || attrs.Count() == 0)
                     continue;
 
-                if (method.GetCustomAttributes<EventsIgnore>() is not null)
+                if (method.GetCustomAttribute<EventsIgnore>() is not null)
                 {
                     Log.Debug($"Events Loader: '{method.Name}' includes [EventsIgnore] attribute, skip..");
                     continue;

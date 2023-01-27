@@ -11,10 +11,14 @@ namespace Qurre.API.Classification.Player
     using InventorySystem.Items.Firearms.Attachments;
     using Qurre.API;
     using Qurre.API.Addons.Items;
+    using Qurre.API.Classification.Structs;
 
     public sealed class Inventory
     {
         public InventorySystem.Inventory Base { get; }
+        public AmmoBox Ammo { get; }
+
+        public int ItemsCount => Base.UserInventory.Items.Count;
 
         public Dictionary<ushort, Item> Items
         {
@@ -40,6 +44,7 @@ namespace Qurre.API.Classification.Player
         internal Inventory(Player player)
         {
             Base = player.ReferenceHub.inventory;
+            Ammo = new(player);
             _player = player;
         }
 

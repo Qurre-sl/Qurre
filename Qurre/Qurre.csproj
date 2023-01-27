@@ -84,6 +84,7 @@
     <Compile Include="API\Addons\BetterHints\ISender.cs" />
     <Compile Include="API\Addons\BetterHints\HintStruct.cs" />
     <Compile Include="API\Addons\BetterColors.cs" />
+    <Compile Include="API\Addons\Version.cs" />
     <Compile Include="API\Addons\Items\Ammo.cs" />
     <Compile Include="API\Addons\Items\Armor.cs" />
     <Compile Include="API\Addons\Items\Usable.cs" />
@@ -116,8 +117,14 @@
     <Compile Include="API\Attributes\PluginStartup.cs" />
     <Compile Include="API\Attributes\PluginInit.cs" />
     <Compile Include="API\Attributes\EventMethod.cs" />
+    <Compile Include="API\Audio.cs" />
     <Compile Include="API\Classification\Player\Administrative.cs" />
+    <Compile Include="API\Classification\Player\EffectsManager.cs" />
+    <Compile Include="API\Classification\Roles\Scp106.cs" />
+    <Compile Include="API\Classification\Roles\Scp173.cs" />
+    <Compile Include="API\Classification\Structs\AmmoBox.cs" />
     <Compile Include="API\Controllers\Intercom.cs" />
+    <Compile Include="API\Objects\ScpAttackType.cs" />
     <Compile Include="API\Respawn.cs" />
     <Compile Include="API\Core.cs" />
     <Compile Include="API\Classification\Player\Inventory.cs" />
@@ -210,16 +217,19 @@
     <Compile Include="Internal\Patches\Alpha\Start.cs" />
     <Compile Include="Internal\Patches\Map\Place\RagdollSpawn.cs" />
     <Compile Include="Internal\Patches\Misc\AddCredits.cs" />
+    <Compile Include="Internal\Patches\Misc\GetMaxHp.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Lift.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Ragdoll.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Locker.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Generator.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Banned.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Ban.cs" />
+    <Compile Include="Internal\Patches\Player\Admins\ChangeGroup.cs" />
     <Compile Include="Internal\Patches\Player\Admins\UnMute.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Mute.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Kick.cs" />
     <Compile Include="Internal\Patches\Player\Health\Attack.cs" />
+    <Compile Include="Internal\Patches\Player\Health\Heal.cs" />
     <Compile Include="Internal\Patches\Player\Health\Damage.cs" />
     <Compile Include="Internal\Patches\Player\Health\Dead.cs" />
     <Compile Include="Internal\Patches\Player\Interact\InteractShootingTarget.cs" />
@@ -264,6 +274,9 @@
     <Compile Include="Loader\Plugins.cs" />
     <Compile Include="Loader\EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="API\Addons\Audio\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

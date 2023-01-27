@@ -7,9 +7,11 @@ namespace Qurre.API.Classification.Roles
     using Qurre.API.Controllers;
     using System.Linq;
 
-    public class Scp079
+    public sealed class Scp079
     {
         public Scp079Role Base { get; private set; }
+
+        public bool IsWork => pl.RoleInfomation.Role == PlayerRoles.RoleTypeId.Scp079;
 
         public Scp079AbilityBase Ability { get; private set; }
         public Scp079AuxManager AuxManager { get; private set; }
@@ -28,8 +30,6 @@ namespace Qurre.API.Classification.Roles
         public Scp079TierManager TierManager { get; private set; }
 
         public SubroutineManagerModule Subroutine => Base.SubroutineModule;
-
-        public bool IsWork => pl.RoleInfomation.Role == PlayerRoles.RoleTypeId.Scp079;
 
         public Camera Camera
         {

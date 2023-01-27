@@ -3,12 +3,13 @@ using System;
 using System.Linq;
 using System.Reflection;
 using EventLists = Qurre.Internal.EventsManager.Lists;
+using Version = Qurre.API.Addons.Version;
 
 namespace Qurre.API
 {
     static public class Core
     {
-        static public Version Version { get; private set; } = new(2, 0);
+        static public Version Version { get; } = new();
 
         static public void InjectEventMethod(MethodInfo method)
         {
@@ -33,9 +34,9 @@ namespace Qurre.API
             if (!EventLists.CallMethods.TryGetValue(eventId, out var list))
                 return;
 
-            var onetime = list.OrderByDescending(x => x.Priority);
+            var onetime = list.ToList().OrderByDescending(x => x.Priority);
             list.Clear();
-            list.AddRange(onetime);
+            list.InsertRange(0, onetime);
         }
     }
 }

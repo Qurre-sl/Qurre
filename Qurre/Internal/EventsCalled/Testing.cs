@@ -5,6 +5,7 @@ using Qurre.Events.Structs;
 
 namespace Qurre.Internal.EventsCalled
 {
+    /*
     // delete later
     static class Testing
     {
@@ -43,4 +44,5 @@ namespace Qurre.Internal.EventsCalled
             //ev.Role = PlayerRoles.RoleTypeId.Tutorial;
         }
     }
+    */
 }

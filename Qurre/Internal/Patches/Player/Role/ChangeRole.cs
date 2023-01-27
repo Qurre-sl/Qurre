@@ -16,7 +16,12 @@ namespace Qurre.Internal.Patches.Player.Role
         {
             try
             {
-                ChangeRoleEvent ev = new(__instance.Hub.GetPlayer(), __instance.CurrentRole, newRole, reason);
+                var pl = __instance.Hub.GetPlayer();
+
+                if (pl is null)
+                    return true;
+
+                ChangeRoleEvent ev = new(pl, __instance.CurrentRole, newRole, reason);
                 ev.InvokeEvent();
 
                 newRole = ev.Role;
