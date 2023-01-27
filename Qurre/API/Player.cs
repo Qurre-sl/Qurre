@@ -19,6 +19,8 @@ namespace Qurre.API
             rh = _rh;
             go = _rh.gameObject;
 
+            Disconnected = false;
+
             Broadcasts = new();
 
             Administrative = new(this);
@@ -68,6 +70,7 @@ namespace Qurre.API
 
         public int Ping => Mirror.LiteNetLib4Mirror.LiteNetLib4MirrorServer.Peers[Connection.connectionId].Ping;
         public bool IsHost => rh.isLocalPlayer;
+        public bool Disconnected { get; internal set; }
         public bool FriendlyFire { get; set; }
         public string Tag
         {

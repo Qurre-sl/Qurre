@@ -28,6 +28,8 @@ namespace Qurre.Internal.Patches.Player.Network
                     );
 
                 new LeaveEvent(player).InvokeEvent();
+
+                player.Disconnected = true;
             }
             catch (Exception e)
             {

@@ -101,16 +101,21 @@ namespace Qurre.Internal.Patches.Player.Health
             try
             {
                 Player attacker = handler.Attacker.Hub.GetPlayer();
-                if (attacker.FriendlyFire) handler.IsFriendlyFire = false;
+                if (attacker.FriendlyFire)
+                    handler.IsFriendlyFire = false;
 
                 AttackEvent ev = new(attacker, target.GetPlayer(), handler, handler.Damage, handler.IsFriendlyFire, allowed);
                 ev.InvokeEvent();
 
-                if (ev.Damage == -1) ev.Damage = ev.Target.HealthInfomation.Hp + 1;
+                if (ev.Damage == -1)
+                    ev.Damage = ev.Target.HealthInfomation.Hp + 1;
+
                 handler.Damage = ev.Damage;
                 handler.IsFriendlyFire = ev.FriendlyFire;
 
-                if (!ev.Allowed) handler.Damage = 0;
+                if (!ev.Allowed)
+                    handler.Damage = 0;
+
                 if (ev.FriendlyFire)
                 {
                     if (!Server.FriendlyFire) handler.Damage = 0;

@@ -2,12 +2,25 @@
 {
     public class Version
     {
-        static public int Major => 2;
-        static public int Minor => 0;
-        static public int Build => 0;
-        static public int Revision => 5;
+        const string s_major = "2";
+        const string s_minor = "0";
+        const string s_build = "0";
+        const string s_revision = "7";
 
-        static public string Testing => "-beta";
+        internal const string AssemblyVersion = $"{s_major}.{s_minor}.{s_build}.{s_revision}";
+        internal const string AssemblyCustom = "v2-beta";
+
+        static readonly int _major = int.Parse(s_major);
+        static readonly int _minor = int.Parse(s_minor);
+        static readonly int _build = int.Parse(s_build);
+        static readonly int _revision = int.Parse(s_revision);
+
+        static public int Major => _major;
+        static public int Minor => _minor;
+        static public int Build => _build;
+        static public int Revision => _revision;
+
+        static public string Testing => "-gamma";
 
         internal Version() { }
 

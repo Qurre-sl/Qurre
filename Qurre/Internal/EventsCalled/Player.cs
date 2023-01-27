@@ -40,6 +40,8 @@ namespace Qurre.Internal.EventsCalled
                 ev.Player.HealthInfomation.MaxHp = healthbarRole.MaxHealth;
             else
                 ev.Player.HealthInfomation.MaxHp = 0;
+
+            ev.Player.HealthInfomation.Hp = ev.Player.HealthInfomation.MaxHp;
         }
 
         [EventMethod(PlayerEvents.Spawn)]

@@ -21,6 +21,9 @@ namespace Qurre.Internal.Patches.Player.Role
                 if (pl is null)
                     return true;
 
+                if (pl.Disconnected)
+                    return true;
+
                 ChangeRoleEvent ev = new(pl, __instance.CurrentRole, newRole, reason);
                 ev.InvokeEvent();
 
