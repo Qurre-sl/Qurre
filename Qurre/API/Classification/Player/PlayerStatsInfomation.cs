@@ -4,7 +4,7 @@ namespace Qurre.API.Classification.Player
     using Qurre.API;
     using Qurre.API.Addons;
 
-    public class PlayerStatsInfomation
+    public sealed class PlayerStatsInfomation
     {
         private readonly Player _player;
         internal PlayerStatsInfomation(Player pl)

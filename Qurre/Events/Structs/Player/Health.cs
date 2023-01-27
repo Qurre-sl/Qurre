@@ -140,6 +140,21 @@ namespace Qurre.Events.Structs
             FriendlyFire = friendlyFire;
             Allowed = allowed;
         }
+    }
 
+    public class HealEvent : IBaseEvent
+    {
+        public uint EventId { get; } = PlayerEvents.Heal;
+
+        public Player Player { get; }
+        public float Amount { get; set; }
+        public bool Allowed { get; set; }
+
+        internal HealEvent(Player player, float amount)
+        {
+            Player = player;
+            Amount = amount;
+            Allowed = true;
+        }
     }
 }

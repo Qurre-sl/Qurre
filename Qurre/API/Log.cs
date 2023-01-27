@@ -55,22 +55,22 @@ namespace Qurre.API
 		static internal void LogTxt(object message)
 		{
 			if (!Logging) return;
-			if (!Directory.Exists(Path.Logs))
+			if (!Directory.Exists(Pathes.Logs))
 			{
-				Directory.CreateDirectory(Path.Logs);
-				Custom($"Logs directory not found. Creating: {Path.Logs}", BetterColors.Yellow("WARN"), ConsoleColor.DarkYellow);
+				Directory.CreateDirectory(Pathes.Logs);
+				Custom($"Logs directory not found. Creating: {Pathes.Logs}", BetterColors.Yellow("WARN"), ConsoleColor.DarkYellow);
 			}
-			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Server.Port}-log.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
+			File.AppendAllText(Path.Combine(Pathes.Logs, $"{Server.Port}-log.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
 		}
 		static internal void AllLogsTxt(object message)
 		{
 			if (!AllLogging) return;
-			if (!Directory.Exists(Path.Logs))
+			if (!Directory.Exists(Pathes.Logs))
 			{
-				Directory.CreateDirectory(Path.Logs);
-				Custom($"Logs directory not found. Creating: {Path.Logs}", BetterColors.Yellow("WARN"), ConsoleColor.DarkYellow);
+				Directory.CreateDirectory(Pathes.Logs);
+				Custom($"Logs directory not found. Creating: {Pathes.Logs}", BetterColors.Yellow("WARN"), ConsoleColor.DarkYellow);
 			}
-			File.AppendAllText(System.IO.Path.Combine(Path.Logs, $"{Server.Port}-all-logs.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
+			File.AppendAllText(Path.Combine(Pathes.Logs, $"{Server.Port}-all-logs.txt"), $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
 		}
 	}
 }

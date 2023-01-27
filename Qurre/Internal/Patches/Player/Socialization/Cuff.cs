@@ -89,11 +89,6 @@ namespace Qurre.Internal.Patches.Player.Socialization
                 new CodeInstruction(OpCodes.Stloc_0),
             });
 
-            list.InsertRange(cuffIndex, new CodeInstruction[]
-            {
-                new CodeInstruction(OpCodes.Nop).MoveLabelsFrom(list[cuffIndex]),
-            });
-
             return list.AsEnumerable();
         }
     }

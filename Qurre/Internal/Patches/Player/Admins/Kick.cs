@@ -38,7 +38,7 @@ namespace Qurre.Internal.Patches.Player.Admins
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Admins}} [Kick]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Admins}} [Kick]: {e}\n{e.StackTrace}");
                 return true;
             }
         }

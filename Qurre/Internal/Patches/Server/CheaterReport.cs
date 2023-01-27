@@ -22,7 +22,7 @@ namespace Qurre.Internal.Patches.Server
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Server> [CheaterReport]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Server> [CheaterReport]: {e}\n{e.StackTrace}");
                 return true;
             }
         }

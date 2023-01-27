@@ -1,5 +1,7 @@
-﻿using Qurre.API;
+﻿using PlayerRoles;
+using Qurre.API;
 using Qurre.API.Attributes;
+using Qurre.API.Classification.Roles;
 using Qurre.Events;
 using Qurre.Events.Structs;
 using System;
@@ -15,27 +17,53 @@ namespace Qurre.Internal.EventsCalled
                 $"({ev.Player?.UserInfomation.Id}) connected. iP: {ev.Player?.UserInfomation.Ip}", ConsoleColor.Magenta);
         }
 
-        [EventMethod(PlayerEvents.PickupArmor)]
-        [EventMethod(PlayerEvents.PickupItem)]
-        static internal void TestMultiple(IBaseEvent ev)
+        [EventMethod(PlayerEvents.Leave)]
+        static internal void LeaveClears(LeaveEvent ev)
         {
-            if (ev is PickupArmorEvent ev1)
-            {
-                Log.Info($"Armor; Pl: {ev1.Player?.UserInfomation.Nickname}; Item: {ev1.Pickup?.Serial}");
-                //ev1.Allowed = false;
-            }
-            else if (ev is PickupItemEvent ev2)
-            {
-                Log.Info($"Item; Pl: {ev2.Player?.UserInfomation.Nickname}; Item: {ev2.Pickup?.Serial}");
-                //ev2.Allowed = false;
-            }
+            if (Scp173.IgnoredPlayers.Contains(ev.Player))
+                Scp173.IgnoredPlayers.Remove(ev.Player);
         }
 
-        [EventMethod(PlayerEvents.Escape)]
-        static internal void Test(EscapeEvent ev)
+        [EventMethod(PlayerEvents.Spawn)]
+        static internal void BlockSpawnTeleport(SpawnEvent ev)
         {
-            Log.Info($"Pl: {ev.Player?.UserInfomation.Nickname}; Role: {ev.Role};");
-            //ev.Role = PlayerRoles.RoleTypeId.Tutorial;
+            if (!ev.Player.GamePlay.BlockSpawnTeleport)
+                return;
+
+            ev.Position = ev.Player.MovementState.Position;
+        }
+
+        [EventMethod(PlayerEvents.Spawn)]
+        static internal void SetMaxHp(SpawnEvent ev)
+        {
+            if (ev.Player.ReferenceHub.roleManager.CurrentRole is IHealthbarRole healthbarRole)
+                ev.Player.HealthInfomation.MaxHp = healthbarRole.MaxHealth;
+            else
+                ev.Player.HealthInfomation.MaxHp = 0;
+        }
+
+        [EventMethod(PlayerEvents.Spawn)]
+        static internal void UpdateRole(SpawnEvent ev)
+        {
+            switch (ev.Role)
+            {
+                case PlayerRoles.RoleTypeId.Scp079:
+                    {
+                        ev.Player.RoleInfomation.Scp079 = new(ev.Player);
+                        break;
+                    }
+                case PlayerRoles.RoleTypeId.Scp106:
+                    {
+                        ev.Player.RoleInfomation.Scp106 = new(ev.Player);
+                        break;
+                    }
+                case PlayerRoles.RoleTypeId.Scp173:
+                    {
+                        ev.Player.RoleInfomation.Scp173 = new(ev.Player);
+                        break;
+                    }
+                default: break;
+            }
         }
     }
 }

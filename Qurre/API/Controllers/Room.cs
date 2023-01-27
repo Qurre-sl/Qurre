@@ -23,6 +23,7 @@ namespace Qurre.API.Controllers
 #nullable restore
 
         public string Name => GameObject.name;
+        public List<Door> Doors { get; } = new();
         public List<Camera> Cameras { get; } = new();
         public List<Player> Players => Player.List.Where(x => !x.IsHost && x.GamePlay.Room.Name == Name).ToList();
 

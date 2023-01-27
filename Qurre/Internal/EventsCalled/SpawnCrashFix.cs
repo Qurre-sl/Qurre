@@ -17,6 +17,8 @@ namespace Qurre.Internal.EventsCalled
             if (ev.Role != PlayerRoles.RoleTypeId.ClassD)
                 return;
 
+            Log.Debug($"Class D spawn position: x: {ev.Position.x}; y: {ev.Position.y}; z: {ev.Position.z}; Player: {ev.Player.UserInfomation.Nickname}");
+
             /*
             if (PositionObject is null)
                 PositionObject = new();
@@ -37,12 +39,13 @@ namespace Qurre.Internal.EventsCalled
                 return;
             */
 
-            // idk why exactly global 76 & 91
+            // idk why exactly global 76 & 91 & 31 [31 appeared after the public release of this fix]
             if (ev.Position.x.Difference(76) > 1 &&
-                ev.Position.x.Difference(91) > 1)
+                ev.Position.x.Difference(91) > 1 &&
+                ev.Position.x.Difference(31) > 1)
                 return;
 
-            ev.Player.Client.Broadcast("<color=red>Crash Detected\nReconnecting..</color>", 15, true);
+            ev.Player.Client.Broadcast("<color=red>>> Crash Detected <<\n<color=black>..</color>Reconnecting..</color>", 15, true);
             ev.Player.Client.SendConsole("Crash Detected. Reconnecting...", "red");
 
             ev.Player.Connection.Send(new RoundRestartMessage(RoundRestartType.RedirectRestart, 1, Server.Port, true, false));

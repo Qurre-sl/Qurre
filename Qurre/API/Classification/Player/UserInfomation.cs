@@ -1,7 +1,7 @@
 ﻿namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
-    public class UserInfomation
+    public sealed class UserInfomation
     {
         private string _ui;
         private readonly string _nick = "";
@@ -49,11 +49,22 @@
             }
             set => NicknameSync.Network_myNickSync = value;
         }
-        public string DisplayName => NicknameSync.Network_displayName;
-        public string CustomInfo => NicknameSync.Network_customPlayerInfoString;
-        public string RoleName => _player.ReferenceHub.serverRoles.Network_myText;
-        public string RoleColor => _player.ReferenceHub.serverRoles.Network_myColor;
-        public bool RemoteAdmin => _player.ReferenceHub.serverRoles.RemoteAdmin;
+        public string DisplayName
+        {
+            get => NicknameSync.Network_displayName;
+            set => NicknameSync.Network_displayName = value;
+        }
+        public string CustomInfo
+        {
+            get => NicknameSync.Network_customPlayerInfoString;
+            set => NicknameSync.Network_customPlayerInfoString = value;
+        }
+        public PlayerInfoArea InfoToShow
+        {
+            get => NicknameSync.Network_playerInfoToShow;
+            set => NicknameSync.Network_playerInfoToShow = value;
+        }
+
         public bool DoNotTrack => _player.ReferenceHub.serverRoles.DoNotTrack;
     }
 }

@@ -31,7 +31,7 @@ namespace Qurre.Internal.Patches.Player.Network
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Network}} [Leave]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Network}} [Leave]: {e}\n{e.StackTrace}");
             }
         }
     }
@@ -55,7 +55,7 @@ namespace Qurre.Internal.Patches.Player.Network
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Network}} [Leaved]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Network}} [Leaved]: {e}\n{e.StackTrace}");
             }
         }
     }

@@ -110,7 +110,7 @@ namespace Qurre.Events.Structs
             Player = player;
             Radio = Item.SafeGet(radio) as Radio;
             Battery = radio._battery * 100;
-            Consumption = UnityEngine.Time.deltaTime * num;
+            Consumption = UnityEngine.Time.deltaTime * (num / 60 / 100) * 100;
             Allowed = true;
         }
     }

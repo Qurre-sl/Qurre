@@ -32,7 +32,7 @@ namespace Qurre.Internal.Patches.Player.Admins
             }
             catch (Exception e)
             {
-                Log.Error($"Patch Error - <Player> {{Admins}} [Banned]:{e}\n{e.StackTrace}");
+                Log.Error($"Patch Error - <Player> {{Admins}} [Banned]: {e}\n{e.StackTrace}");
             }
         }
     }

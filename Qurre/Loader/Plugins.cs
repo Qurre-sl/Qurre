@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using Path = Qurre.API.Path;
 
 namespace Qurre.Loader
 {
@@ -17,10 +16,10 @@ namespace Qurre.Loader
 
         static internal void Init()
         {
-            if (!Directory.Exists(Path.Plugins))
+            if (!Directory.Exists(Pathes.Plugins))
             {
-                Log.Warn($"Plugins directory not found. Creating: {Path.Plugins}");
-                Directory.CreateDirectory(Path.Plugins);
+                Log.Warn($"Plugins directory not found. Creating: {Pathes.Plugins}");
+                Directory.CreateDirectory(Pathes.Plugins);
             }
 
             try { LoadDependencies(); }
@@ -29,6 +28,8 @@ namespace Qurre.Loader
             PatchMethods();
 
             LoadPlugins();
+
+            Internal.EventsManager.Loader.SortMethods();
 
             MEC.Timing.RunCoroutine(EnablePluginsInThread());
 
@@ -41,10 +42,10 @@ namespace Qurre.Loader
 
         static void LoadDependencies()
         {
-            if (!Directory.Exists(Path.Dependencies))
-                Directory.CreateDirectory(Path.Dependencies);
+            if (!Directory.Exists(Pathes.Dependencies))
+                Directory.CreateDirectory(Pathes.Dependencies);
 
-            foreach (string dll in Directory.GetFiles(Path.Dependencies))
+            foreach (string dll in Directory.GetFiles(Pathes.Dependencies))
             {
                 if (!dll.EndsWith(".dll") || LoaderManager.Loaded(dll)) continue;
 
@@ -74,7 +75,7 @@ namespace Qurre.Loader
 
         static void LoadPlugins()
         {
-            foreach (string plugin in Directory.GetFiles(Path.Plugins))
+            foreach (string plugin in Directory.GetFiles(Pathes.Plugins))
             {
                 try
                 {
@@ -98,16 +99,16 @@ namespace Qurre.Loader
                 foreach (Type type in assembly.GetTypes())
                 {
                     var attr = type.GetCustomAttribute<PluginInit>();
-                    if (attr is null) continue;
+                    if (attr is null)
+                        continue;
 
                     Log.Debug($"Loading plugin {attr.Name} ({type.FullName})");
 
                     loaded = true;
-                    var instance = Activator.CreateInstance(type);
 
                     PluginStruct plugin = new(attr);
 
-                    foreach (var methodInfo in instance.GetType()
+                    foreach (var methodInfo in type
                         .GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic))
                     {
                         if (methodInfo.IsAbstract)
@@ -135,7 +136,8 @@ namespace Qurre.Loader
                     Log.Custom($"Plugin {plugin.Info.Name} written by {plugin.Info.Developer} loaded. v{plugin.Info.Version}", "Loader", ConsoleColor.Magenta);
                 }
 
-                if (!loaded) Log.Debug($"{assembly.FullName} doesn't have a class with [PluginInit] attribute");
+                if (!loaded)
+                    Log.Debug($"{assembly.FullName} doesn't have a class with [PluginInit] attribute");
 
                 return loaded;
             }
@@ -190,11 +192,15 @@ namespace Qurre.Loader
             try
             {
                 Log.Info("Plugins are reloading...");
+
                 Disable();
                 Internal.EventsManager.Loader.UnloadPlugins();
                 _plugins.Clear();
+
                 LoadPlugins();
                 EnablePlugins();
+                Internal.EventsManager.Loader.SortMethods();
+
                 Log.Info("Plugins reloaded");
             }
             catch (Exception ex)

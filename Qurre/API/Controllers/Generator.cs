@@ -107,7 +107,7 @@ namespace Qurre.API.Controllers
             generator = g;
             positionsync = generator.GetComponent<StructurePositionSync>();
         }
-        internal Generator(Vector3 position, Quaternion? rotation = null)
+        public Generator(Vector3 position, Quaternion? rotation = null)
         {
             generator = Object.Instantiate(Addons.Prefabs.Generator);
 
