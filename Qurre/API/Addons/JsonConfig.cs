@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Text;
+
 namespace Qurre.API.Addons
 {
     public class JsonConfig
@@ -71,14 +72,17 @@ namespace Qurre.API.Addons
             }
         }
 
-        public static JsonConfig Register(string name) => new(name);
-        public static void UpdateFile() => File.WriteAllText(ConfigPath, Cache.ToString());
-        public static void RefreshConfig() => Init();
+        static public JsonConfig Register(string name) => new(name);
+        static public void UpdateFile() => File.WriteAllText(ConfigPath, Cache.ToString());
+        static public void RefreshConfig() => Init();
 
-        internal static JObject Cache;
-        internal static string ConfigPath = string.Empty;
-        internal static void Init()
+        static internal JObject Cache;
+        static internal string ConfigPath = string.Empty;
+        static internal void Init()
         {
+            if (!Directory.Exists(Pathes.Configs))
+                Directory.CreateDirectory(Pathes.Configs);
+
             ConfigPath = Path.Combine(Pathes.Configs, $"{Server.Port}.json");
             if (!File.Exists(ConfigPath))
             {
@@ -98,7 +102,7 @@ namespace Qurre.API.Addons
             }
         }
 
-        private JToken ConvertObject<T>(T obj)
+        JToken ConvertObject<T>(T obj)
         {
             if (obj is string str) return str;
             if (obj is bool bl) return bl;
