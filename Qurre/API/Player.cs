@@ -1,11 +1,7 @@
 ﻿using Mirror;
-using PlayerRoles;
 using Qurre.API.Controllers.Structs;
 using RemoteAdmin;
-using System.Collections;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using Field = Qurre.Internal.Fields.Player;
 
@@ -98,75 +94,5 @@ namespace Qurre.API
         public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
         public Classification.Player.RoleInfomation RoleInfomation { get; }
         public Classification.Player.UserInfomation UserInfomation { get; }
-        public static IEnumerable<Player> Get(Team team) => List.Where(player => player.RoleInfomation.Team == team);
-        public static IEnumerable<Player> Get(RoleTypeId role) => List.Where(player => player.RoleInfomation.Role == role);
-        public static Player Get(CommandSender sender) => sender == null ? null : Get(sender.SenderId);
-        public static Player Get(ReferenceHub referenceHub) => referenceHub == null ? null : Get(referenceHub.gameObject);
-        public static Player Get(GameObject gameObject)
-        {
-            if (gameObject == null) return null;
-            Dictionary.TryGetValue(gameObject, out Player player);
-            return player;
-        }
-        public static Player Get(uint netId) => ReferenceHub.TryGetHubNetID(netId, out ReferenceHub hub) ? Get(hub) : null;
-        public static Player Get(int playerId)
-        {
-            if (IdPlayers.ContainsKey(playerId)) return IdPlayers[playerId];
-            foreach (Player pl in List.Where(x => x.Id == playerId))
-            {
-                IdPlayers.Add(playerId, pl);
-                return pl;
-            }
-            return null;
-        }
-        public static Player Get(string args)
-        {
-            try
-            {
-                if (string.IsNullOrWhiteSpace(args))
-                    return null;
-                if (ArgsPlayers.TryGetValue(args, out Player playerFound) && playerFound?.ReferenceHub != null)
-                    return playerFound;
-                if (int.TryParse(args, out int id))
-                    return Get(id);
-                if (args.EndsWith("@steam") || args.EndsWith("@discord") || args.EndsWith("@northwood") || args.EndsWith("@patreon"))
-                {
-                    foreach (Player player in Dictionary.Values)
-                    {
-                        if (player.UserId == args)
-                        {
-                            playerFound = player;
-                            break;
-                        }
-                    }
-                }
-                else
-                {
-                    int lastnameDifference = 31;
-                    string firstString = args.ToLower();
-                    foreach (Player player in Dictionary.Values)
-                    {
-                        if (player.Nickname == null) continue;
-                        if (!player.Nickname.Contains(args, StringComparison.OrdinalIgnoreCase))
-                            continue;
-                        string secondString = player.Nickname;
-                        int nameDifference = secondString.Length - firstString.Length;
-                        if (nameDifference < lastnameDifference)
-                        {
-                            lastnameDifference = nameDifference;
-                            playerFound = player;
-                        }
-                    }
-                }
-                if (playerFound != null)
-                    ArgsPlayers[args] = playerFound;
-                return playerFound;
-            }
-            catch (Exception ex)
-            {
-                Log.Error($"[API.Player.Get(string)] umm, error: {ex}");
-                return null;
-            }
-        }
     }
 }

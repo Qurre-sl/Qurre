@@ -61,7 +61,11 @@ namespace Qurre.Internal.Patches.Player.Health
                 if (handler is AttackerDamageHandler adh)
                     attacker = adh.Attacker.Hub.GetPlayer();
                 if (attacker is null)
+                {
+                    if (handler is ExplosionDamageHandler)
+                        return false;
                     attacker = Server.Host;
+                }
 
                 DamageEvent ev = new(attacker, hub.GetPlayer(), handler, doDamage);
 

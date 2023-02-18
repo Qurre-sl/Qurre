@@ -11,7 +11,7 @@ namespace Qurre.Internal.EventsCalled
         //static GameObject PositionObject;
         //static Room ClassDRoom;
 
-        [EventMethod(PlayerEvents.Spawn)]
+        //[EventMethod(PlayerEvents.Spawn)]
         static internal void CrashNotify(SpawnEvent ev)
         {
             if (ev.Role != PlayerRoles.RoleTypeId.ClassD)

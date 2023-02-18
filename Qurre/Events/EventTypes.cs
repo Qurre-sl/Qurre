@@ -155,7 +155,7 @@
         public const uint Scp079NewLvl = 7203;
 
         //7300+ <- Scp096
-        public const uint AddTarget = 7301;
+
         //7400+ <- Scp106
 
         //7500+ <- Scp173

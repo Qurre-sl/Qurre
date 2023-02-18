@@ -47,19 +47,21 @@ namespace Qurre.Internal.EventsCalled
         [EventMethod(PlayerEvents.Spawn)]
         static internal void UpdateRole(SpawnEvent ev)
         {
+            if (ev.Role is not RoleTypeId.Spectator and not RoleTypeId.None and not RoleTypeId.Overwatch)
+                ev.Player.RoleInfomation.cachedRole = ev.Role;
             switch (ev.Role)
             {
-                case PlayerRoles.RoleTypeId.Scp079:
+                case RoleTypeId.Scp079:
                     {
                         ev.Player.RoleInfomation.Scp079 = new(ev.Player);
                         break;
                     }
-                case PlayerRoles.RoleTypeId.Scp106:
+                case RoleTypeId.Scp106:
                     {
                         ev.Player.RoleInfomation.Scp106 = new(ev.Player);
                         break;
                     }
-                case PlayerRoles.RoleTypeId.Scp173:
+                case RoleTypeId.Scp173:
                     {
                         ev.Player.RoleInfomation.Scp173 = new(ev.Player);
                         break;

@@ -30,7 +30,7 @@ namespace Qurre.Internal.Patches.Scp.Scp079
             {
                 Scp079RewardManager.RefreshCache();
 
-                if (instance.TryGetOwner(out var hub))
+                if (!instance.TryGetOwner(out var hub))
                     return;
 
                 Scp079GetExpEvent ev = new(hub.GetPlayer(), gainReason, reward);
