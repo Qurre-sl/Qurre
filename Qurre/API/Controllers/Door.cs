@@ -71,6 +71,7 @@ namespace Qurre.API.Controllers
             }
         }
 
+        public bool IsLift => DoorVariant is ElevatorDoor;
         public bool Breakable => DoorVariant is BreakableDoor;
         public bool Pryable
         {
