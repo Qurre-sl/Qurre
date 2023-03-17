@@ -1,15 +1,14 @@
-﻿using Interactables.Interobjects.DoorUtils;
-using Qurre.API;
+﻿using Qurre.API;
 using UnityEngine;
 
 namespace Qurre.Internal.Misc
 {
-    internal class DoorsUpdater : MonoBehaviour
+    internal class LockersUpdater : MonoBehaviour
     {
         readonly float _interval = 0.1f;
         float _nextCycle = 0f;
 
-        internal DoorVariant Door;
+        internal MapGeneration.Distributors.Locker Locker;
 
         private void Start()
         {
@@ -17,7 +16,7 @@ namespace Qurre.Internal.Misc
         }
         internal void Update()
         {
-            if (Door is null)
+            if (Locker is null)
                 return;
 
             if (Time.time < _nextCycle)
@@ -25,7 +24,7 @@ namespace Qurre.Internal.Misc
 
             _nextCycle += _interval;
 
-            try { Door.netIdentity.UpdateData(); } catch { }
+            try { Locker.netIdentity.UpdateData(); } catch { }
         }
     }
 }

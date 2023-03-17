@@ -22,15 +22,6 @@ namespace Qurre.API.Controllers
                 Base.NetworkPosition = Base.transform.position;
             }
         }
-        public Vector3 Scale
-        {
-            get => Base.transform.localScale;
-            set
-            {
-                Base.transform.localScale = value;
-                Base.NetworkScale = Base.transform.localScale;
-            }
-        }
         public Quaternion Rotation
         {
             get => Base.transform.rotation;
@@ -40,6 +31,16 @@ namespace Qurre.API.Controllers
                 Base.NetworkRotation = new LowPrecisionQuaternion(Base.transform.rotation);
             }
         }
+        public Vector3 Scale
+        {
+            get => Base.transform.localScale;
+            set
+            {
+                Base.transform.localScale = value;
+                Base.NetworkScale = Base.transform.lossyScale;
+            }
+        }
+        public Vector3 GlobalScale => Base.transform.lossyScale;
 
         private protected bool _collider = true;
         public bool Collider
@@ -90,11 +91,11 @@ namespace Qurre.API.Controllers
                 Base.NetworkPrimitiveType = type;
                 Base.NetworkMaterialColor = color == default ? Color.white : color;
 
-                Base.transform.position = position;
-                Base.transform.rotation = rotation;
+                Base.transform.localPosition = position;
+                Base.transform.localRotation = rotation;
                 Base.transform.localScale = size == default ? Vector3.one : size;
 
-                Base.NetworkScale = Base.transform.localScale;
+                Base.NetworkScale = Base.transform.lossyScale;
                 Base.NetworkPosition = Base.transform.position;
                 Base.NetworkRotation = new LowPrecisionQuaternion(Base.transform.rotation);
 

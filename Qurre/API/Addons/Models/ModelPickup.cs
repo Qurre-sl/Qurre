@@ -19,7 +19,7 @@ namespace Qurre.API.Addons.Models
         {
             try
             {
-                var item = Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), false);
+                var item = Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), true);
                 ushort ser = ItemSerialGenerator.GenerateNext();
 
                 item.PickupDropModel.Info.Serial = ser;
@@ -29,7 +29,7 @@ namespace Qurre.API.Addons.Models
                 item.PickupDropModel.Info._serverRotation = Quaternion.Euler(model.GameObject.transform.rotation.eulerAngles + rotation);
                 item.PickupDropModel.NetworkInfo = item.PickupDropModel.Info;
 
-                ItemPickupBase ipb = Object.Instantiate(item.PickupDropModel);
+                ItemPickupBase ipb = Object.Instantiate(item.PickupDropModel, item.PickupDropModel.Info._serverPosition, item.PickupDropModel.Info._serverRotation);
 
                 gameObject = ipb.gameObject;
                 GameObject.GetComponent<Rigidbody>().isKinematic = kinematic;
@@ -37,9 +37,10 @@ namespace Qurre.API.Addons.Models
                 GameObject.transform.localPosition = position;
                 GameObject.transform.localRotation = Quaternion.Euler(rotation);
                 GameObject.transform.localScale = size;
+                ipb.NetworkInfo = item.PickupDropModel.NetworkInfo;
                 NetworkServer.Spawn(GameObject);
+                ipb.InfoReceived(default, ipb.NetworkInfo);
 
-                ipb.InfoReceived(default, item.PickupDropModel.NetworkInfo);
                 pickup = ipb;
             }
             catch (Exception ex)

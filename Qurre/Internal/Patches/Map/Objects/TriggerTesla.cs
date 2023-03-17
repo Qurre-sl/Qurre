@@ -92,9 +92,9 @@ namespace Qurre.Internal.Patches.Map.Objects
                         teslaGate.ServerSideIdle(activated);
                 }
             }
-            catch (NullReferenceException e)
+            catch (NullReferenceException)
             {
-                Debug.Log(e);
+                //Debug.Log(e);
             }
             catch (Exception e)
             {

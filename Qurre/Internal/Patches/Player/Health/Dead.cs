@@ -19,6 +19,10 @@ namespace Qurre.Internal.Patches.Player.Health
             try
             {
                 DiesEvent ev = new(handler.GetAttacker(), __instance.gameObject.GetPlayer(), handler);
+
+                if (ev.Target is null)
+                    return true;
+
                 ev.InvokeEvent();
 
                 return ev.Allowed;

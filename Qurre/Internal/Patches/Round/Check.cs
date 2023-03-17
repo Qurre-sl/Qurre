@@ -36,9 +36,12 @@ namespace Qurre.Internal.Patches.Round
             while (instance is not null)
             {
                 yield return Timing.WaitForSeconds(2.5f);
+
                 while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || Time.unscaledTime - time < 15f ||
-                    (instance.KeepRoundOnOne && Player.List.Count() < 2))
+                    (instance.KeepRoundOnOne && Player.List.Count() < 2) || Round.ElapsedTime.TotalSeconds < 15f)
                     yield return Timing.WaitForSeconds(1);
+
+                yield return Timing.WaitForSeconds(2.5f);
 
                 RoundSummary.SumInfo_ClassList list = default;
                 bool end = false;
@@ -86,7 +89,7 @@ namespace Qurre.Internal.Patches.Round
                 int mtf_cf = 0;
                 int scp_cf = 0;
 
-                if (ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive)
+                if (ScpAlive && !MTFAlive && !DClassAlive && !ScientistsAlive && (Qurre.Loader.Configs.RoundEndChaos || !CiAlive))
                 {
                     end = true;
                     scp_cf++;

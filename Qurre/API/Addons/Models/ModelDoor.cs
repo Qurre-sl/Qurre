@@ -31,6 +31,11 @@ namespace Qurre.API.Addons.Models
                 NetworkServer.Spawn(GameObject);
 
                 Door.DoorVariant.netIdentity.UpdateData();
+
+                Door.DoorVariant.netIdentity.gameObject.transform.parent = GameObject.transform.parent;
+                Door.DoorVariant.netIdentity.gameObject.transform.localPosition = GameObject.transform.localPosition;
+                Door.DoorVariant.netIdentity.gameObject.transform.localRotation = GameObject.transform.localRotation;
+                Door.DoorVariant.netIdentity.gameObject.transform.localScale = GameObject.transform.localScale;
             }
             catch (Exception ex)
             {

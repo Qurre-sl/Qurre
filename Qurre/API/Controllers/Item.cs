@@ -98,7 +98,7 @@ namespace Qurre.API.Controllers
         }
 
         public Item(ItemType type)
-            : this(Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), false)) { }
+            : this(Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), true)) { }
 
         static internal Item SafeGet(ItemBase itemBase)
         {

@@ -98,6 +98,11 @@
 
         //2300+ <- Objects
         public const uint TriggerTesla = 2301;
+
+        //2400+ <- Doors
+        public const uint DamageDoor = 2501;
+        public const uint LockDoor = 2502;
+        public const uint OpenDoor = 2503;
     }
 
     static public class ServerEvents //3xxx

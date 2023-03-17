@@ -124,6 +124,7 @@
     <Compile Include="API\Classification\Roles\Scp173.cs" />
     <Compile Include="API\Classification\Structs\AmmoBox.cs" />
     <Compile Include="API\Controllers\Intercom.cs" />
+    <Compile Include="API\Objects\SpawnPoint.cs" />
     <Compile Include="API\Objects\ScpAttackType.cs" />
     <Compile Include="API\Respawn.cs" />
     <Compile Include="API\Core.cs" />
@@ -191,6 +192,7 @@
     <Compile Include="Events\Structs\Base.cs" />
     <Compile Include="Events\Structs\Effect\Player.cs" />
     <Compile Include="Events\Structs\Effect\Main.cs" />
+    <Compile Include="Events\Structs\Map\Doors.cs" />
     <Compile Include="Events\Structs\Map\Objects.cs" />
     <Compile Include="Events\Structs\Map\Place.cs" />
     <Compile Include="Events\Structs\Player\Admins.cs" />
@@ -215,6 +217,7 @@
     <Compile Include="Internal\EventsManager\Lists.cs" />
     <Compile Include="Internal\Fields\Player.cs" />
     <Compile Include="Internal\Misc\BanSender.cs" />
+    <Compile Include="Internal\Misc\LockersUpdater.cs" />
     <Compile Include="Internal\Misc\DoorsUpdater.cs" />
     <Compile Include="Internal\Patches\Alpha\UnlockPanel.cs" />
     <Compile Include="Internal\Patches\Alpha\Detonate.cs" />
@@ -222,11 +225,18 @@
     <Compile Include="Internal\Patches\Alpha\Start.cs" />
     <Compile Include="Internal\Patches\Effect\ChangeIntensity.cs" />
     <Compile Include="Internal\Patches\Effect\Flashed.cs" />
+    <Compile Include="Internal\Patches\Map\Doors\OpenDoor.cs" />
+    <Compile Include="Internal\Patches\Map\Doors\LockDoor.cs" />
+    <Compile Include="Internal\Patches\Map\Doors\DamageDoor.cs" />
     <Compile Include="Internal\Patches\Map\Objects\TriggerTesla.cs" />
     <Compile Include="Internal\Patches\Map\Place\CreatePickup.cs" />
     <Compile Include="Internal\Patches\Map\Place\RagdollSpawned.cs" />
     <Compile Include="Internal\Patches\Map\Place\RagdollSpawn.cs" />
     <Compile Include="Internal\Patches\Misc\AddCredits.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\CassieController.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixToysScale.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixNullFPMM.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixNullAudioFlood.cs" />
     <Compile Include="Internal\Patches\Misc\GetMaxHp.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Lift.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Ragdoll.cs" />

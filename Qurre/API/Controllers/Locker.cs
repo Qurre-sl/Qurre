@@ -5,6 +5,7 @@ using UnityEngine;
 using Mirror;
 using Qurre.API.Controllers.Structs;
 using System.Linq;
+using Qurre.Internal.Misc;
 
 namespace Qurre.API.Controllers
 {
@@ -89,6 +90,8 @@ namespace Qurre.API.Controllers
 
             NetworkServer.Spawn(_locker.gameObject);
             _locker.netIdentity.UpdateData();
+            var comp = GameObject.AddComponent<LockersUpdater>();
+            if (comp) comp.Locker = _locker;
 
             Map.Lockers.Add(this);
         }

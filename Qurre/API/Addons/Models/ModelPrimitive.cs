@@ -25,6 +25,8 @@ namespace Qurre.API.Addons.Models
                 GameObject.transform.localRotation = Quaternion.Euler(rotation);
                 GameObject.transform.localScale = size;
                 Primitive.Collider = collider;
+
+                Primitive.Base.NetworkScale = GameObject.transform.lossyScale;
             }
             catch (Exception ex)
             {
