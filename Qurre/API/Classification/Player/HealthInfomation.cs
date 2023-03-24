@@ -4,6 +4,7 @@ using System.Collections.Generic;
 namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
+    using System.Linq;
     using UnityEngine;
 
     public sealed class HealthInfomation
@@ -29,7 +30,21 @@ namespace Qurre.API.Classification.Player
         public float Ahp
         {
             get => ((AhpStat)PlayerStats.StatModules[1]).CurValue;
-            set => ((AhpStat)PlayerStats.StatModules[1]).CurValue = value;
+            set
+            {
+                if (value > MaxAhp)
+                    MaxAhp = Mathf.CeilToInt(value);
+
+                AhpStat.AhpProcess process = AhpActiveProcesses.FirstOrDefault();
+
+                if (process is null)
+                    AddAhp(value, MaxAhp);
+                else
+                {
+                    process.Limit = MaxAhp;
+                    process.CurrentAmount = value;
+                }
+            }
         }
         public float MaxAhp
         {
