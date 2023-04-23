@@ -8,18 +8,18 @@ namespace Qurre.Internal.Patches.Player.Pickups
     using Qurre.Events.Structs;
     using Qurre.Internal.EventsManager;
 
-    [HarmonyPatch(typeof(Inventory), nameof(Inventory.UserCode_CmdDropAmmo))]
+    [HarmonyPatch(typeof(InventoryExtensions), nameof(InventoryExtensions.ServerDropAmmo))]
     static class DropAmmo
     {
         [HarmonyPrefix]
-        static bool Call(Inventory __instance, ref byte ammoType, ref ushort amount)
+        static bool Call(Inventory inv, ref ItemType ammoType, ref ushort amount)
         {
             try
             {
-                DropAmmoEvent ev = new(__instance._hub.GetPlayer(), ((ItemType)ammoType).GetAmmoType(), amount);
+                DropAmmoEvent ev = new(inv._hub.GetPlayer(), ammoType.GetAmmoType(), amount);
                 ev.InvokeEvent();
 
-                ammoType = (byte)ev.Type.GetItemType();
+                ammoType = ev.Type.GetItemType();
                 amount = ev.Amount;
 
                 return ev.Allowed;

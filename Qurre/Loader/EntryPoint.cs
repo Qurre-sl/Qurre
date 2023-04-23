@@ -14,17 +14,24 @@ namespace Qurre.Loader
 
             Log.Info("Initializing Qurre...");
 
-            Configs.Setup();
+            try
+            {
+                Configs.Setup();
 
-            CustomNetworkManager.Modded = true;
+                CustomNetworkManager.Modded = true;
 
-            Internal.EventsManager.Loader.PathQurreEvents();
+                Internal.EventsManager.Loader.PathQurreEvents();
 
-            Plugins.Init();
+                Plugins.Init();
 
-            Prefabs.Init();
+                Prefabs.Init();
 
-            Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{Core.Version}")} enabled"), "Loader", ConsoleColor.Red);
+                Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{Core.Version}")} enabled"), "Loader", ConsoleColor.Red);
+            }
+            catch(Exception e)
+            {
+                ServerConsole.AddLog(e.ToString(), ConsoleColor.Red);
+            }
 
 
             if (!Configs.PrintLogo || Log.Errored) return;

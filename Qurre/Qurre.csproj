@@ -267,8 +267,8 @@
     <Compile Include="Internal\Patches\Player\Network\Leave.cs" />
     <Compile Include="Internal\Patches\Player\Network\ReserveSlot.cs" />
     <Compile Include="Internal\Patches\Player\Network\Join.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\DroppedItem.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\DropAmmo.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\DroppedItem.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\DropItem.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\ThrowProjectile.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\PickupCandy.cs" />

@@ -12,7 +12,7 @@ namespace Qurre.API.Controllers
     public class Door
     {
         string name;
-        DoorType type;
+        DoorType type = DoorType.Unknown;
         List<Room> _rooms = new();
 
         public DoorVariant DoorVariant { get; internal set; }
