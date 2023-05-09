@@ -31,7 +31,7 @@ namespace Qurre.Internal.Patches.Player.Role
 
         static void Invoke(PlayerRoleManager instance, RoleTypeId role)
         {
-            Transform transform = instance.CurrentRole.transform;
+            Transform transform = ((Component)(object)instance.CurrentRole).transform;
             var pl = instance.Hub.GetPlayer();
 
             if (pl is null)

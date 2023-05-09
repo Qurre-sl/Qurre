@@ -350,7 +350,7 @@ namespace Qurre.API
 		#endregion
 
 		#region GameObjects
-		static internal void NetworkRespawn(this GameObject gameObject)
+		static public void NetworkRespawn(this GameObject gameObject)
 		{
 			NetworkServer.UnSpawn(gameObject);
 			NetworkServer.Spawn(gameObject);

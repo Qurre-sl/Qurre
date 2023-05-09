@@ -30,8 +30,8 @@ namespace Qurre.API
         static public void UpdateData(this NetworkIdentity identity) => NetworkServer.SendToAll(identity.SpawnMessage());
         static public SpawnMessage SpawnMessage(this NetworkIdentity identity)
         {
-            var writer = NetworkWriterPool.GetWriter();
-            var writer2 = NetworkWriterPool.GetWriter();
+            var writer = NetworkWriterPool.Get();
+            var writer2 = NetworkWriterPool.Get();
             var payload = NetworkServer.CreateSpawnMessagePayload(false, identity, writer, writer2);
 
             return new SpawnMessage

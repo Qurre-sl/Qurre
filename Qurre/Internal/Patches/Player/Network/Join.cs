@@ -8,7 +8,7 @@ namespace Qurre.Internal.Patches.Player.Network
     using Qurre.API;
     using Qurre.Events.Structs;
 
-    [HarmonyPatch(typeof(ServerRoles), nameof(ServerRoles.UserCode_CmdServerSignatureComplete))]
+    [HarmonyPatch(typeof(ServerRoles), nameof(ServerRoles.UserCode_CmdServerSignatureComplete__String__String__String__Boolean))]
     static class Join
     {
         [HarmonyTranspiler]

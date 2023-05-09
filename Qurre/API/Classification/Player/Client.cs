@@ -35,32 +35,32 @@ namespace Qurre.API.Classification.Player
         public void DimScreen()
         {
             var component = RoundSummary.singleton;
-            var writer = NetworkWriterPool.GetWriter();
+            var writer = NetworkWriterPool.Get();
             var msg = new RpcMessage
             {
                 netId = component.netId,
                 componentIndex = component.ComponentIndex,
-                functionHash = typeof(RoundSummary).FullName.GetStableHashCode() * 503 + "RpcDimScreen".GetStableHashCode(),
+                functionHash = (ushort)(typeof(RoundSummary).FullName.GetStableHashCode() * 503 + "RpcDimScreen".GetStableHashCode()),
                 payload = writer.ToArraySegment()
             };
             _player.Connection.Send(msg);
-            NetworkWriterPool.Recycle(writer);
+            NetworkWriterPool.Return(writer);
         }
 
         public void ShakeScreen(bool achieve = false)
         {
             var component = AlphaWarheadController.Singleton;
-            var writer = NetworkWriterPool.GetWriter();
-            writer.WriteBoolean(achieve);
+            var writer = NetworkWriterPool.Get();
+            writer.WriteBool(achieve);
             var msg = new RpcMessage
             {
                 netId = component.netId,
                 componentIndex = component.ComponentIndex,
-                functionHash = typeof(AlphaWarheadController).FullName.GetStableHashCode() * 503 + "RpcShake".GetStableHashCode(),
+                functionHash = (ushort)(typeof(AlphaWarheadController).FullName.GetStableHashCode() * 503 + "RpcShake".GetStableHashCode()),
                 payload = writer.ToArraySegment()
             };
             _player.Connection.Send(msg);
-            NetworkWriterPool.Recycle(writer);
+            NetworkWriterPool.Return(writer);
         }
     }
 }

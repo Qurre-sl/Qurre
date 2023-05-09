@@ -9,7 +9,7 @@ namespace Qurre.Internal.Patches.Player.Network
     using Qurre.Events.Structs;
     using Qurre.Internal.EventsManager;
 
-    [HarmonyPatch(typeof(CustomNetworkManager), nameof(CustomNetworkManager.OnServerDisconnect), new[] { typeof(NetworkConnection) })]
+    [HarmonyPatch(typeof(CustomNetworkManager), nameof(CustomNetworkManager.OnServerDisconnect), new[] { typeof(NetworkConnectionToClient) })]
     static class Leave
     {
         [HarmonyPrefix]
