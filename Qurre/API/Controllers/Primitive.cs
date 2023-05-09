@@ -90,6 +90,8 @@ namespace Qurre.API.Controllers
 
                 Base.NetworkPrimitiveType = type;
                 Base.NetworkMaterialColor = color == default ? Color.white : color;
+                /*Log.Info($"r1:{color.r}; g1:{color.g}; b1:{color.b}; r2:{Base.NetworkMaterialColor.r}; " +
+                    $"g2:{Base.NetworkMaterialColor.g}; b2:{Base.NetworkMaterialColor.b}");*/
 
                 Base.transform.localPosition = position;
                 Base.transform.localRotation = rotation;
