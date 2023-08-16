@@ -1,6 +1,7 @@
 ﻿using PlayerRoles.FirstPersonControl;
 using UnityEngine;
 using System;
+using System.Reflection;
 
 namespace Qurre.API.Classification.Player
 {
@@ -34,6 +35,12 @@ namespace Qurre.API.Classification.Player
             {
                 try
                 {
+                    if (_player.Disconnected)
+                    {
+                        Log.Debug($"Scale: Player already disconnected. Called from: {Assembly.GetCallingAssembly().GetName().Name}");
+                        return;
+                    }
+
                     _player.ReferenceHub.transform.localScale = value;
                     foreach (Player target in Player.List)
                         Network.SendSpawnMessage?.Invoke(null, new object[] { _player.ClassManager.netIdentity, target.Connection });

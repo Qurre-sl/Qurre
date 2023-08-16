@@ -17,7 +17,7 @@ namespace Qurre.API.Controllers
         public bool LockChange { get; set; } = false;
         public bool Override
         {
-            get => _room is null || _room._light.WarheadLightOverride;
+            get => _room is null || _room._light.NetworkOverrideColor != _room.defaultColor;
             set
             {
                 if (LockChange)
@@ -26,7 +26,11 @@ namespace Qurre.API.Controllers
                     return;
                 }
 
-                if (_room is not null) _room._light.WarheadLightOverride = value;
+                if (_room is not null)
+                {
+                    if (value) Log.Debug($"Override.set = true is not supported in Default Room. Called from {Assembly.GetCallingAssembly().GetName().Name}");
+                    else _room._light.NetworkOverrideColor = _room.defaultColor;
+                }
                 else if (_custom is not null)
                 {
                     if (value) Log.Debug($"Override.set = true is not supported in Custom Room. Called from {Assembly.GetCallingAssembly().GetName().Name}");
@@ -37,7 +41,7 @@ namespace Qurre.API.Controllers
 
         public float Intensity
         {
-            get => _room is not null ? _room._light.LightIntensityMultiplier : _custom._intensity;
+            get => _room is not null ? 1 : _custom._intensity;
             set
             {
                 if (LockChange)
@@ -46,7 +50,11 @@ namespace Qurre.API.Controllers
                     return;
                 }
 
-                if (_room is not null) _room._light.UpdateLightsIntensity(_room._light.LightIntensityMultiplier, value);
+                if (_room is not null)
+                {
+                    Log.Debug($"Lights Intensity.set doesnt support on default rooms. Called from {Assembly.GetCallingAssembly().GetName().Name}");
+                    return;
+                }
                 else if (_custom is not null)
                 {
                     _custom._intensity = value;
@@ -57,7 +65,7 @@ namespace Qurre.API.Controllers
 
         public Color Color
         {
-            get => _room is not null ? _room._light.Network_warheadLightColor : _custom._lastColor;
+            get => _room is not null ? _room._light.NetworkOverrideColor : _custom._lastColor;
             set
             {
                 if (LockChange)
@@ -68,8 +76,7 @@ namespace Qurre.API.Controllers
 
                 if (_room is not null)
                 {
-                    _room._light.Network_warheadLightColor = value;
-                    Override = true;
+                    _room._light.NetworkOverrideColor = value;
                 }
                 else if (_custom is not null)
                 {

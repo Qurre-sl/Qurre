@@ -164,14 +164,15 @@ namespace Qurre.API.Controllers
 
         public virtual Pickup Spawn(Vector3 position, Quaternion rotation = default, Vector3 scale = default)
         {
-            PickupSyncInfo syncInfo = Base.PickupDropModel.Info;
-            syncInfo.ItemId = Type;
-            syncInfo.Weight = Weight;
-            syncInfo._serverPosition = position;
-            syncInfo._serverRotation = rotation;
-            Base.PickupDropModel.NetworkInfo = syncInfo;
-
             ItemPickupBase ipb = Object.Instantiate(Base.PickupDropModel, position, rotation);
+
+            ipb.Info.ItemId = Type;
+            ipb.Info.WeightKg = Weight;
+            ipb.NetworkInfo = ipb.Info;
+
+            ipb.Position = position;
+            ipb.Rotation = rotation;
+
             if (ipb is FirearmPickup firearmPickup)
             {
                 if (this is Gun firearm)
@@ -194,7 +195,7 @@ namespace Qurre.API.Controllers
             }
 
             NetworkServer.Spawn(ipb.gameObject);
-            ipb.InfoReceived(default, Base.PickupDropModel.NetworkInfo);
+
             Pickup pickup = Pickup.Get(ipb);
             pickup.Scale = scale == default ? Vector3.one : scale;
             return pickup;

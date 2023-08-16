@@ -2,12 +2,10 @@
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items.Firearms.Attachments;
 using MapGeneration;
-using PlayerRoles.PlayableScps.Scp079;
 using Qurre.API;
 using Qurre.API.Attributes;
 using Qurre.API.Controllers;
 using Qurre.Events;
-using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -21,7 +19,7 @@ namespace Qurre.Internal.EventsCalled
             Server.host = null;
             Server.hinv = null;
 
-            API.Extensions.DamagesCached.Clear();
+            Extensions.DamagesCached.Clear();
             Patches.Player.Admins.Banned.Cached.Clear();
 
             if (API.Round.CurrentRound == 0)

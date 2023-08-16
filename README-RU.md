@@ -21,7 +21,7 @@
 
 # Qurre
 <p align="center">
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=3FF781&center=true&vCenter=true&width=435&lines=Простота.;Удобство.;Функциональность.">
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=3FF781&center=true&vCenter=true&width=435&lines=Простой.;Удобный.;Функциональный.">
 </p>
 <p align="center">
 Простой, удобный и функциональный загрузчик плагинов для SCP: Secret Laboratory

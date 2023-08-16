@@ -17,9 +17,6 @@ namespace Qurre.Internal.Patches.Player.Health
         [HarmonyTranspiler]
         static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
         {
-            Label retLabel = generator.DefineLabel();
-            instructions.ElementAt(instructions.Count() - 1).labels.Add(retLabel);
-
             List<CodeInstruction> list = new(instructions);
 
             int index = list.FindIndex(ins => ins.opcode == OpCodes.Callvirt && ins.operand is not null && ins.operand is MethodBase methodBase &&
@@ -31,15 +28,22 @@ namespace Qurre.Internal.Patches.Player.Health
                 return list.AsEnumerable();
             }
 
+            Label contLabel = generator.DefineLabel();
+            var _labels = list[index - 3].ExtractLabels();
+            list[index - 3].labels.Add(contLabel);
+
             list.InsertRange(index - 3, new CodeInstruction[]
             {
-                new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(list[index - 3]), // handler
+                new CodeInstruction(OpCodes.Ldarg_1).WithLabels(_labels), // handler
 
                 new CodeInstruction(OpCodes.Ldarg_0), // this
                 new CodeInstruction(OpCodes.Ldfld, AccessTools.Field(typeof(PlayerStats), nameof(PlayerStats._hub))),
 
                 new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Damage), nameof(Damage.DamageCall))),
-                new CodeInstruction(OpCodes.Brfalse, retLabel),
+                new CodeInstruction(OpCodes.Brtrue, contLabel),
+
+                new CodeInstruction(OpCodes.Ldc_I4_0),
+                new CodeInstruction(OpCodes.Ret),
             });
 
             return list.AsEnumerable();
@@ -74,7 +78,8 @@ namespace Qurre.Internal.Patches.Player.Health
 
                 ev.InvokeEvent();
 
-                if (!SetDamage(handler, ev.Damage)) ev.Damage = doDamage;
+                if (!SetDamage(handler, ev.Damage))
+                    ev.Damage = doDamage;
 
                 return ev.Allowed;
             }

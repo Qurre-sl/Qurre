@@ -100,7 +100,16 @@ namespace Qurre.Internal.Patches.Player.Health
         {
             try
             {
+                if (handler is null)
+                    return;
+                if (target is null)
+                    return;
+
                 Player attacker = handler.Attacker.Hub.GetPlayer();
+
+                if (attacker is null)
+                    return;
+
                 if (attacker.FriendlyFire)
                     handler.IsFriendlyFire = false;
 

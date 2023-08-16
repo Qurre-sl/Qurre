@@ -45,11 +45,11 @@
     <Reference Include="CommandSystem.Core">
       <HintPath>..\depedencies\CommandSystem.Core.dll</HintPath>
     </Reference>
-    <Reference Include="Mirror">
-      <HintPath>..\depedencies\Mirror.dll</HintPath>
-    </Reference>
     <Reference Include="Mirror.Components">
       <HintPath>..\depedencies\Mirror.Components.dll</HintPath>
+    </Reference>
+    <Reference Include="Mirror_edit">
+      <HintPath>..\depedencies\Mirror_edit.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -212,7 +212,6 @@
     <Compile Include="Events\Structs\Server\Reports.cs" />
     <Compile Include="Events\Structs\Server\Commands.cs" />
     <Compile Include="Internal\EventsCalled\Testing.cs" />
-    <Compile Include="Internal\EventsCalled\SpawnCrashFix.cs" />
     <Compile Include="Internal\EventsCalled\Round.cs" />
     <Compile Include="Internal\EventsCalled\Player.cs" />
     <Compile Include="Internal\EventsManager\EventCallMethod.cs" />

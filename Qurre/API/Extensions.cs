@@ -394,7 +394,8 @@ namespace Qurre.API
 			EffectType.Stained => typeof(Stained),
 			EffectType.Traumatized => typeof(Traumatized),
 			EffectType.Vitality => typeof(Vitality),
-			_ => throw new InvalidOperationException("Invalid effect enum provided"),
+			EffectType.PocketCorroding => typeof(PocketCorroding),
+            _ => throw new InvalidOperationException("Invalid effect enum provided"),
 		};
 		static public EffectType GetEffectType(this StatusEffectBase ef) => ef switch
 		{
@@ -432,7 +433,8 @@ namespace Qurre.API
 			Stained => EffectType.Stained,
 			Traumatized => EffectType.Traumatized,
 			Vitality => EffectType.Vitality,
-			_ => EffectType.None,
+            PocketCorroding => EffectType.PocketCorroding,
+            _ => EffectType.None,
 		};
 		#endregion
 

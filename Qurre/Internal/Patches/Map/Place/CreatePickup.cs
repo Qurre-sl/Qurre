@@ -1,5 +1,6 @@
 ﻿using HarmonyLib;
 using InventorySystem;
+using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
 using Qurre.API;
 using Qurre.Events.Structs;
@@ -8,7 +9,8 @@ using System;
 
 namespace Qurre.Internal.Patches.Map.Place
 {
-    [HarmonyPatch(typeof(InventoryExtensions), nameof(InventoryExtensions.ServerCreatePickup))]
+    [HarmonyPatch(typeof(InventoryExtensions), nameof(InventoryExtensions.ServerCreatePickup),
+        new Type[] { typeof(Inventory), typeof(ItemBase), typeof(PickupSyncInfo), typeof(bool), typeof(Action<ItemPickupBase>) })]
     static class CreatePickup
     {
         [HarmonyPrefix]

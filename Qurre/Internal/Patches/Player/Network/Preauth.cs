@@ -27,9 +27,9 @@ namespace Qurre.Internal.Patches.Player.Network
             int index = list.FindLastIndex(ins => ins.opcode == OpCodes.Call && ins.operand is not null && ins.operand is MethodBase methodBase &&
                 methodBase.Name == nameof(CustomLiteNetLib4MirrorTransport.ProcessCancellationData));
 
-            List<Label> labels = list[index - 43].ExtractLabels();
-            list.RemoveRange(index - 43, 44);
-            list.InsertRange(index - 43, new CodeInstruction[]
+            List<Label> labels = list[index - 14].ExtractLabels();
+            list.RemoveRange(index - 14, 15);
+            list.InsertRange(index - 14, new CodeInstruction[]
             {
                 new CodeInstruction(OpCodes.Ldarg_1).WithLabels(labels), // request
                 new CodeInstruction(OpCodes.Ldloc_S, 10), // "text" (userid)

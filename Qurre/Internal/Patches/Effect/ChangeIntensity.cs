@@ -12,7 +12,7 @@ namespace Qurre.Internal.Patches.Effect
     using Qurre.Events.Structs;
     using Qurre.Internal.EventsManager;
 
-    [HarmonyPatch(typeof(StatusEffectBase), nameof(StatusEffectBase.Intensity), MethodType.Setter)]
+    [HarmonyPatch(typeof(StatusEffectBase), nameof(StatusEffectBase.ForceIntensity))]
     static class ChangeIntensity
     {
         [HarmonyTranspiler]

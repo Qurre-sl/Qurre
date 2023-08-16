@@ -34,32 +34,48 @@ namespace Qurre.API.Classification.Player
 
         public void DimScreen()
         {
+            //RoundSummary.singleton.RpcDimScreen();
+
+            int functionHashCode = -1745793588;
             var component = RoundSummary.singleton;
             var writer = NetworkWriterPool.Get();
-            var msg = new RpcMessage
+
+            RpcMessage rpcMessage = new()
             {
                 netId = component.netId,
                 componentIndex = component.ComponentIndex,
-                functionHash = (ushort)(typeof(RoundSummary).FullName.GetStableHashCode() * 503 + "RpcDimScreen".GetStableHashCode()),
+                functionHash = (ushort)functionHashCode,
                 payload = writer.ToArraySegment()
             };
-            _player.Connection.Send(msg);
+            RpcMessage rpcMessage2 = rpcMessage;
+            using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
+            networkWriterPooled.Write(rpcMessage2);
+            _player.ReferenceHub.networkIdentity.connectionToClient.BufferRpc(rpcMessage, 0);
+
             NetworkWriterPool.Return(writer);
         }
 
         public void ShakeScreen(bool achieve = false)
         {
+            //AlphaWarheadController.Singleton.RpcShake(achieve);
+
+            int functionHashCode = 1208415683;
             var component = AlphaWarheadController.Singleton;
             var writer = NetworkWriterPool.Get();
             writer.WriteBool(achieve);
-            var msg = new RpcMessage
+
+            RpcMessage rpcMessage = new()
             {
                 netId = component.netId,
                 componentIndex = component.ComponentIndex,
-                functionHash = (ushort)(typeof(AlphaWarheadController).FullName.GetStableHashCode() * 503 + "RpcShake".GetStableHashCode()),
+                functionHash = (ushort)functionHashCode,
                 payload = writer.ToArraySegment()
             };
-            _player.Connection.Send(msg);
+            RpcMessage rpcMessage2 = rpcMessage;
+            using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
+            networkWriterPooled.Write(rpcMessage2);
+            _player.ReferenceHub.networkIdentity.connectionToClient.BufferRpc(rpcMessage, 0);
+
             NetworkWriterPool.Return(writer);
         }
     }
