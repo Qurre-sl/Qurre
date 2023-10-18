@@ -16,7 +16,7 @@
    </a>
 </p>
 <a href="https://discord.gg/zGUqfJQebn" alt="Discord">
-<img src="https://cdn.scpsl.store/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
+<img src="https://cdn.fydne.dev/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
 </a>
 
 # Qurre
@@ -37,7 +37,7 @@
 3. Поместите `Assembly-CSharp.dll` в папку с игрой: `SCPSL_Data/Managed` (с заменой файлов)
 4. На этом все, вы успешно установили **Qurre**
 ### Автоматическая установка
-Авто-установщик вы можете найти на [дискорд сервере](https://discord.gg/qXBZUCaDBR), либо вы можете скачать архив [отсюда](https://cdn.scpsl.store/qurre/modules/Qurre-Installer.zip)
+Авто-установщик вы можете найти на [дискорд сервере](https://discord.gg/qXBZUCaDBR), либо вы можете скачать архив [отсюда](https://cdn.fydne.dev/qurre/modules/Qurre-Installer.zip)
 
 # Документация
 > Появится в скором времени
