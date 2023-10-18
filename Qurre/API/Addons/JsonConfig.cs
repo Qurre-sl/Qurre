@@ -155,7 +155,11 @@ namespace Qurre.API.Addons
                                 jt[i] = contentValue;
                         }
                     }
-                    else jt.Add(targetItem);
+                    else
+                    {
+                        try { jt.Add(targetItem); }
+                        catch { jt.Add(JObject.FromObject(targetItem)); }
+                    }
 
                     i++;
                 }

@@ -18,6 +18,8 @@ namespace Qurre.API.Addons
         static Scp079Generator _generator;
         static GameObject _primitive;
         static GameObject _light;
+        static GameObject _tantrum;
+        static GameObject _cloud;
 
         static public IReadOnlyDictionary<DoorPrefabs, BreakableDoor> Doors => _doors;
         static public IReadOnlyDictionary<LockerPrefabs, Locker> Lockers => _lockers;
@@ -27,6 +29,8 @@ namespace Qurre.API.Addons
         static public Scp079Generator Generator => _generator;
         static public GameObject Primitive => _primitive;
         static public GameObject Light => _light;
+        static public GameObject Tantrum => _tantrum;
+        static public GameObject Cloud => _cloud;
 
 
         static internal void Init()
@@ -47,6 +51,12 @@ namespace Qurre.API.Addons
                         case "LCZ BreakableDoor" when prefab.TryGetComponent<BreakableDoor>(out var door):
                             _doors[DoorPrefabs.DoorLCZ] = door;
                             break;
+
+                        case "TantrumObj":
+                            {
+                                _tantrum = prefab;
+                                break;
+                            }
                     }
                 }
             }
@@ -130,6 +140,9 @@ namespace Qurre.API.Addons
                             break;
                         case "3956448839":
                             _light = prefab.Value;
+                            break;
+                        case "825024811":
+                            _cloud = prefab.Value;
                             break;
                     }
                 }

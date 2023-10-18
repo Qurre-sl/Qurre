@@ -24,10 +24,7 @@ namespace Qurre.API.Classification.Player
         }
 
         public void SendConsole(string message, string color)
-        {
-            try { _player.ClassManager.ConsolePrint(message, color); }
-            catch { _player.ReferenceHub.GetComponent<GameConsoleTransmission>().SendToClient(_player.Connection, message, color); }
-        }
+            => _player.ReferenceHub.gameConsoleTransmission.SendToClient(message, color);
 
         public void Disconnect(string reason = null)
             => ServerConsole.Disconnect(_player.GameObject, string.IsNullOrEmpty(reason) ? "" : reason);
@@ -47,10 +44,10 @@ namespace Qurre.API.Classification.Player
                 functionHash = (ushort)functionHashCode,
                 payload = writer.ToArraySegment()
             };
-            RpcMessage rpcMessage2 = rpcMessage;
+
             using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
-            networkWriterPooled.Write(rpcMessage2);
-            _player.ReferenceHub.networkIdentity.connectionToClient.BufferRpc(rpcMessage, 0);
+            networkWriterPooled.Write(rpcMessage);
+            _player.ReferenceHub.networkIdentity.connectionToClient.Send(rpcMessage, 0);
 
             NetworkWriterPool.Return(writer);
         }
@@ -71,10 +68,10 @@ namespace Qurre.API.Classification.Player
                 functionHash = (ushort)functionHashCode,
                 payload = writer.ToArraySegment()
             };
-            RpcMessage rpcMessage2 = rpcMessage;
+
             using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
-            networkWriterPooled.Write(rpcMessage2);
-            _player.ReferenceHub.networkIdentity.connectionToClient.BufferRpc(rpcMessage, 0);
+            networkWriterPooled.Write(rpcMessage);
+            _player.ReferenceHub.networkIdentity.connectionToClient.Send(rpcMessage, 0);
 
             NetworkWriterPool.Return(writer);
         }

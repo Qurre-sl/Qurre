@@ -178,6 +178,7 @@ namespace Qurre.API
 			DisruptorDamageHandler _ => LiteDamageTypes.Disruptor,
 			ExplosionDamageHandler _ => LiteDamageTypes.Explosion,
 			FirearmDamageHandler _ => LiteDamageTypes.Gun,
+			JailbirdDamageHandler _ => LiteDamageTypes.Jailbird,
 			MicroHidDamageHandler _ => LiteDamageTypes.MicroHid,
 			RecontainmentDamageHandler _ => LiteDamageTypes.Recontainment,
 			Scp018DamageHandler _ => LiteDamageTypes.Scp018,
@@ -199,12 +200,14 @@ namespace Qurre.API
 			return _type;
 
 			DamageTypes _get() => handler switch
-			{
-				CustomReasonDamageHandler _ => DamageTypes.Custom,
-				DisruptorDamageHandler _ => DamageTypes.Disruptor,
-				ExplosionDamageHandler _ => DamageTypes.Explosion,
+            {
+                CustomReasonDamageHandler _ => DamageTypes.Custom,
+                DisruptorDamageHandler _ => DamageTypes.Disruptor,
+                ExplosionDamageHandler _ => DamageTypes.Explosion,
+                JailbirdDamageHandler _ => DamageTypes.Jailbird,
+                MicroHidDamageHandler _ => DamageTypes.MicroHid,
 
-				FirearmDamageHandler fr => fr.WeaponType switch
+                FirearmDamageHandler fr => fr.WeaponType switch
 				{
 					ItemType.GunCOM15 => DamageTypes.Com15,
 					ItemType.GunCOM18 => DamageTypes.Com18,
@@ -214,24 +217,27 @@ namespace Qurre.API
 					ItemType.GunFSP9 => DamageTypes.FSP9,
 					ItemType.GunCrossvec => DamageTypes.CrossVec,
 
-					ItemType.GunAK => DamageTypes.AK,
 					ItemType.GunE11SR => DamageTypes.E11SR,
+					ItemType.GunFRMG0 => DamageTypes.FRMG0,
+
+					ItemType.GunAK => DamageTypes.AK,
 					ItemType.GunLogicer => DamageTypes.Logicer,
 					ItemType.GunShotgun => DamageTypes.Shotgun,
+					ItemType.GunA7 => DamageTypes.A7,
 
 					ItemType.ParticleDisruptor => DamageTypes.Disruptor,
+					ItemType.Jailbird => DamageTypes.Jailbird,
 
 					_ => DamageTypes.Unknow,
 				},
 
-				MicroHidDamageHandler _ => DamageTypes.MicroHid,
 				RecontainmentDamageHandler _ => DamageTypes.Recontainment,
 				Scp018DamageHandler _ => DamageTypes.Scp018,
 				Scp049DamageHandler _ => DamageTypes.Scp049,
 				Scp096DamageHandler _ => DamageTypes.Scp096,
-				ScpDamageHandler sr => parseTranslation(sr._translationId),
+                WarheadDamageHandler _ => DamageTypes.Warhead,
+                ScpDamageHandler sr => parseTranslation(sr._translationId),
 				UniversalDamageHandler tr => parseTranslation(tr.TranslationId),
-				WarheadDamageHandler _ => DamageTypes.Warhead,
 				_ => DamageTypes.Unknow,
 			};
 
@@ -299,15 +305,31 @@ namespace Qurre.API
 		{
 			return itemType switch
 			{
-				ItemType.KeycardChaosInsurgency or ItemType.KeycardContainmentEngineer or ItemType.KeycardFacilityManager or ItemType.KeycardGuard or ItemType.KeycardJanitor or ItemType.KeycardNTFCommander or ItemType.KeycardNTFLieutenant or ItemType.KeycardNTFOfficer or ItemType.KeycardO5 or ItemType.KeycardResearchCoordinator or ItemType.KeycardScientist or ItemType.KeycardZoneManager => ItemCategory.Keycard,
-				ItemType.Medkit or ItemType.Adrenaline or ItemType.Painkillers => ItemCategory.Medical,
+				ItemType.KeycardJanitor or ItemType.KeycardScientist or ItemType.KeycardResearchCoordinator or
+				ItemType.KeycardZoneManager or ItemType.KeycardGuard or ItemType.KeycardContainmentEngineer or
+				ItemType.KeycardMTFPrivate or ItemType.KeycardMTFOperative or ItemType.KeycardMTFCaptain or
+				ItemType.KeycardFacilityManager or ItemType.KeycardChaosInsurgency or ItemType.KeycardO5 => ItemCategory.Keycard,
+
 				ItemType.Radio => ItemCategory.Radio,
-				ItemType.GunAK or ItemType.GunCOM15 or ItemType.GunCOM18 or ItemType.GunCrossvec or ItemType.GunE11SR or ItemType.GunFSP9 or ItemType.GunLogicer or ItemType.GunRevolver or ItemType.GunShotgun => ItemCategory.Firearm,
-				ItemType.GrenadeFlash or ItemType.GrenadeHE => ItemCategory.Grenade,
-				ItemType.SCP018 or ItemType.SCP207 or ItemType.SCP268 or ItemType.SCP500 or ItemType.SCP244a or ItemType.SCP244b or ItemType.SCP330 or ItemType.SCP2176 => ItemCategory.SCPItem,
 				ItemType.MicroHID => ItemCategory.MicroHID,
-				ItemType.Ammo12gauge or ItemType.Ammo44cal or ItemType.Ammo556x45 or ItemType.Ammo762x39 or ItemType.Ammo9x19 => ItemCategory.Ammo,
-				ItemType.ArmorCombat or ItemType.ArmorHeavy or ItemType.ArmorLight => ItemCategory.Armor,
+
+				ItemType.Medkit or ItemType.Adrenaline or ItemType.Painkillers => ItemCategory.Medical,
+
+				ItemType.GunCOM15 or ItemType.GunE11SR or ItemType.GunCrossvec or ItemType.GunFSP9 or
+				ItemType.GunLogicer or ItemType.GunCOM18 or ItemType.GunRevolver or ItemType.GunAK or
+				ItemType.GunShotgun or ItemType.ParticleDisruptor or ItemType.GunCom45 or ItemType.Jailbird
+				or ItemType.GunFRMG0 or ItemType.GunA7 => ItemCategory.Firearm,
+
+				ItemType.GrenadeHE or ItemType.GrenadeFlash => ItemCategory.Grenade,
+
+				ItemType.SCP500 or ItemType.SCP207 or ItemType.SCP018 or ItemType.SCP268 or ItemType.SCP330 or
+				ItemType.SCP2176 or ItemType.SCP244a or ItemType.SCP244b or ItemType.SCP1853 or ItemType.SCP1576 or
+				ItemType.AntiSCP207 => ItemCategory.SCPItem,
+
+				ItemType.Ammo12gauge or ItemType.Ammo556x45 or ItemType.Ammo44cal or ItemType.Ammo762x39 or ItemType.Ammo9x19 => ItemCategory.Ammo,
+
+				ItemType.ArmorLight or ItemType.ArmorCombat or ItemType.ArmorHeavy => ItemCategory.Armor,
+
 				_ => ItemCategory.None
 			};
 		}
@@ -395,7 +417,7 @@ namespace Qurre.API
 			EffectType.Traumatized => typeof(Traumatized),
 			EffectType.Vitality => typeof(Vitality),
 			EffectType.PocketCorroding => typeof(PocketCorroding),
-            _ => throw new InvalidOperationException("Invalid effect enum provided"),
+			_ => throw new InvalidOperationException("Invalid effect enum provided"),
 		};
 		static public EffectType GetEffectType(this StatusEffectBase ef) => ef switch
 		{
@@ -433,8 +455,8 @@ namespace Qurre.API
 			Stained => EffectType.Stained,
 			Traumatized => EffectType.Traumatized,
 			Vitality => EffectType.Vitality,
-            PocketCorroding => EffectType.PocketCorroding,
-            _ => EffectType.None,
+			PocketCorroding => EffectType.PocketCorroding,
+			_ => EffectType.None,
 		};
 		#endregion
 

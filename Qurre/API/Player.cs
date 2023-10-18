@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using CentralAuth;
+using Mirror;
 using Qurre.API.Controllers.Structs;
 using RemoteAdmin;
 using System.Collections.Generic;
@@ -54,6 +55,7 @@ namespace Qurre.API
             }
         }
         public ReferenceHub ReferenceHub => rh;
+        public PlayerAuthenticationManager AuthManager => rh.authManager;
         public CharacterClassManager ClassManager => rh.characterClassManager;
         public QueryProcessor QueryProcessor => rh.queryProcessor;
         public NetworkConnection Connection => IsHost ? rh.networkIdentity.connectionToServer : rh.networkIdentity.connectionToClient;

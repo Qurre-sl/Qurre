@@ -25,7 +25,7 @@ namespace Qurre.Internal.Patches.Server
                 ev.InvokeEvent();
 
                 if (!string.IsNullOrEmpty(ev.Reply))
-                    __instance.GCT.SendToClient(__instance.connectionToClient, ev.Reply, ev.Color);
+                    ev.Player.Client.SendConsole(ev.Reply, ev.Color);
 
                 return ev.Allowed;
             }

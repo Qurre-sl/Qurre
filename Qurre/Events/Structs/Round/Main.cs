@@ -14,6 +14,13 @@
         internal RoundStartedEvent() { }
     }
 
+    public class RoundForceStartEvent : IBaseEvent
+    {
+        public uint EventId { get; } = RoundEvents.ForceStart;
+
+        internal RoundForceStartEvent() { }
+    }
+
     public class RoundRestartEvent : IBaseEvent
     {
         public uint EventId { get; } = RoundEvents.Restart;

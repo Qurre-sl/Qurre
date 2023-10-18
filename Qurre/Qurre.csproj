@@ -283,6 +283,7 @@
     <Compile Include="Internal\Patches\Player\Role\Spawn.cs" />
     <Compile Include="Internal\Patches\Player\Socialization\Cuff.cs" />
     <Compile Include="Internal\Patches\Round\Check.cs" />
+    <Compile Include="Internal\Patches\Round\ForceStart.cs" />
     <Compile Include="Internal\Patches\Round\Restart.cs" />
     <Compile Include="Internal\Patches\Round\Start.cs" />
     <Compile Include="Internal\Patches\Round\Waiting.cs" />

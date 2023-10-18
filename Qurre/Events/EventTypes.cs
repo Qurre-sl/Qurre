@@ -127,6 +127,7 @@
         public const uint Restart = 4003;
         public const uint End = 4004;
         public const uint Check = 4005;
+        public const uint ForceStart = 4006;
     }
 
     static public class AlphaEvents //5xxx

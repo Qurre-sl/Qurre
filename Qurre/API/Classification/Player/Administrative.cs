@@ -11,12 +11,11 @@
         public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
 
         public bool RemoteAdmin => ServerRoles.RemoteAdmin;
-        public bool GlobalRemoteAdmin => ServerRoles.RemoteAdminMode == ServerRoles.AccessMode.GlobalAccess;
 
         public UserGroup Group
         {
             get => ServerRoles.Group;
-            set => ServerRoles.SetGroup(value, false, false, value.Cover);
+            set => ServerRoles.SetGroup(value, false, false);
         }
 
         public string GroupName
@@ -38,15 +37,17 @@
         public void RaLogin()
         {
             ServerRoles.RemoteAdmin = true;
-            ServerRoles.Permissions = ServerRoles._globalPerms;
-            ServerRoles.RemoteAdminMode = GlobalRemoteAdmin ? ServerRoles.AccessMode.GlobalAccess : ServerRoles.AccessMode.PasswordOverride;
-            ServerRoles.TargetOpenRemoteAdmin(false);
+            ServerRoles.Permissions = ServerRoles.GlobalPerms;
+            //_player.AuthManager.ResetPasswordAttempts();
+            ServerRoles.RpcResetFixed();
+            ServerRoles.OpenRemoteAdmin();
         }
         public void RaLogout()
         {
             ServerRoles.RemoteAdmin = false;
-            ServerRoles.RemoteAdminMode = ServerRoles.AccessMode.LocalAccess;
-            ServerRoles.TargetCloseRemoteAdmin();
+            //_player.AuthManager.ResetPasswordAttempts();
+            ServerRoles.RpcResetFixed();
+            ServerRoles.TargetSetRemoteAdmin(false);
         }
 
         public void Ban(long duration, string reason, string issuer = "API")
