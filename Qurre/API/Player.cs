@@ -58,6 +58,7 @@ namespace Qurre.API
         public PlayerAuthenticationManager AuthManager => rh.authManager;
         public CharacterClassManager ClassManager => rh.characterClassManager;
         public QueryProcessor QueryProcessor => rh.queryProcessor;
+        public NetworkConnectionToClient ConnectionToClient => rh.networkIdentity.connectionToClient;
         public NetworkConnection Connection => IsHost ? rh.networkIdentity.connectionToServer : rh.networkIdentity.connectionToClient;
         public Transform Transform => rh.transform;
 

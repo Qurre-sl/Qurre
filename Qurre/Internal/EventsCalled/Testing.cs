@@ -5,6 +5,7 @@ using Qurre.API.Objects;
 using Qurre.Events;
 using Qurre.Events.Structs;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Qurre.Internal.EventsCalled
 {
@@ -85,6 +86,12 @@ namespace Qurre.Internal.EventsCalled
             MEC.Timing.CallDelayed(45f, () => ev.Player.Inventory.Clear());
             Log.Info($"Pl: {ev.Player?.UserInfomation.Nickname}; Role: {ev.Role};");
             //ev.Role = PlayerRoles.RoleTypeId.Tutorial;
+        }
+
+        [EventMethod(PlayerEvents.Join)]
+        static void TestCmdSync(JoinEvent ev)
+        {
+            ev.Player.ClassManager.TargetChangeCmdBinding(KeyCode.LeftAlt, ".test");
         }
     }
 }

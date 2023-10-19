@@ -200,14 +200,14 @@ namespace Qurre.API
 			return _type;
 
 			DamageTypes _get() => handler switch
-            {
-                CustomReasonDamageHandler _ => DamageTypes.Custom,
-                DisruptorDamageHandler _ => DamageTypes.Disruptor,
-                ExplosionDamageHandler _ => DamageTypes.Explosion,
-                JailbirdDamageHandler _ => DamageTypes.Jailbird,
-                MicroHidDamageHandler _ => DamageTypes.MicroHid,
+			{
+				CustomReasonDamageHandler _ => DamageTypes.Custom,
+				DisruptorDamageHandler _ => DamageTypes.Disruptor,
+				ExplosionDamageHandler _ => DamageTypes.Explosion,
+				JailbirdDamageHandler _ => DamageTypes.Jailbird,
+				MicroHidDamageHandler _ => DamageTypes.MicroHid,
 
-                FirearmDamageHandler fr => fr.WeaponType switch
+				FirearmDamageHandler fr => fr.WeaponType switch
 				{
 					ItemType.GunCOM15 => DamageTypes.Com15,
 					ItemType.GunCOM18 => DamageTypes.Com18,
@@ -235,8 +235,8 @@ namespace Qurre.API
 				Scp018DamageHandler _ => DamageTypes.Scp018,
 				Scp049DamageHandler _ => DamageTypes.Scp049,
 				Scp096DamageHandler _ => DamageTypes.Scp096,
-                WarheadDamageHandler _ => DamageTypes.Warhead,
-                ScpDamageHandler sr => parseTranslation(sr._translationId),
+				WarheadDamageHandler _ => DamageTypes.Warhead,
+				ScpDamageHandler sr => parseTranslation(sr._translationId),
 				UniversalDamageHandler tr => parseTranslation(tr.TranslationId),
 				_ => DamageTypes.Unknow,
 			};

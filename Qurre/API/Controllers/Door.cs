@@ -1,12 +1,12 @@
-﻿using UnityEngine;
+﻿using Interactables.Interobjects;
 using Interactables.Interobjects.DoorUtils;
-using Interactables.Interobjects;
+using MapGeneration;
 using Mirror;
-using System.Linq;
 using Qurre.API.Objects;
 using Qurre.Internal.Misc;
 using System.Collections.Generic;
-using MapGeneration;
+using System.Linq;
+using UnityEngine;
 
 namespace Qurre.API.Controllers
 {
@@ -33,6 +33,24 @@ namespace Qurre.API.Controllers
             {
                 if (_rooms.Count > 0)
                     return _rooms;
+
+                if (DoorVariant.Rooms is null)
+                {
+                    List<RoomIdentifier> _list = new();
+                    Vector3 position = DoorVariant.transform.position;
+                    for (int i = 0; i < 4; i++)
+                    {
+                        Vector3Int key = RoomIdUtils.PositionToCoords(position + DoorVariant.WorldDirections[i]);
+                        if (RoomIdentifier.RoomsByCoordinates.TryGetValue(key, out var value) &&
+                            CollectionExtensions.GetOrAdd(DoorVariant.DoorsByRoom, value, () => new HashSet<DoorVariant>()).Add(DoorVariant))
+                        {
+                            _list.Add(value);
+                        }
+                    }
+
+                    _rooms = _list.Select(x => x.GetRoom()).ToList();
+                    return _rooms;
+                }
 
                 _rooms = DoorVariant.Rooms.Select(x => x.GetRoom()).ToList();
 
@@ -293,7 +311,7 @@ namespace Qurre.API.Controllers
 
                 case "Unsecured":
                     {
-                        if (Rooms.Any(x => x.RoomName == RoomName.Hcz049))
+                        if (DoorVariant.Rooms.Any(x => x.Name == RoomName.Hcz049))
                         {
                             if (Name.Contains("(1)"))
                                 Type = DoorType.Hcz173Gate;
@@ -302,7 +320,7 @@ namespace Qurre.API.Controllers
                             return;
                         }
 
-                        if (Rooms.Any(x => x.RoomName == RoomName.HczCheckpointToEntranceZone))
+                        if (DoorVariant.Rooms.Any(x => x.Name == RoomName.HczCheckpointToEntranceZone))
                         {
                             Type = DoorType.EzCheckpointGate;
                             return;
@@ -314,31 +332,36 @@ namespace Qurre.API.Controllers
 
                 case "Intercom":
                     {
-                        foreach (var room in Rooms)
+                        foreach (var room in DoorVariant.Rooms)
                         {
-                            if (room.Type == RoomType.HczChkpA)
+                            switch (room.Name)
                             {
-                                Type = DoorType.EzCheckpointArmoryA;
-                                return;
-                            }
-
-                            if (room.Type == RoomType.HczChkpB)
-                            {
-                                Type = DoorType.EzCheckpointArmoryB;
-                                return;
-                            }
-
-                            if (room.Type == RoomType.HczPart)
-                            {
-                                switch (room.Transform.parent.name)
-                                {
-                                    case "HCZ_EZ_Checkpoint (A)":
+                                case RoomName.HczCheckpointA:
+                                    {
                                         Type = DoorType.EzCheckpointArmoryA;
                                         return;
-                                    case "HCZ_EZ_Checkpoint (B)":
+                                    }
+                                case RoomName.HczCheckpointB:
+                                    {
                                         Type = DoorType.EzCheckpointArmoryB;
                                         return;
-                                }
+                                    }
+                                default:
+                                    {
+                                        if (room.gameObject.name.StartsWith("HCZ Part"))
+                                        {
+                                            switch (room.gameObject.transform.parent.name)
+                                            {
+                                                case "HCZ_EZ_Checkpoint (A)":
+                                                    Type = DoorType.EzCheckpointArmoryA;
+                                                    return;
+                                                case "HCZ_EZ_Checkpoint (B)":
+                                                    Type = DoorType.EzCheckpointArmoryB;
+                                                    return;
+                                            }
+                                        }
+                                        break;
+                                    }
                             }
                         }
 
@@ -348,10 +371,10 @@ namespace Qurre.API.Controllers
 
                 case "Elevator":
                     {
-                        if (Rooms.Count == 0)
+                        if (!DoorVariant.Rooms.Any())
                             return;
 
-                        switch (Rooms[0].RoomName)
+                        switch (DoorVariant.Rooms[0].Name)
                         {
                             case RoomName.LczCheckpointA:
                                 Type = DoorType.ElevatorLczChkpA;
