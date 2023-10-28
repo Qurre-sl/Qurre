@@ -15,21 +15,34 @@ namespace Qurre.API.Classification.Player
 
         public PlayerStats PlayerStats => _player.ReferenceHub.playerStats;
 
+        /* pls dont add items to the top of the list
+            typeof(MaxHealthStat), // 0
+            typeof(HealthStat), // 1
+            typeof(AhpStat), // 2
+            typeof(StaminaStat), // 3
+            typeof(AdminFlagsStat), // 4
+            typeof(HumeShieldStat), // 5
+            typeof(VigorStat) // 6
+        */
+        public HealthStat HealthStat => (HealthStat)PlayerStats.StatModules[1];
+        public AhpStat AhpStat => (AhpStat)PlayerStats.StatModules[2];
+        public StaminaStat StaminaStat => (StaminaStat)PlayerStats.StatModules[3];
+
         public float Hp
         {
-            get => ((HealthStat)PlayerStats.StatModules[0]).CurValue;
-            set => ((HealthStat)PlayerStats.StatModules[0]).CurValue = value;
+            get => HealthStat.CurValue;
+            set => HealthStat.CurValue = value;
         }
         public float MaxHp
         {
-            get => ((HealthStat)PlayerStats.StatModules[0]).MaxValue;
+            get => HealthStat.MaxValue;
             set => _maxHp = value;
         }
 
-        public List<AhpStat.AhpProcess> AhpActiveProcesses => ((AhpStat)PlayerStats.StatModules[1])._activeProcesses;
+        public List<AhpStat.AhpProcess> AhpActiveProcesses => AhpStat._activeProcesses;
         public float Ahp
         {
-            get => ((AhpStat)PlayerStats.StatModules[1]).CurValue;
+            get => AhpStat.CurValue;
             set
             {
                 if (value > MaxAhp)
@@ -48,14 +61,14 @@ namespace Qurre.API.Classification.Player
         }
         public float MaxAhp
         {
-            get => ((AhpStat)PlayerStats.StatModules[1]).MaxValue;
-            set => ((AhpStat)PlayerStats.StatModules[1])._maxSoFar = value;
+            get => AhpStat.MaxValue;
+            set => AhpStat._maxSoFar = value;
         }
 
         public float Stamina
         {
-            get => ((StaminaStat)PlayerStats.StatModules[2]).CurValue * 100;
-            set => ((StaminaStat)PlayerStats.StatModules[2]).CurValue = Mathf.Clamp01(value / 100);
+            get => StaminaStat.CurValue * 100;
+            set => StaminaStat.CurValue = Mathf.Clamp01(value / 100);
         }
 
         public void Heal(float amount, bool instant)
@@ -63,14 +76,14 @@ namespace Qurre.API.Classification.Player
             if (instant)
                 Hp += amount;
             else
-                ((HealthStat)PlayerStats.StatModules[0]).ServerHeal(amount);
+                HealthStat.ServerHeal(amount);
         }
 
         public void AddAhp(float amount, float limit, float decay = 0, float efficacy = 0.7f, float sustain = 0, bool persistant = false)
-            => ((AhpStat)PlayerStats.StatModules[1]).ServerAddProcess(amount, limit, decay, efficacy, sustain, persistant);
+            => AhpStat.ServerAddProcess(amount, limit, decay, efficacy, sustain, persistant);
 
         public void AddStamina(float value)
-            => ((StaminaStat)PlayerStats.StatModules[2]).ModifyAmount(value / 100);
+            => StaminaStat.ModifyAmount(value / 100);
 
         public void Kill(DeathTranslation deathReason) => PlayerStats.KillPlayer(new UniversalDamageHandler(-1, deathReason));
         public void Kill(string deathReason = "") => PlayerStats.KillPlayer(new CustomReasonDamageHandler(deathReason));
