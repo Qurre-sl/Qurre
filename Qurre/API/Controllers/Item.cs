@@ -1,20 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using InventorySystem.Items;
+﻿using InventorySystem.Items;
+using InventorySystem.Items.Armor;
+using InventorySystem.Items.Firearms;
+using InventorySystem.Items.Firearms.Ammo;
+using InventorySystem.Items.Keycards;
+using InventorySystem.Items.MicroHID;
 using InventorySystem.Items.Pickups;
+using InventorySystem.Items.Radio;
+using InventorySystem.Items.SwitchableLightSources.Flashlight;
+using InventorySystem.Items.ThrowableProjectiles;
+using InventorySystem.Items.Usables;
 using Mirror;
 using Qurre.API.Addons.Items;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using InventorySystem.Items.Firearms;
-using InventorySystem.Items.Keycards;
-using InventorySystem.Items.Usables;
-using InventorySystem.Items.Radio;
-using InventorySystem.Items.MicroHID;
-using InventorySystem.Items.Armor;
-using InventorySystem.Items.Firearms.Ammo;
-using InventorySystem.Items.Flashlight;
-using InventorySystem.Items.ThrowableProjectiles;
-using InventorySystem.Items.Usables.Scp330;
 
 namespace Qurre.API.Controllers
 {

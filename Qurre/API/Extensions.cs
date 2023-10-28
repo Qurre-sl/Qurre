@@ -8,6 +8,7 @@ using MapGeneration.Distributors;
 using Mirror;
 using NorthwoodLib;
 using PlayerRoles;
+using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
 using Qurre.API.Addons;
 using Qurre.API.Controllers;
@@ -121,13 +122,18 @@ namespace Qurre.API
 				{
 					int lastnameDifference = 31;
 					string firstString = args.ToLower();
+
 					foreach (Player player in Internal.Fields.Player.Dictionary.Values)
 					{
-						if (player.UserInfomation.Nickname is null) continue;
-						if (!player.UserInfomation.Nickname.Contains(args, StringComparison.OrdinalIgnoreCase))
+						if (player.UserInfomation.Nickname is null)
 							continue;
+
+						if (player.UserInfomation.Nickname.IndexOf(args, StringComparison.OrdinalIgnoreCase) == -1)
+							continue;
+
 						string secondString = player.UserInfomation.Nickname;
 						int nameDifference = secondString.Length - firstString.Length;
+
 						if (nameDifference < lastnameDifference)
 						{
 							lastnameDifference = nameDifference;

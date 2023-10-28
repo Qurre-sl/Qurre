@@ -15,7 +15,8 @@ namespace Qurre.Internal.Patches.Misc.Creates
         {
             try
             {
-                if (__result is null) return;
+                if (__result is null)
+                    return;
 
                 Controller ragdoll = new(__result, owner.GetPlayer());
                 Map.Ragdolls.Add(ragdoll);

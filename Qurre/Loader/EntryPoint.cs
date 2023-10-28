@@ -71,16 +71,6 @@ namespace Qurre.Loader
                                      :^^:^:                                     
                                                                                 
 " + BetterColors.Hidden("⠀"), ConsoleColor.Red));
-
-            ServerConsole.AddLog(BetterColors.Bold("Bold"));
-            ServerConsole.AddLog(BetterColors.Dim("Dim"));
-            ServerConsole.AddLog(BetterColors.Italic("Italic"));
-            ServerConsole.AddLog(BetterColors.Underline("Underline"));
-            ServerConsole.AddLog(BetterColors.Inverse("Inverse"));
-            ServerConsole.AddLog(BetterColors.Hidden("Hidden"));
-            ServerConsole.AddLog(BetterColors.Strikethrough("Strikethrough"));
-
-            ServerConsole.AddLog(BetterColors.BgCyan("BgCyan"));
         }
     }
 }
