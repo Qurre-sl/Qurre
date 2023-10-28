@@ -11,6 +11,10 @@ namespace Qurre.Internal.Misc
 
         internal DoorVariant Door;
 
+        Vector3 _cachedPosition = Vector3.zero;
+        Vector3 _cachedScale = Vector3.zero;
+        Quaternion _cachedRotation = Quaternion.identity;
+
         private void Start()
         {
             _nextCycle = Time.time;
@@ -25,6 +29,15 @@ namespace Qurre.Internal.Misc
 
             _nextCycle += _interval;
 
+            Transform transform = Door.gameObject.transform;
+            if (_cachedPosition == transform.position &&
+                _cachedRotation == transform.rotation &&
+                _cachedScale == transform.lossyScale)
+                return;
+
+            _cachedPosition = transform.position;
+            _cachedRotation = transform.rotation;
+            _cachedScale = transform.lossyScale;
             try { Door.netIdentity.UpdateData(); } catch { }
         }
     }

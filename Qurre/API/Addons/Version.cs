@@ -5,7 +5,7 @@
         const string s_major = "2";
         const string s_minor = "0";
         const string s_build = "0";
-        const string s_revision = "34";
+        const string s_revision = "35";
 
         internal const string AssemblyVersion = $"{s_major}.{s_minor}.{s_build}.{s_revision}";
         internal const string AssemblyCustom = "v2-gamma";
