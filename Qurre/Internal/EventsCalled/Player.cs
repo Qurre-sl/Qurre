@@ -1,7 +1,9 @@
 ﻿using PlayerRoles;
 using Qurre.API;
+using Qurre.API.Addons;
 using Qurre.API.Attributes;
 using Qurre.API.Classification.Roles;
+using Qurre.API.Controllers;
 using Qurre.Events;
 using Qurre.Events.Structs;
 using System;
@@ -11,10 +13,41 @@ namespace Qurre.Internal.EventsCalled
     static class Player
     {
         [EventMethod(PlayerEvents.Join)]
-        static internal void JoinLog(JoinEvent ev)
+        static internal void Join(JoinEvent ev)
         {
             ServerConsole.AddLog($"Player {ev.Player?.UserInfomation.Nickname} ({ev.Player?.UserInfomation.UserId}) " +
                 $"({ev.Player?.UserInfomation.Id}) connected. iP: {ev.Player?.UserInfomation.Ip}", ConsoleColor.Magenta);
+
+            // send net identity info
+            foreach (var door in Map.Doors)
+            {
+                if (!door.Custom)
+                    continue;
+
+                try
+                {
+                    door.DoorVariant.netIdentity.UpdateDataForConnection(ev.Player.ConnectionToClient);
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug($"Error in {BetterColors.Yellow("Qurre.Internal.EventsCalled.Join<DoorsUpdate>")}\n{BetterColors.Grey(ex)}");
+                }
+            }
+
+            foreach (var locker in Map.Lockers)
+            {
+                if (!locker.Custom)
+                    continue;
+
+                try
+                {
+                    locker._locker.netIdentity.UpdateDataForConnection(ev.Player.ConnectionToClient);
+                }
+                catch (Exception ex)
+                {
+                    Log.Debug($"Error in {BetterColors.Yellow("Qurre.Internal.EventsCalled.Join<LockersUpdate>")}\n{BetterColors.Grey(ex)}");
+                }
+            }
         }
 
         [EventMethod(PlayerEvents.Leave)]

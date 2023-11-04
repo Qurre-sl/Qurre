@@ -22,6 +22,8 @@ namespace Qurre.API.Controllers
         public AudioClip DeniedBeep => _locker._deniedBeep;
         public Chamber[] Chambers { get; private set; }
 
+        public bool Custom { get; private set; }
+
         public string Name => _locker.name;
 
         public Vector3 Position
@@ -76,11 +78,13 @@ namespace Qurre.API.Controllers
 
         internal Locker(BaseLocker locker)
         {
+            Custom = false;
             _locker = locker;
             Chambers = _locker.Chambers.Select(x => new Chamber(x, this)).ToArray();
         }
         public Locker(Vector3 position, LockerPrefabs type, Quaternion? rotation = null)
         {
+            Custom = true;
             _locker = Object.Instantiate(type.GetPrefab());
 
             _locker.transform.position = position;

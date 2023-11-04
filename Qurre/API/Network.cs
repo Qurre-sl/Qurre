@@ -1,4 +1,5 @@
 ﻿using Mirror;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Reflection;
 
@@ -27,7 +28,23 @@ namespace Qurre.API
         }
 
 
-        static public void UpdateData(this NetworkIdentity identity) => NetworkServer.SendToAll(identity.SpawnMessage());
+        static public void UpdateDataForConnection(this NetworkIdentity identity, NetworkConnectionToClient connection)
+        {
+            if (!connection.isReady)
+                return;
+
+            var message = identity.SpawnMessage();
+
+            using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
+            NetworkMessages.Pack(message, networkWriterPooled);
+            ArraySegment<byte> segment = networkWriterPooled.ToArraySegment();
+
+            connection.Send(segment);
+        }
+
+        static public void UpdateData(this NetworkIdentity identity)
+            => NetworkServer.SendToAll(identity.SpawnMessage());
+
         static public SpawnMessage SpawnMessage(this NetworkIdentity identity)
         {
             var writer = NetworkWriterPool.Get();

@@ -29,7 +29,7 @@ namespace Qurre.Internal.Misc
 
             _nextCycle += _interval;
 
-            Transform transform = Door.gameObject.transform;
+            Transform transform = Door.netIdentity.gameObject.transform;
             if (_cachedPosition == transform.position &&
                 _cachedRotation == transform.rotation &&
                 _cachedScale == transform.lossyScale)

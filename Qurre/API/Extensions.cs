@@ -6,7 +6,6 @@ using InventorySystem.Items.Usables.Scp244.Hypothermia;
 using MapGeneration;
 using MapGeneration.Distributors;
 using Mirror;
-using NorthwoodLib;
 using PlayerRoles;
 using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
@@ -22,7 +21,7 @@ using SinkHole = CustomPlayerEffects.Sinkhole;
 
 namespace Qurre.API
 {
-	static public class Extensions
+    static public class Extensions
 	{
 		static public bool TryFind<TSource>(this IEnumerable<TSource> source, out TSource found, Func<TSource, bool> predicate)
 		{

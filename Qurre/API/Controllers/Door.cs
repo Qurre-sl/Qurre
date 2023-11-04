@@ -18,6 +18,8 @@ namespace Qurre.API.Controllers
         public DoorVariant DoorVariant { get; internal set; }
         public GameObject GameObject => DoorVariant?.gameObject;
 
+        public bool Custom { get; private set; }
+
         public string Name
         {
             get
@@ -430,6 +432,7 @@ namespace Qurre.API.Controllers
 
         internal Door(DoorVariant _)
         {
+            Custom = false;
             DoorVariant = _;
 
             if (DoorVariant.TryGetComponent<DoorNametagExtension>(out var nametag))
@@ -439,6 +442,7 @@ namespace Qurre.API.Controllers
         }
         public Door(Vector3 position, DoorPrefabs prefab, Quaternion? rotation = null, DoorPermissions permissions = null)
         {
+            Custom = true;
             DoorVariant = Object.Instantiate(prefab.GetPrefab());
 
             DoorVariant.transform.position = position;
