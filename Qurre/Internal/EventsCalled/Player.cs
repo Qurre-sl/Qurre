@@ -3,17 +3,17 @@ using Qurre.API;
 using Qurre.API.Addons;
 using Qurre.API.Attributes;
 using Qurre.API.Classification.Roles;
-using Qurre.API.Controllers;
 using Qurre.Events;
 using Qurre.Events.Structs;
 using System;
 
+#pragma warning disable IDE0051
 namespace Qurre.Internal.EventsCalled
 {
     static class Player
     {
         [EventMethod(PlayerEvents.Join)]
-        static internal void Join(JoinEvent ev)
+        static void Join(JoinEvent ev)
         {
             ServerConsole.AddLog($"Player {ev.Player?.UserInfomation.Nickname} ({ev.Player?.UserInfomation.UserId}) " +
                 $"({ev.Player?.UserInfomation.Id}) connected. iP: {ev.Player?.UserInfomation.Ip}", ConsoleColor.Magenta);
@@ -51,14 +51,14 @@ namespace Qurre.Internal.EventsCalled
         }
 
         [EventMethod(PlayerEvents.Leave)]
-        static internal void LeaveClears(LeaveEvent ev)
+        static void LeaveClears(LeaveEvent ev)
         {
             if (Scp173.IgnoredPlayers.Contains(ev.Player))
                 Scp173.IgnoredPlayers.Remove(ev.Player);
         }
 
         [EventMethod(PlayerEvents.Spawn)]
-        static internal void BlockSpawnTeleport(SpawnEvent ev)
+        static void BlockSpawnTeleport(SpawnEvent ev)
         {
             if (!ev.Player.GamePlay.BlockSpawnTeleport)
                 return;
@@ -67,7 +67,7 @@ namespace Qurre.Internal.EventsCalled
         }
 
         [EventMethod(PlayerEvents.Spawn)]
-        static internal void SetMaxHp(SpawnEvent ev)
+        static void SetMaxHp(SpawnEvent ev)
         {
             if (ev.Player.ReferenceHub.roleManager.CurrentRole is IHealthbarRole healthbarRole)
                 ev.Player.HealthInfomation.MaxHp = healthbarRole.MaxHealth;
@@ -78,7 +78,7 @@ namespace Qurre.Internal.EventsCalled
         }
 
         [EventMethod(PlayerEvents.Spawn)]
-        static internal void UpdateRole(SpawnEvent ev)
+        static void UpdateRole(SpawnEvent ev)
         {
             if (ev.Role is not RoleTypeId.Spectator and not RoleTypeId.None and not RoleTypeId.Overwatch)
                 ev.Player.RoleInfomation.cachedRole = ev.Role;
@@ -104,3 +104,4 @@ namespace Qurre.Internal.EventsCalled
         }
     }
 }
+#pragma warning restore IDE0051

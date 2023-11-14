@@ -83,6 +83,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Addons\Audio\AudioPlayer.cs" />
+    <Compile Include="API\Addons\Audio\AudioTask.cs" />
+    <Compile Include="API\Addons\Audio\Objects\AccessConditions.cs" />
+    <Compile Include="API\Addons\Audio\Objects\AudioTaskBlacklist.cs" />
+    <Compile Include="API\Addons\Audio\Objects\AudioTaskWhitelist.cs" />
+    <Compile Include="API\Addons\Audio\Objects\IAudio.cs" />
+    <Compile Include="API\Addons\Audio\Objects\Mirror\ZeroConnectionToClient.cs" />
+    <Compile Include="API\Addons\Audio\Objects\PlaybackAudio.cs" />
+    <Compile Include="API\Addons\Audio\Objects\StreamAudio.cs" />
     <Compile Include="API\Addons\BetterHints\Manager.cs" />
     <Compile Include="API\Addons\BetterHints\ISender.cs" />
     <Compile Include="API\Addons\BetterHints\HintStruct.cs" />
@@ -121,6 +130,7 @@
     <Compile Include="API\Attributes\PluginInit.cs" />
     <Compile Include="API\Attributes\EventMethod.cs" />
     <Compile Include="API\Audio.cs" />
+    <Compile Include="API\AudioExtensions.cs" />
     <Compile Include="API\Classification\Player\Administrative.cs" />
     <Compile Include="API\Classification\Player\EffectsManager.cs" />
     <Compile Include="API\Classification\Roles\Scp106.cs" />
@@ -236,6 +246,9 @@
     <Compile Include="Internal\Patches\Map\Place\RagdollSpawn.cs" />
     <Compile Include="Internal\Patches\Misc\AddCredits.cs" />
     <Compile Include="Internal\Patches\Misc\Fixes\CassieController.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixBotHint.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixBotInRa.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixBotVerification.cs" />
     <Compile Include="Internal\Patches\Misc\Fixes\FixToysScale.cs" />
     <Compile Include="Internal\Patches\Misc\Fixes\FixNullFPMM.cs" />
     <Compile Include="Internal\Patches\Misc\Fixes\FixNullAudioFlood.cs" />
@@ -281,6 +294,7 @@
     <Compile Include="Internal\Patches\Player\Role\ChangeRole.cs" />
     <Compile Include="Internal\Patches\Player\Role\Escape.cs" />
     <Compile Include="Internal\Patches\Player\Role\Spawn.cs" />
+    <Compile Include="Internal\Patches\Player\Socialization\ChangeSpectate.cs" />
     <Compile Include="Internal\Patches\Player\Socialization\Cuff.cs" />
     <Compile Include="Internal\Patches\Round\Check.cs" />
     <Compile Include="Internal\Patches\Round\ForceStart.cs" />
@@ -302,8 +316,6 @@
     <Compile Include="Loader\EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="API\Addons\Audio\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

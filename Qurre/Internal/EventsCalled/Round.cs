@@ -2,19 +2,22 @@
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items.Firearms.Attachments;
 using MapGeneration;
+using MEC;
 using Qurre.API;
 using Qurre.API.Attributes;
 using Qurre.API.Controllers;
 using Qurre.Events;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+#pragma warning disable IDE0051
 namespace Qurre.Internal.EventsCalled
 {
     static class Round
     {
         [EventMethod(RoundEvents.Waiting)]
-        static internal void Waiting()
+        static void Waiting()
         {
             Server.host = null;
             Server.hinv = null;
@@ -59,16 +62,42 @@ namespace Qurre.Internal.EventsCalled
                 Map.WorkStations.Add(new(station));
 
 
-            foreach (var door in Map.Doors)
-            {
-                foreach (var room in door.Rooms)
-                {
-                    room.Doors.Add(door);
-                }
-            }
-
-
             API.Controllers.Scp914.Controller = Object.FindObjectOfType<Scp914.Scp914Controller>();
+
+
+            List<Door> updateDoors = new();
+            updateDoors.AddRange(Map.Doors);
+
+            UpdateDoors();
+
+            void UpdateDoors()
+            {
+                List<Door> updates = new();
+                updates.AddRange(updateDoors);
+
+                foreach (var door in updates)
+                {
+                    try
+                    {
+                        foreach (var room in door.Rooms)
+                        {
+                            room.Doors.Add(door);
+                        }
+                        updateDoors.Remove(door);
+                    }
+                    catch { }
+                }
+
+                updates.Clear();
+
+                if (updateDoors.Count == 0)
+                    return;
+
+                Timing.CallDelayed(0.5f, () =>
+                {
+                    UpdateDoors();
+                });
+            }
         }
 
         static void MapClearLists()
@@ -125,3 +154,4 @@ namespace Qurre.Internal.EventsCalled
         }
     }
 }
+#pragma warning restore IDE0051

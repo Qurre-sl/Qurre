@@ -1,5 +1,5 @@
-﻿using InventorySystem.Items.SwitchableLightSources;
-using InventorySystem.Items.SwitchableLightSources.Flashlight;
+﻿using InventorySystem.Items.ToggleableLights;
+using InventorySystem.Items.ToggleableLights.Flashlight;
 using Qurre.API.Controllers;
 using Utils.Networking;
 

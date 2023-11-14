@@ -1,6 +1,7 @@
 ﻿using HarmonyLib;
 using MapGeneration;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -17,8 +18,13 @@ namespace Qurre.Internal.Patches.Round
         {
             List<CodeInstruction> list = new(instructions);
 
-            int index = list.FindIndex(ins => ins.opcode == OpCodes.Stsfld && ins.operand is not null && ins.operand is FieldInfo methodBase &&
-                methodBase.Name == nameof(SeedSynchronizer.MapGenerated)) + 1;
+            int index = list.FindLastIndex(ins => ins.opcode == OpCodes.Callvirt && ins.operand is not null && ins.operand is MethodInfo methodBase &&
+                methodBase.Name == nameof(Stopwatch.Restart)) + 1;
+
+            if (0 >= index)
+            {
+                index = instructions.Count() - 1;
+            }
 
             list.InsertRange(index, new CodeInstruction[]
             {

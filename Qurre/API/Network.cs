@@ -2,6 +2,7 @@
 using Newtonsoft.Json.Linq;
 using System;
 using System.Reflection;
+using System.Security.Principal;
 
 namespace Qurre.API
 {
@@ -28,6 +29,18 @@ namespace Qurre.API
         }
 
 
+        static public void SendDataToClient<T>(this NetworkConnectionToClient connection, T message) where T : struct, NetworkMessage
+        {
+            if (!connection.isReady)
+                return;
+
+            using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
+            NetworkMessages.Pack(message, networkWriterPooled);
+            ArraySegment<byte> segment = networkWriterPooled.ToArraySegment();
+
+            connection.Send(segment);
+        }
+
         static public void UpdateDataForConnection(this NetworkIdentity identity, NetworkConnectionToClient connection)
         {
             if (!connection.isReady)
@@ -35,11 +48,7 @@ namespace Qurre.API
 
             var message = identity.SpawnMessage();
 
-            using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
-            NetworkMessages.Pack(message, networkWriterPooled);
-            ArraySegment<byte> segment = networkWriterPooled.ToArraySegment();
-
-            connection.Send(segment);
+            connection.SendDataToClient(message);
         }
 
         static public void UpdateData(this NetworkIdentity identity)

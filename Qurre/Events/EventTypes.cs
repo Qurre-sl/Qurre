@@ -66,6 +66,7 @@
         //1800+ <- Socialization
         public const uint Cuff = 1801;
         public const uint UnCuff = 1802;
+        public const uint ChangeSpectate = 1803;
 
         //1900+ <- Misc
         public const uint ChangeSpectator = 1901;

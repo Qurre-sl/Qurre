@@ -16,17 +16,17 @@ namespace Qurre.API.Classification.Player
         public PlayerStats PlayerStats => _player.ReferenceHub.playerStats;
 
         /* pls dont add items to the top of the list
-            typeof(MaxHealthStat), // 0
-            typeof(HealthStat), // 1
-            typeof(AhpStat), // 2
-            typeof(StaminaStat), // 3
-            typeof(AdminFlagsStat), // 4
-            typeof(HumeShieldStat), // 5
-            typeof(VigorStat) // 6
+            typeof(MaxHealthStat), // deleted
+            typeof(HealthStat), // 0
+            typeof(AhpStat), // 1
+            typeof(StaminaStat), // 2
+            typeof(AdminFlagsStat), // 3
+            typeof(HumeShieldStat), // 4
+            typeof(VigorStat) // 5
         */
-        public HealthStat HealthStat => (HealthStat)PlayerStats.StatModules[1];
-        public AhpStat AhpStat => (AhpStat)PlayerStats.StatModules[2];
-        public StaminaStat StaminaStat => (StaminaStat)PlayerStats.StatModules[3];
+        public HealthStat HealthStat => (HealthStat)PlayerStats.StatModules[0];
+        public AhpStat AhpStat => (AhpStat)PlayerStats.StatModules[1];
+        public StaminaStat StaminaStat => (StaminaStat)PlayerStats.StatModules[2];
 
         public float Hp
         {

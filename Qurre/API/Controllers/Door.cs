@@ -38,20 +38,7 @@ namespace Qurre.API.Controllers
 
                 if (DoorVariant.Rooms is null)
                 {
-                    List<RoomIdentifier> _list = new();
-                    Vector3 position = DoorVariant.transform.position;
-                    for (int i = 0; i < 4; i++)
-                    {
-                        Vector3Int key = RoomIdUtils.PositionToCoords(position + DoorVariant.WorldDirections[i]);
-                        if (RoomIdentifier.RoomsByCoordinates.TryGetValue(key, out var value) &&
-                            CollectionExtensions.GetOrAdd(DoorVariant.DoorsByRoom, value, () => new HashSet<DoorVariant>()).Add(DoorVariant))
-                        {
-                            _list.Add(value);
-                        }
-                    }
-
-                    _rooms = _list.Select(x => x.GetRoom()).ToList();
-                    return _rooms;
+                    throw new System.Exception("DoorVariant.Rooms is null");
                 }
 
                 _rooms = DoorVariant.Rooms.Select(x => x.GetRoom()).ToList();
