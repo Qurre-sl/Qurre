@@ -1,4 +1,5 @@
-﻿using HarmonyLib;
+﻿using CentralAuth;
+using HarmonyLib;
 using System;
 
 namespace Qurre.Internal.Patches.Player.Network
@@ -15,7 +16,7 @@ namespace Qurre.Internal.Patches.Player.Network
         {
             try
             {
-                bool allow = ReservedSlot.Users.Contains(userId.Trim()) || !CharacterClassManager.OnlineMode;
+                bool allow = ReservedSlot.Users.Contains(userId.Trim()) || !PlayerAuthenticationManager.OnlineMode;
 
                 CheckReserveSlotEvent ev = new(userId, allow);
                 ev.InvokeEvent();

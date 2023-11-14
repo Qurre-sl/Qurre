@@ -36,6 +36,7 @@
         Stained,
         Traumatized,
         Vitality,
+        PocketCorroding,
         None,
     }
 }

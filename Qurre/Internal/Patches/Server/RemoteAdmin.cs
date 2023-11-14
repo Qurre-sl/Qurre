@@ -20,9 +20,9 @@ namespace Qurre.Internal.Patches.Server
                 IdleMode.PreauthStopwatch.Restart();
                 IdleMode.SetIdleMode(false);
 
-                if (q == "$0 1")
+                if (q.StartsWith("$0 1"))
                 {
-                    RequestPlayerListCommandEvent req = new(sender, sender.GetPlayer());
+                    RequestPlayerListCommandEvent req = new(sender, sender.GetPlayer(), q);
                     req.InvokeEvent();
 
                     if (!string.IsNullOrEmpty(req.Reply))

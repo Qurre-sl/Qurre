@@ -11,7 +11,7 @@ namespace Qurre.Internal.Patches.Player.Pickups
     using Qurre.API.Controllers;
     using Qurre.Events.Structs;
 
-    [HarmonyPatch(typeof(Inventory), nameof(Inventory.UserCode_CmdDropItem))]
+    [HarmonyPatch(typeof(Inventory), nameof(Inventory.UserCode_CmdDropItem__UInt16__Boolean))]
     static class DropItem
     {
         [HarmonyTranspiler]

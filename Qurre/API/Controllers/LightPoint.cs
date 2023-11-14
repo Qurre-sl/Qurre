@@ -1,7 +1,7 @@
 ﻿using AdminToys;
-using UnityEngine;
 using Mirror;
 using System;
+using UnityEngine;
 
 namespace Qurre.API.Controllers
 {
@@ -67,7 +67,7 @@ namespace Qurre.API.Controllers
 
         public LightSourceToy Base { get; }
 
-        public LightPoint(Vector3 position, Color lightColor = default, float lightIntensivity = 1, float lightRange = 10, bool shadows = true)
+        public LightPoint(Vector3 position, Color lightColor = default, float lightIntensivity = 5, float lightRange = 10, bool shadows = true)
         {
             try
             {

@@ -1,12 +1,14 @@
-﻿using Qurre.API;
+﻿/*
+using Qurre.API;
 using Qurre.API.Attributes;
+using Qurre.API.Objects;
 using Qurre.Events;
 using Qurre.Events.Structs;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Qurre.Internal.EventsCalled
 {
-    /*
-    // delete later
     static class Testing
     {
         [EventMethod(PlayerEvents.PickupArmor)]
@@ -32,6 +34,48 @@ namespace Qurre.Internal.EventsCalled
             //ev.Role = PlayerRoles.RoleTypeId.Tutorial;
         }
 
+        [EventMethod(RoundEvents.Waiting)]
+        static internal void LogDoors()
+        {
+            MEC.Timing.CallDelayed(1f, () =>
+            {
+                Log.Info("----- Logging Doors -----");
+                List<string> names = new();
+                foreach (var door in Map.Doors)
+                {
+                    if (!names.Contains(door.Name))
+                    {
+                        names.Add(door.Name);
+                        string str = $"Door: '{door.Name}' > '{door.Type}'; Rooms: ";
+                        foreach (var room in door.Rooms)
+                            str += $"'{room.RoomName} ({room.Name})'; ";
+                        Log.Info(str);
+                    }
+                }
+                Log.Info("----- Unknown doors -----");
+                foreach (var door in Map.Doors)
+                {
+                    if (door.Type == DoorType.Unknown)
+                    {
+                        string str = $"Door: '{door.Name}' > '{door.Type}'; Rooms: ";
+                        foreach (var room in door.Rooms)
+                            str += $"'{room.RoomName} ({room.Name})'; ";
+                        Log.Info(str);
+                    }
+                }
+                Log.Info("----- End log -----");
+            });
+        }
+
+        [EventMethod(PlayerEvents.InteractDoor)]
+        static internal void Test(InteractDoorEvent ev)
+        {
+            string rms = string.Empty;
+            foreach (var room in ev.Door.Rooms)
+                rms += $"'{room.RoomName} ({room.Name})'; ";
+            Log.Info($"Pl: {ev.Player?.UserInfomation.Nickname}; Type: {ev.Door.Type}; Name: {ev.Door.Name}; Rooms: {rms}");
+        }
+
         [EventMethod(PlayerEvents.Spawn)]
         static internal void Test(SpawnEvent ev)
         {
@@ -43,6 +87,12 @@ namespace Qurre.Internal.EventsCalled
             Log.Info($"Pl: {ev.Player?.UserInfomation.Nickname}; Role: {ev.Role};");
             //ev.Role = PlayerRoles.RoleTypeId.Tutorial;
         }
+
+        [EventMethod(PlayerEvents.Join)]
+        static void TestCmdSync(JoinEvent ev)
+        {
+            ev.Player.ClassManager.TargetChangeCmdBinding(KeyCode.LeftAlt, ".test");
+        }
     }
-    */
 }
+*/

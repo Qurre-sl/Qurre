@@ -12,7 +12,7 @@ namespace Qurre.API.Addons.Models
         public GameObject GameObject => gameObject;
         public LightPoint Light => light;
 
-        public ModelLight(Model model, Color color, Vector3 position, float lightIntensivity = 1, float lightRange = 10, bool shadows = true)
+        public ModelLight(Model model, Color color, Vector3 position, float lightIntensivity = 5, float lightRange = 10, bool shadows = true)
         {
             try
             {

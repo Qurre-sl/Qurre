@@ -5,6 +5,7 @@ using UnityEngine;
 using Mirror;
 using Qurre.API.Controllers.Structs;
 using System.Linq;
+using Qurre.Internal.Misc;
 
 namespace Qurre.API.Controllers
 {
@@ -20,6 +21,8 @@ namespace Qurre.API.Controllers
         public AudioClip GrantedBeep => _locker._grantedBeep;
         public AudioClip DeniedBeep => _locker._deniedBeep;
         public Chamber[] Chambers { get; private set; }
+
+        public bool Custom { get; private set; }
 
         public string Name => _locker.name;
 
@@ -75,11 +78,13 @@ namespace Qurre.API.Controllers
 
         internal Locker(BaseLocker locker)
         {
+            Custom = false;
             _locker = locker;
             Chambers = _locker.Chambers.Select(x => new Chamber(x, this)).ToArray();
         }
         public Locker(Vector3 position, LockerPrefabs type, Quaternion? rotation = null)
         {
+            Custom = true;
             _locker = Object.Instantiate(type.GetPrefab());
 
             _locker.transform.position = position;
@@ -89,6 +94,8 @@ namespace Qurre.API.Controllers
 
             NetworkServer.Spawn(_locker.gameObject);
             _locker.netIdentity.UpdateData();
+            var comp = GameObject.AddComponent<LockersUpdater>();
+            if (comp) comp.Locker = _locker;
 
             Map.Lockers.Add(this);
         }

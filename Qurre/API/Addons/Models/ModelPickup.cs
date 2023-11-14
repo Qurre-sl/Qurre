@@ -19,17 +19,21 @@ namespace Qurre.API.Addons.Models
         {
             try
             {
-                var item = Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), false);
+                var item = Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), true);
                 ushort ser = ItemSerialGenerator.GenerateNext();
 
-                item.PickupDropModel.Info.Serial = ser;
-                item.PickupDropModel.Info.ItemId = type;
-                item.PickupDropModel.Info._serverPosition = model.GameObject.transform.position + position;
-                item.PickupDropModel.Info.Weight = item.Weight;
-                item.PickupDropModel.Info._serverRotation = Quaternion.Euler(model.GameObject.transform.rotation.eulerAngles + rotation);
-                item.PickupDropModel.NetworkInfo = item.PickupDropModel.Info;
+                Vector3 pos = model.GameObject.transform.position + position;
+                Quaternion rot = Quaternion.Euler(model.GameObject.transform.rotation.eulerAngles + rotation);
 
-                ItemPickupBase ipb = Object.Instantiate(item.PickupDropModel);
+                ItemPickupBase ipb = Object.Instantiate(item.PickupDropModel, pos, rot);
+
+                ipb.Info.Serial = ser;
+                ipb.Info.ItemId = type;
+                ipb.Info.WeightKg = item.Weight;
+                ipb.NetworkInfo = ipb.Info;
+
+                ipb.Position = pos;
+                ipb.Rotation = rot;
 
                 gameObject = ipb.gameObject;
                 GameObject.GetComponent<Rigidbody>().isKinematic = kinematic;
@@ -37,9 +41,9 @@ namespace Qurre.API.Addons.Models
                 GameObject.transform.localPosition = position;
                 GameObject.transform.localRotation = Quaternion.Euler(rotation);
                 GameObject.transform.localScale = size;
+
                 NetworkServer.Spawn(GameObject);
 
-                ipb.InfoReceived(default, item.PickupDropModel.NetworkInfo);
                 pickup = ipb;
             }
             catch (Exception ex)

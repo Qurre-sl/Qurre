@@ -1,8 +1,10 @@
 ﻿using HarmonyLib;
 using Qurre.API;
+using Qurre.API.Addons;
 using Qurre.API.Attributes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -62,10 +64,25 @@ namespace Qurre.Loader
         {
             try
             {
+                bool _errored = false;
                 _harmony = new Harmony("qurre.patches");
-                _harmony.PatchAll();
 
-                Log.Info("Harmony successfully Patched");
+                Assembly assembly = new StackTrace().GetFrame(1).GetMethod().ReflectedType.Assembly;
+                AccessTools.GetTypesFromAssembly(assembly).Do(delegate (Type type)
+                {
+                    try
+                    {
+                        _harmony.CreateClassProcessor(type).Patch();
+                    }
+                    catch (Exception e)
+                    {
+                        Log.Error($"Excepted error in type: {BetterColors.Yellow(type)}\n{BetterColors.Grey(e)}");
+                        _errored = true;
+                    }
+                });
+
+                if (!_errored)
+                    Log.Info("Harmony successfully Patched");
             }
             catch (Exception ex)
             {

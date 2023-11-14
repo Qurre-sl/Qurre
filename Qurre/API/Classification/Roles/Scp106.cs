@@ -1,7 +1,8 @@
-﻿namespace Qurre.API.Classification.Roles
+﻿using PlayerRoles.PlayableScps.Scp106;
+using PlayerRoles.Subroutines;
+
+namespace Qurre.API.Classification.Roles
 {
-    using PlayerRoles.PlayableScps.Scp106;
-    using PlayerRoles.PlayableScps.Subroutines;
     using Qurre.API;
 
     public sealed class Scp106

@@ -1,6 +1,8 @@
 ﻿using Mirror;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Reflection;
+using System.Security.Principal;
 
 namespace Qurre.API
 {
@@ -27,11 +29,35 @@ namespace Qurre.API
         }
 
 
-        static public void UpdateData(this NetworkIdentity identity) => NetworkServer.SendToAll(identity.SpawnMessage());
+        static public void SendDataToClient<T>(this NetworkConnectionToClient connection, T message) where T : struct, NetworkMessage
+        {
+            if (!connection.isReady)
+                return;
+
+            using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
+            NetworkMessages.Pack(message, networkWriterPooled);
+            ArraySegment<byte> segment = networkWriterPooled.ToArraySegment();
+
+            connection.Send(segment);
+        }
+
+        static public void UpdateDataForConnection(this NetworkIdentity identity, NetworkConnectionToClient connection)
+        {
+            if (!connection.isReady)
+                return;
+
+            var message = identity.SpawnMessage();
+
+            connection.SendDataToClient(message);
+        }
+
+        static public void UpdateData(this NetworkIdentity identity)
+            => NetworkServer.SendToAll(identity.SpawnMessage());
+
         static public SpawnMessage SpawnMessage(this NetworkIdentity identity)
         {
-            var writer = NetworkWriterPool.GetWriter();
-            var writer2 = NetworkWriterPool.GetWriter();
+            var writer = NetworkWriterPool.Get();
+            var writer2 = NetworkWriterPool.Get();
             var payload = NetworkServer.CreateSpawnMessagePayload(false, identity, writer, writer2);
 
             return new SpawnMessage

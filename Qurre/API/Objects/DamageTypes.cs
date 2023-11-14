@@ -5,21 +5,33 @@
 		Unknow,
 
 		Com15,
-		E11SR,
-		CrossVec,
-		FSP9,
-		Logicer,
 		Com18,
-		Revolver,
-		AK,
-		Shotgun,
 		Com45,
+		Revolver,
+
+		FSP9,
+		CrossVec,
+
+		E11SR,
+		FRMG0,
+
+		AK,
+		Logicer,
+		Shotgun,
+		A7,
 
 		Custom,
 		Disruptor,
+		Explosion,
+		Jailbird,
+		MicroHid,
+
 		Recontainment,
-		Warhead,
+		Scp018,
 		Scp049,
+		Scp096,
+		Warhead,
+
 		Asphyxiation,
 		Bleeding,
 		Falldown,
@@ -28,11 +40,7 @@
 		Poison,
 		Scp207,
 		SeveredHands,
-		MicroHid,
 		Tesla,
-		Explosion,
-		Scp018,
-		Scp096,
 		Scp173,
 		Scp939,
 		Scp939Lunge,
@@ -40,6 +48,6 @@
 		Crushed,
 		FriendlyFireDetector,
 		Hypothermia,
-		CardiacArrest
+		CardiacArrest,
 	}
 }

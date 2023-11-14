@@ -93,12 +93,14 @@ namespace Qurre.API.Addons.Models
             parts.Add(part.GameObject, ModelEnums.WorkStation);
         }
 
-        public Model(string id, Vector3 position, Vector3 rotation = default, Model root = null)
+        public Model(string id, Vector3 position, Vector3 rotation = default, Model root = null) : this(id, position, rotation, Vector3.one, root) { }
+        public Model(string id, Vector3 position, Vector3 rotation, Vector3 scale, Model root = null)
         {
             gameObject = new GameObject(id);
             GameObject.transform.parent = root?.GameObject?.transform;
             GameObject.transform.localPosition = position;
             GameObject.transform.localRotation = Quaternion.Euler(rotation);
+            GameObject.transform.localScale = scale == default ? Vector3.one : scale;
 
             NetworkServer.Spawn(GameObject);
 

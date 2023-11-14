@@ -9,15 +9,20 @@ namespace Qurre.API.Classification.Player
 
     public sealed class RoleInfomation
     {
-        private readonly Player _player;
-        internal RoleInfomation(Player pl) => _player = pl;
+        readonly Player _player;
+        internal RoleTypeId cachedRole;
+        internal RoleInfomation(Player pl)
+        {
+            _player = pl;
+            cachedRole = RoleTypeId.None;
+        }
 
         public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
         public QueryProcessor QueryProcessor => _player.ReferenceHub.queryProcessor;
 
-        public bool IsAlive => _player.ReferenceHub.IsAlive();
-        public bool IsScp => _player.ReferenceHub.IsSCP();
-        public bool IsHuman => _player.ReferenceHub.IsHuman();
+        public bool IsAlive => Team != Team.Dead;
+        public bool IsScp => Team == Team.SCPs;
+        public bool IsHuman => IsAlive && !IsScp;
         public bool IsDirty => _player.ReferenceHub.IsDirty();
 
         public Scp079 Scp079 { get; internal set; }
@@ -26,16 +31,31 @@ namespace Qurre.API.Classification.Player
 
         public RoleTypeId Role
         {
-            get => _player.ReferenceHub.GetRoleId();
+            get
+            {
+                if (_player.Disconnected)
+                    return cachedRole;
+                return _player.ReferenceHub.GetRoleId();
+            }
             set => _player.ReferenceHub.roleManager.ServerSetRole(value, RoleChangeReason.RemoteAdmin);
         }
         public Team Team
         {
-            get => _player.ReferenceHub.GetTeam();
+            get
+            {
+                if (_player.Disconnected)
+                    return cachedRole.GetTeam();
+                return _player.ReferenceHub.GetTeam();
+            }
         }
         public Faction Faction
         {
-            get => _player.ReferenceHub.GetFaction();
+            get
+            {
+                if (_player.Disconnected)
+                    return cachedRole.GetFaction();
+                return _player.ReferenceHub.GetFaction();
+            }
         }
         public float TimeForNextSequence
         {

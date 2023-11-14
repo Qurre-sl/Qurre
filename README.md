@@ -16,7 +16,7 @@
    </a>
 </p>
 <a href="https://discord.gg/zGUqfJQebn" alt="Discord">
-<img src="https://cdn.scpsl.store/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
+<img src="https://cdn.fydne.dev/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
 </a>
 
 # Qurre
@@ -37,7 +37,7 @@ Simple, convenient and functional plugin loader for SCP: Secret Laboratory
 3. Move `Assembly-CSharp.dll` into game folder: `SCPSL_Data/Managed` (with file replacement)
 4. That's all, you have successfully installed **Qurre**
 ### Automatic installation
-You can find the auto-installer on [the discord server](https://discord.gg/qXBZUCaDBR), or you can download the archive from [here](https://cdn.scpsl.store/qurre/modules/Qurre-Installer.zip)
+You can find the auto-installer on [the discord server](https://discord.gg/qXBZUCaDBR), or you can download the archive from [here](https://cdn.fydne.dev/qurre/modules/Qurre-Installer.zip)
 
 # Documentation
 > Coming soon

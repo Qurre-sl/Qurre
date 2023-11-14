@@ -9,13 +9,15 @@ namespace Qurre.Events.Structs
 
         public CommandSender Sender { get; }
         public Player Player { get; }
+        public string Command { get; }
         public string Reply { get; set; }
         public bool Allowed { get; set; }
 
-        internal RequestPlayerListCommandEvent(CommandSender sender, Player player)
+        internal RequestPlayerListCommandEvent(CommandSender sender, Player player, string command)
         {
             Sender = sender;
             Player = player ?? Server.Host;
+            Command = command;
             Reply = string.Empty;
             Allowed = true;
         }

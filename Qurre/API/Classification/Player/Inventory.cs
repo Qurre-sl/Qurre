@@ -60,6 +60,15 @@ namespace Qurre.API.Classification.Player
                 AddItem(item);
             }
         }
+        public void Reset(IEnumerable<ItemType> newItems)
+        {
+            Clear();
+
+            foreach (ItemType type in newItems)
+            {
+                AddItem(type);
+            }
+        }
 
         public void Clear()
         {

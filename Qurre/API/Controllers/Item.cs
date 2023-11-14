@@ -1,20 +1,19 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using InventorySystem.Items;
+﻿using InventorySystem.Items;
+using InventorySystem.Items.Armor;
+using InventorySystem.Items.Firearms;
+using InventorySystem.Items.Firearms.Ammo;
+using InventorySystem.Items.Keycards;
+using InventorySystem.Items.MicroHID;
 using InventorySystem.Items.Pickups;
+using InventorySystem.Items.Radio;
+using InventorySystem.Items.ThrowableProjectiles;
+using InventorySystem.Items.ToggleableLights.Flashlight;
+using InventorySystem.Items.Usables;
 using Mirror;
 using Qurre.API.Addons.Items;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
-using InventorySystem.Items.Firearms;
-using InventorySystem.Items.Keycards;
-using InventorySystem.Items.Usables;
-using InventorySystem.Items.Radio;
-using InventorySystem.Items.MicroHID;
-using InventorySystem.Items.Armor;
-using InventorySystem.Items.Firearms.Ammo;
-using InventorySystem.Items.Flashlight;
-using InventorySystem.Items.ThrowableProjectiles;
-using InventorySystem.Items.Usables.Scp330;
 
 namespace Qurre.API.Controllers
 {
@@ -98,7 +97,7 @@ namespace Qurre.API.Controllers
         }
 
         public Item(ItemType type)
-            : this(Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), false)) { }
+            : this(Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), true)) { }
 
         static internal Item SafeGet(ItemBase itemBase)
         {
@@ -164,14 +163,15 @@ namespace Qurre.API.Controllers
 
         public virtual Pickup Spawn(Vector3 position, Quaternion rotation = default, Vector3 scale = default)
         {
-            PickupSyncInfo syncInfo = Base.PickupDropModel.Info;
-            syncInfo.ItemId = Type;
-            syncInfo.Weight = Weight;
-            syncInfo._serverPosition = position;
-            syncInfo._serverRotation = rotation;
-            Base.PickupDropModel.NetworkInfo = syncInfo;
-
             ItemPickupBase ipb = Object.Instantiate(Base.PickupDropModel, position, rotation);
+
+            ipb.Info.ItemId = Type;
+            ipb.Info.WeightKg = Weight;
+            ipb.NetworkInfo = ipb.Info;
+
+            ipb.Position = position;
+            ipb.Rotation = rotation;
+
             if (ipb is FirearmPickup firearmPickup)
             {
                 if (this is Gun firearm)
@@ -194,7 +194,7 @@ namespace Qurre.API.Controllers
             }
 
             NetworkServer.Spawn(ipb.gameObject);
-            ipb.InfoReceived(default, Base.PickupDropModel.NetworkInfo);
+
             Pickup pickup = Pickup.Get(ipb);
             pickup.Scale = scale == default ? Vector3.one : scale;
             return pickup;

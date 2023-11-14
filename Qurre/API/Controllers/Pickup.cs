@@ -66,12 +66,11 @@ namespace Qurre.API.Controllers
 
         public float Weight
         {
-            get => Base.NetworkInfo.Weight;
+            get => Base.NetworkInfo.WeightKg;
             set
             {
                 PickupSyncInfo syncInfo = Base.Info;
-
-                syncInfo.Weight = value;
+                syncInfo.WeightKg = value;
                 Base.NetworkInfo = syncInfo;
             }
         }
@@ -102,28 +101,14 @@ namespace Qurre.API.Controllers
 
         public Vector3 Position
         {
-            get => Base.NetworkInfo._serverPosition;
-            set
-            {
-                Base.Rb.position = value;
-                Base.transform.position = value;
-
-                GameObject.NetworkRespawn();
-                Base.RefreshPositionAndRotation();
-            }
+            get => Base.Position;
+            set => Base.Position = value;
         }
 
         public Quaternion Rotation
         {
-            get => Base.NetworkInfo._serverRotation;
-            set
-            {
-                Base.Rb.rotation = value;
-                Base.transform.rotation = value;
-
-                GameObject.NetworkRespawn();
-                Base.RefreshPositionAndRotation();
-            }
+            get => Base.Rotation;
+            set => Base.Rotation = value;
         }
 
         public Vector3 Scale

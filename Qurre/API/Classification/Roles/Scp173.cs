@@ -1,9 +1,10 @@
-﻿namespace Qurre.API.Classification.Roles
+﻿using PlayerRoles.PlayableScps.Scp173;
+using PlayerRoles.Subroutines;
+using System.Collections.Generic;
+
+namespace Qurre.API.Classification.Roles
 {
-    using PlayerRoles.PlayableScps.Scp173;
-    using PlayerRoles.PlayableScps.Subroutines;
     using Qurre.API;
-    using System.Collections.Generic;
 
     public sealed class Scp173
     {

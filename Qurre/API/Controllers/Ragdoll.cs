@@ -1,5 +1,6 @@
 ﻿using Mirror;
 using PlayerRoles;
+using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
 using UnityEngine;
 
@@ -77,7 +78,7 @@ namespace Qurre.API.Controllers
             _pl = owner;
         }
         public Ragdoll(RoleTypeId type, Vector3 position, Quaternion rotation, DamageHandlerBase handler, Player owner)
-            : this(owner.RoleInfomation.Role, position, rotation, handler, owner.UserInfomation.Nickname) => _pl = Server.Host;
+            : this(type, position, rotation, handler, owner.UserInfomation.Nickname) => _pl = Server.Host;
         public Ragdoll(Vector3 position, Quaternion rotation, DamageHandlerBase handler, Player owner)
             : this(owner.RoleInfomation.Role, position, rotation, handler, owner) { }
         public Ragdoll(RoleTypeId type, Vector3 position, Quaternion rotation, DamageHandlerBase handler, string nickname)
@@ -90,7 +91,8 @@ namespace Qurre.API.Controllers
 
             GameObject gameObject = Object.Instantiate(irag.Ragdoll.gameObject);
 
-            if (!gameObject.TryGetComponent(out BasicRagdoll component)) return;
+            if (!gameObject.TryGetComponent(out BasicRagdoll component))
+                return;
 
             ragdoll = component;
             _pl = Server.Host;

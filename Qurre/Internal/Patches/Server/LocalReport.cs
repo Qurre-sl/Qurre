@@ -9,7 +9,7 @@ namespace Qurre.Internal.Patches.Server
     using Qurre.API;
     using Qurre.Events.Structs;
 
-    [HarmonyPatch(typeof(global::CheaterReport), nameof(global::CheaterReport.UserCode_CmdReport))]
+    [HarmonyPatch(typeof(global::CheaterReport), "UserCode_CmdReport__UInt32__String__Byte[]__Boolean")]
     static class LocalReport
     {
         [HarmonyTranspiler]

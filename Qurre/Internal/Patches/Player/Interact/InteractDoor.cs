@@ -23,13 +23,13 @@ namespace Qurre.Internal.Patches.Player.Interact
 
             int index = list.FindIndex(ins => ins.opcode == OpCodes.Stloc_0) + 1;
 
-            if (index < 0)
+            if (index < 1)
             {
-                Log.Error($"Creating Patch error: <Player> {{Interact}} [Door]: Index - {index} < 0");
+                Log.Error($"Creating Patch error: <Player> {{Interact}} [Door]: Index - {index} < 1");
                 return list.AsEnumerable();
             }
 
-            int delIndex = list.FindIndex(ins => ins.opcode == OpCodes.Call && ins.operand is not null && ins.operand is MethodBase methodBase &&
+            int delIndex = list.FindLastIndex(ins => ins.opcode == OpCodes.Call && ins.operand is not null && ins.operand is MethodBase methodBase &&
                 methodBase.Name.Contains("ExecuteEvent")) + 3;
 
             if (delIndex < 3)

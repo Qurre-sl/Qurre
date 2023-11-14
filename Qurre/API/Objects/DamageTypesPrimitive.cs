@@ -2,6 +2,7 @@
 {
     public enum LiteDamageTypes : byte
     {
+        Unknow,
         Custom,
         Disruptor,
         Explosion,
@@ -14,6 +15,6 @@
         ScpDamage,
         Universal,
         Warhead,
-        Unknow
+        Jailbird,
     }
 }

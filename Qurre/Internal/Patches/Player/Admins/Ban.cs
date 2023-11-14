@@ -13,7 +13,7 @@ namespace Qurre.Internal.Patches.Player.Admins
     using Qurre.Events.Structs;
     using Qurre.Internal.EventsManager;
 
-    [HarmonyPatch(typeof(BanPlayer), nameof(BanPlayer.BanUser), new[] { typeof(ReferenceHub), typeof(ICommandSender), typeof(string), typeof(long) })]
+    [HarmonyPatch(typeof(BanPlayer), nameof(BanPlayer.BanUser), new[] { typeof(Footprinting.Footprint), typeof(ICommandSender), typeof(string), typeof(long) })]
     static class Ban
     {
         [HarmonyTranspiler]
@@ -50,11 +50,14 @@ namespace Qurre.Internal.Patches.Player.Admins
             return list.AsEnumerable();
         }
 
-        static internal bool CallEvent(ReferenceHub target, ICommandSender issuer, ref string reason, ref long duration)
+        static internal bool CallEvent(Footprinting.Footprint footprint, ICommandSender issuer, ref string reason, ref long duration)
         {
             try
             {
-                if (target is null) return false;
+                ReferenceHub target = footprint.Hub;
+
+                if (target is null)
+                    return false;
 
                 Player issue = null;
                 if (issuer is PlayerCommandSender plsender)

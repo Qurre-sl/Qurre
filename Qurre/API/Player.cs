@@ -1,4 +1,5 @@
-﻿using Mirror;
+﻿using CentralAuth;
+using Mirror;
 using Qurre.API.Controllers.Structs;
 using RemoteAdmin;
 using System.Collections.Generic;
@@ -18,6 +19,8 @@ namespace Qurre.API
         {
             rh = _rh;
             go = _rh.gameObject;
+
+            Disconnected = false;
 
             Broadcasts = new();
 
@@ -52,8 +55,10 @@ namespace Qurre.API
             }
         }
         public ReferenceHub ReferenceHub => rh;
+        public PlayerAuthenticationManager AuthManager => rh.authManager;
         public CharacterClassManager ClassManager => rh.characterClassManager;
         public QueryProcessor QueryProcessor => rh.queryProcessor;
+        public NetworkConnectionToClient ConnectionToClient => rh.networkIdentity.connectionToClient;
         public NetworkConnection Connection => IsHost ? rh.networkIdentity.connectionToServer : rh.networkIdentity.connectionToClient;
         public Transform Transform => rh.transform;
 
@@ -68,6 +73,7 @@ namespace Qurre.API
 
         public int Ping => Mirror.LiteNetLib4Mirror.LiteNetLib4MirrorServer.Peers[Connection.connectionId].Ping;
         public bool IsHost => rh.isLocalPlayer;
+        public bool Disconnected { get; internal set; }
         public bool FriendlyFire { get; set; }
         public string Tag
         {

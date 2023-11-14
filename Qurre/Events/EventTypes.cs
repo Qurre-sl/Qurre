@@ -51,6 +51,12 @@
         public const uint InteractShootingTarget = 1506;
 
         //1600+ <- Gun
+        public const uint UnloadGun = 1601;
+        public const uint AimGun = 1602;
+        public const uint ReloadGun = 1603;
+        public const uint ShotGun = 1604;
+        public const uint DryfireGun = 1605;
+        public const uint GunToggleFlashlight = 1606;
 
         //1700+ <- Player Role Events
         public const uint Spawn = 1701;
@@ -60,20 +66,44 @@
         //1800+ <- Socialization
         public const uint Cuff = 1801;
         public const uint UnCuff = 1802;
+        public const uint ChangeSpectate = 1803;
 
         //1900+ <- Misc
+        public const uint ChangeSpectator = 1901;
+        public const uint MakeNoise = 1902;
+        public const uint ReceiveEffect = 1903;
+        public const uint UseHotkey = 1904;
+
+        public const uint DamageWindow = 1951;
+        public const uint DamageShootingTarget = 1952;
     }
 
     static public class MapEvents //2xxx
     {
         //2000+ <- Main Map Events
+        public const uint MapGenerated = 2001;
+        public const uint LczDecontamination = 2002;
+        public const uint LczAnnounce = 2003;
 
         //2100+ <- Place/Spawn
+        public const uint PlaceBlood = 2101;
+        public const uint PlaceBulletHole = 2102;
+        public const uint CreatePickup = 2103;
         public const uint RagdollSpawn = 2104;
+        public const uint RagdollSpawned = 2105;
+        public const uint GrenadeExploded = 2106;
 
         //2200+ <- Team Respawn
+        public const uint TeamRespawnSelect = 2201;
+        public const uint TeamRespawn = 2202;
 
         //2300+ <- Objects
+        public const uint TriggerTesla = 2301;
+
+        //2400+ <- Doors
+        public const uint DamageDoor = 2501;
+        public const uint LockDoor = 2502;
+        public const uint OpenDoor = 2503;
     }
 
     static public class ServerEvents //3xxx
@@ -98,6 +128,7 @@
         public const uint Restart = 4003;
         public const uint End = 4004;
         public const uint Check = 4005;
+        public const uint ForceStart = 4006;
     }
 
     static public class AlphaEvents //5xxx
@@ -111,17 +142,24 @@
     static public class EffectEvents //6xxx
     {
         //6000+ <- Main
+        public const uint Enabled = 6001;
+        public const uint Disabled = 6002;
 
         //6100+ <- Player
+        public const uint Flashed = 6101;
     }
 
     static public class ScpEvents //7xxx
     {
         //7000+ <- Main
+        public const uint Attack = 7001;
 
         //7100+ <- Scp049
 
         //7200+ <- Scp079
+        public const uint ActivateGenerator = 7201;
+        public const uint Scp079GetExp = 7202;
+        public const uint Scp079NewLvl = 7203;
 
         //7300+ <- Scp096
 

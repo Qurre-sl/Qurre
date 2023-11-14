@@ -107,7 +107,7 @@ namespace Qurre.Events.Structs
 
         internal UsingRadioEvent(Player player, RadioItem radio, float num)
         {
-            Player = player;
+            Player = player ?? Server.Host;
             Radio = Item.SafeGet(radio) as Radio;
             Battery = radio._battery * 100;
             Consumption = UnityEngine.Time.deltaTime * (num / 60 / 100) * 100;

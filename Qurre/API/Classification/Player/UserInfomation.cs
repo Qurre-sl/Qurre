@@ -9,7 +9,7 @@
         internal UserInfomation(Player pl)
         {
             _player = pl;
-            _ui = pl.ClassManager.UserId;
+            _ui = pl.AuthManager.UserId;
             try { _nick = pl.ReferenceHub.nicknameSync.Network_myNickSync; } catch { }
         }
 
@@ -28,7 +28,7 @@
 
                 try
                 {
-                    string _ = _player.ClassManager.UserId;
+                    string _ = _player.AuthManager.UserId;
                     if (_.Contains("@"))
                     {
                         _ui = _;
@@ -38,7 +38,7 @@
                 }
                 catch { return _ui; }
             }
-            set => _player.ClassManager.UserId = value;
+            set => _player.AuthManager.UserId = value;
         }
         public string Nickname
         {
@@ -47,7 +47,19 @@
                 try { return NicknameSync.Network_myNickSync; }
                 catch { return _nick; }
             }
-            set => NicknameSync.Network_myNickSync = value;
+            set
+            {
+                NicknameSync.Network_myNickSync = value;
+
+                foreach (Player item in Player.List)
+                {
+                    Network.SendSpawnMessage?.Invoke(null, new object[2]
+                    {
+                            _player.ClassManager.netIdentity,
+                            item.Connection
+                    });
+                }
+            }
         }
         public string DisplayName
         {
@@ -65,6 +77,6 @@
             set => NicknameSync.Network_playerInfoToShow = value;
         }
 
-        public bool DoNotTrack => _player.ReferenceHub.serverRoles.DoNotTrack;
+        public bool DoNotTrack => _player.AuthManager.DoNotTrack;
     }
 }

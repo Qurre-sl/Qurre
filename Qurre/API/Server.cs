@@ -1,8 +1,10 @@
 ﻿using CustomPlayerEffects;
 using InventorySystem;
 using RoundRestarting;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace Qurre.API
 {
@@ -13,6 +15,8 @@ namespace Qurre.API
 
         static public ushort Port => ServerStatic.ServerPort;
         static public string Ip => ServerConsole.Ip;
+
+        static public double TPS => Math.Round(1f / Time.smoothDeltaTime);
 
         static public Player Host
         {

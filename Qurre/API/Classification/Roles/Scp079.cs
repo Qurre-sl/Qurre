@@ -1,11 +1,11 @@
-using PlayerRoles.PlayableScps.Scp079;
+﻿using PlayerRoles.PlayableScps.Scp079;
+using PlayerRoles.Subroutines;
+using System.Linq;
 
 namespace Qurre.API.Classification.Roles
 {
-    using PlayerRoles.PlayableScps.Subroutines;
     using Qurre.API;
     using Qurre.API.Controllers;
-    using System.Linq;
 
     public sealed class Scp079
     {
@@ -55,8 +55,8 @@ namespace Qurre.API.Classification.Roles
         }
         public float MaxEnergy
         {
-            get => AuxManager._maxPerTier[Lvl];
-            set => AuxManager._maxPerTier[Lvl] = value;
+            get => AuxManager._maxPerTier[TierManager.AccessTierIndex];
+            set => AuxManager._maxPerTier[TierManager.AccessTierIndex] = value;
         }
 
 

@@ -16,12 +16,12 @@
    </a>
 </p>
 <a href="https://discord.gg/zGUqfJQebn" alt="Discord">
-<img src="https://cdn.scpsl.store/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
+<img src="https://cdn.fydne.dev/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
 </a>
 
 # Qurre
 <p align="center">
-<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=3FF781&center=true&vCenter=true&width=435&lines=Простота.;Удобство.;Функциональность.">
+<img src="https://readme-typing-svg.herokuapp.com?font=Fira+Code&pause=1000&color=3FF781&center=true&vCenter=true&width=435&lines=Простой.;Удобный.;Функциональный.">
 </p>
 <p align="center">
 Простой, удобный и функциональный загрузчик плагинов для SCP: Secret Laboratory
@@ -37,7 +37,7 @@
 3. Поместите `Assembly-CSharp.dll` в папку с игрой: `SCPSL_Data/Managed` (с заменой файлов)
 4. На этом все, вы успешно установили **Qurre**
 ### Автоматическая установка
-Авто-установщик вы можете найти на [дискорд сервере](https://discord.gg/qXBZUCaDBR), либо вы можете скачать архив [отсюда](https://cdn.scpsl.store/qurre/modules/Qurre-Installer.zip)
+Авто-установщик вы можете найти на [дискорд сервере](https://discord.gg/qXBZUCaDBR), либо вы можете скачать архив [отсюда](https://cdn.fydne.dev/qurre/modules/Qurre-Installer.zip)
 
 # Документация
 > Появится в скором времени

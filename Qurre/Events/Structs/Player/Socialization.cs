@@ -33,4 +33,20 @@ namespace Qurre.Events.Structs
             Allowed = true;
         }
     }
+
+    public class ChangeSpectateEvent : IBaseEvent
+    {
+        public uint EventId { get; } = PlayerEvents.ChangeSpectate;
+
+        public Player Player { get; }
+        public Player Old { get; }
+        public Player New { get; }
+
+        internal ChangeSpectateEvent(Player player, Player old, Player @new)
+        {
+            Player = player;
+            Old = old;
+            New = @new;
+        }
+    }
 }

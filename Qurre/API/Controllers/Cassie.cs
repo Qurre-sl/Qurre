@@ -31,6 +31,7 @@ namespace Qurre.API.Controllers
             Message = message;
             Hold = makeHold;
             Noise = makeNoise;
+            Active = false;
         }
     }
 }

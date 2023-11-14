@@ -15,7 +15,9 @@ namespace Qurre.API.Addons.Models
         internal Dictionary<ModelLight, Color> _colors = new();
 
         public Lights LightsController { get; private set; }
-        public CustomRoom(string id, Vector3 position, Vector3 rotation = default, Model root = null) : base(id, position, rotation, root)
+        public CustomRoom(string id, Vector3 position, Vector3 rotation = default, Model root = null) : this(id, position, rotation, Vector3.one, root) { }
+        public CustomRoom(string id, Vector3 position, Vector3 rotation, Vector3 scale, Model root = null)
+            : base(id, position, rotation, scale, root)
         {
             LightsController = new(this);
             _list.Add(this);

@@ -24,43 +24,56 @@ namespace Qurre.API.Classification.Player
         }
 
         public void SendConsole(string message, string color)
-        {
-            try { _player.ClassManager.ConsolePrint(message, color); }
-            catch { _player.ReferenceHub.GetComponent<GameConsoleTransmission>().SendToClient(_player.Connection, message, color); }
-        }
+            => _player.ReferenceHub.gameConsoleTransmission.SendToClient(message, color);
 
         public void Disconnect(string reason = null)
             => ServerConsole.Disconnect(_player.GameObject, string.IsNullOrEmpty(reason) ? "" : reason);
 
         public void DimScreen()
         {
+            //RoundSummary.singleton.RpcDimScreen();
+
+            int functionHashCode = -1745793588;
             var component = RoundSummary.singleton;
-            var writer = NetworkWriterPool.GetWriter();
-            var msg = new RpcMessage
+            var writer = NetworkWriterPool.Get();
+
+            RpcMessage rpcMessage = new()
             {
                 netId = component.netId,
                 componentIndex = component.ComponentIndex,
-                functionHash = typeof(RoundSummary).FullName.GetStableHashCode() * 503 + "RpcDimScreen".GetStableHashCode(),
+                functionHash = (ushort)functionHashCode,
                 payload = writer.ToArraySegment()
             };
-            _player.Connection.Send(msg);
-            NetworkWriterPool.Recycle(writer);
+
+            using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
+            networkWriterPooled.Write(rpcMessage);
+            _player.ReferenceHub.networkIdentity.connectionToClient.Send(rpcMessage, 0);
+
+            NetworkWriterPool.Return(writer);
         }
 
         public void ShakeScreen(bool achieve = false)
         {
+            //AlphaWarheadController.Singleton.RpcShake(achieve);
+
+            int functionHashCode = 1208415683;
             var component = AlphaWarheadController.Singleton;
-            var writer = NetworkWriterPool.GetWriter();
-            writer.WriteBoolean(achieve);
-            var msg = new RpcMessage
+            var writer = NetworkWriterPool.Get();
+            writer.WriteBool(achieve);
+
+            RpcMessage rpcMessage = new()
             {
                 netId = component.netId,
                 componentIndex = component.ComponentIndex,
-                functionHash = typeof(AlphaWarheadController).FullName.GetStableHashCode() * 503 + "RpcShake".GetStableHashCode(),
+                functionHash = (ushort)functionHashCode,
                 payload = writer.ToArraySegment()
             };
-            _player.Connection.Send(msg);
-            NetworkWriterPool.Recycle(writer);
+
+            using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
+            networkWriterPooled.Write(rpcMessage);
+            _player.ReferenceHub.networkIdentity.connectionToClient.Send(rpcMessage, 0);
+
+            NetworkWriterPool.Return(writer);
         }
     }
 }

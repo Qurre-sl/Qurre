@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <LangVersion>10.0</LangVersion>
+    <LangVersion>10</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -48,8 +48,8 @@
     <Reference Include="Mirror.Components">
       <HintPath>..\depedencies\Mirror.Components.dll</HintPath>
     </Reference>
-    <Reference Include="Mirror_public">
-      <HintPath>..\depedencies\Mirror_public.dll</HintPath>
+    <Reference Include="Mirror_edit">
+      <HintPath>..\depedencies\Mirror_edit.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -57,6 +57,9 @@
     </Reference>
     <Reference Include="NorthwoodLib">
       <HintPath>..\depedencies\NorthwoodLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Pooling">
+      <HintPath>..\depedencies\Pooling.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -80,6 +83,15 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="API\Addons\Audio\AudioPlayer.cs" />
+    <Compile Include="API\Addons\Audio\AudioTask.cs" />
+    <Compile Include="API\Addons\Audio\Objects\AccessConditions.cs" />
+    <Compile Include="API\Addons\Audio\Objects\AudioTaskBlacklist.cs" />
+    <Compile Include="API\Addons\Audio\Objects\AudioTaskWhitelist.cs" />
+    <Compile Include="API\Addons\Audio\Objects\IAudio.cs" />
+    <Compile Include="API\Addons\Audio\Objects\Mirror\ZeroConnectionToClient.cs" />
+    <Compile Include="API\Addons\Audio\Objects\PlaybackAudio.cs" />
+    <Compile Include="API\Addons\Audio\Objects\StreamAudio.cs" />
     <Compile Include="API\Addons\BetterHints\Manager.cs" />
     <Compile Include="API\Addons\BetterHints\ISender.cs" />
     <Compile Include="API\Addons\BetterHints\HintStruct.cs" />
@@ -118,12 +130,14 @@
     <Compile Include="API\Attributes\PluginInit.cs" />
     <Compile Include="API\Attributes\EventMethod.cs" />
     <Compile Include="API\Audio.cs" />
+    <Compile Include="API\AudioExtensions.cs" />
     <Compile Include="API\Classification\Player\Administrative.cs" />
     <Compile Include="API\Classification\Player\EffectsManager.cs" />
     <Compile Include="API\Classification\Roles\Scp106.cs" />
     <Compile Include="API\Classification\Roles\Scp173.cs" />
     <Compile Include="API\Classification\Structs\AmmoBox.cs" />
     <Compile Include="API\Controllers\Intercom.cs" />
+    <Compile Include="API\Objects\SpawnPoint.cs" />
     <Compile Include="API\Objects\ScpAttackType.cs" />
     <Compile Include="API\Respawn.cs" />
     <Compile Include="API\Core.cs" />
@@ -189,6 +203,10 @@
     <Compile Include="Events\EventTypes.cs" />
     <Compile Include="Events\Structs\Alpha\Main.cs" />
     <Compile Include="Events\Structs\Base.cs" />
+    <Compile Include="Events\Structs\Effect\Player.cs" />
+    <Compile Include="Events\Structs\Effect\Main.cs" />
+    <Compile Include="Events\Structs\Map\Doors.cs" />
+    <Compile Include="Events\Structs\Map\Objects.cs" />
     <Compile Include="Events\Structs\Map\Place.cs" />
     <Compile Include="Events\Structs\Player\Admins.cs" />
     <Compile Include="Events\Structs\Player\Socialization.cs" />
@@ -199,10 +217,11 @@
     <Compile Include="Events\Structs\Player\Health.cs" />
     <Compile Include="Events\Structs\Player\Network.cs" />
     <Compile Include="Events\Structs\Round\Main.cs" />
+    <Compile Include="Events\Structs\Scp\Scp079.cs" />
+    <Compile Include="Events\Structs\Scp\Main.cs" />
     <Compile Include="Events\Structs\Server\Reports.cs" />
     <Compile Include="Events\Structs\Server\Commands.cs" />
     <Compile Include="Internal\EventsCalled\Testing.cs" />
-    <Compile Include="Internal\EventsCalled\SpawnCrashFix.cs" />
     <Compile Include="Internal\EventsCalled\Round.cs" />
     <Compile Include="Internal\EventsCalled\Player.cs" />
     <Compile Include="Internal\EventsManager\EventCallMethod.cs" />
@@ -210,13 +229,29 @@
     <Compile Include="Internal\EventsManager\Lists.cs" />
     <Compile Include="Internal\Fields\Player.cs" />
     <Compile Include="Internal\Misc\BanSender.cs" />
+    <Compile Include="Internal\Misc\LockersUpdater.cs" />
     <Compile Include="Internal\Misc\DoorsUpdater.cs" />
     <Compile Include="Internal\Patches\Alpha\UnlockPanel.cs" />
     <Compile Include="Internal\Patches\Alpha\Detonate.cs" />
     <Compile Include="Internal\Patches\Alpha\Stop.cs" />
     <Compile Include="Internal\Patches\Alpha\Start.cs" />
+    <Compile Include="Internal\Patches\Effect\ChangeIntensity.cs" />
+    <Compile Include="Internal\Patches\Effect\Flashed.cs" />
+    <Compile Include="Internal\Patches\Map\Doors\OpenDoor.cs" />
+    <Compile Include="Internal\Patches\Map\Doors\LockDoor.cs" />
+    <Compile Include="Internal\Patches\Map\Doors\DamageDoor.cs" />
+    <Compile Include="Internal\Patches\Map\Objects\TriggerTesla.cs" />
+    <Compile Include="Internal\Patches\Map\Place\CreatePickup.cs" />
+    <Compile Include="Internal\Patches\Map\Place\RagdollSpawned.cs" />
     <Compile Include="Internal\Patches\Map\Place\RagdollSpawn.cs" />
     <Compile Include="Internal\Patches\Misc\AddCredits.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\CassieController.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixBotHint.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixBotInRa.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixBotVerification.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixToysScale.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixNullFPMM.cs" />
+    <Compile Include="Internal\Patches\Misc\Fixes\FixNullAudioFlood.cs" />
     <Compile Include="Internal\Patches\Misc\GetMaxHp.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Lift.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Ragdoll.cs" />
@@ -247,8 +282,8 @@
     <Compile Include="Internal\Patches\Player\Network\Leave.cs" />
     <Compile Include="Internal\Patches\Player\Network\ReserveSlot.cs" />
     <Compile Include="Internal\Patches\Player\Network\Join.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\DroppedItem.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\DropAmmo.cs" />
+    <Compile Include="Internal\Patches\Player\Pickups\DroppedItem.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\DropItem.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\ThrowProjectile.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\PickupCandy.cs" />
@@ -259,11 +294,17 @@
     <Compile Include="Internal\Patches\Player\Role\ChangeRole.cs" />
     <Compile Include="Internal\Patches\Player\Role\Escape.cs" />
     <Compile Include="Internal\Patches\Player\Role\Spawn.cs" />
+    <Compile Include="Internal\Patches\Player\Socialization\ChangeSpectate.cs" />
     <Compile Include="Internal\Patches\Player\Socialization\Cuff.cs" />
     <Compile Include="Internal\Patches\Round\Check.cs" />
+    <Compile Include="Internal\Patches\Round\ForceStart.cs" />
     <Compile Include="Internal\Patches\Round\Restart.cs" />
     <Compile Include="Internal\Patches\Round\Start.cs" />
     <Compile Include="Internal\Patches\Round\Waiting.cs" />
+    <Compile Include="Internal\Patches\Scp\Attack.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp079\ActivateGenerator.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp079\NewLvl.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp079\GetExp.cs" />
     <Compile Include="Internal\Patches\Server\CheaterReport.cs" />
     <Compile Include="Internal\Patches\Server\LocalReport.cs" />
     <Compile Include="Internal\Patches\Server\ServerConsole.cs" />
@@ -275,8 +316,6 @@
     <Compile Include="Loader\EntryPoint.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="API\Addons\Audio\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
