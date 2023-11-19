@@ -219,6 +219,7 @@
     <Compile Include="Events\Structs\Round\Main.cs" />
     <Compile Include="Events\Structs\Scp\Scp079.cs" />
     <Compile Include="Events\Structs\Scp\Main.cs" />
+    <Compile Include="Events\Structs\Scp\Scp106.cs" />
     <Compile Include="Events\Structs\Server\Reports.cs" />
     <Compile Include="Events\Structs\Server\Commands.cs" />
     <Compile Include="Internal\EventsCalled\Testing.cs" />
@@ -301,10 +302,10 @@
     <Compile Include="Internal\Patches\Round\Restart.cs" />
     <Compile Include="Internal\Patches\Round\Start.cs" />
     <Compile Include="Internal\Patches\Round\Waiting.cs" />
-    <Compile Include="Internal\Patches\Scp\Attack.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\ActivateGenerator.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\NewLvl.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\GetExp.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp106\Attack.cs" />
     <Compile Include="Internal\Patches\Server\CheaterReport.cs" />
     <Compile Include="Internal\Patches\Server\LocalReport.cs" />
     <Compile Include="Internal\Patches\Server\ServerConsole.cs" />

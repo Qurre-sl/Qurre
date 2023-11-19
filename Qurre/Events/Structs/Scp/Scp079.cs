@@ -1,7 +1,6 @@
 ﻿using PlayerRoles.PlayableScps.Scp079;
 using Qurre.API;
 using Qurre.API.Controllers;
-using Qurre.API.Objects;
 
 namespace Qurre.Events.Structs
 {

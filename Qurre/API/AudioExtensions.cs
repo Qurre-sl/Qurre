@@ -92,7 +92,7 @@ namespace Qurre.API
                         }
 
                         type.GetField(nameof(MimicPointController._syncPos), MimicPointPropertiesBindingFlags)
-                            .SetValue(mimicPoint, new RelativePosition(pl.MovementState.Position));
+                            .SetValue(mimicPoint, new RelativePosition(pl.CameraTransform.position));
 
                         var message = new SubroutineMessage(mimicPoint, true);
                         using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
@@ -176,7 +176,7 @@ namespace Qurre.API
                 while (audioTask.IsRunning && source is not null && !source.Disconnected)
                 {
                     type.GetField(nameof(MimicPointController._syncPos), MimicPointPropertiesBindingFlags)
-                        .SetValue(mimicPoint, new RelativePosition(source.MovementState.Position));
+                        .SetValue(mimicPoint, new RelativePosition(source.CameraTransform.position));
 
                     NetworkServer.SendToReady(new SubroutineMessage(mimicPoint, true));
                     yield return Timing.WaitForOneFrame;

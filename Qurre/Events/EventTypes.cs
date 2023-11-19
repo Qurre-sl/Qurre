@@ -164,6 +164,7 @@
         //7300+ <- Scp096
 
         //7400+ <- Scp106
+        public const uint Scp106Attack = 7401;
 
         //7500+ <- Scp173
 

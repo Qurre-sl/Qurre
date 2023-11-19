@@ -61,6 +61,7 @@ namespace Qurre.API
         public NetworkConnectionToClient ConnectionToClient => rh.networkIdentity.connectionToClient;
         public NetworkConnection Connection => IsHost ? rh.networkIdentity.connectionToServer : rh.networkIdentity.connectionToClient;
         public Transform Transform => rh.transform;
+        public Transform CameraTransform => rh.PlayerCameraReference;
 
         public CommandSender Sender
         {

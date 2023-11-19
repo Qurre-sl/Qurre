@@ -9,6 +9,7 @@ namespace Qurre.API
     static public class Round
     {
         static internal bool _forceEnd = false;
+        static internal bool _started = false;
 
         static public TimeSpan ElapsedTime => RoundStart.RoundLength;
         static public DateTime StartedTime => DateTime.Now - ElapsedTime;
@@ -22,7 +23,15 @@ namespace Qurre.API
             set => RespawnManager.Singleton._timeForNextSequence = value + (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
         }
 
-        static public bool Started => ReferenceHub.LocalHub.characterClassManager.RoundStarted;
+        static public bool Started
+        {
+            get
+            {
+                try { return ReferenceHub.LocalHub.characterClassManager.RoundStarted; }
+                catch { return _started; }
+            }
+        }
+
         static public bool Ended => RoundSummary.singleton._roundEnded;
         static public bool Waiting => RoundStart.singleton is not null && !Started && !Ended;
 

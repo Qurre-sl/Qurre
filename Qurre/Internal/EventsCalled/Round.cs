@@ -16,11 +16,19 @@ namespace Qurre.Internal.EventsCalled
 {
     static class Round
     {
+        [EventMethod(RoundEvents.Start)]
+        static void Started()
+        {
+            API.Round._started = true;
+        }
+
         [EventMethod(RoundEvents.Waiting)]
         static void Waiting()
         {
             Server.host = null;
             Server.hinv = null;
+
+            API.Round._started = false;
 
             Extensions.DamagesCached.Clear();
             Patches.Player.Admins.Banned.Cached.Clear();

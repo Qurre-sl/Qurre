@@ -5,10 +5,12 @@
         const string s_major = "2";
         const string s_minor = "0";
         const string s_build = "0";
-        const string s_revision = "42";
+        const string s_revision = "46";
+
+        const string s_testing = "delta";
 
         internal const string AssemblyVersion = $"{s_major}.{s_minor}.{s_build}.{s_revision}";
-        internal const string AssemblyCustom = "v2-gamma";
+        internal const string AssemblyCustom = $"v2-{s_testing}";
 
         static readonly int _major = int.Parse(s_major);
         static readonly int _minor = int.Parse(s_minor);
@@ -20,7 +22,7 @@
         static public int Build => _build;
         static public int Revision => _revision;
 
-        static public string Testing => "-gamma";
+        static public string Testing => s_testing;
 
         internal Version() { }
 
@@ -28,7 +30,7 @@
         {
             if (!string.IsNullOrEmpty(Testing))
             {
-                return $"{Major}{Testing} r-{Revision}";
+                return $"{Major}-{Testing} r-{Revision}";
             }
 
             string vers = $"{Major}";
