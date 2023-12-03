@@ -11,7 +11,7 @@ namespace Qurre.API.Classification.Roles
         static public HashSet<Player> IgnoredPlayers { get; } = new();
 
 
-        public Scp173Role Base { get; private set; }
+        public Scp173Role Base { get; }
 
         public bool IsWork => pl.RoleInfomation.Role == PlayerRoles.RoleTypeId.Scp173;
 
