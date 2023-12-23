@@ -37,7 +37,7 @@ namespace Qurre.Internal.Patches.Round
             {
                 yield return Timing.WaitForSeconds(2.5f);
 
-                while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || Time.unscaledTime - time < 15f ||
+                while (RoundSummary.RoundLock || !Round.Started || Time.unscaledTime - time < 15f ||
                     (instance.KeepRoundOnOne && Player.List.Count() < 2) || Round.ElapsedTime.TotalSeconds < 15f)
                     yield return Timing.WaitForSeconds(1);
 
@@ -155,17 +155,15 @@ namespace Qurre.Internal.Patches.Round
                     yield return Timing.WaitForSeconds(0.5f);
 
                     int wait = Mathf.Clamp(GameCore.ConfigFile.ServerConfig.GetInt("auto_round_restart_time", 10), 5, 1000);
-                    if (instance is not null)
-                    {
-                        var ev = new RoundEndEvent(winner, list, wait);
-                        ev.InvokeEvent();
 
-                        winner = ev.Winner;
-                        wait = Mathf.Clamp(ev.ToRestart, 5, 1000);
+                    var ev = new RoundEndEvent(winner, list, wait);
+                    ev.InvokeEvent();
 
-                        instance.RpcShowRoundSummary(instance.classlistStart, list, winner, RoundSummary.EscapedClassD,
-                            RoundSummary.EscapedScientists, RoundSummary.KilledBySCPs, wait, (int)GameCore.RoundStart.RoundLength.TotalSeconds);
-                    }
+                    winner = ev.Winner;
+                    wait = Mathf.Clamp(ev.ToRestart, 5, 1000);
+
+                    instance.RpcShowRoundSummary(instance.classlistStart, list, winner, RoundSummary.EscapedClassD,
+                        RoundSummary.EscapedScientists, RoundSummary.KilledBySCPs, wait, (int)GameCore.RoundStart.RoundLength.TotalSeconds);
 
                     yield return Timing.WaitForSeconds(wait - 1);
 

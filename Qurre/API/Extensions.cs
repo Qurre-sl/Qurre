@@ -21,7 +21,7 @@ using SinkHole = CustomPlayerEffects.Sinkhole;
 
 namespace Qurre.API
 {
-    static public class Extensions
+	static public class Extensions
 	{
 		static public bool TryFind<TSource>(this IEnumerable<TSource> source, out TSource found, Func<TSource, bool> predicate)
 		{
@@ -389,12 +389,15 @@ namespace Qurre.API
 		{
 			EffectType.AmnesiaItems => typeof(AmnesiaItems),
 			EffectType.AmnesiaVision => typeof(AmnesiaVision),
+			EffectType.AntiScp207 => typeof(AntiScp207),
 			EffectType.Asphyxiated => typeof(Asphyxiated),
+			EffectType.BecomingFlamingo => typeof(BecomingFlamingo),
 			EffectType.Bleeding => typeof(Bleeding),
 			EffectType.Blinded => typeof(Blinded),
 			EffectType.BodyshotReduction => typeof(BodyshotReduction),
 			EffectType.Burned => typeof(Burned),
 			EffectType.CardiacArrest => typeof(CardiacArrest),
+			EffectType.CokeBase => typeof(CokeBase),
 			EffectType.Concussed => typeof(Concussed),
 			EffectType.Corroding => typeof(Corroding),
 			EffectType.DamageReduction => typeof(DamageReduction),
@@ -404,31 +407,38 @@ namespace Qurre.API
 			EffectType.Ensnared => typeof(Ensnared),
 			EffectType.Exhausted => typeof(Exhausted),
 			EffectType.Flashed => typeof(Flashed),
+			EffectType.Ghostly => typeof(Ghostly),
 			EffectType.Hemorrhage => typeof(Hemorrhage),
 			EffectType.Hypothermia => typeof(Hypothermia),
 			EffectType.InsufficientLighting => typeof(InsufficientLighting),
 			EffectType.Invigorated => typeof(Invigorated),
 			EffectType.Invisible => typeof(Invisible),
 			EffectType.MovementBoost => typeof(MovementBoost),
+			EffectType.PocketCorroding => typeof(PocketCorroding),
 			EffectType.Poisoned => typeof(Poisoned),
 			EffectType.RainbowTaste => typeof(RainbowTaste),
+			EffectType.Scanned => typeof(Scanned),
 			EffectType.Scp1853 => typeof(Scp1853),
 			EffectType.Scp207 => typeof(Scp207),
 			EffectType.SeveredHands => typeof(SeveredHands),
+			EffectType.SilentWalk => typeof(SilentWalk),
 			EffectType.Sinkhole => typeof(SinkHole),
 			EffectType.SoundtrackMute => typeof(SoundtrackMute),
 			EffectType.SpawnProtected => typeof(SpawnProtected),
 			EffectType.Stained => typeof(Stained),
+			EffectType.Strangled => typeof(Strangled),
+			EffectType.Snowed => typeof(Snowed),
 			EffectType.Traumatized => typeof(Traumatized),
 			EffectType.Vitality => typeof(Vitality),
-			EffectType.PocketCorroding => typeof(PocketCorroding),
 			_ => throw new InvalidOperationException("Invalid effect enum provided"),
 		};
 		static public EffectType GetEffectType(this StatusEffectBase ef) => ef switch
 		{
 			AmnesiaItems => EffectType.AmnesiaItems,
 			AmnesiaVision => EffectType.AmnesiaVision,
+			AntiScp207 => EffectType.AntiScp207,
 			Asphyxiated => EffectType.Asphyxiated,
+			BecomingFlamingo => EffectType.BecomingFlamingo,
 			Bleeding => EffectType.Bleeding,
 			Blinded => EffectType.Blinded,
 			BodyshotReduction => EffectType.BodyshotReduction,
@@ -443,24 +453,32 @@ namespace Qurre.API
 			Ensnared => EffectType.Ensnared,
 			Exhausted => EffectType.Exhausted,
 			Flashed => EffectType.Flashed,
+			Ghostly => EffectType.Ghostly,
 			Hemorrhage => EffectType.Hemorrhage,
 			Hypothermia => EffectType.Hypothermia,
 			InsufficientLighting => EffectType.InsufficientLighting,
 			Invigorated => EffectType.Invigorated,
 			Invisible => EffectType.Invisible,
 			MovementBoost => EffectType.MovementBoost,
+			PocketCorroding => EffectType.PocketCorroding,
 			Poisoned => EffectType.Poisoned,
 			RainbowTaste => EffectType.RainbowTaste,
+			Scanned => EffectType.Scanned,
 			Scp1853 => EffectType.Scp1853,
 			Scp207 => EffectType.Scp207,
 			SeveredHands => EffectType.SeveredHands,
+			SilentWalk => EffectType.SilentWalk,
 			SinkHole => EffectType.Sinkhole,
 			SoundtrackMute => EffectType.SoundtrackMute,
 			SpawnProtected => EffectType.SpawnProtected,
 			Stained => EffectType.Stained,
+			Strangled => EffectType.Strangled,
+			Snowed => EffectType.Snowed,
 			Traumatized => EffectType.Traumatized,
 			Vitality => EffectType.Vitality,
-			PocketCorroding => EffectType.PocketCorroding,
+
+			CokeBase => EffectType.CokeBase,
+
 			_ => EffectType.None,
 		};
 		#endregion
