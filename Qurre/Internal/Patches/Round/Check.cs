@@ -33,6 +33,10 @@ namespace Qurre.Internal.Patches.Round
         static IEnumerator<float> ProcessServerSide(RoundSummary instance)
         {
             float time = Time.unscaledTime;
+
+            if (instance is not null)
+                instance._roundEnded = false;
+
             while (instance is not null)
             {
                 yield return Timing.WaitForSeconds(2.5f);
@@ -41,34 +45,38 @@ namespace Qurre.Internal.Patches.Round
                     (instance.KeepRoundOnOne && Player.List.Count() < 2) || Round.ElapsedTime.TotalSeconds < 15f)
                     yield return Timing.WaitForSeconds(1);
 
-                yield return Timing.WaitForSeconds(2.5f);
-
                 RoundSummary.SumInfo_ClassList list = default;
                 bool end = false;
 
                 foreach (var pl in Player.List)
                 {
-                    switch (pl.RoleInfomation.Team)
+                    try
                     {
-                        case Team.ClassD:
-                            list.class_ds++;
-                            break;
-                        case Team.Scientists:
-                            list.scientists++;
-                            break;
-                        case Team.ChaosInsurgency:
-                            list.chaos_insurgents++;
-                            break;
-                        case Team.FoundationForces:
-                            list.mtf_and_guards++;
-                            break;
-                        case Team.SCPs:
-                            {
-                                if (pl.RoleInfomation.Role is RoleTypeId.Scp0492) list.zombies++;
-                                else list.scps_except_zombies++;
+                        switch (pl.RoleInfomation.Team)
+                        {
+                            case Team.ClassD:
+                                list.class_ds++;
                                 break;
-                            }
+                            case Team.Scientists:
+                                list.scientists++;
+                                break;
+                            case Team.ChaosInsurgency:
+                                list.chaos_insurgents++;
+                                break;
+                            case Team.FoundationForces:
+                                list.mtf_and_guards++;
+                                break;
+                            case Team.SCPs:
+                                {
+                                    if (pl.RoleInfomation.Role is RoleTypeId.Scp0492)
+                                        list.zombies++;
+                                    else
+                                        list.scps_except_zombies++;
+                                    break;
+                                }
+                        }
                     }
+                    catch { }
                 }
 
                 yield return float.NegativeInfinity;

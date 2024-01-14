@@ -192,6 +192,7 @@ namespace Qurre.API
 			ScpDamageHandler _ => LiteDamageTypes.ScpDamage,
 			UniversalDamageHandler _ => LiteDamageTypes.Universal,
 			WarheadDamageHandler _ => LiteDamageTypes.Warhead,
+			//SnowballDamageHandler _ => LiteDamageTypes.Snowball,
 			_ => LiteDamageTypes.Unknow,
 		};
 
@@ -211,6 +212,8 @@ namespace Qurre.API
 				ExplosionDamageHandler _ => DamageTypes.Explosion,
 				JailbirdDamageHandler _ => DamageTypes.Jailbird,
 				MicroHidDamageHandler _ => DamageTypes.MicroHid,
+
+				//SnowballDamageHandler _ => DamageTypes.Snowball,
 
 				FirearmDamageHandler fr => fr.WeaponType switch
 				{
@@ -271,6 +274,9 @@ namespace Qurre.API
 				23 => DamageTypes.Hypothermia,
 				24 => DamageTypes.CardiacArrest,
 				25 => DamageTypes.Scp939,
+				26 => DamageTypes.Scp3114,
+				27 => DamageTypes.MarshmallowMan,
+				28 => DamageTypes.Scp1507,
 				_ => DamageTypes.Unknow,
 			};
 		}
@@ -391,7 +397,7 @@ namespace Qurre.API
 			EffectType.AmnesiaVision => typeof(AmnesiaVision),
 			EffectType.AntiScp207 => typeof(AntiScp207),
 			EffectType.Asphyxiated => typeof(Asphyxiated),
-			EffectType.BecomingFlamingo => typeof(BecomingFlamingo),
+			//EffectType.BecomingFlamingo => typeof(BecomingFlamingo),
 			EffectType.Bleeding => typeof(Bleeding),
 			EffectType.Blinded => typeof(Blinded),
 			EffectType.BodyshotReduction => typeof(BodyshotReduction),
@@ -427,7 +433,7 @@ namespace Qurre.API
 			EffectType.SpawnProtected => typeof(SpawnProtected),
 			EffectType.Stained => typeof(Stained),
 			EffectType.Strangled => typeof(Strangled),
-			EffectType.Snowed => typeof(Snowed),
+			//EffectType.Snowed => typeof(Snowed),
 			EffectType.Traumatized => typeof(Traumatized),
 			EffectType.Vitality => typeof(Vitality),
 			_ => throw new InvalidOperationException("Invalid effect enum provided"),
@@ -438,7 +444,7 @@ namespace Qurre.API
 			AmnesiaVision => EffectType.AmnesiaVision,
 			AntiScp207 => EffectType.AntiScp207,
 			Asphyxiated => EffectType.Asphyxiated,
-			BecomingFlamingo => EffectType.BecomingFlamingo,
+			//BecomingFlamingo => EffectType.BecomingFlamingo,
 			Bleeding => EffectType.Bleeding,
 			Blinded => EffectType.Blinded,
 			BodyshotReduction => EffectType.BodyshotReduction,
@@ -473,7 +479,7 @@ namespace Qurre.API
 			SpawnProtected => EffectType.SpawnProtected,
 			Stained => EffectType.Stained,
 			Strangled => EffectType.Strangled,
-			Snowed => EffectType.Snowed,
+			//Snowed => EffectType.Snowed,
 			Traumatized => EffectType.Traumatized,
 			Vitality => EffectType.Vitality,
 
