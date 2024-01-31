@@ -7,6 +7,6 @@ namespace Qurre.Internal.Patches.Misc.Fixes
     {
         [HarmonyPrefix]
         static bool Call(ReferenceHub rh)
-            => !string.IsNullOrEmpty(rh.authManager.UserId);
+            => !(string.IsNullOrEmpty(rh.authManager.UserId) || rh.authManager.UserId.EndsWith("@bot"));
     }
 }
