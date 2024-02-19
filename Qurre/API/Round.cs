@@ -80,8 +80,10 @@ namespace Qurre.API
             RoundRestart.InitiateRoundRestart();
             CustomNetworkManager.EnableFastRestart = oldfast;
         }
-        static public void Start() => CharacterClassManager.ForceRoundStart();
-        static public void End() => _forceEnd = true;
+        static public void Start()
+            => CharacterClassManager.ForceRoundStart();
+        static public void End()
+            => _forceEnd = true;
 
         static public void DimScreen() => RoundSummary.singleton.RpcDimScreen();
         static public void ShowRoundSummary(RoundSummary.SumInfo_ClassList remainingPlayers, LeadingTeam team) =>

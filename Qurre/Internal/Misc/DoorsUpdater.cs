@@ -38,6 +38,7 @@ namespace Qurre.Internal.Misc
             _cachedPosition = transform.position;
             _cachedRotation = transform.rotation;
             _cachedScale = transform.lossyScale;
+
             try { Door.netIdentity.UpdateData(); } catch { }
         }
     }

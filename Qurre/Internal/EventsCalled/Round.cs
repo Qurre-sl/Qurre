@@ -4,10 +4,12 @@ using InventorySystem.Items.Firearms.Attachments;
 using MapGeneration;
 using MEC;
 using Qurre.API;
+using Qurre.API.Addons.Audio;
 using Qurre.API.Attributes;
 using Qurre.API.Controllers;
 using Qurre.Events;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,6 +24,19 @@ namespace Qurre.Internal.EventsCalled
             API.Round._started = true;
         }
 
+        [EventMethod(RoundEvents.Restart)]
+        static void DestroyAudio()
+        {
+            API.Audio._hostAudioPlayer = null;
+
+            foreach (var player in AudioPlayer._players.ToList())
+            {
+                AudioExtensions.DestroyPlayer(player);
+            }
+
+            AudioPlayer._players.Clear();
+        }
+
         [EventMethod(RoundEvents.Waiting)]
         static void Waiting()
         {
@@ -29,6 +44,7 @@ namespace Qurre.Internal.EventsCalled
             Server.hinv = null;
 
             API.Round._started = false;
+            API.Round._forceEnd = false;
 
             Extensions.DamagesCached.Clear();
             Patches.Player.Admins.Banned.Cached.Clear();

@@ -16,6 +16,8 @@ namespace Qurre.API.Addons.Audio
     /// </summary>
     public sealed class AudioPlayer : IEquatable<AudioPlayer>
     {
+        static readonly internal List<AudioPlayer> _players = new();
+
         private const int SamplesBufferLength = 480; // VoiceChat.Networking.VoiceTransceiver._packageSize
         private const int EncoderBufferLength = 512; // VoiceChat.Networking.VoiceTransceiver._encodedBuffer.Length
 
@@ -79,6 +81,8 @@ namespace Qurre.API.Addons.Audio
             ReferenceHub = referenceHub ?? throw new ArgumentNullException(nameof(referenceHub));
             AudioTasks = new Queue<AudioTask>();
             _encoder = new OpusEncoder(OpusApplicationType.Voip);
+
+            _players.Add(this);
         }
 
         /// <summary>
@@ -108,6 +112,10 @@ namespace Qurre.API.Addons.Audio
             }
 
             Timing.KillCoroutines(_coroutineHandler);
+
+            if (_players.Contains(this))
+                _players.Remove(this);
+
             return true;
         }
 

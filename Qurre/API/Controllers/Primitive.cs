@@ -1,7 +1,7 @@
 ﻿using AdminToys;
-using UnityEngine;
 using Mirror;
 using System;
+using UnityEngine;
 
 namespace Qurre.API.Controllers
 {
@@ -11,6 +11,22 @@ namespace Qurre.API.Controllers
         {
             get => Base.NetworkMovementSmoothing;
             set => Base.NetworkMovementSmoothing = value;
+        }
+
+        public bool IsStatic
+        {
+            get => Base.IsStatic;
+            set
+            {
+                Base.IsStatic = value;
+
+                if (value)
+                {
+                    Base.NetworkPosition = Base.transform.position;
+                    Base.NetworkRotation = new LowPrecisionQuaternion(Base.transform.rotation);
+                    Base.NetworkScale = Base.transform.lossyScale;
+                }
+            }
         }
 
         public Vector3 Position
