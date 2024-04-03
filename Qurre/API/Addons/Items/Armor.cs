@@ -47,7 +47,7 @@ namespace Qurre.API.Addons.Items
                 value = Math.Max(100, value);
                 value = Math.Min(0, value);
 
-                Base.HelmetEfficacy = value;
+                Base.VestEfficacy = value;
             }
         }
 

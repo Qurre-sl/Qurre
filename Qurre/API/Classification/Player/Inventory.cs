@@ -1,14 +1,14 @@
 ﻿using InventorySystem;
 using InventorySystem.Items;
+using InventorySystem.Items.Firearms;
+using InventorySystem.Items.Firearms.Attachments;
 using InventorySystem.Items.Pickups;
 using Qurre.API.Controllers;
-using System.Linq;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Qurre.API.Classification.Player
 {
-    using InventorySystem.Items.Firearms;
-    using InventorySystem.Items.Firearms.Attachments;
     using Qurre.API;
     using Qurre.API.Addons.Items;
     using Qurre.API.Classification.Structs;
@@ -24,7 +24,14 @@ namespace Qurre.API.Classification.Player
         {
             get
             {
-                return (Dictionary<ushort, Item>)Base.UserInventory.Items.Select(item => new KeyValuePair<ushort, Item>(item.Key, Item.Get(item.Value)));
+                Dictionary<ushort, Item> dict = new();
+                foreach (var preitem in Base.UserInventory.Items)
+                {
+                    Item item = Item.Get(preitem.Value);
+                    if (item is not null)
+                        dict.Add(preitem.Key, item);
+                }
+                return dict;
             }
             set
             {
@@ -34,7 +41,12 @@ namespace Qurre.API.Classification.Player
                     return;
                 }
 
-                Base.UserInventory.Items = (Dictionary<ushort, ItemBase>)value.Select(item => new KeyValuePair<ushort, ItemBase>(item.Key, item.Value.Base));
+                Dictionary<ushort, ItemBase> dict = new();
+                foreach (var preitem in value)
+                {
+                    dict.Add(preitem.Key, preitem.Value.Base);
+                }
+                Base.UserInventory.Items = dict;
                 Base.SendItemsNextFrame = true;
             }
         }
@@ -56,6 +68,15 @@ namespace Qurre.API.Classification.Player
             Clear();
 
             foreach (Item item in newItems)
+            {
+                AddItem(item);
+            }
+        }
+        public void Reset(IEnumerable<ItemBase> newItems)
+        {
+            Clear();
+
+            foreach (ItemBase item in newItems)
             {
                 AddItem(item);
             }

@@ -2,6 +2,7 @@
 using Mirror;
 using Qurre.API.Controllers.Structs;
 using RemoteAdmin;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Field = Qurre.Internal.Fields.Player;
@@ -21,6 +22,8 @@ namespace Qurre.API
             go = _rh.gameObject;
 
             Disconnected = false;
+            LastSynced = Time.time;
+            JoinedTime = DateTime.Now;
 
             Broadcasts = new();
 
@@ -76,6 +79,8 @@ namespace Qurre.API
         public bool IsHost => rh.isLocalPlayer;
         public bool Disconnected { get; internal set; }
         public bool FriendlyFire { get; set; }
+        public float LastSynced { get; internal set; }
+        public DateTime JoinedTime { get; internal set; }
         public string Tag
         {
             get => _tag;

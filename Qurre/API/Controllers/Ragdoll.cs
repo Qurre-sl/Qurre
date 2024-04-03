@@ -68,7 +68,7 @@ namespace Qurre.API.Controllers
 
         public void Destroy()
         {
-            Object.Destroy(GameObject);
+            NetworkServer.Destroy(GameObject);
             Map.Ragdolls.Remove(this);
         }
 

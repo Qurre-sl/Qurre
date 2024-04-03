@@ -160,6 +160,8 @@
         public const uint ActivateGenerator = 7201;
         public const uint Scp079GetExp = 7202;
         public const uint Scp079NewLvl = 7203;
+        public const uint Scp079Recontain = 7204;
+        public const uint GeneratorStatus = 7205;
 
         //7300+ <- Scp096
 
@@ -174,5 +176,8 @@
         // Non-game SCPs
 
         //7700+ <- Scp914
+        public const uint Scp914Upgrade = 7701;
+        public const uint Scp914UpgradePickup = 7702;
+        public const uint Scp914UpgradePlayer = 7703;
     }
 }

@@ -24,8 +24,8 @@ namespace Qurre.API
         static public AudioPlayer PlayFromAll(
             string file,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             ) => PlayFromAll(
                 new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
                 botName, whitelist, blacklist);
@@ -33,8 +33,8 @@ namespace Qurre.API
         static public AudioPlayer PlayFromAll(
             Stream stream,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             )
         {
             // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
@@ -114,8 +114,8 @@ namespace Qurre.API
             string file,
             Player source,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             ) => PlayFromPlayer(
                 new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
                 source, botName, whitelist, blacklist);
@@ -124,8 +124,8 @@ namespace Qurre.API
             Stream stream,
             Player source,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             )
         {
             // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
@@ -191,8 +191,8 @@ namespace Qurre.API
             string file,
             Vector3 source,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             ) => PlayFromPosition(
                 new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
                 source, botName, whitelist, blacklist);
@@ -201,8 +201,8 @@ namespace Qurre.API
             Stream stream,
             Vector3 source,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             )
         {
             // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
@@ -239,7 +239,7 @@ namespace Qurre.API
 
                     NetworkServer.SendToReady(new SubroutineMessage(mimicPoint, true));
 
-                    Timing.RunCoroutine(CheckPlaying(audioPlayer, audioTask));
+                    Timing.RunCoroutine(CheckPlaying(audioPlayer));
                 }
                 catch (Exception ex)
                 {
@@ -249,11 +249,11 @@ namespace Qurre.API
 
             return audioPlayer;
 
-            static IEnumerator<float> CheckPlaying(AudioPlayer audioPlayer, AudioTask audioTask)
+            static IEnumerator<float> CheckPlaying(AudioPlayer audioPlayer)
             {
                 yield return Timing.WaitForSeconds(5f);
 
-                while (audioPlayer.AudioTasks.Any() || audioTask.IsRunning)
+                while (audioPlayer.AudioTasks.Any(x => !x.IsDone) || (audioPlayer.CurrentAudioTask != null && !audioPlayer.CurrentAudioTask.IsDone))
                 {
                     yield return Timing.WaitForSeconds(0.1f);
                 }
@@ -281,8 +281,8 @@ namespace Qurre.API
         static public AudioPlayer PlayInIntercom(
             string file,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             ) => PlayInIntercom(
                 new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
                 botName, whitelist, blacklist);
@@ -290,8 +290,8 @@ namespace Qurre.API
         static public AudioPlayer PlayInIntercom(
             Stream stream,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             )
         {
             // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
@@ -312,15 +312,15 @@ namespace Qurre.API
                 audioTask.Blacklist.AccessConditions.AddRange(blacklist);
             }
 
-            Timing.RunCoroutine(CheckPlaying(audioPlayer, audioTask));
+            Timing.RunCoroutine(CheckPlaying(audioPlayer));
 
             return audioPlayer;
 
-            static IEnumerator<float> CheckPlaying(AudioPlayer audioPlayer, AudioTask audioTask)
+            static IEnumerator<float> CheckPlaying(AudioPlayer audioPlayer)
             {
                 yield return Timing.WaitForSeconds(5f);
 
-                while (audioPlayer.AudioTasks.Any() || audioTask.IsRunning)
+                while (audioPlayer.AudioTasks.Any(x => !x.IsDone) || (audioPlayer.CurrentAudioTask != null && !audioPlayer.CurrentAudioTask.IsDone))
                 {
                     yield return Timing.WaitForSeconds(0.1f);
                 }

@@ -5,7 +5,7 @@
         const string s_major = "2";
         const string s_minor = "0";
         const string s_build = "0";
-        const string s_revision = "60";
+        const string s_revision = "77";
 
         const string s_testing = "delta";
 

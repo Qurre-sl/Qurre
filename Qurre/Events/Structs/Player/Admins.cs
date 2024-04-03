@@ -30,12 +30,16 @@ namespace Qurre.Events.Structs
         public Player Player { get; }
         public BanDetails Details { get; }
         public BanHandler.BanType Type { get; }
+        public bool Forced { get; }
+        public bool UnsafeAllowed { get; set; }
 
-        internal BannedEvent(Player player, BanDetails details, BanHandler.BanType type)
+        internal BannedEvent(Player player, BanDetails details, BanHandler.BanType type, bool forced)
         {
             Player = player;
             Details = details;
             Type = type;
+            Forced = forced;
+            UnsafeAllowed = true;
         }
     }
 

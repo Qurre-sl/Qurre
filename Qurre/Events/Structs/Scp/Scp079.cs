@@ -51,4 +51,25 @@ namespace Qurre.Events.Structs
             Allowed = true;
         }
     }
+
+    public class Scp079RecontainEvent : IBaseEvent
+    {
+        public uint EventId { get; } = ScpEvents.Scp079Recontain;
+
+        internal Scp079RecontainEvent() { }
+    }
+
+    public class GeneratorStatusEvent : IBaseEvent
+    {
+        public uint EventId { get; } = ScpEvents.GeneratorStatus;
+
+        public int EnragedCount { get; }
+        public int TotalCount { get; }
+
+        internal GeneratorStatusEvent(int enragedCount, int totalCount)
+        {
+            EnragedCount = enragedCount;
+            TotalCount = totalCount;
+        }
+    }
 }

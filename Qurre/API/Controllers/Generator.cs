@@ -97,9 +97,8 @@ namespace Qurre.API.Controllers
 
         public void Destroy()
         {
-            NetworkServer.UnSpawn(GameObject);
             Map.Generators.Remove(this);
-            Object.Destroy(GameObject);
+            NetworkServer.Destroy(GameObject);
         }
 
         internal Generator(Scp079Generator g)

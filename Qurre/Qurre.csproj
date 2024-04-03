@@ -89,6 +89,7 @@
     <Compile Include="API\Addons\Audio\Objects\AudioTaskBlacklist.cs" />
     <Compile Include="API\Addons\Audio\Objects\AudioTaskWhitelist.cs" />
     <Compile Include="API\Addons\Audio\Objects\IAudio.cs" />
+    <Compile Include="API\Addons\Audio\Objects\IAccessConditions.cs" />
     <Compile Include="API\Addons\Audio\Objects\Mirror\ZeroConnectionToClient.cs" />
     <Compile Include="API\Addons\Audio\Objects\PlaybackAudio.cs" />
     <Compile Include="API\Addons\Audio\Objects\StreamAudio.cs" />
@@ -220,6 +221,7 @@
     <Compile Include="Events\Structs\Scp\Scp079.cs" />
     <Compile Include="Events\Structs\Scp\Main.cs" />
     <Compile Include="Events\Structs\Scp\Scp106.cs" />
+    <Compile Include="Events\Structs\Scp\Scp914.cs" />
     <Compile Include="Events\Structs\Server\Reports.cs" />
     <Compile Include="Events\Structs\Server\Commands.cs" />
     <Compile Include="Internal\EventsCalled\Testing.cs" />
@@ -258,6 +260,7 @@
     <Compile Include="Internal\Patches\Misc\Creates\Ragdoll.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Locker.cs" />
     <Compile Include="Internal\Patches\Misc\Creates\Generator.cs" />
+    <Compile Include="Internal\Patches\Misc\Modules\LastSynced.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Banned.cs" />
     <Compile Include="Internal\Patches\Player\Admins\Ban.cs" />
     <Compile Include="Internal\Patches\Player\Admins\ChangeGroup.cs" />
@@ -303,9 +306,14 @@
     <Compile Include="Internal\Patches\Round\Start.cs" />
     <Compile Include="Internal\Patches\Round\Waiting.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\ActivateGenerator.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp079\GeneratorStatus.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\NewLvl.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\GetExp.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp079\Recontain.cs" />
     <Compile Include="Internal\Patches\Scp\Scp106\Attack.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp914\Upgrade.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp914\UpgradePickup.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp914\UpgradePlayer.cs" />
     <Compile Include="Internal\Patches\Server\CheaterReport.cs" />
     <Compile Include="Internal\Patches\Server\LocalReport.cs" />
     <Compile Include="Internal\Patches\Server\ServerConsole.cs" />

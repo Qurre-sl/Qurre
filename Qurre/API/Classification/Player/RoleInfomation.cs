@@ -64,6 +64,8 @@ namespace Qurre.API.Classification.Player
 
         public void SetNew(RoleTypeId newRole, RoleChangeReason reason)
             => _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason);
+        public void SetNew(RoleTypeId newRole, RoleChangeReason reason, RoleSpawnFlags spawnFlags)
+            => _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason, spawnFlags);
 
         public void SetSyncModel(RoleTypeId roleTypeId)
         {

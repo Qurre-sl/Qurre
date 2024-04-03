@@ -127,9 +127,8 @@ namespace Qurre.API.Controllers
         }
         public void Destroy()
         {
-            NetworkServer.UnSpawn(GameObject);
             Map.Doors.Remove(this);
-            Object.Destroy(GameObject);
+            NetworkServer.Destroy(GameObject);
         }
 
         void SetupDoorType()
