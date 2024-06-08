@@ -97,6 +97,7 @@
     <Compile Include="API\Addons\BetterHints\ISender.cs" />
     <Compile Include="API\Addons\BetterHints\HintStruct.cs" />
     <Compile Include="API\Addons\BetterColors.cs" />
+    <Compile Include="API\Addons\VariableDictionary.cs" />
     <Compile Include="API\Addons\Version.cs" />
     <Compile Include="API\Addons\Items\Ammo.cs" />
     <Compile Include="API\Addons\Items\Armor.cs" />
@@ -224,6 +225,7 @@
     <Compile Include="Events\Structs\Scp\Scp914.cs" />
     <Compile Include="Events\Structs\Server\Reports.cs" />
     <Compile Include="Events\Structs\Server\Commands.cs" />
+    <Compile Include="Internal\EventsCalled\Primitives.cs" />
     <Compile Include="Internal\EventsCalled\Testing.cs" />
     <Compile Include="Internal\EventsCalled\Round.cs" />
     <Compile Include="Internal\EventsCalled\Player.cs" />
@@ -244,6 +246,7 @@
     <Compile Include="Internal\Patches\Map\Doors\LockDoor.cs" />
     <Compile Include="Internal\Patches\Map\Doors\DamageDoor.cs" />
     <Compile Include="Internal\Patches\Map\Objects\TriggerTesla.cs" />
+    <Compile Include="Internal\Patches\Map\Objects\WorkStationUpdate.cs" />
     <Compile Include="Internal\Patches\Map\Place\CreatePickup.cs" />
     <Compile Include="Internal\Patches\Map\Place\RagdollSpawned.cs" />
     <Compile Include="Internal\Patches\Map\Place\RagdollSpawn.cs" />
@@ -277,6 +280,7 @@
     <Compile Include="Internal\Patches\Player\Interact\InteractLocker.cs" />
     <Compile Include="Internal\Patches\Player\Interact\InteractLift.cs" />
     <Compile Include="Internal\Patches\Player\Interact\InteractGenerator.cs" />
+    <Compile Include="Internal\Patches\Player\Interact\InteractWorkStation.cs" />
     <Compile Include="Internal\Patches\Player\Items\ChangeItem.cs" />
     <Compile Include="Internal\Patches\Player\Items\UsingRadio.cs" />
     <Compile Include="Internal\Patches\Player\Items\UpdateRadio.cs" />

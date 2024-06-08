@@ -14,6 +14,8 @@ namespace Qurre.API.Controllers
 
         public string Name => GameObject.name;
 
+        public WorkstationController Controller => workStation;
+
         public Vector3 Position
         {
             get => Transform.position;
@@ -53,7 +55,29 @@ namespace Qurre.API.Controllers
         public WorkstationStatus Status
         {
             get => (WorkstationStatus)workStation.Status;
-            set => workStation.NetworkStatus = (byte)value;
+            set
+            {
+                workStation.NetworkStatus = (byte)value;
+
+                switch (value)
+                {
+                    case WorkstationStatus.Offline:
+                        {
+                            Controller._serverStopwatch.Stop();
+                            break;
+                        }
+                    case WorkstationStatus.PoweringUp:
+                        {
+                            Controller._serverStopwatch.Restart();
+                            break;
+                        }
+                    default:
+                        {
+                            Controller._serverStopwatch.Restart();
+                            break;
+                        }
+                }
+            }
         }
         public bool Activated
         {

@@ -10,6 +10,7 @@ namespace Qurre.API
     {
         static internal bool _forceEnd = false;
         static internal bool _started = false;
+        static internal bool _waiting = false;
 
         static public TimeSpan ElapsedTime => RoundStart.RoundLength;
         static public DateTime StartedTime => DateTime.Now - ElapsedTime;
@@ -33,7 +34,20 @@ namespace Qurre.API
         }
 
         static public bool Ended => RoundSummary.singleton._roundEnded;
-        static public bool Waiting => RoundStart.singleton is not null && !Started && !Ended;
+        static public bool Waiting
+        {
+            get
+            {
+                try
+                {
+                    if (RoundStart.singleton is not null)
+                        return !Started && !Ended;
+                }
+                catch { }
+
+                return _waiting;
+            }
+        }
 
         static public bool Lock
         {

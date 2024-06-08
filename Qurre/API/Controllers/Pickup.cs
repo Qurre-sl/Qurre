@@ -122,7 +122,7 @@ namespace Qurre.API.Controllers
             }
         }
 
-        private string _tag;
+        private string _tag = string.Empty;
         private ushort _bufferedSerial;
         private ItemCategory _bufferedCategory;
 

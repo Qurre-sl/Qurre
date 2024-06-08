@@ -1,18 +1,21 @@
-﻿namespace Qurre.API.Objects
+﻿using System;
+
+namespace Qurre.API.Objects
 {
     public enum EffectType : byte
     {
+        None,
         AmnesiaItems,
         AmnesiaVision,
         AntiScp207,
         Asphyxiated,
+        [Obsolete("removed")]
         BecomingFlamingo,
         Bleeding,
         Blinded,
         BodyshotReduction,
         Burned,
         CardiacArrest,
-        CokeBase,
         Concussed,
         Corroding,
         DamageReduction,
@@ -22,6 +25,7 @@
         Ensnared,
         Exhausted,
         Flashed,
+        FogControl,
         Ghostly,
         Hemorrhage,
         Hypothermia,
@@ -38,13 +42,14 @@
         SeveredHands,
         SilentWalk,
         Sinkhole,
+        Slowness,
         SoundtrackMute,
         SpawnProtected,
         Stained,
         Strangled,
+        [Obsolete("removed")]
         Snowed,
         Traumatized,
         Vitality,
-        None,
     }
 }

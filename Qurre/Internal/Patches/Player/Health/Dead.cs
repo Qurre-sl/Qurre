@@ -42,9 +42,11 @@ namespace Qurre.Internal.Patches.Player.Health
                 Player attacker = handler.GetAttacker();
                 Player target = __instance.gameObject.GetPlayer();
 
-                if (attacker is null) attacker = target;
+                attacker ??= target;
+
                 if ((target is not null && (target.RoleInfomation.Role != RoleTypeId.Spectator ||
-                    target.GamePlay.GodMode || target.IsHost)) || attacker is null) return;
+                    target.GamePlay.GodMode || target.IsHost)) || attacker is null)
+                    return;
 
                 var type = handler.GetDamageType();
                 var ev = new DeadEvent(attacker, target, handler, type);

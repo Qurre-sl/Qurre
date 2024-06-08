@@ -3,6 +3,7 @@ using Qurre.API;
 using Qurre.API.Controllers;
 using Qurre.API.Controllers.Structs;
 using Qurre.API.Objects;
+using UnityEngine;
 
 namespace Qurre.Events.Structs
 {
@@ -104,6 +105,24 @@ namespace Qurre.Events.Structs
             Player = player;
             ShootingTarget = shootingTarget;
             Button = button;
+            Allowed = true;
+        }
+    }
+
+    public class InteractWorkStationEvent : IBaseEvent
+    {
+        public uint EventId { get; } = PlayerEvents.InteractWorkStation;
+
+        public Player Player { get; }
+        public WorkStation Station { get; }
+        public byte ColliderId { get; }
+        public bool Allowed { get; set; }
+
+        internal InteractWorkStationEvent(Player player, WorkStation station, byte colliderId)
+        {
+            Player = player;
+            Station = station;
+            ColliderId = colliderId;
             Allowed = true;
         }
     }

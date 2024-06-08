@@ -1,5 +1,6 @@
 ﻿using CentralAuth;
 using Mirror;
+using Qurre.API.Addons;
 using Qurre.API.Controllers.Structs;
 using RemoteAdmin;
 using System;
@@ -24,6 +25,8 @@ namespace Qurre.API
             Disconnected = false;
             LastSynced = Time.time;
             JoinedTime = DateTime.Now;
+
+            Variables = new();
 
             Broadcasts = new();
 
@@ -81,12 +84,15 @@ namespace Qurre.API
         public bool FriendlyFire { get; set; }
         public float LastSynced { get; internal set; }
         public DateTime JoinedTime { get; internal set; }
+        public VariableDictionary<string, object> Variables { get; }
         public string Tag
         {
             get => _tag;
             set
             {
-                if (value is null) return;
+                if (value is null)
+                    return;
+
                 _tag = value;
             }
         }

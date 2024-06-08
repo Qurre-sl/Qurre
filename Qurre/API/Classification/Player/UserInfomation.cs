@@ -17,6 +17,7 @@
 
         public string Ip => _player.ClassManager.connectionToClient.address;
         public int Id => _player.ReferenceHub.PlayerId;
+        public uint NetId => _player.ReferenceHub.netId;
         public string UserId
         {
             get

@@ -2,6 +2,7 @@
 using Interactables.Interobjects;
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items;
+using InventorySystem.Items.Firearms.Attachments;
 using InventorySystem.Items.Usables.Scp244.Hypothermia;
 using MapGeneration;
 using MapGeneration.Distributors;
@@ -403,7 +404,6 @@ namespace Qurre.API
 			EffectType.BodyshotReduction => typeof(BodyshotReduction),
 			EffectType.Burned => typeof(Burned),
 			EffectType.CardiacArrest => typeof(CardiacArrest),
-			EffectType.CokeBase => typeof(CokeBase),
 			EffectType.Concussed => typeof(Concussed),
 			EffectType.Corroding => typeof(Corroding),
 			EffectType.DamageReduction => typeof(DamageReduction),
@@ -413,6 +413,7 @@ namespace Qurre.API
 			EffectType.Ensnared => typeof(Ensnared),
 			EffectType.Exhausted => typeof(Exhausted),
 			EffectType.Flashed => typeof(Flashed),
+			EffectType.FogControl => typeof(FogControl),
 			EffectType.Ghostly => typeof(Ghostly),
 			EffectType.Hemorrhage => typeof(Hemorrhage),
 			EffectType.Hypothermia => typeof(Hypothermia),
@@ -429,6 +430,7 @@ namespace Qurre.API
 			EffectType.SeveredHands => typeof(SeveredHands),
 			EffectType.SilentWalk => typeof(SilentWalk),
 			EffectType.Sinkhole => typeof(SinkHole),
+			EffectType.Slowness => typeof(Slowness),
 			EffectType.SoundtrackMute => typeof(SoundtrackMute),
 			EffectType.SpawnProtected => typeof(SpawnProtected),
 			EffectType.Stained => typeof(Stained),
@@ -459,6 +461,7 @@ namespace Qurre.API
 			Ensnared => EffectType.Ensnared,
 			Exhausted => EffectType.Exhausted,
 			Flashed => EffectType.Flashed,
+			FogControl => EffectType.FogControl,
 			Ghostly => EffectType.Ghostly,
 			Hemorrhage => EffectType.Hemorrhage,
 			Hypothermia => EffectType.Hypothermia,
@@ -475,6 +478,7 @@ namespace Qurre.API
 			SeveredHands => EffectType.SeveredHands,
 			SilentWalk => EffectType.SilentWalk,
 			SinkHole => EffectType.Sinkhole,
+			Slowness => EffectType.Slowness,
 			SoundtrackMute => EffectType.SoundtrackMute,
 			SpawnProtected => EffectType.SpawnProtected,
 			Stained => EffectType.Stained,
@@ -482,8 +486,6 @@ namespace Qurre.API
 			//Snowed => EffectType.Snowed,
 			Traumatized => EffectType.Traumatized,
 			Vitality => EffectType.Vitality,
-
-			CokeBase => EffectType.CokeBase,
 
 			_ => EffectType.None,
 		};
@@ -520,6 +522,10 @@ namespace Qurre.API
 
 		#region GetRagdoll
 		static public Ragdoll GetRagdoll(this BasicRagdoll basic) => Map.Ragdolls.FirstOrDefault(x => x.ragdoll == basic);
+		#endregion
+
+		#region GetWorkStation
+		static public WorkStation GetWorkStation(this WorkstationController controller) => Map.WorkStations.FirstOrDefault(x => x.Controller == controller);
 		#endregion
 	}
 }

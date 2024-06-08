@@ -17,7 +17,7 @@ namespace Qurre.API.Addons.Models
         {
             try
             {
-                workStation = new(position, Vector3.zero, Vector3.one);
+                workStation = new(position, rotation, size);
                 gameObject = WorkStation.GameObject;
 
                 NetworkServer.UnSpawn(GameObject);

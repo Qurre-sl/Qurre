@@ -49,6 +49,7 @@
         public const uint InteractLocker = 1504;
         public const uint InteractScp330 = 1505;
         public const uint InteractShootingTarget = 1506;
+        public const uint InteractWorkStation = 1507;
 
         //1600+ <- Gun
         public const uint UnloadGun = 1601;
@@ -99,6 +100,7 @@
 
         //2300+ <- Objects
         public const uint TriggerTesla = 2301;
+        public const uint WorkStationUpdate = 2302;
 
         //2400+ <- Doors
         public const uint DamageDoor = 2501;

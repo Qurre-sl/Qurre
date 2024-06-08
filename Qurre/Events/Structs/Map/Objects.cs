@@ -22,4 +22,18 @@ namespace Qurre.Events.Structs
             Allowed = true;
         }
     }
+
+    public class WorkStationUpdateEvent : IBaseEvent
+    {
+        public uint EventId { get; } = MapEvents.WorkStationUpdate;
+
+        public WorkStation Station { get; }
+        public bool Allowed { get; set; }
+
+        internal WorkStationUpdateEvent(WorkStation station)
+        {
+            Station = station;
+            Allowed = true;
+        }
+    }
 }

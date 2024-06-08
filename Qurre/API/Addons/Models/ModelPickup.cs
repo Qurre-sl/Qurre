@@ -1,52 +1,35 @@
-﻿using UnityEngine;
-using System;
-using Mirror;
-using Object = UnityEngine.Object;
-using InventorySystem.Items;
-using InventorySystem.Items.Pickups;
+﻿using Qurre.API.Controllers;
+using UnityEngine;
 
 namespace Qurre.API.Addons.Models
 {
     public class ModelPickup
     {
         private readonly GameObject gameObject;
-        private readonly ItemPickupBase pickup;
+        private readonly Pickup pickup;
 
         public GameObject GameObject => gameObject;
-        public ItemPickupBase Pickup => pickup;
+        public Pickup Pickup => pickup;
 
         public ModelPickup(Model model, ItemType type, Vector3 position, Vector3 rotation, Vector3 size = default, bool kinematic = true)
         {
             try
             {
-                var item = Server.InventoryHost.CreateItemInstance(new(type, ItemSerialGenerator.GenerateNext()), true);
-                ushort ser = ItemSerialGenerator.GenerateNext();
+                GameObject transformer = new("GetPosition");
+                transformer.transform.parent = model.GameObject.transform;
+                transformer.transform.localPosition = position;
+                transformer.transform.localRotation = Quaternion.Euler(rotation);
+                transformer.transform.localScale = size;
 
-                Vector3 pos = model.GameObject.transform.position + position;
-                Quaternion rot = Quaternion.Euler(model.GameObject.transform.rotation.eulerAngles + rotation);
+                pickup = new Item(type).Spawn(transformer.transform.position, transformer.transform.rotation, transformer.transform.lossyScale);
+                gameObject = pickup.GameObject;
 
-                ItemPickupBase ipb = Object.Instantiate(item.PickupDropModel, pos, rot);
+                if (kinematic)
+                    gameObject.GetComponent<Rigidbody>().isKinematic = kinematic;
 
-                ipb.Info.Serial = ser;
-                ipb.Info.ItemId = type;
-                ipb.Info.WeightKg = item.Weight;
-                ipb.NetworkInfo = ipb.Info;
-
-                ipb.Position = pos;
-                ipb.Rotation = rot;
-
-                gameObject = ipb.gameObject;
-                GameObject.GetComponent<Rigidbody>().isKinematic = kinematic;
-                GameObject.transform.parent = model.GameObject.transform;
-                GameObject.transform.localPosition = position;
-                GameObject.transform.localRotation = Quaternion.Euler(rotation);
-                GameObject.transform.localScale = size;
-
-                NetworkServer.Spawn(GameObject);
-
-                pickup = ipb;
+                Object.Destroy(transformer);
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 Log.Warn($"{ex}\n{ex.StackTrace}");
             }

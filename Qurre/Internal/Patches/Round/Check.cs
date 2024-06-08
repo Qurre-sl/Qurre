@@ -176,7 +176,18 @@ namespace Qurre.Internal.Patches.Round
                     yield return Timing.WaitForSeconds(wait - 1);
 
                     instance.RpcDimScreen();
-                    Timing.CallDelayed(1f, () => RoundRestarting.RoundRestart.InitiateRoundRestart());
+                    Timing.CallDelayed(1f, () =>
+                    {
+                        try
+                        {
+                            RoundRestarting.RoundRestart.InitiateRoundRestart();
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Log.Error("Round restart error in game method [InitiateRoundRestart]:\n" + ex);
+                            Server.Restart();
+                        }
+                    });
 
                     // optimization
                     try

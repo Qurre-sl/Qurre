@@ -17,6 +17,7 @@ namespace Qurre.API.Classification.Player
             cachedRole = RoleTypeId.None;
         }
 
+        public PlayerRoleBase Base => _player.ReferenceHub.roleManager.CurrentRole;
         public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
         public QueryProcessor QueryProcessor => _player.ReferenceHub.queryProcessor;
 

@@ -15,6 +15,8 @@ namespace Qurre.API.Classification.Roles
 
         public bool IsWork => pl.RoleInfomation.Role == PlayerRoles.RoleTypeId.Scp173;
 
+        public Scp173ObserversTracker Observers { get; }
+
         public SubroutineManagerModule Subroutine => Base.SubroutineModule;
 
 
@@ -27,6 +29,11 @@ namespace Qurre.API.Classification.Roles
 
             if (Base is null)
                 return;
+
+            if (Subroutine.TryGetSubroutine(out Scp173ObserversTracker observers))
+                Observers = observers;
+            else
+                Log.Debug($"Null Debug: [Roles > Scp106] >> Scp106Attack is null");
         }
     }
 }

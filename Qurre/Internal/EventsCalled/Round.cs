@@ -7,6 +7,7 @@ using Qurre.API;
 using Qurre.API.Addons.Audio;
 using Qurre.API.Attributes;
 using Qurre.API.Controllers;
+using Qurre.API.Controllers.Structs;
 using Qurre.Events;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace Qurre.Internal.EventsCalled
         static void Started()
         {
             API.Round._started = true;
+            API.Round._waiting = false;
         }
 
         [EventMethod(RoundEvents.Restart)]
@@ -45,6 +47,9 @@ namespace Qurre.Internal.EventsCalled
 
             API.Round._started = false;
             API.Round._forceEnd = false;
+            API.Round._waiting = true;
+
+            BcComponent.Refresh();
 
             Extensions.DamagesCached.Clear();
             Patches.Player.Admins.Banned.Cached.Clear();

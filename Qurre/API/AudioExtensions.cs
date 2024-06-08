@@ -239,7 +239,7 @@ namespace Qurre.API
 
                     NetworkServer.SendToReady(new SubroutineMessage(mimicPoint, true));
 
-                    Timing.RunCoroutine(CheckPlaying(audioPlayer));
+                    Timing.RunCoroutine(CheckPlayingAndDestroy(audioPlayer));
                 }
                 catch (Exception ex)
                 {
@@ -248,18 +248,6 @@ namespace Qurre.API
             });
 
             return audioPlayer;
-
-            static IEnumerator<float> CheckPlaying(AudioPlayer audioPlayer)
-            {
-                yield return Timing.WaitForSeconds(5f);
-
-                while (audioPlayer.AudioTasks.Any(x => !x.IsDone) || (audioPlayer.CurrentAudioTask != null && !audioPlayer.CurrentAudioTask.IsDone))
-                {
-                    yield return Timing.WaitForSeconds(0.1f);
-                }
-
-                audioPlayer.DestroyPlayer();
-            }
         }
 
         static void DoMimicPointInit(MimicPointController mimicPoint)
@@ -312,25 +300,26 @@ namespace Qurre.API
                 audioTask.Blacklist.AccessConditions.AddRange(blacklist);
             }
 
-            Timing.RunCoroutine(CheckPlaying(audioPlayer));
+            Timing.RunCoroutine(CheckPlayingAndDestroy(audioPlayer));
 
             return audioPlayer;
 
-            static IEnumerator<float> CheckPlaying(AudioPlayer audioPlayer)
-            {
-                yield return Timing.WaitForSeconds(5f);
-
-                while (audioPlayer.AudioTasks.Any(x => !x.IsDone) || (audioPlayer.CurrentAudioTask != null && !audioPlayer.CurrentAudioTask.IsDone))
-                {
-                    yield return Timing.WaitForSeconds(0.1f);
-                }
-
-                audioPlayer.DestroyPlayer();
-            }
         }
         #endregion
 
         #region Extensions
+        static public IEnumerator<float> CheckPlayingAndDestroy(this AudioPlayer audioPlayer)
+        {
+            yield return Timing.WaitForSeconds(5f);
+
+            while (audioPlayer.AudioTasks.Any(x => !x.IsDone) || (audioPlayer?.CurrentAudioTask?.IsDone == false))
+            {
+                yield return Timing.WaitForSeconds(0.1f);
+            }
+
+            audioPlayer.DestroyPlayer();
+        }
+
         static public void DestroyPlayer(this AudioPlayer audioPlayer)
         {
             audioPlayer.KillCoroutine();
