@@ -41,6 +41,7 @@
         public const uint DropItem = 1422;
         public const uint DroppedItem = 1423;
         public const uint DropAmmo = 1424;
+        public const uint JailbirdTrigger = 1431;
 
         //1500+ <- Interact
         public const uint InteractDoor = 1501;

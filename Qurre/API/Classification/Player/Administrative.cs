@@ -20,8 +20,8 @@
 
         public string GroupName
         {
-            get => ServerStatic.GetPermissionsHandler()._members.TryGetValue(_player.UserInfomation.UserId, out string groupName) ? groupName : null;
-            set => ServerStatic.GetPermissionsHandler()._members[_player.UserInfomation.UserId] = value;
+            get => ServerStatic.GetPermissionsHandler()._members.TryGetValue(_player.UserInformation.UserId, out string groupName) ? groupName : null;
+            set => ServerStatic.GetPermissionsHandler()._members[_player.UserInformation.UserId] = value;
         }
         public string RoleName
         {

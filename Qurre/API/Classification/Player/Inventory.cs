@@ -12,11 +12,13 @@ namespace Qurre.API.Classification.Player
     using Qurre.API;
     using Qurre.API.Addons.Items;
     using Qurre.API.Classification.Structs;
+    using Qurre.API.Objects;
 
     public sealed class Inventory
     {
         public InventorySystem.Inventory Base { get; }
         public AmmoBox Ammo { get; }
+        public Hand Hand { get; }
 
         public int ItemsCount => Base.UserInventory.Items.Count;
 
@@ -57,6 +59,7 @@ namespace Qurre.API.Classification.Player
         {
             Base = player.ReferenceHub.inventory;
             Ammo = new(player);
+            Hand = new(player);
             _player = player;
         }
 
@@ -92,7 +95,19 @@ namespace Qurre.API.Classification.Player
         }
 
         public void Clear()
+            => Clear(true);
+
+        public void Clear(bool clearAmmo)
         {
+            if (clearAmmo)
+            {
+                Ammo[AmmoType.Ammo556] = 0;
+                Ammo[AmmoType.Ammo762] = 0;
+                Ammo[AmmoType.Ammo9] = 0;
+                Ammo[AmmoType.Ammo12Gauge] = 0;
+                Ammo[AmmoType.Ammo44Cal] = 0;
+            }
+
             while (Base.UserInventory.Items.Count > 0)
                 Base.ServerRemoveItem(Base.UserInventory.Items.ElementAt(0).Key, null);
         }

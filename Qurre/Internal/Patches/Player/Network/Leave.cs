@@ -23,7 +23,7 @@ namespace Qurre.Internal.Patches.Player.Network
                 if (player is null || player.IsHost) return;
 
                 ServerConsole.AddLog(
-                    $"Player {player.UserInfomation.Nickname} ({player.UserInfomation.UserId}) ({player.UserInfomation.Id}) disconnected",
+                    $"Player {player.UserInformation.Nickname} ({player.UserInformation.UserId}) ({player.UserInformation.Id}) disconnected",
                     ConsoleColor.DarkMagenta
                     );
 
@@ -52,11 +52,11 @@ namespace Qurre.Internal.Patches.Player.Network
                 if (Fields.Player.Dictionary.ContainsKey(player.GameObject))
                     Fields.Player.Dictionary.Remove(player.GameObject);
 
-                if (Fields.Player.IDs.ContainsKey(player.UserInfomation.Id))
-                    Fields.Player.IDs.Remove(player.UserInfomation.Id);
+                if (Fields.Player.IDs.ContainsKey(player.UserInformation.Id))
+                    Fields.Player.IDs.Remove(player.UserInformation.Id);
 
-                if (Fields.Player.UserIDs.ContainsKey(player.UserInfomation.UserId))
-                    Fields.Player.UserIDs.Remove(player.UserInfomation.UserId);
+                if (Fields.Player.UserIDs.ContainsKey(player.UserInformation.UserId))
+                    Fields.Player.UserIDs.Remove(player.UserInformation.UserId);
 
                 foreach (var item in Fields.Player.Args.Where(kvp => kvp.Value == player).ToList())
                     Fields.Player.Args.Remove(item.Key);

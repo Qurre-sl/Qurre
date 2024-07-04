@@ -33,7 +33,7 @@ namespace Qurre.Internal.Patches.Player.Health
                 if (!ev.Allowed)
                     return;
 
-                instance.CurValue = Mathf.Min(instance.CurValue + Mathf.Abs(ev.Amount), ev.Player?.HealthInfomation?.MaxHp ?? instance.MaxValue);
+                instance.CurValue = Mathf.Min(instance.CurValue + Mathf.Abs(ev.Amount), ev.Player?.HealthInformation?.MaxHp ?? instance.MaxValue);
             }
             catch (Exception e)
             {

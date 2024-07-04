@@ -8,11 +8,15 @@ using MapGeneration;
 using MapGeneration.Distributors;
 using Mirror;
 using PlayerRoles;
+using PlayerRoles.FirstPersonControl;
+using PlayerRoles.PlayableScps;
 using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
 using Qurre.API.Addons;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -67,8 +71,8 @@ namespace Qurre.API
 			=> Math.Abs(first - second);
 
 		#region Player.Get
-		static public IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInfomation.Team == team);
-		static public IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInfomation.Role == role);
+		static public IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInformation.Team == team);
+		static public IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInformation.Role == role);
 
 		static public Player GetPlayer(this CommandSender sender) => sender is null ? null : GetPlayer(sender.SenderId);
 		static public Player GetPlayer(this ReferenceHub referenceHub) { try { return referenceHub is null ? null : GetPlayer(referenceHub.gameObject); } catch { return null; } }
@@ -85,7 +89,7 @@ namespace Qurre.API
 		{
 			if (Internal.Fields.Player.IDs.TryGetValue(playerId, out var _pl)) return _pl;
 
-			foreach (Player pl in Player.List.Where(x => x.UserInfomation.Id == playerId))
+			foreach (Player pl in Player.List.Where(x => x.UserInformation.Id == playerId))
 			{
 				Internal.Fields.Player.IDs.Add(playerId, pl);
 				return pl;
@@ -111,7 +115,7 @@ namespace Qurre.API
 				{
 					foreach (Player player in Internal.Fields.Player.Dictionary.Values)
 					{
-						if (player.UserInfomation.UserId == args)
+						if (player.UserInformation.UserId == args)
 						{
 							playerFound = player;
 							break;
@@ -125,13 +129,13 @@ namespace Qurre.API
 
 					foreach (Player player in Internal.Fields.Player.Dictionary.Values)
 					{
-						if (player.UserInfomation.Nickname is null)
+						if (player.UserInformation.Nickname is null)
 							continue;
 
-						if (player.UserInfomation.Nickname.IndexOf(args, StringComparison.OrdinalIgnoreCase) == -1)
+						if (player.UserInformation.Nickname.IndexOf(args, StringComparison.OrdinalIgnoreCase) == -1)
 							continue;
 
-						string secondString = player.UserInfomation.Nickname;
+						string secondString = player.UserInformation.Nickname;
 						int nameDifference = secondString.Length - firstString.Length;
 
 						if (nameDifference < lastnameDifference)
@@ -174,6 +178,74 @@ namespace Qurre.API
 			=> Vector3.Distance(source.MovementState.Position, position);
 		static public float DistanceTo(this Player source, GameObject Object)
 			=> Vector3.Distance(source.MovementState.Position, Object.transform.position);
+		static public HashSet<Player> GetLookingAtPlayers(this Player player, float distance = 0)
+		{
+			HashSet<Player> hash = new();
+
+			foreach (Player target in Player.List)
+			{
+				if (player == target)
+					continue;
+
+				if (target.RoleInformation.Team is Team.Dead)
+					continue;
+
+				if (target.Effects.CheckActive<Invisible>())
+					continue;
+
+				if (target.RoleInformation.Base is not IFpcRole fpcRole)
+					continue;
+
+				if (!VisionInformation.GetVisionInformation(
+					player.ReferenceHub,
+					player.CameraTransform,
+					fpcRole.FpcModule.Position,
+					fpcRole.FpcModule.CharacterControllerSettings.Radius,
+					distance, true, true, 0, false).IsLooking)
+					continue;
+
+				hash.Add(target);
+			}
+
+			return hash;
+		}
+		static public Player GetLookingAtPlayer(this Player player, float distance = 0)
+		{
+			foreach (Player target in Player.List)
+			{
+				if (player == target)
+					continue;
+
+				if (target.RoleInformation.Team is Team.Dead)
+					continue;
+
+				if (target.Effects.CheckActive<Invisible>())
+					continue;
+
+				if (target.RoleInformation.Base is not IFpcRole fpcRole)
+					continue;
+
+				if (!VisionInformation.GetVisionInformation(
+					player.ReferenceHub,
+					player.CameraTransform,
+					fpcRole.FpcModule.Position,
+					fpcRole.FpcModule.CharacterControllerSettings.Radius,
+					distance, true, true, 0, false).IsLooking)
+					continue;
+
+				return target;
+			}
+
+			return null;
+		}
+
+		static public EscapeEvent InvokeEscape(this Player pl, RoleTypeId role)
+		{
+			EscapeEvent @event = new(pl, role);
+			@event.InvokeEvent();
+
+			return @event;
+		}
 		#endregion
 
 		#region Damages

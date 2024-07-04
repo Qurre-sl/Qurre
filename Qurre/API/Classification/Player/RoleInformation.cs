@@ -7,11 +7,11 @@ namespace Qurre.API.Classification.Player
     using Qurre.API.Classification.Roles;
     using RemoteAdmin;
 
-    public sealed class RoleInfomation
+    public sealed class RoleInformation
     {
         readonly Player _player;
         internal RoleTypeId cachedRole;
-        internal RoleInfomation(Player pl)
+        internal RoleInformation(Player pl)
         {
             _player = pl;
             cachedRole = RoleTypeId.None;

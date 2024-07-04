@@ -52,7 +52,7 @@ namespace Qurre.Internal.Patches.Round
                 {
                     try
                     {
-                        switch (pl.RoleInfomation.Team)
+                        switch (pl.RoleInformation.Team)
                         {
                             case Team.ClassD:
                                 list.class_ds++;
@@ -68,7 +68,7 @@ namespace Qurre.Internal.Patches.Round
                                 break;
                             case Team.SCPs:
                                 {
-                                    if (pl.RoleInfomation.Role is RoleTypeId.Scp0492)
+                                    if (pl.RoleInformation.Role is RoleTypeId.Scp0492)
                                         list.zombies++;
                                     else
                                         list.scps_except_zombies++;
@@ -196,10 +196,10 @@ namespace Qurre.Internal.Patches.Round
                         {
                             try
                             {
-                                if (pl.RoleInfomation.Role != RoleTypeId.Spectator)
+                                if (pl.RoleInformation.Role != RoleTypeId.Spectator)
                                 {
                                     pl.Inventory.Clear();
-                                    pl.RoleInfomation.Role = RoleTypeId.Spectator;
+                                    pl.RoleInformation.Role = RoleTypeId.Spectator;
                                 }
                             }
                             catch { }

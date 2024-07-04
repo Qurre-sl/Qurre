@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
+
 namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
     using Qurre.API.Addons;
 
-    public sealed class PlayerStatsInfomation
+    public sealed class StatsInformation
     {
         private readonly Player _player;
-        internal PlayerStatsInfomation(Player pl)
+        internal StatsInformation(Player pl)
         {
             _player = pl;
             DeathsCount = 0;

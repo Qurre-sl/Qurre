@@ -9,7 +9,7 @@ namespace Qurre.API.Classification.Roles
     {
         public Scp106Role Base { get; }
 
-        public bool IsWork => pl.RoleInfomation.Role == PlayerRoles.RoleTypeId.Scp106;
+        public bool IsWork => pl.RoleInformation.Role is PlayerRoles.RoleTypeId.Scp106;
 
         public Scp106Attack Attack { get; }
 

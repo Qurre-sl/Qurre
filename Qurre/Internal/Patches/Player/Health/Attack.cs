@@ -117,7 +117,7 @@ namespace Qurre.Internal.Patches.Player.Health
                 ev.InvokeEvent();
 
                 if (ev.Damage == -1)
-                    ev.Damage = ev.Target.HealthInfomation.Hp + 1;
+                    ev.Damage = ev.Target.HealthInformation.Hp + 1;
 
                 handler.Damage = ev.Damage;
                 handler.IsFriendlyFire = ev.FriendlyFire;

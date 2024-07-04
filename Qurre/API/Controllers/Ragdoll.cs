@@ -78,9 +78,9 @@ namespace Qurre.API.Controllers
             _pl = owner;
         }
         public Ragdoll(RoleTypeId type, Vector3 position, Quaternion rotation, DamageHandlerBase handler, Player owner)
-            : this(type, position, rotation, handler, owner.UserInfomation.Nickname) => _pl = Server.Host;
+            : this(type, position, rotation, handler, owner.UserInformation.Nickname) => _pl = Server.Host;
         public Ragdoll(Vector3 position, Quaternion rotation, DamageHandlerBase handler, Player owner)
-            : this(owner.RoleInfomation.Role, position, rotation, handler, owner) { }
+            : this(owner.RoleInformation.Role, position, rotation, handler, owner) { }
         public Ragdoll(RoleTypeId type, Vector3 position, Quaternion rotation, DamageHandlerBase handler, string nickname)
         {
             if (!PlayerRoleLoader.AllRoles.TryFind(out var role, x => x.Key == type))

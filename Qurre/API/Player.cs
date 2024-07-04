@@ -25,6 +25,7 @@ namespace Qurre.API
             Disconnected = false;
             LastSynced = Time.time;
             JoinedTime = DateTime.Now;
+            SpawnedTime = DateTime.Now;
 
             Variables = new();
 
@@ -34,12 +35,12 @@ namespace Qurre.API
             Client = new(this);
             Effects = new(this);
             GamePlay = new(this);
-            HealthInfomation = new(this);
+            HealthInformation = new(this);
             Inventory = new(this);
             MovementState = new(this);
-            PlayerStatsInfomation = new(this);
-            RoleInfomation = new(this);
-            UserInfomation = new(this);
+            StatsInformation = new(this);
+            RoleInformation = new(this);
+            UserInformation = new(this);
 
             if (_rh.isLocalPlayer)
                 return;
@@ -84,6 +85,7 @@ namespace Qurre.API
         public bool FriendlyFire { get; set; }
         public float LastSynced { get; internal set; }
         public DateTime JoinedTime { get; internal set; }
+        public DateTime SpawnedTime { get; internal set; }
         public VariableDictionary<string, object> Variables { get; }
         public string Tag
         {
@@ -103,11 +105,11 @@ namespace Qurre.API
         public Classification.Player.Client Client { get; }
         public Classification.Player.EffectsManager Effects { get; }
         public Classification.Player.GamePlay GamePlay { get; }
-        public Classification.Player.HealthInfomation HealthInfomation { get; }
+        public Classification.Player.HealthInformation HealthInformation { get; }
         public Classification.Player.Inventory Inventory { get; }
         public Classification.Player.MovementState MovementState { get; }
-        public Classification.Player.PlayerStatsInfomation PlayerStatsInfomation { get; }
-        public Classification.Player.RoleInfomation RoleInfomation { get; }
-        public Classification.Player.UserInfomation UserInfomation { get; }
+        public Classification.Player.StatsInformation StatsInformation { get; }
+        public Classification.Player.RoleInformation RoleInformation { get; }
+        public Classification.Player.UserInformation UserInformation { get; }
     }
 }

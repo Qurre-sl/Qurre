@@ -8,12 +8,6 @@
    <a href="https://github.com/Qurre-sl/Qurre/releases" alt="Release">
       <img src="https://img.shields.io/github/v/release/Qurre-sl/Qurre.svg?style=plastic" alt="Release"/>
    </a>
-   <a href="https://www.nuget.org/packages/Qurre" alt="nuget downloads">
-      <img src="https://img.shields.io/nuget/dt/Qurre?label=nuget%20downloads&style=plastic" alt="nuget downloads"/>
-   </a>
-   <a href="https://www.nuget.org/packages/Qurre" alt="nuget release">
-      <img src="https://img.shields.io/nuget/vpre/Qurre?style=plastic" alt="nuget release"/>
-   </a>
 </p>
 <a href="https://discord.gg/zGUqfJQebn" alt="Discord">
 <img src="https://cdn.fydne.dev/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
@@ -31,13 +25,10 @@ Simple, convenient and functional plugin loader for SCP: Secret Laboratory
 ### EN [RU](https://github.com/Qurre-sl/Qurre/blob/main/README-RU.md)
 
 # Installation
-### Manual installation
 1. Download `Qurre.tar.gz` file from [releases](https://github.com/Qurre-sl/Qurre/releases/latest)
 2. Move `Qurre` folder into `%appdata%` (on Linux: `~/.config`)
 3. Move `Assembly-CSharp.dll` into game folder: `SCPSL_Data/Managed` (with file replacement)
 4. That's all, you have successfully installed **Qurre**
-### Automatic installation
-You can find the auto-installer on [the discord server](https://discord.gg/qXBZUCaDBR), or you can download the archive from [here](https://cdn.fydne.dev/qurre/modules/Qurre-Installer.zip)
 
 # Documentation
 > Coming soon

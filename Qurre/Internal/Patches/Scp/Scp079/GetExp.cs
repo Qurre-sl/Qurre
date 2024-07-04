@@ -37,7 +37,7 @@ namespace Qurre.Internal.Patches.Scp.Scp079
                 if (!ev.Allowed)
                     return;
 
-                ev.Player.RoleInfomation.Scp079.TierManager.ServerGrantExperience(ev.Amount, ev.Type);
+                ev.Player.RoleInformation.Scp079.TierManager.ServerGrantExperience(ev.Amount, ev.Type);
             }
             catch (Exception e)
             {

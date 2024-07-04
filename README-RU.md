@@ -8,12 +8,6 @@
    <a href="https://github.com/Qurre-sl/Qurre/releases" alt="Release">
       <img src="https://img.shields.io/github/v/release/Qurre-sl/Qurre.svg?style=plastic" alt="Release"/>
    </a>
-   <a href="https://www.nuget.org/packages/Qurre" alt="nuget downloads">
-      <img src="https://img.shields.io/nuget/dt/Qurre?label=nuget%20downloads&style=plastic" alt="nuget downloads"/>
-   </a>
-   <a href="https://www.nuget.org/packages/Qurre" alt="nuget release">
-      <img src="https://img.shields.io/nuget/vpre/Qurre?style=plastic" alt="nuget release"/>
-   </a>
 </p>
 <a href="https://discord.gg/zGUqfJQebn" alt="Discord">
 <img src="https://cdn.fydne.dev/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
@@ -31,13 +25,10 @@
 ### [EN](https://github.com/Qurre-sl/Qurre) RU
 
 # Установка
-### Ручная установка
 1. Скачайте файл `Qurre.tar.gz` из [релизов](https://github.com/Qurre-sl/Qurre/releases/latest)
 2. Поместите папку `Qurre` в `%appdata%` (На линукс: `~/.config`)
 3. Поместите `Assembly-CSharp.dll` в папку с игрой: `SCPSL_Data/Managed` (с заменой файлов)
 4. На этом все, вы успешно установили **Qurre**
-### Автоматическая установка
-Авто-установщик вы можете найти на [дискорд сервере](https://discord.gg/qXBZUCaDBR), либо вы можете скачать архив [отсюда](https://cdn.fydne.dev/qurre/modules/Qurre-Installer.zip)
 
 # Документация
 > Появится в скором времени

@@ -44,7 +44,7 @@ namespace Qurre.Internal.Patches.Player.Health
 
                 attacker ??= target;
 
-                if ((target is not null && (target.RoleInfomation.Role != RoleTypeId.Spectator ||
+                if ((target is not null && (target.RoleInformation.Role != RoleTypeId.Spectator ||
                     target.GamePlay.GodMode || target.IsHost)) || attacker is null)
                     return;
 
@@ -54,8 +54,8 @@ namespace Qurre.Internal.Patches.Player.Health
 
                 if (attacker != target && attacker is not null && target is not null)
                 {
-                    attacker.PlayerStatsInfomation._kills.Add(new KillElement(attacker, target, type, DateTime.Now));
-                    target.PlayerStatsInfomation.DeathsCount++;
+                    attacker.StatsInformation._kills.Add(new KillElement(attacker, target, type, DateTime.Now));
+                    target.StatsInformation.DeathsCount++;
                 }
                 //if (target.Bot && API.Map.Bots.TryFind(out var _bot, x => x.Player == target)) _bot.Destroy();
             }

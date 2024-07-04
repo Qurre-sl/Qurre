@@ -13,7 +13,7 @@ namespace Qurre.API.Classification.Roles
 
         public Scp173Role Base { get; }
 
-        public bool IsWork => pl.RoleInfomation.Role == PlayerRoles.RoleTypeId.Scp173;
+        public bool IsWork => pl.RoleInformation.Role is PlayerRoles.RoleTypeId.Scp173;
 
         public Scp173ObserversTracker Observers { get; }
 
