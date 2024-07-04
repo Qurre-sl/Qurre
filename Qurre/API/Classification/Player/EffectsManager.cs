@@ -1,6 +1,7 @@
 ﻿namespace Qurre.API.Classification.Player
 {
     using CustomPlayerEffects;
+    using CustomRendering;
     using Qurre.API;
     using Qurre.API.Objects;
 
@@ -91,6 +92,14 @@
                 return true;
             }
             return false;
+        }
+        #endregion
+
+        #region Other functions
+        public void SetFogType(FogType type)
+        {
+            Enable<FogControl>();
+            SetIntensity<FogControl>((byte)(type + 1));
         }
         #endregion
     }

@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Qurre Team")]
 [assembly: AssemblyProduct("Qurre SL")]
-[assembly: AssemblyCopyright("Copyright © Qurre Team 2023")]
+[assembly: AssemblyCopyright("Copyright © Qurre Team")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

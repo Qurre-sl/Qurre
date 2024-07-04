@@ -11,7 +11,7 @@ namespace Qurre.API.Controllers
     public class Room
     {
         internal readonly Color defaultColor;
-        internal readonly RoomLightController _light;
+        internal readonly RoomLightController[] _lights;
         ZoneType zone = ZoneType.Unknown;
 
 #nullable enable
@@ -82,9 +82,13 @@ namespace Qurre.API.Controllers
                 return zone;
             }
         }
-        public bool LightsDisabled => _light && !_light.NetworkLightsEnabled;
+        public bool LightsDisabled => _lights.Length > 0 && _lights.Any(x => !x.NetworkLightsEnabled);
 
-        public void LightsOff(float duration) => _light.ServerFlickerLights(duration);
+        public void LightsOff(float duration)
+        {
+            foreach (var _light in _lights)
+                _light.ServerFlickerLights(duration);
+        }
 
         internal Room(RoomIdentifier identifier)
         {
@@ -94,8 +98,12 @@ namespace Qurre.API.Controllers
             Shape = Identifier.Shape;
             GameObject = identifier.gameObject;
 
-            _light = GameObject.GetComponentInChildren<RoomLightController>();
-            defaultColor = _light.OverrideColor;
+            _lights = GameObject.GetComponentsInChildren<RoomLightController>();
+
+            if (_lights.Length == 0)
+                defaultColor = Color.white;
+            else
+                defaultColor = _lights[0].OverrideColor;
 
             foreach (var cam in GameObject.GetComponentsInChildren<Scp079Camera>())
                 Cameras.Add(new Camera(cam, this));

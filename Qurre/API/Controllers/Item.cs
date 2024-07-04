@@ -51,7 +51,7 @@ namespace Qurre.API.Controllers
         {
             get
             {
-                return Base.OwnerInventory.UserInventory.Items.FirstOrDefault(i => i.Value == Base).Key;
+                return Base.ItemSerial;
             }
             internal set
             {
@@ -78,7 +78,8 @@ namespace Qurre.API.Controllers
         {
             get
             {
-                // TODO
+                if (Pickup.BaseToItem.TryGetValue(Base.PickupDropModel, out var pick))
+                    return pick;
 
                 return null;
             }
@@ -174,22 +175,6 @@ namespace Qurre.API.Controllers
 
             if (ipb is FirearmPickup firearmPickup)
             {
-                if (this is Gun firearm)
-                {
-                    firearmPickup.Status = new FirearmStatus(firearm.Ammo, FirearmStatusFlags.MagazineInserted, firearmPickup.Status.Attachments);
-                }
-                else
-                {
-                    byte ammo = Base switch
-                    {
-                        AutomaticFirearm auto => auto._baseMaxAmmo,
-                        Shotgun shotgun => shotgun._ammoCapacity,
-                        Revolver _ => 6,
-                        _ => 0,
-                    };
-                    firearmPickup.Status = new FirearmStatus(ammo, FirearmStatusFlags.MagazineInserted, firearmPickup.Status.Attachments);
-                }
-
                 firearmPickup.NetworkStatus = firearmPickup.Status;
             }
 

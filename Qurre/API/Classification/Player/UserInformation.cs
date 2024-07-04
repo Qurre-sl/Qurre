@@ -1,12 +1,12 @@
 ﻿namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
-    public sealed class UserInfomation
+    public sealed class UserInformation
     {
         private string _ui;
         private readonly string _nick = "";
         private readonly Player _player;
-        internal UserInfomation(Player pl)
+        internal UserInformation(Player pl)
         {
             _player = pl;
             _ui = pl.AuthManager.UserId;
@@ -17,6 +17,7 @@
 
         public string Ip => _player.ClassManager.connectionToClient.address;
         public int Id => _player.ReferenceHub.PlayerId;
+        public uint NetId => _player.ReferenceHub.netId;
         public string UserId
         {
             get

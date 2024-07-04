@@ -19,10 +19,10 @@ namespace Qurre.Internal.Patches.Misc
                 if (pl is null)
                     return true;
 
-                if (pl.HealthInfomation._maxHp < 1)
+                if (pl.HealthInformation._maxHp < 1)
                     return true;
 
-                __result = pl.HealthInfomation._maxHp;
+                __result = pl.HealthInformation._maxHp;
                 return false;
             }
             catch (Exception e)

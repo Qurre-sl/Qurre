@@ -7,6 +7,7 @@ namespace Qurre.Internal.Patches.Player.Role
     using Qurre.API;
     using Qurre.Events.Structs;
     using Qurre.Internal.EventsManager;
+    using UnityEngine;
 
     [HarmonyPatch(typeof(PlayerRoleManager), nameof(PlayerRoleManager.ServerSetRole))]
     static class ChangeRole
@@ -29,6 +30,11 @@ namespace Qurre.Internal.Patches.Player.Role
 
                 newRole = ev.Role;
                 reason = ev.Reason;
+
+                if (ev.Allowed)
+                {
+                    pl.LastSynced = Time.time;
+                }
 
                 return ev.Allowed;
             }

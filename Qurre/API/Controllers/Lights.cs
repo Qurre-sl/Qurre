@@ -1,4 +1,5 @@
 ﻿using Qurre.API.Addons.Models;
+using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -17,7 +18,7 @@ namespace Qurre.API.Controllers
         public bool LockChange { get; set; } = false;
         public bool Override
         {
-            get => _room is null || _room._light.NetworkOverrideColor != _room.defaultColor;
+            get => _room is null || _room._lights.Any(x => x.NetworkOverrideColor != _room.defaultColor);
             set
             {
                 if (LockChange)
@@ -29,7 +30,7 @@ namespace Qurre.API.Controllers
                 if (_room is not null)
                 {
                     if (value) Log.Debug($"Override.set = true is not supported in Default Room. Called from {Assembly.GetCallingAssembly().GetName().Name}");
-                    else _room._light.NetworkOverrideColor = _room.defaultColor;
+                    else foreach (var light in _room._lights) light.NetworkOverrideColor = _room.defaultColor;
                 }
                 else if (_custom is not null)
                 {
@@ -65,7 +66,7 @@ namespace Qurre.API.Controllers
 
         public Color Color
         {
-            get => _room is not null ? _room._light.NetworkOverrideColor : _custom._lastColor;
+            get => _room is not null ? (_room._lights.Length > 0 ? _room._lights[0].NetworkOverrideColor : _room.defaultColor) : _custom._lastColor;
             set
             {
                 if (LockChange)
@@ -76,7 +77,8 @@ namespace Qurre.API.Controllers
 
                 if (_room is not null)
                 {
-                    _room._light.NetworkOverrideColor = value;
+                    foreach (var light in _room._lights)
+                        light.NetworkOverrideColor = value;
                 }
                 else if (_custom is not null)
                 {

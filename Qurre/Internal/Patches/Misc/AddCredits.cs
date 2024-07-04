@@ -5,7 +5,7 @@ using System.Reflection.Emit;
 
 namespace Qurre.Internal.Patches.Misc
 {
-    // don't remove plz
+    // don't remove pls
     [HarmonyPatch(typeof(ServerConsole), nameof(ServerConsole.RefreshServerNameSafe))]
     static class AddCredits
     {

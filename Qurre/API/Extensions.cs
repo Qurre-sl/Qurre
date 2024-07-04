@@ -2,16 +2,21 @@
 using Interactables.Interobjects;
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items;
+using InventorySystem.Items.Firearms.Attachments;
 using InventorySystem.Items.Usables.Scp244.Hypothermia;
 using MapGeneration;
 using MapGeneration.Distributors;
 using Mirror;
 using PlayerRoles;
+using PlayerRoles.FirstPersonControl;
+using PlayerRoles.PlayableScps;
 using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
 using Qurre.API.Addons;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +26,7 @@ using SinkHole = CustomPlayerEffects.Sinkhole;
 
 namespace Qurre.API
 {
-    static public class Extensions
+	static public class Extensions
 	{
 		static public bool TryFind<TSource>(this IEnumerable<TSource> source, out TSource found, Func<TSource, bool> predicate)
 		{
@@ -66,8 +71,8 @@ namespace Qurre.API
 			=> Math.Abs(first - second);
 
 		#region Player.Get
-		static public IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInfomation.Team == team);
-		static public IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInfomation.Role == role);
+		static public IEnumerable<Player> GetPlayer(this Team team) => Player.List.Where(player => player.RoleInformation.Team == team);
+		static public IEnumerable<Player> GetPlayer(this RoleTypeId role) => Player.List.Where(player => player.RoleInformation.Role == role);
 
 		static public Player GetPlayer(this CommandSender sender) => sender is null ? null : GetPlayer(sender.SenderId);
 		static public Player GetPlayer(this ReferenceHub referenceHub) { try { return referenceHub is null ? null : GetPlayer(referenceHub.gameObject); } catch { return null; } }
@@ -84,7 +89,7 @@ namespace Qurre.API
 		{
 			if (Internal.Fields.Player.IDs.TryGetValue(playerId, out var _pl)) return _pl;
 
-			foreach (Player pl in Player.List.Where(x => x.UserInfomation.Id == playerId))
+			foreach (Player pl in Player.List.Where(x => x.UserInformation.Id == playerId))
 			{
 				Internal.Fields.Player.IDs.Add(playerId, pl);
 				return pl;
@@ -110,7 +115,7 @@ namespace Qurre.API
 				{
 					foreach (Player player in Internal.Fields.Player.Dictionary.Values)
 					{
-						if (player.UserInfomation.UserId == args)
+						if (player.UserInformation.UserId == args)
 						{
 							playerFound = player;
 							break;
@@ -124,13 +129,13 @@ namespace Qurre.API
 
 					foreach (Player player in Internal.Fields.Player.Dictionary.Values)
 					{
-						if (player.UserInfomation.Nickname is null)
+						if (player.UserInformation.Nickname is null)
 							continue;
 
-						if (player.UserInfomation.Nickname.IndexOf(args, StringComparison.OrdinalIgnoreCase) == -1)
+						if (player.UserInformation.Nickname.IndexOf(args, StringComparison.OrdinalIgnoreCase) == -1)
 							continue;
 
-						string secondString = player.UserInfomation.Nickname;
+						string secondString = player.UserInformation.Nickname;
 						int nameDifference = secondString.Length - firstString.Length;
 
 						if (nameDifference < lastnameDifference)
@@ -173,6 +178,74 @@ namespace Qurre.API
 			=> Vector3.Distance(source.MovementState.Position, position);
 		static public float DistanceTo(this Player source, GameObject Object)
 			=> Vector3.Distance(source.MovementState.Position, Object.transform.position);
+		static public HashSet<Player> GetLookingAtPlayers(this Player player, float distance = 0)
+		{
+			HashSet<Player> hash = new();
+
+			foreach (Player target in Player.List)
+			{
+				if (player == target)
+					continue;
+
+				if (target.RoleInformation.Team is Team.Dead)
+					continue;
+
+				if (target.Effects.CheckActive<Invisible>())
+					continue;
+
+				if (target.RoleInformation.Base is not IFpcRole fpcRole)
+					continue;
+
+				if (!VisionInformation.GetVisionInformation(
+					player.ReferenceHub,
+					player.CameraTransform,
+					fpcRole.FpcModule.Position,
+					fpcRole.FpcModule.CharacterControllerSettings.Radius,
+					distance, true, true, 0, false).IsLooking)
+					continue;
+
+				hash.Add(target);
+			}
+
+			return hash;
+		}
+		static public Player GetLookingAtPlayer(this Player player, float distance = 0)
+		{
+			foreach (Player target in Player.List)
+			{
+				if (player == target)
+					continue;
+
+				if (target.RoleInformation.Team is Team.Dead)
+					continue;
+
+				if (target.Effects.CheckActive<Invisible>())
+					continue;
+
+				if (target.RoleInformation.Base is not IFpcRole fpcRole)
+					continue;
+
+				if (!VisionInformation.GetVisionInformation(
+					player.ReferenceHub,
+					player.CameraTransform,
+					fpcRole.FpcModule.Position,
+					fpcRole.FpcModule.CharacterControllerSettings.Radius,
+					distance, true, true, 0, false).IsLooking)
+					continue;
+
+				return target;
+			}
+
+			return null;
+		}
+
+		static public EscapeEvent InvokeEscape(this Player pl, RoleTypeId role)
+		{
+			EscapeEvent @event = new(pl, role);
+			@event.InvokeEvent();
+
+			return @event;
+		}
 		#endregion
 
 		#region Damages
@@ -192,6 +265,7 @@ namespace Qurre.API
 			ScpDamageHandler _ => LiteDamageTypes.ScpDamage,
 			UniversalDamageHandler _ => LiteDamageTypes.Universal,
 			WarheadDamageHandler _ => LiteDamageTypes.Warhead,
+			//SnowballDamageHandler _ => LiteDamageTypes.Snowball,
 			_ => LiteDamageTypes.Unknow,
 		};
 
@@ -211,6 +285,8 @@ namespace Qurre.API
 				ExplosionDamageHandler _ => DamageTypes.Explosion,
 				JailbirdDamageHandler _ => DamageTypes.Jailbird,
 				MicroHidDamageHandler _ => DamageTypes.MicroHid,
+
+				//SnowballDamageHandler _ => DamageTypes.Snowball,
 
 				FirearmDamageHandler fr => fr.WeaponType switch
 				{
@@ -271,6 +347,9 @@ namespace Qurre.API
 				23 => DamageTypes.Hypothermia,
 				24 => DamageTypes.CardiacArrest,
 				25 => DamageTypes.Scp939,
+				26 => DamageTypes.Scp3114,
+				27 => DamageTypes.MarshmallowMan,
+				28 => DamageTypes.Scp1507,
 				_ => DamageTypes.Unknow,
 			};
 		}
@@ -389,7 +468,9 @@ namespace Qurre.API
 		{
 			EffectType.AmnesiaItems => typeof(AmnesiaItems),
 			EffectType.AmnesiaVision => typeof(AmnesiaVision),
+			EffectType.AntiScp207 => typeof(AntiScp207),
 			EffectType.Asphyxiated => typeof(Asphyxiated),
+			//EffectType.BecomingFlamingo => typeof(BecomingFlamingo),
 			EffectType.Bleeding => typeof(Bleeding),
 			EffectType.Blinded => typeof(Blinded),
 			EffectType.BodyshotReduction => typeof(BodyshotReduction),
@@ -404,31 +485,40 @@ namespace Qurre.API
 			EffectType.Ensnared => typeof(Ensnared),
 			EffectType.Exhausted => typeof(Exhausted),
 			EffectType.Flashed => typeof(Flashed),
+			EffectType.FogControl => typeof(FogControl),
+			EffectType.Ghostly => typeof(Ghostly),
 			EffectType.Hemorrhage => typeof(Hemorrhage),
 			EffectType.Hypothermia => typeof(Hypothermia),
 			EffectType.InsufficientLighting => typeof(InsufficientLighting),
 			EffectType.Invigorated => typeof(Invigorated),
 			EffectType.Invisible => typeof(Invisible),
 			EffectType.MovementBoost => typeof(MovementBoost),
+			EffectType.PocketCorroding => typeof(PocketCorroding),
 			EffectType.Poisoned => typeof(Poisoned),
 			EffectType.RainbowTaste => typeof(RainbowTaste),
+			EffectType.Scanned => typeof(Scanned),
 			EffectType.Scp1853 => typeof(Scp1853),
 			EffectType.Scp207 => typeof(Scp207),
 			EffectType.SeveredHands => typeof(SeveredHands),
+			EffectType.SilentWalk => typeof(SilentWalk),
 			EffectType.Sinkhole => typeof(SinkHole),
+			EffectType.Slowness => typeof(Slowness),
 			EffectType.SoundtrackMute => typeof(SoundtrackMute),
 			EffectType.SpawnProtected => typeof(SpawnProtected),
 			EffectType.Stained => typeof(Stained),
+			EffectType.Strangled => typeof(Strangled),
+			//EffectType.Snowed => typeof(Snowed),
 			EffectType.Traumatized => typeof(Traumatized),
 			EffectType.Vitality => typeof(Vitality),
-			EffectType.PocketCorroding => typeof(PocketCorroding),
 			_ => throw new InvalidOperationException("Invalid effect enum provided"),
 		};
 		static public EffectType GetEffectType(this StatusEffectBase ef) => ef switch
 		{
 			AmnesiaItems => EffectType.AmnesiaItems,
 			AmnesiaVision => EffectType.AmnesiaVision,
+			AntiScp207 => EffectType.AntiScp207,
 			Asphyxiated => EffectType.Asphyxiated,
+			//BecomingFlamingo => EffectType.BecomingFlamingo,
 			Bleeding => EffectType.Bleeding,
 			Blinded => EffectType.Blinded,
 			BodyshotReduction => EffectType.BodyshotReduction,
@@ -443,24 +533,32 @@ namespace Qurre.API
 			Ensnared => EffectType.Ensnared,
 			Exhausted => EffectType.Exhausted,
 			Flashed => EffectType.Flashed,
+			FogControl => EffectType.FogControl,
+			Ghostly => EffectType.Ghostly,
 			Hemorrhage => EffectType.Hemorrhage,
 			Hypothermia => EffectType.Hypothermia,
 			InsufficientLighting => EffectType.InsufficientLighting,
 			Invigorated => EffectType.Invigorated,
 			Invisible => EffectType.Invisible,
 			MovementBoost => EffectType.MovementBoost,
+			PocketCorroding => EffectType.PocketCorroding,
 			Poisoned => EffectType.Poisoned,
 			RainbowTaste => EffectType.RainbowTaste,
+			Scanned => EffectType.Scanned,
 			Scp1853 => EffectType.Scp1853,
 			Scp207 => EffectType.Scp207,
 			SeveredHands => EffectType.SeveredHands,
+			SilentWalk => EffectType.SilentWalk,
 			SinkHole => EffectType.Sinkhole,
+			Slowness => EffectType.Slowness,
 			SoundtrackMute => EffectType.SoundtrackMute,
 			SpawnProtected => EffectType.SpawnProtected,
 			Stained => EffectType.Stained,
+			Strangled => EffectType.Strangled,
+			//Snowed => EffectType.Snowed,
 			Traumatized => EffectType.Traumatized,
 			Vitality => EffectType.Vitality,
-			PocketCorroding => EffectType.PocketCorroding,
+
 			_ => EffectType.None,
 		};
 		#endregion
@@ -496,6 +594,10 @@ namespace Qurre.API
 
 		#region GetRagdoll
 		static public Ragdoll GetRagdoll(this BasicRagdoll basic) => Map.Ragdolls.FirstOrDefault(x => x.ragdoll == basic);
+		#endregion
+
+		#region GetWorkStation
+		static public WorkStation GetWorkStation(this WorkstationController controller) => Map.WorkStations.FirstOrDefault(x => x.Controller == controller);
 		#endregion
 	}
 }

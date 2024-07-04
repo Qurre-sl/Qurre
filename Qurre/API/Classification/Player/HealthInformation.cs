@@ -7,11 +7,12 @@ namespace Qurre.API.Classification.Player
     using System.Linq;
     using UnityEngine;
 
-    public sealed class HealthInfomation
+    public sealed class HealthInformation
     {
         internal float _maxHp = -1;
         private readonly Player _player;
-        internal HealthInfomation(Player pl) => _player = pl;
+        internal HealthInformation(Player pl)
+            => _player = pl;
 
         public PlayerStats PlayerStats => _player.ReferenceHub.playerStats;
 
@@ -24,9 +25,12 @@ namespace Qurre.API.Classification.Player
             typeof(HumeShieldStat), // 4
             typeof(VigorStat) // 5
         */
-        public HealthStat HealthStat => (HealthStat)PlayerStats.StatModules[0];
-        public AhpStat AhpStat => (AhpStat)PlayerStats.StatModules[1];
-        public StaminaStat StaminaStat => (StaminaStat)PlayerStats.StatModules[2];
+        public HealthStat HealthStat
+            => (HealthStat)PlayerStats.StatModules[0];
+        public AhpStat AhpStat
+            => (AhpStat)PlayerStats.StatModules[1];
+        public StaminaStat StaminaStat
+            => (StaminaStat)PlayerStats.StatModules[2];
 
         public float Hp
         {
@@ -39,7 +43,8 @@ namespace Qurre.API.Classification.Player
             set => _maxHp = value;
         }
 
-        public List<AhpStat.AhpProcess> AhpActiveProcesses => AhpStat._activeProcesses;
+        public List<AhpStat.AhpProcess> AhpActiveProcesses
+            => AhpStat._activeProcesses;
         public float Ahp
         {
             get => AhpStat.CurValue;

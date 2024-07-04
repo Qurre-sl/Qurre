@@ -4,6 +4,7 @@ using Mirror;
 namespace Qurre.API.Classification.Player
 {
     using Qurre.API;
+    using RoundRestarting;
 
     public sealed class Client
     {
@@ -28,6 +29,12 @@ namespace Qurre.API.Classification.Player
 
         public void Disconnect(string reason = null)
             => ServerConsole.Disconnect(_player.GameObject, string.IsNullOrEmpty(reason) ? "" : reason);
+
+        public void Reconnect(float timeout = 0.1f)
+            => _player.Connection.Send(new RoundRestartMessage(RoundRestartType.FullRestart, timeout, 0, true, false));
+
+        public void Redirect(ushort port, float timeout = 0.1f)
+            => _player.Connection.Send(new RoundRestartMessage(RoundRestartType.RedirectRestart, timeout, port, true, false));
 
         public void DimScreen()
         {

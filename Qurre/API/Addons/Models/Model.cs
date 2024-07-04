@@ -114,8 +114,7 @@ namespace Qurre.API.Addons.Models
             var _list = parts.Select(x => x.Key).ToList();
             _list.ForEach(part =>
             {
-                NetworkServer.UnSpawn(part);
-                Object.Destroy(part);
+                NetworkServer.Destroy(part);
             });
 
             Object.Destroy(GameObject);

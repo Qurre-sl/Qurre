@@ -7,7 +7,7 @@ namespace Qurre.API.Addons.Audio.Objects
     /// <summary>
     /// Conditions to determine player access.
     /// </summary>
-    public class AccessConditions
+    public class AccessConditions : IAccessConditions
     {
         public List<int> Ids { get; set; }
 

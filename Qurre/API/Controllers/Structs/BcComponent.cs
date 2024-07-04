@@ -7,11 +7,15 @@
         {
             get
             {
-                if (bc is null)
-                    bc = Server.Host.GameObject.GetComponent<global::Broadcast>();
+                bc ??= Server.Host.GameObject.GetComponent<global::Broadcast>();
 
                 return bc;
             }
+        }
+
+        static internal void Refresh()
+        {
+            bc = null;
         }
     }
 }

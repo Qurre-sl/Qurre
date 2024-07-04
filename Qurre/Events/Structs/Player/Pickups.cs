@@ -1,5 +1,6 @@
 ﻿using InventorySystem.Items.Armor;
 using InventorySystem.Items.Firearms.Ammo;
+using InventorySystem.Items.Jailbird;
 using InventorySystem.Items.Usables.Scp330;
 using Qurre.API;
 using Qurre.API.Addons.Items;
@@ -158,6 +159,34 @@ namespace Qurre.Events.Structs
             Player = player;
             Type = type;
             Amount = amount;
+            Allowed = true;
+        }
+    }
+
+    public class JailbirdTriggerEvent : IBaseEvent
+    {
+        public uint EventId { get; } = PlayerEvents.JailbirdTrigger;
+
+        Item _item;
+
+        public Player Player { get; }
+        public Item Item
+        {
+            get
+            {
+                _item ??= Item.Get(JailbirdBase);
+                return _item;
+            }
+        }
+        public JailbirdItem JailbirdBase { get; }
+        public JailbirdMessageType Message { get; set; }
+        public bool Allowed { get; set; }
+
+        internal JailbirdTriggerEvent(Player player, JailbirdItem @base, JailbirdMessageType message)
+        {
+            Player = player;
+            JailbirdBase = @base;
+            Message = message;
             Allowed = true;
         }
     }

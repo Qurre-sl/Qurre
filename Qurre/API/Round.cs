@@ -9,6 +9,8 @@ namespace Qurre.API
     static public class Round
     {
         static internal bool _forceEnd = false;
+        static internal bool _started = false;
+        static internal bool _waiting = false;
 
         static public TimeSpan ElapsedTime => RoundStart.RoundLength;
         static public DateTime StartedTime => DateTime.Now - ElapsedTime;
@@ -22,9 +24,30 @@ namespace Qurre.API
             set => RespawnManager.Singleton._timeForNextSequence = value + (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
         }
 
-        static public bool Started => ReferenceHub.LocalHub.characterClassManager.RoundStarted;
+        static public bool Started
+        {
+            get
+            {
+                try { return ReferenceHub.LocalHub.characterClassManager.RoundStarted; }
+                catch { return _started; }
+            }
+        }
+
         static public bool Ended => RoundSummary.singleton._roundEnded;
-        static public bool Waiting => RoundStart.singleton is not null && !Started && !Ended;
+        static public bool Waiting
+        {
+            get
+            {
+                try
+                {
+                    if (RoundStart.singleton is not null)
+                        return !Started && !Ended;
+                }
+                catch { }
+
+                return _waiting;
+            }
+        }
 
         static public bool Lock
         {
@@ -71,8 +94,10 @@ namespace Qurre.API
             RoundRestart.InitiateRoundRestart();
             CustomNetworkManager.EnableFastRestart = oldfast;
         }
-        static public void Start() => CharacterClassManager.ForceRoundStart();
-        static public void End() => _forceEnd = true;
+        static public void Start()
+            => CharacterClassManager.ForceRoundStart();
+        static public void End()
+            => _forceEnd = true;
 
         static public void DimScreen() => RoundSummary.singleton.RpcDimScreen();
         static public void ShowRoundSummary(RoundSummary.SumInfo_ClassList remainingPlayers, LeadingTeam team) =>

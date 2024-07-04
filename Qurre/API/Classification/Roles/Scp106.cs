@@ -7,9 +7,11 @@ namespace Qurre.API.Classification.Roles
 
     public sealed class Scp106
     {
-        public Scp106Role Base { get; private set; }
+        public Scp106Role Base { get; }
 
-        public bool IsWork => pl.RoleInfomation.Role == PlayerRoles.RoleTypeId.Scp106;
+        public bool IsWork => pl.RoleInformation.Role is PlayerRoles.RoleTypeId.Scp106;
+
+        public Scp106Attack Attack { get; }
 
         public SubroutineManagerModule Subroutine => Base.SubroutineModule;
 
@@ -23,6 +25,11 @@ namespace Qurre.API.Classification.Roles
 
             if (Base is null)
                 return;
+
+            if (Subroutine.TryGetSubroutine(out Scp106Attack attack))
+                Attack = attack;
+            else
+                Log.Debug($"Null Debug: [Roles > Scp106] >> Scp106Attack is null");
         }
     }
 }

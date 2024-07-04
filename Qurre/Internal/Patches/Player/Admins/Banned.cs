@@ -14,9 +14,11 @@ namespace Qurre.Internal.Patches.Player.Admins
         static internal readonly List<string> Cached = new();
 
         [HarmonyPostfix]
-        static void Call(BanDetails ban, BanHandler.BanType banType, bool __result)
+        static void Call(BanDetails ban, BanHandler.BanType banType, bool forced, bool __result)
         {
-            if (!__result) return;
+            if (!__result)
+                return;
+
             try
             {
                 string _cache = ban.ToString();
@@ -28,7 +30,13 @@ namespace Qurre.Internal.Patches.Player.Admins
                 Cached.Add(_cache);
                 _cache = null;
 
-                new BannedEvent(string.IsNullOrEmpty(ban.Id) ? null : ban.Id.GetPlayer(), ban, banType).InvokeEvent();
+                BannedEvent @event = new(string.IsNullOrEmpty(ban.Id) ? null : ban.Id.GetPlayer(), ban, banType, forced);
+                @event.InvokeEvent();
+
+                if (!@event.UnsafeAllowed)
+                {
+                    BanHandler.RemoveBan(ban.Id, banType, forced: true);
+                }
             }
             catch (Exception e)
             {

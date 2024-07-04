@@ -41,6 +41,7 @@
         public const uint DropItem = 1422;
         public const uint DroppedItem = 1423;
         public const uint DropAmmo = 1424;
+        public const uint JailbirdTrigger = 1431;
 
         //1500+ <- Interact
         public const uint InteractDoor = 1501;
@@ -49,6 +50,7 @@
         public const uint InteractLocker = 1504;
         public const uint InteractScp330 = 1505;
         public const uint InteractShootingTarget = 1506;
+        public const uint InteractWorkStation = 1507;
 
         //1600+ <- Gun
         public const uint UnloadGun = 1601;
@@ -99,6 +101,7 @@
 
         //2300+ <- Objects
         public const uint TriggerTesla = 2301;
+        public const uint WorkStationUpdate = 2302;
 
         //2400+ <- Doors
         public const uint DamageDoor = 2501;
@@ -160,10 +163,13 @@
         public const uint ActivateGenerator = 7201;
         public const uint Scp079GetExp = 7202;
         public const uint Scp079NewLvl = 7203;
+        public const uint Scp079Recontain = 7204;
+        public const uint GeneratorStatus = 7205;
 
         //7300+ <- Scp096
 
         //7400+ <- Scp106
+        public const uint Scp106Attack = 7401;
 
         //7500+ <- Scp173
 
@@ -173,5 +179,8 @@
         // Non-game SCPs
 
         //7700+ <- Scp914
+        public const uint Scp914Upgrade = 7701;
+        public const uint Scp914UpgradePickup = 7702;
+        public const uint Scp914UpgradePlayer = 7703;
     }
 }

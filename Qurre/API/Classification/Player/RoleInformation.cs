@@ -7,16 +7,17 @@ namespace Qurre.API.Classification.Player
     using Qurre.API.Classification.Roles;
     using RemoteAdmin;
 
-    public sealed class RoleInfomation
+    public sealed class RoleInformation
     {
         readonly Player _player;
         internal RoleTypeId cachedRole;
-        internal RoleInfomation(Player pl)
+        internal RoleInformation(Player pl)
         {
             _player = pl;
             cachedRole = RoleTypeId.None;
         }
 
+        public PlayerRoleBase Base => _player.ReferenceHub.roleManager.CurrentRole;
         public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
         public QueryProcessor QueryProcessor => _player.ReferenceHub.queryProcessor;
 
@@ -64,6 +65,8 @@ namespace Qurre.API.Classification.Player
 
         public void SetNew(RoleTypeId newRole, RoleChangeReason reason)
             => _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason);
+        public void SetNew(RoleTypeId newRole, RoleChangeReason reason, RoleSpawnFlags spawnFlags)
+            => _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason, spawnFlags);
 
         public void SetSyncModel(RoleTypeId roleTypeId)
         {

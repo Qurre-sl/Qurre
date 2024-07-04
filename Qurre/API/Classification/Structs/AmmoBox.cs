@@ -43,6 +43,7 @@
 			{
 				if (_player.Inventory.Base.UserInventory.ReserveAmmo.TryGetValue(ammo.GetItemType(), out ushort amount))
 					return amount;
+
 				return 0;
 			}
 			set

@@ -25,7 +25,7 @@ namespace Qurre.API
             get => _hostAudioPlayer ??= new AudioPlayer(ReferenceHub.HostHub);
         }
 
-        private static AudioPlayer _hostAudioPlayer;
+        internal static AudioPlayer _hostAudioPlayer;
 
         /// <summary>
         /// Play audio to a global channel.

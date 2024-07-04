@@ -49,5 +49,9 @@
 		FriendlyFireDetector,
 		Hypothermia,
 		CardiacArrest,
+		Scp3114,
+		MarshmallowMan,
+		Scp1507,
+		Snowball,
 	}
 }

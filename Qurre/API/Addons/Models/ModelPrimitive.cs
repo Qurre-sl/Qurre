@@ -27,6 +27,8 @@ namespace Qurre.API.Addons.Models
                 Primitive.Collider = collider;
 
                 Primitive.Base.NetworkScale = GameObject.transform.lossyScale;
+                Primitive.Base.NetworkPosition = GameObject.transform.position;
+                Primitive.Base.NetworkRotation = new LowPrecisionQuaternion(GameObject.transform.rotation);
             }
             catch (Exception ex)
             {

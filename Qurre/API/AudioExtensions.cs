@@ -24,8 +24,8 @@ namespace Qurre.API
         static public AudioPlayer PlayFromAll(
             string file,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             ) => PlayFromAll(
                 new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
                 botName, whitelist, blacklist);
@@ -33,8 +33,8 @@ namespace Qurre.API
         static public AudioPlayer PlayFromAll(
             Stream stream,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             )
         {
             // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
@@ -92,7 +92,7 @@ namespace Qurre.API
                         }
 
                         type.GetField(nameof(MimicPointController._syncPos), MimicPointPropertiesBindingFlags)
-                            .SetValue(mimicPoint, new RelativePosition(pl.MovementState.Position));
+                            .SetValue(mimicPoint, new RelativePosition(pl.CameraTransform.position));
 
                         var message = new SubroutineMessage(mimicPoint, true);
                         using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
@@ -114,8 +114,8 @@ namespace Qurre.API
             string file,
             Player source,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             ) => PlayFromPlayer(
                 new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
                 source, botName, whitelist, blacklist);
@@ -124,8 +124,8 @@ namespace Qurre.API
             Stream stream,
             Player source,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             )
         {
             // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
@@ -176,7 +176,7 @@ namespace Qurre.API
                 while (audioTask.IsRunning && source is not null && !source.Disconnected)
                 {
                     type.GetField(nameof(MimicPointController._syncPos), MimicPointPropertiesBindingFlags)
-                        .SetValue(mimicPoint, new RelativePosition(source.MovementState.Position));
+                        .SetValue(mimicPoint, new RelativePosition(source.CameraTransform.position));
 
                     NetworkServer.SendToReady(new SubroutineMessage(mimicPoint, true));
                     yield return Timing.WaitForOneFrame;
@@ -184,6 +184,70 @@ namespace Qurre.API
 
                 audioPlayer.DestroyPlayer();
             }
+        }
+
+
+        static public AudioPlayer PlayFromPosition(
+            string file,
+            Vector3 source,
+            string botName = "Dummy",
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
+            ) => PlayFromPosition(
+                new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
+                source, botName, whitelist, blacklist);
+
+        static public AudioPlayer PlayFromPosition(
+            Stream stream,
+            Vector3 source,
+            string botName = "Dummy",
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
+            )
+        {
+            // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
+            var streamAudio = new StreamAudio(stream);
+
+            // Create and run player
+            var audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
+            audioPlayer.RunCoroutine();
+            var audioTask = audioPlayer.Play(streamAudio, VoiceChat.VoiceChatChannel.Mimicry);
+
+            // Add white and black lists
+            if (whitelist?.Count > 0)
+            {
+                audioTask.Whitelist.AccessConditions.AddRange(whitelist);
+            }
+            if (blacklist?.Count > 0)
+            {
+                audioTask.Blacklist.AccessConditions.AddRange(blacklist);
+            }
+
+            Timing.CallDelayed(0.5f, () =>
+            {
+                try
+                {
+                    var scp939Role = audioPlayer.ReferenceHub.GetComponent<PlayerRoleManager>().CurrentRole as Scp939Role;
+                    scp939Role.SubroutineModule.TryGetSubroutine<MimicPointController>(out var mimicPoint);
+
+                    DoMimicPointInit(mimicPoint);
+
+                    var type = typeof(MimicPointController);
+
+                    type.GetField(nameof(MimicPointController._syncPos), MimicPointPropertiesBindingFlags)
+                        .SetValue(mimicPoint, new RelativePosition(source));
+
+                    NetworkServer.SendToReady(new SubroutineMessage(mimicPoint, true));
+
+                    Timing.RunCoroutine(CheckPlayingAndDestroy(audioPlayer));
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                }
+            });
+
+            return audioPlayer;
         }
 
         static void DoMimicPointInit(MimicPointController mimicPoint)
@@ -205,8 +269,8 @@ namespace Qurre.API
         static public AudioPlayer PlayInIntercom(
             string file,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             ) => PlayInIntercom(
                 new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
                 botName, whitelist, blacklist);
@@ -214,8 +278,8 @@ namespace Qurre.API
         static public AudioPlayer PlayInIntercom(
             Stream stream,
             string botName = "Dummy",
-            List<AccessConditions> whitelist = null,
-            List<AccessConditions> blacklist = null
+            List<IAccessConditions> whitelist = null,
+            List<IAccessConditions> blacklist = null
             )
         {
             // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
@@ -236,25 +300,26 @@ namespace Qurre.API
                 audioTask.Blacklist.AccessConditions.AddRange(blacklist);
             }
 
-            Timing.RunCoroutine(CheckPlaying(audioPlayer, audioTask));
+            Timing.RunCoroutine(CheckPlayingAndDestroy(audioPlayer));
 
             return audioPlayer;
 
-            static IEnumerator<float> CheckPlaying(AudioPlayer audioPlayer, AudioTask audioTask)
-            {
-                yield return Timing.WaitForSeconds(5f);
-
-                while (audioPlayer.AudioTasks.Any() || audioTask.IsRunning)
-                {
-                    yield return Timing.WaitForSeconds(0.1f);
-                }
-
-                audioPlayer.DestroyPlayer();
-            }
         }
         #endregion
 
         #region Extensions
+        static public IEnumerator<float> CheckPlayingAndDestroy(this AudioPlayer audioPlayer)
+        {
+            yield return Timing.WaitForSeconds(5f);
+
+            while (audioPlayer.AudioTasks.Any(x => !x.IsDone) || (audioPlayer?.CurrentAudioTask?.IsDone == false))
+            {
+                yield return Timing.WaitForSeconds(0.1f);
+            }
+
+            audioPlayer.DestroyPlayer();
+        }
+
         static public void DestroyPlayer(this AudioPlayer audioPlayer)
         {
             audioPlayer.KillCoroutine();

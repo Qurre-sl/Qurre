@@ -11,14 +11,14 @@ namespace Qurre.API.Addons.Audio.Objects
         /// <summary>
         /// A collection of required conditions to define a player as blacklisted.
         /// </summary>
-        public List<AccessConditions> AccessConditions { get; set; }
+        public List<IAccessConditions> AccessConditions { get; set; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AudioTaskBlacklist"/> class.
         /// </summary>
-        public AudioTaskBlacklist(List<AccessConditions> accessConditions = null)
+        public AudioTaskBlacklist(List<IAccessConditions> accessConditions = null)
         {
-            AccessConditions = accessConditions ?? new List<AccessConditions>();
+            AccessConditions = accessConditions ?? new List<IAccessConditions>();
         }
 
         /// <summary>

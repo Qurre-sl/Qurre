@@ -9,25 +9,25 @@ namespace Qurre.API.Classification.Roles
 
     public sealed class Scp079
     {
-        public Scp079Role Base { get; private set; }
+        public Scp079Role Base { get; }
 
-        public bool IsWork => pl.RoleInfomation.Role == PlayerRoles.RoleTypeId.Scp079;
+        public bool IsWork => pl.RoleInformation.Role is PlayerRoles.RoleTypeId.Scp079;
 
-        public Scp079AbilityBase Ability { get; private set; }
-        public Scp079AuxManager AuxManager { get; private set; }
-        public Scp079BlackoutRoomAbility BlackoutRoomAbility { get; private set; }
-        public Scp079BlackoutZoneAbility BlackoutZoneAbility { get; private set; }
-        public Scp079DoorAbility DoorAbility { get; private set; }
-        public Scp079DoorLockChanger DoorLockChanger { get; private set; }
-        public Scp079DoorLockReleaser DoorLockReleaser { get; private set; }
-        public Scp079DoorStateChanger DoorStateChanger { get; private set; }
-        public Scp079ElevatorStateChanger ElevatorStateChanger { get; private set; }
-        public Scp079KeyAbilityBase KeyAbilityBase { get; private set; }
-        public Scp079LockdownRoomAbility LockdownRoomAbility { get; private set; }
-        public Scp079LostSignalHandler LostSignalHandler { get; private set; }
-        public Scp079SpeakerAbility SpeakerAbility { get; private set; }
-        public Scp079TeslaAbility TeslaAbility { get; private set; }
-        public Scp079TierManager TierManager { get; private set; }
+        public Scp079AbilityBase Ability { get; }
+        public Scp079AuxManager AuxManager { get; }
+        public Scp079BlackoutRoomAbility BlackoutRoomAbility { get; }
+        public Scp079BlackoutZoneAbility BlackoutZoneAbility { get; }
+        public Scp079DoorAbility DoorAbility { get; }
+        public Scp079DoorLockChanger DoorLockChanger { get; }
+        public Scp079DoorLockReleaser DoorLockReleaser { get; }
+        public Scp079DoorStateChanger DoorStateChanger { get; }
+        public Scp079ElevatorStateChanger ElevatorStateChanger { get; }
+        public Scp079KeyAbilityBase KeyAbilityBase { get; }
+        public Scp079LockdownRoomAbility LockdownRoomAbility { get; }
+        public Scp079LostSignalHandler LostSignalHandler { get; }
+        public Scp079SpeakerAbility SpeakerAbility { get; }
+        public Scp079TeslaAbility TeslaAbility { get; }
+        public Scp079TierManager TierManager { get; }
 
         public SubroutineManagerModule Subroutine => Base.SubroutineModule;
 

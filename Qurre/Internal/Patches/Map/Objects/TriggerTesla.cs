@@ -61,7 +61,7 @@ namespace Qurre.Internal.Patches.Map.Objects
                         if (pl.IsHost)
                             continue;
 
-                        if (!pl.RoleInfomation.IsAlive)
+                        if (!pl.RoleInformation.IsAlive)
                             continue;
 
                         bool inidl = teslaGate.IsInIdleRange(pl.ReferenceHub);

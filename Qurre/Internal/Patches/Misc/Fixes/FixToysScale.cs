@@ -18,13 +18,15 @@ namespace Qurre.Internal.Patches.Misc.Fixes
 
         static void Invoke(AdminToyBase instance)
         {
-            try
-            {
-                instance.NetworkPosition = instance.transform.position;
-                instance.NetworkRotation = new LowPrecisionQuaternion(instance.transform.rotation);
-                instance.NetworkScale = instance.transform.lossyScale;
-            }
-            catch { }
+            if (instance.IsStatic)
+                return;
+
+            if (instance.transform is null)
+                return;
+
+            instance.NetworkPosition = instance.transform.position;
+            instance.NetworkRotation = new LowPrecisionQuaternion(instance.transform.rotation);
+            instance.NetworkScale = instance.transform.lossyScale;
         }
     }
 }

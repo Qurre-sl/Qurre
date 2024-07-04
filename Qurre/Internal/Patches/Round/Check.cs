@@ -33,42 +33,50 @@ namespace Qurre.Internal.Patches.Round
         static IEnumerator<float> ProcessServerSide(RoundSummary instance)
         {
             float time = Time.unscaledTime;
+
+            if (instance is not null)
+                instance._roundEnded = false;
+
             while (instance is not null)
             {
                 yield return Timing.WaitForSeconds(2.5f);
 
-                while (RoundSummary.RoundLock || !RoundSummary.RoundInProgress() || Time.unscaledTime - time < 15f ||
+                while (RoundSummary.RoundLock || !Round.Started || Time.unscaledTime - time < 15f ||
                     (instance.KeepRoundOnOne && Player.List.Count() < 2) || Round.ElapsedTime.TotalSeconds < 15f)
                     yield return Timing.WaitForSeconds(1);
-
-                yield return Timing.WaitForSeconds(2.5f);
 
                 RoundSummary.SumInfo_ClassList list = default;
                 bool end = false;
 
                 foreach (var pl in Player.List)
                 {
-                    switch (pl.RoleInfomation.Team)
+                    try
                     {
-                        case Team.ClassD:
-                            list.class_ds++;
-                            break;
-                        case Team.Scientists:
-                            list.scientists++;
-                            break;
-                        case Team.ChaosInsurgency:
-                            list.chaos_insurgents++;
-                            break;
-                        case Team.FoundationForces:
-                            list.mtf_and_guards++;
-                            break;
-                        case Team.SCPs:
-                            {
-                                if (pl.RoleInfomation.Role is RoleTypeId.Scp0492) list.zombies++;
-                                else list.scps_except_zombies++;
+                        switch (pl.RoleInformation.Team)
+                        {
+                            case Team.ClassD:
+                                list.class_ds++;
                                 break;
-                            }
+                            case Team.Scientists:
+                                list.scientists++;
+                                break;
+                            case Team.ChaosInsurgency:
+                                list.chaos_insurgents++;
+                                break;
+                            case Team.FoundationForces:
+                                list.mtf_and_guards++;
+                                break;
+                            case Team.SCPs:
+                                {
+                                    if (pl.RoleInformation.Role is RoleTypeId.Scp0492)
+                                        list.zombies++;
+                                    else
+                                        list.scps_except_zombies++;
+                                    break;
+                                }
+                        }
                     }
+                    catch { }
                 }
 
                 yield return float.NegativeInfinity;
@@ -155,22 +163,31 @@ namespace Qurre.Internal.Patches.Round
                     yield return Timing.WaitForSeconds(0.5f);
 
                     int wait = Mathf.Clamp(GameCore.ConfigFile.ServerConfig.GetInt("auto_round_restart_time", 10), 5, 1000);
-                    if (instance is not null)
-                    {
-                        var ev = new RoundEndEvent(winner, list, wait);
-                        ev.InvokeEvent();
 
-                        winner = ev.Winner;
-                        wait = Mathf.Clamp(ev.ToRestart, 5, 1000);
+                    var ev = new RoundEndEvent(winner, list, wait);
+                    ev.InvokeEvent();
 
-                        instance.RpcShowRoundSummary(instance.classlistStart, list, winner, RoundSummary.EscapedClassD,
-                            RoundSummary.EscapedScientists, RoundSummary.KilledBySCPs, wait, (int)GameCore.RoundStart.RoundLength.TotalSeconds);
-                    }
+                    winner = ev.Winner;
+                    wait = Mathf.Clamp(ev.ToRestart, 5, 1000);
+
+                    instance.RpcShowRoundSummary(instance.classlistStart, list, winner, RoundSummary.EscapedClassD,
+                        RoundSummary.EscapedScientists, RoundSummary.KilledBySCPs, wait, (int)GameCore.RoundStart.RoundLength.TotalSeconds);
 
                     yield return Timing.WaitForSeconds(wait - 1);
 
                     instance.RpcDimScreen();
-                    Timing.CallDelayed(1f, () => RoundRestarting.RoundRestart.InitiateRoundRestart());
+                    Timing.CallDelayed(1f, () =>
+                    {
+                        try
+                        {
+                            RoundRestarting.RoundRestart.InitiateRoundRestart();
+                        }
+                        catch (System.Exception ex)
+                        {
+                            Log.Error("Round restart error in game method [InitiateRoundRestart]:\n" + ex);
+                            Server.Restart();
+                        }
+                    });
 
                     // optimization
                     try
@@ -179,10 +196,10 @@ namespace Qurre.Internal.Patches.Round
                         {
                             try
                             {
-                                if (pl.RoleInfomation.Role != RoleTypeId.Spectator)
+                                if (pl.RoleInformation.Role != RoleTypeId.Spectator)
                                 {
                                     pl.Inventory.Clear();
-                                    pl.RoleInfomation.Role = RoleTypeId.Spectator;
+                                    pl.RoleInformation.Role = RoleTypeId.Spectator;
                                 }
                             }
                             catch { }

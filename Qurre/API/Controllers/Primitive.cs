@@ -1,16 +1,48 @@
 ﻿using AdminToys;
-using UnityEngine;
 using Mirror;
 using System;
+using System.Collections.Generic;
+using UnityEngine;
 
 namespace Qurre.API.Controllers
 {
     public class Primitive
     {
+        static internal bool _allowStatic = false;
+        static internal HashSet<Primitive> _cachedToSetStatic = new();
+
         public byte MovementSmoothing
         {
             get => Base.NetworkMovementSmoothing;
             set => Base.NetworkMovementSmoothing = value;
+        }
+
+        public bool IsStatic
+        {
+            get => Base.IsStatic;
+            set
+            {
+                if (value)
+                {
+                    Base.NetworkPosition = Base.transform.position;
+                    Base.NetworkRotation = new LowPrecisionQuaternion(Base.transform.rotation);
+                    Base.NetworkScale = Base.transform.lossyScale;
+                }
+
+                if (_allowStatic)
+                {
+                    Base.NetworkIsStatic = value;
+
+                    if (!value && _cachedToSetStatic.Contains(this))
+                        _cachedToSetStatic.Remove(this);
+                    return;
+                }
+
+                if (value)
+                    _cachedToSetStatic.Add(this);
+                else
+                    _cachedToSetStatic.Remove(this);
+            }
         }
 
         public Vector3 Position
@@ -42,17 +74,22 @@ namespace Qurre.API.Controllers
         }
         public Vector3 GlobalScale => Base.transform.lossyScale;
 
-        private protected bool _collider = true;
         public bool Collider
         {
-            get => _collider;
+            get => Flags.HasFlag(PrimitiveFlags.Collidable);
             set
             {
-                _collider = value;
-                Vector3 _s = Scale;
-                if (_collider) Base.transform.localScale = new Vector3(Math.Abs(_s.x), Math.Abs(_s.y), Math.Abs(_s.z));
-                else Base.transform.localScale = new Vector3(-Math.Abs(_s.x), -Math.Abs(_s.y), -Math.Abs(_s.z));
+                if (!value)
+                    Flags &= ~PrimitiveFlags.Collidable;
+                else
+                    Flags |= PrimitiveFlags.Collidable;
             }
+        }
+
+        public PrimitiveFlags Flags
+        {
+            get => Base.NetworkPrimitiveFlags;
+            set => Base.NetworkPrimitiveFlags = value;
         }
 
         public Color Color
@@ -80,7 +117,8 @@ namespace Qurre.API.Controllers
         {
             try
             {
-                if (!Addons.Prefabs.Primitive.TryGetComponent<AdminToyBase>(out var primitiveToyBase)) return;
+                if (!Addons.Prefabs.Primitive.TryGetComponent<AdminToyBase>(out var primitiveToyBase))
+                    return;
 
                 AdminToyBase prim = UnityEngine.Object.Instantiate(primitiveToyBase, position, rotation);
 
@@ -90,8 +128,7 @@ namespace Qurre.API.Controllers
 
                 Base.NetworkPrimitiveType = type;
                 Base.NetworkMaterialColor = color == default ? Color.white : color;
-                /*Log.Info($"r1:{color.r}; g1:{color.g}; b1:{color.b}; r2:{Base.NetworkMaterialColor.r}; " +
-                    $"g2:{Base.NetworkMaterialColor.g}; b2:{Base.NetworkMaterialColor.b}");*/
+                Base.NetworkPrimitiveFlags = PrimitiveFlags.Collidable | PrimitiveFlags.Visible;
 
                 Base.transform.localPosition = position;
                 Base.transform.localRotation = rotation;

@@ -16,5 +16,6 @@
         Universal,
         Warhead,
         Jailbird,
+        Snowball,
     }
 }
