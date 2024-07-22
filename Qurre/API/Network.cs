@@ -1,77 +1,73 @@
-﻿using Mirror;
-using Newtonsoft.Json.Linq;
+﻿namespace Qurre.API;
+
+using Mirror;
 using System;
 using System.Reflection;
-using System.Security.Principal;
 
-namespace Qurre.API
+static public class Network
 {
-    static public class Network // rename later
+    static MethodInfo sendSpawnMessage;
+    static public MethodInfo SendSpawnMessage
     {
-        static MethodInfo sendSpawnMessage;
-        static public MethodInfo SendSpawnMessage
+        get
         {
-            get
-            {
-                if (sendSpawnMessage is null)
-                    sendSpawnMessage = typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.Instance | BindingFlags.InvokeMethod
-                        | BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public);
-                return sendSpawnMessage;
-            }
+            sendSpawnMessage ??= typeof(NetworkServer).GetMethod("SendSpawnMessage", BindingFlags.Instance | BindingFlags.InvokeMethod |
+                BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.Public);
+            return sendSpawnMessage;
         }
+    }
 
-        static public void InvokeStaticMethod(this Type type, string methodName, object[] param)
+    static public void InvokeStaticMethod(this Type type, string methodName, object[] param)
+    {
+        BindingFlags flags = BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic |
+            BindingFlags.Static | BindingFlags.Public;
+        MethodInfo info = type.GetMethod(methodName, flags);
+        info?.Invoke(null, param);
+    }
+
+
+    static public void SendDataToClient<T>(this NetworkConnectionToClient connection, T message) where T : struct, NetworkMessage
+    {
+        if (!connection.isReady)
+            return;
+
+        using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
+        NetworkMessages.Pack(message, networkWriterPooled);
+        ArraySegment<byte> segment = networkWriterPooled.ToArraySegment();
+
+        connection.Send(segment);
+    }
+
+    static public void UpdateDataForConnection(this NetworkIdentity identity, NetworkConnectionToClient connection)
+    {
+        if (!connection.isReady)
+            return;
+
+        var message = identity.SpawnMessage();
+
+        connection.SendDataToClient(message);
+    }
+
+    static public void UpdateData(this NetworkIdentity identity)
+        => NetworkServer.SendToAll(identity.SpawnMessage());
+
+    static public SpawnMessage SpawnMessage(this NetworkIdentity identity)
+    {
+        var writer = NetworkWriterPool.Get();
+        var writer2 = NetworkWriterPool.Get();
+        var payload = NetworkServer.CreateSpawnMessagePayload(false, identity, writer, writer2);
+
+        return new SpawnMessage
         {
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.NonPublic |
-                                 BindingFlags.Static | BindingFlags.Public;
-            MethodInfo info = type.GetMethod(methodName, flags);
-            info?.Invoke(null, param);
-        }
-
-
-        static public void SendDataToClient<T>(this NetworkConnectionToClient connection, T message) where T : struct, NetworkMessage
-        {
-            if (!connection.isReady)
-                return;
-
-            using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
-            NetworkMessages.Pack(message, networkWriterPooled);
-            ArraySegment<byte> segment = networkWriterPooled.ToArraySegment();
-
-            connection.Send(segment);
-        }
-
-        static public void UpdateDataForConnection(this NetworkIdentity identity, NetworkConnectionToClient connection)
-        {
-            if (!connection.isReady)
-                return;
-
-            var message = identity.SpawnMessage();
-
-            connection.SendDataToClient(message);
-        }
-
-        static public void UpdateData(this NetworkIdentity identity)
-            => NetworkServer.SendToAll(identity.SpawnMessage());
-
-        static public SpawnMessage SpawnMessage(this NetworkIdentity identity)
-        {
-            var writer = NetworkWriterPool.Get();
-            var writer2 = NetworkWriterPool.Get();
-            var payload = NetworkServer.CreateSpawnMessagePayload(false, identity, writer, writer2);
-
-            return new SpawnMessage
-            {
-                netId = identity.netId,
-                isLocalPlayer = false,
-                isOwner = false,
-                sceneId = identity.sceneId,
-                assetId = identity.assetId,
-                position = identity.gameObject.transform.position,
-                rotation = identity.gameObject.transform.rotation,
-                scale = identity.gameObject.transform.localScale,
-                payload = payload
-            };
-        }
+            netId = identity.netId,
+            isLocalPlayer = false,
+            isOwner = false,
+            sceneId = identity.sceneId,
+            assetId = identity.assetId,
+            position = identity.gameObject.transform.position,
+            rotation = identity.gameObject.transform.rotation,
+            scale = identity.gameObject.transform.localScale,
+            payload = payload
+        };
     }
 }

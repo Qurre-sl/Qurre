@@ -1,13 +1,12 @@
-﻿namespace Qurre.API.Objects
+﻿namespace Qurre.API.Objects;
+
+public enum LockerType : byte
 {
-    public enum LockerType : byte
-    {
-        Unknown,
-        AdrenalineMedkit,
-        RegularMedkit,
-        Pedestal,
-        MiscLocker,
-        RifleRack,
-        LargeGun,
-    }
+    Unknown,
+    AdrenalineMedkit,
+    RegularMedkit,
+    Pedestal,
+    MiscLocker,
+    RifleRack,
+    LargeGun,
 }

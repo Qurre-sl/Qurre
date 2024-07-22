@@ -1,11 +1,10 @@
-﻿namespace Qurre.API.Objects
+﻿namespace Qurre.API.Objects;
+
+public enum GeneratorStatus : byte
 {
-    public enum GeneratorStatus : byte
-    {
-        Activate,
-        Deactivate,
-        Unlock,
-        OpenDoor,
-        CloseDoor
-    }
+    Activate,
+    Deactivate,
+    Unlock,
+    OpenDoor,
+    CloseDoor
 }

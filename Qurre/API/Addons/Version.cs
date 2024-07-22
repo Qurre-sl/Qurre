@@ -5,9 +5,9 @@
         const string s_major = "2";
         const string s_minor = "0";
         const string s_build = "0";
-        const string s_revision = "106";
+        const string s_revision = "114";
 
-        const string s_testing = "delta";
+        const string s_testing = "epsilon";
 
         internal const string AssemblyVersion = $"{s_major}.{s_minor}.{s_build}.{s_revision}";
         internal const string AssemblyCustom = $"v2-{s_testing}";

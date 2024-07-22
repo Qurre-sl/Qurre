@@ -108,19 +108,26 @@ namespace Qurre.API.Controllers
             foreach (var cam in GameObject.GetComponentsInChildren<Scp079Camera>())
                 Cameras.Add(new Camera(cam, this));
 
-            NetworkIdentity = GetNetworkIdentity();
-
             Lights = new(this);
 
             Type = GetType(Name, Transform);
+
+            NetworkIdentity = GetNetworkIdentity();
         }
 
         static internal readonly List<NetworkIdentity> NetworkIdentities = new();
         NetworkIdentity GetNetworkIdentity()
         {
+            if (Type is not RoomType.Lcz330 and not RoomType.HczTestroom)
+                return null;
+
             if (NetworkIdentities.Count == 0)
                 NetworkIdentities.AddRange(Object.FindObjectsOfType<NetworkIdentity>().Where(x => x.name.Contains("All")));
-            return NetworkIdentities.FirstOrDefault(x => Vector3.Distance(x.transform.position, Position) < 0.1f);
+
+            if (NetworkIdentities.TryFind(out var ident, x => Vector3.Distance(x.transform.position, Position) < 0.1f))
+                return ident;
+
+            return null;
         }
 
         static RoomType GetType(string name, Transform trans)

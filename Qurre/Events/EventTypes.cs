@@ -75,6 +75,7 @@
         public const uint MakeNoise = 1902;
         public const uint ReceiveEffect = 1903;
         public const uint UseHotkey = 1904;
+        public const uint PressAlt = 1905;
 
         public const uint DamageWindow = 1951;
         public const uint DamageShootingTarget = 1952;

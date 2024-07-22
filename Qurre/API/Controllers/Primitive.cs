@@ -9,7 +9,8 @@ namespace Qurre.API.Controllers
     public class Primitive
     {
         static internal bool _allowStatic = false;
-        static internal HashSet<Primitive> _cachedToSetStatic = new();
+        static internal readonly HashSet<Primitive> _cachedToSetStatic = new();
+        static internal readonly HashSet<Primitive> _nonstaticPrims = new();
 
         public byte MovementSmoothing
         {
@@ -32,6 +33,11 @@ namespace Qurre.API.Controllers
                 if (_allowStatic)
                 {
                     Base.NetworkIsStatic = value;
+
+                    if (value)
+                        _nonstaticPrims.Remove(this);
+                    else
+                        _nonstaticPrims.Add(this);
 
                     if (!value && _cachedToSetStatic.Contains(this))
                         _cachedToSetStatic.Remove(this);
@@ -107,6 +113,7 @@ namespace Qurre.API.Controllers
         {
             NetworkServer.Destroy(Base.gameObject);
             Map.Primitives.Remove(this);
+            _nonstaticPrims.Remove(this);
         }
 
         public PrimitiveObjectToy Base { get; }
@@ -140,6 +147,7 @@ namespace Qurre.API.Controllers
 
                 Collider = collider;
                 Map.Primitives.Add(this);
+                _nonstaticPrims.Add(this);
             }
             catch (Exception e)
             {

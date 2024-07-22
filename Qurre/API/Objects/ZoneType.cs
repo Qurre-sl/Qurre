@@ -1,11 +1,10 @@
-﻿namespace Qurre.API.Objects
+﻿namespace Qurre.API.Objects;
+
+public enum ZoneType : byte
 {
-	public enum ZoneType : byte
-	{
-		Surface,
-		Office,
-		Heavy,
-		Light,
-		Unknown
-	}
+	Surface,
+	Office,
+	Heavy,
+	Light,
+	Unknown
 }

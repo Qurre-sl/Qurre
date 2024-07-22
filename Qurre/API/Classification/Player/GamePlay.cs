@@ -66,5 +66,12 @@ namespace Qurre.API.Classification.Player
                 Map.Rooms.OrderBy(x => Vector3.Distance(x.Position, _player.MovementState.Position)).FirstOrDefault();
             set => _player.MovementState.Position = value.Position + Vector3.up * 2;
         }
+
+        public Lift Lift
+        {
+            get => _player.MovementState.Position.GetLift();
+            set => _player.MovementState.Position = value.Position + Vector3.up * 2;
+        }
+
     }
 }

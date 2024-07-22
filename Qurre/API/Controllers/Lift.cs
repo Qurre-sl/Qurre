@@ -5,10 +5,14 @@ namespace Qurre.API.Controllers
 {
     public class Lift
     {
-        public ElevatorChamber Elevator => _elevator;
+        public ElevatorChamber Elevator
+            => _elevator;
 
-        public GameObject GameObject => _elevator.gameObject;
-        public Transform Transform => _elevator.transform;
+        public GameObject GameObject
+            => _elevator.gameObject;
+
+        public Transform Transform
+            => _elevator.transform;
 
         public Vector3 Position
         {
@@ -20,7 +24,8 @@ namespace Qurre.API.Controllers
             get => Transform.rotation;
             set => Transform.rotation = value;
         }
-        public Vector3 Scale => Transform.localScale;
+        public Vector3 Scale
+            => Transform.localScale;
 
         public ElevatorChamber.ElevatorSequence Status
         {
@@ -28,7 +33,11 @@ namespace Qurre.API.Controllers
             set => _elevator._curSequence = value;
         }
 
-        public ElevatorManager.ElevatorGroup Type => _elevator.AssignedGroup;
+        public ElevatorManager.ElevatorGroup Type
+            => _elevator.AssignedGroup;
+
+        public Bounds Bounds
+            => _elevator.WorldspaceBounds;
 
         public void Use() => Status = ElevatorChamber.ElevatorSequence.Ready;
 
