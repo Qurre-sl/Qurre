@@ -1,34 +1,40 @@
-﻿using CentralAuth;
+﻿namespace Qurre.Internal.Patches.Player.Network;
+
+using CentralAuth;
 using HarmonyLib;
+using Qurre.API;
+using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 using System;
+using System.Collections.Generic;
+using System.Reflection.Emit;
 
-namespace Qurre.Internal.Patches.Player.Network
+[HarmonyPatch(typeof(ReservedSlot), nameof(ReservedSlot.HasReservedSlot))]
+static class ReserveSlot
 {
-    using Qurre.API;
-    using Qurre.Events.Structs;
-    using Qurre.Internal.EventsManager;
-
-    [HarmonyPatch(typeof(ReservedSlot), nameof(ReservedSlot.HasReservedSlot))]
-    static class ReserveSlot
+    [HarmonyTranspiler]
+    static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
     {
-        [HarmonyPrefix]
-        static bool Call(string userId, ref bool __result)
+        yield return new CodeInstruction(OpCodes.Ldarg_0); // userId [string]
+        yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(ReserveSlot), nameof(ReserveSlot.Invoke)));
+        yield return new CodeInstruction(OpCodes.Ret);
+    }
+
+    static bool Invoke(string userId)
+    {
+        try
         {
-            try
-            {
-                bool allow = ReservedSlot.Users.Contains(userId.Trim()) || !PlayerAuthenticationManager.OnlineMode;
+            bool allow = ReservedSlot.Users.Contains(userId.Trim()) || !PlayerAuthenticationManager.OnlineMode;
 
-                CheckReserveSlotEvent ev = new(userId, allow);
-                ev.InvokeEvent();
+            CheckReserveSlotEvent ev = new(userId, allow);
+            ev.InvokeEvent();
 
-                __result = ev.Allowed;
-                return false;
-            }
-            catch (Exception e)
-            {
-                Log.Error($"Patch Error - <Player> {{Network}} [ReserveSlot]: {e}\n{e.StackTrace}");
-                return true;
-            }
+            return ev.Allowed;
+        }
+        catch (Exception e)
+        {
+            Log.Error($"Patch Error - <Player> {{Network}} [ReserveSlot]: {e}\n{e.StackTrace}");
+            return false;
         }
     }
 }

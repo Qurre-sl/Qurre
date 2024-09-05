@@ -171,8 +171,8 @@ namespace Qurre.API.Classification.Player
                 return null;
 
             Base.UserInventory.Items[itemBase.PickupDropModel.NetworkInfo.Serial] = itemBase;
-
             itemBase.OnAdded(itemBase.PickupDropModel);
+
             if (itemBase is Firearm)
                 AttachmentsServerHandler.SetupProvidedWeapon(_player.ReferenceHub, itemBase);
 

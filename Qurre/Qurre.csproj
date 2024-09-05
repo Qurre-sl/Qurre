@@ -12,7 +12,7 @@
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
-    <LangVersion>10</LangVersion>
+    <LangVersion>latest</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -93,9 +93,6 @@
     <Compile Include="API\Addons\Audio\Objects\Mirror\ZeroConnectionToClient.cs" />
     <Compile Include="API\Addons\Audio\Objects\PlaybackAudio.cs" />
     <Compile Include="API\Addons\Audio\Objects\StreamAudio.cs" />
-    <Compile Include="API\Addons\BetterHints\Manager.cs" />
-    <Compile Include="API\Addons\BetterHints\ISender.cs" />
-    <Compile Include="API\Addons\BetterHints\HintStruct.cs" />
     <Compile Include="API\Addons\BetterColors.cs" />
     <Compile Include="API\Addons\VariableDictionary.cs" />
     <Compile Include="API\Addons\Version.cs" />
@@ -135,11 +132,13 @@
     <Compile Include="API\AudioExtensions.cs" />
     <Compile Include="API\Classification\Player\Administrative.cs" />
     <Compile Include="API\Classification\Player\EffectsManager.cs" />
+    <Compile Include="API\Classification\Roles\Scp096.cs" />
     <Compile Include="API\Classification\Roles\Scp106.cs" />
     <Compile Include="API\Classification\Roles\Scp173.cs" />
     <Compile Include="API\Classification\Structs\AmmoBox.cs" />
     <Compile Include="API\Classification\Structs\Hand.cs" />
     <Compile Include="API\Controllers\Intercom.cs" />
+    <Compile Include="API\Objects\Scp096State.cs" />
     <Compile Include="API\Objects\SpawnPoint.cs" />
     <Compile Include="API\Objects\ScpAttackType.cs" />
     <Compile Include="API\Respawn.cs" />
@@ -221,9 +220,12 @@
     <Compile Include="Events\Structs\Player\Network.cs" />
     <Compile Include="Events\Structs\Player\Utils.cs" />
     <Compile Include="Events\Structs\Round\Main.cs" />
+    <Compile Include="Events\Structs\Scp\Scp049.cs" />
     <Compile Include="Events\Structs\Scp\Scp079.cs" />
     <Compile Include="Events\Structs\Scp\Main.cs" />
+    <Compile Include="Events\Structs\Scp\Scp096.cs" />
     <Compile Include="Events\Structs\Scp\Scp106.cs" />
+    <Compile Include="Events\Structs\Scp\Scp173.cs" />
     <Compile Include="Events\Structs\Scp\Scp914.cs" />
     <Compile Include="Events\Structs\Server\Reports.cs" />
     <Compile Include="Events\Structs\Server\Commands.cs" />
@@ -293,6 +295,7 @@
     <Compile Include="Internal\Patches\Player\Network\Leave.cs" />
     <Compile Include="Internal\Patches\Player\Network\ReserveSlot.cs" />
     <Compile Include="Internal\Patches\Player\Network\Join.cs" />
+    <Compile Include="Internal\Patches\Player\Network\WhiteListPatch.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\DropAmmo.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\DroppedItem.cs" />
     <Compile Include="Internal\Patches\Player\Pickups\DropItem.cs" />
@@ -313,12 +316,22 @@
     <Compile Include="Internal\Patches\Round\Restart.cs" />
     <Compile Include="Internal\Patches\Round\Start.cs" />
     <Compile Include="Internal\Patches\Round\Waiting.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp049\RaisingEnd.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp049\RaisingStart.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\ActivateGenerator.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\GeneratorStatus.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\NewLvl.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\GetExp.cs" />
     <Compile Include="Internal\Patches\Scp\Scp079\Recontain.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp096\AddTarget.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp096\StateCharge.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp096\StateCry.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp096\StateEnraging.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp096\StateRageUpdate.cs" />
     <Compile Include="Internal\Patches\Scp\Scp106\Attack.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp173\AddObserver.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp173\EnableSpeed.cs" />
+    <Compile Include="Internal\Patches\Scp\Scp173\RemovedObserver.cs" />
     <Compile Include="Internal\Patches\Scp\Scp914\Upgrade.cs" />
     <Compile Include="Internal\Patches\Scp\Scp914\UpgradePickup.cs" />
     <Compile Include="Internal\Patches\Scp\Scp914\UpgradePlayer.cs" />

@@ -82,12 +82,19 @@ static public class Extensions
 	static public Player GetPlayer(this CommandSender sender)
 		=> sender is null ? null : GetPlayer(sender.SenderId);
 
-	static public Player GetPlayer(this ReferenceHub referenceHub)
-		=> referenceHub is null ? null : GetPlayer(referenceHub.gameObject);
-
 	static public Player GetPlayer(this uint netId)
 		=> ReferenceHub.TryGetHubNetID(netId, out ReferenceHub hub) ? GetPlayer(hub) : null;
 
+
+	static public Player GetPlayer(this ReferenceHub referenceHub)
+	{
+		if (referenceHub is null)
+			return null;
+
+		Internal.Fields.Player.Hubs.TryGetValue(referenceHub, out Player player);
+
+		return player;
+	}
 
 	static public Player GetPlayer(this GameObject gameObject)
 	{

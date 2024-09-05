@@ -174,6 +174,7 @@ namespace Qurre.Internal.EventsCalled
             Fields.Player.IDs.Clear();
             Fields.Player.UserIDs.Clear();
             Fields.Player.Args.Clear();
+            Fields.Player.Hubs.Clear();
             Fields.Player.Dictionary.Clear();
         }
 

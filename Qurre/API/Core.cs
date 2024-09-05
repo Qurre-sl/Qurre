@@ -28,6 +28,24 @@ static public class Core
         }
     }
 
+    static public void UnjectEventMethod(MethodInfo method)
+    {
+        if (method.IsAbstract)
+            throw new System.Exception($"InjectEventMethod: '{method.Name}' is abstract");
+
+        var attrs = method.GetCustomAttributes<EventMethod>();
+        if (attrs is null)
+            return;
+
+        foreach (var attr in attrs)
+        {
+            if (!EventLists.CallMethods.TryGetValue(attr.Type, out var list))
+                continue;
+
+            list.RemoveAll(x => x.Info == method);
+        }
+    }
+
     static public void SortMethodsPriority()
         => Internal.EventsManager.Loader.SortMethods();
     static public void SortMethodsPriority(uint eventId)

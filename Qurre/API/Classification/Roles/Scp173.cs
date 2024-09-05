@@ -33,7 +33,7 @@ namespace Qurre.API.Classification.Roles
             if (Subroutine.TryGetSubroutine(out Scp173ObserversTracker observers))
                 Observers = observers;
             else
-                Log.Debug($"Null Debug: [Roles > Scp106] >> Scp106Attack is null");
+                Log.Debug($"Null Debug: [Roles > Scp173] >> Scp173ObserversTracker is null");
         }
     }
 }

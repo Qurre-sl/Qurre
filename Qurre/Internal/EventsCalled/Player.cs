@@ -89,6 +89,11 @@ namespace Qurre.Internal.EventsCalled
                         ev.Player.RoleInformation.Scp079 = new(ev.Player);
                         break;
                     }
+                case RoleTypeId.Scp096:
+                    {
+                        ev.Player.RoleInformation.Scp096 = new(ev.Player);
+                        break;
+                    }
                 case RoleTypeId.Scp106:
                     {
                         ev.Player.RoleInformation.Scp106 = new(ev.Player);

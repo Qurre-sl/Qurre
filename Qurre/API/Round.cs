@@ -26,6 +26,12 @@ static public class Round
         set => RespawnManager.Singleton._timeForNextSequence = value + (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
     }
 
+    static public short WaitTime
+    {
+        get => RoundStart.singleton.NetworkTimer;
+        set => RoundStart.singleton.NetworkTimer = value;
+    }
+
     static public bool Started
     {
         get

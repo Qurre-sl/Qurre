@@ -46,7 +46,13 @@ public class Player
 
         if (!Field.Dictionary.ContainsKey(go))
             Field.Dictionary.Add(go, this);
-        else Field.Dictionary[go] = this;
+        else
+            Field.Dictionary[go] = this;
+
+        if (!Field.Hubs.ContainsKey(rh))
+            Field.Hubs.Add(rh, this);
+        else
+            Field.Hubs[rh] = this;
     }
 
     private readonly ReferenceHub rh;

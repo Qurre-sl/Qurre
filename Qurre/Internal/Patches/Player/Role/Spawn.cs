@@ -31,7 +31,7 @@ namespace Qurre.Internal.Patches.Player.Role
 
         static void Invoke(PlayerRoleManager instance, RoleTypeId role)
         {
-            Transform transform = ((Component)(object)instance.CurrentRole).transform;
+            Transform transform = instance.CurrentRole.transform;
             var pl = instance.Hub.GetPlayer();
 
             if (pl is null)
@@ -39,6 +39,9 @@ namespace Qurre.Internal.Patches.Player.Role
 
             SpawnEvent ev = new(pl, role, transform.position, transform.rotation.eulerAngles);
             ev.InvokeEvent();
+
+            if (pl.Disconnected)
+                return;
 
             pl.MovementState.Position = ev.Position;
             pl.MovementState.Rotation = ev.Rotation;

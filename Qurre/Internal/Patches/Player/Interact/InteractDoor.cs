@@ -1,6 +1,5 @@
 ﻿using HarmonyLib;
 using Interactables.Interobjects.DoorUtils;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -40,26 +39,53 @@ namespace Qurre.Internal.Patches.Player.Interact
 
             list.RemoveRange(index, delIndex - index);
 
-            list.InsertRange(index, new CodeInstruction[]
-            {
+            list.InsertRange(index,
+            [
                 new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(list[index]), // ply [ReferenceHub]
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Extensions), nameof(Extensions.GetPlayer), new Type[] { typeof(ReferenceHub) })),
+                new(OpCodes.Call, AccessTools.Method( typeof(Extensions), nameof(Extensions.GetPlayer), [ typeof(ReferenceHub) ] )),
 
-                new CodeInstruction(OpCodes.Ldarg_0), // this [DoorVariant]
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(Extensions), nameof(Extensions.GetDoor), new Type[] { typeof(DoorVariant) })),
+                new(OpCodes.Ldarg_0), // this [DoorVariant]
+                new(OpCodes.Call, AccessTools.Method( typeof(Extensions), nameof(Extensions.GetDoor), [ typeof(DoorVariant) ] )),
 
-                new CodeInstruction(OpCodes.Ldloc_0), // allowed [bool]
+                new(OpCodes.Ldloc_0), // allowed [bool]
 
-                new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(InteractDoorEvent))[0]),
-                new CodeInstruction(OpCodes.Stloc, @event.LocalIndex), // var @event = ...;
+                new(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(InteractDoorEvent))[0]),
+                new(OpCodes.Stloc, @event.LocalIndex), // var @event = ...;
 
-                new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex), // @event.InvokeEvent();
-                new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(EventsManager.Loader), nameof(EventsManager.Loader.InvokeEvent))),
+                new(OpCodes.Ldloc_S, @event.LocalIndex), // @event.InvokeEvent();
+                new(OpCodes.Call, AccessTools.Method(typeof(EventsManager.Loader), nameof(EventsManager.Loader.InvokeEvent))),
 
-                new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex), // allowed = @event.Allowed;
-                new CodeInstruction(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(InteractDoorEvent), nameof(InteractDoorEvent.Allowed))),
-                new CodeInstruction(OpCodes.Stloc_0),
-            });
+                new(OpCodes.Ldloc_S, @event.LocalIndex), // allowed = @event.Allowed;
+                new(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(InteractDoorEvent), nameof(InteractDoorEvent.Allowed))),
+                new(OpCodes.Stloc_0),
+            ]);
+
+
+            delIndex = list.FindLastIndex(ins => ins.opcode == OpCodes.Call && ins.operand is not null && ins.operand is MethodBase methodBase &&
+                methodBase.Name.Contains("ExecuteEvent")) - 4;
+
+            List<Label> pasteLabels = list[delIndex].ExtractLabels();
+
+            list.RemoveRange(delIndex, 5);
+            list.InsertRange(delIndex,
+            [
+                new CodeInstruction(OpCodes.Ldarg_1).WithLabels(pasteLabels), // ply [ReferenceHub]
+                new(OpCodes.Call, AccessTools.Method( typeof(Extensions), nameof(Extensions.GetPlayer), [ typeof(ReferenceHub) ] )),
+
+                new(OpCodes.Ldarg_0), // this [DoorVariant]
+                new(OpCodes.Call, AccessTools.Method( typeof(Extensions), nameof(Extensions.GetDoor), [ typeof(DoorVariant) ] )),
+
+                new(OpCodes.Ldc_I4_0), // false [bool]
+
+                new(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(InteractDoorEvent))[0]),
+                new(OpCodes.Stloc, @event.LocalIndex), // var @event = ...;
+
+                new(OpCodes.Ldloc_S, @event.LocalIndex), // @event.InvokeEvent();
+                new(OpCodes.Call, AccessTools.Method(typeof(EventsManager.Loader), nameof(EventsManager.Loader.InvokeEvent))),
+
+                new(OpCodes.Ldloc_S, @event.LocalIndex), // allowed = @event.Allowed;
+                new(OpCodes.Callvirt, AccessTools.PropertyGetter(typeof(InteractDoorEvent), nameof(InteractDoorEvent.Allowed))),
+            ]);
 
             return list.AsEnumerable();
         }

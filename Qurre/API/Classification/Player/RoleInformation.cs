@@ -26,8 +26,12 @@ public sealed class RoleInformation
     public bool IsDirty => _player.ReferenceHub.IsDirty();
 
     public Scp079 Scp079 { get; internal set; }
+    public Scp096 Scp096 { get; internal set; }
     public Scp106 Scp106 { get; internal set; }
     public Scp173 Scp173 { get; internal set; }
+
+    public RoleTypeId CachedRole
+        => cachedRole;
 
     public RoleTypeId Role
     {

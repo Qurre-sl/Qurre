@@ -40,10 +40,12 @@ namespace Qurre.API.Addons.Models
         public IReadOnlyList<ModelTarget> Targets => targets.AsReadOnly();
         public IReadOnlyList<ModelWorkStation> WorkStations => workStations.AsReadOnly();
 
-        public void AddPart(ModelBody part, bool addToList = true)
+        public void AddPart(ModelBody ragdoll, bool addToList = true)
         {
-            if (addToList) body.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Body);
+            if (addToList)
+                body.Add(ragdoll);
+
+            parts.Add(ragdoll.GameObject, ModelEnums.Body);
         }
         /*
         public void AddPart(ModelBot part, bool addToList = true)
@@ -52,48 +54,66 @@ namespace Qurre.API.Addons.Models
             parts.Add(part.GameObject, ModelEnums.Bot);
         }
         */
-        public void AddPart(ModelDoor part, bool addToList = true)
+        public void AddPart(ModelDoor door, bool addToList = true)
         {
-            if (addToList) doors.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Door);
+            if (addToList)
+                doors.Add(door);
+
+            parts.Add(door.GameObject, ModelEnums.Door);
         }
-        public void AddPart(ModelGenerator part, bool addToList = true)
+        public void AddPart(ModelGenerator gen, bool addToList = true)
         {
-            if (addToList) generators.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Generator);
+            if (addToList)
+                generators.Add(gen);
+
+            parts.Add(gen.GameObject, ModelEnums.Generator);
         }
-        public void AddPart(ModelLight part, bool addToList = true)
+        public void AddPart(ModelLight light, bool addToList = true)
         {
-            if (addToList) lights.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Light);
+            if (addToList)
+                lights.Add(light);
+
+            parts.Add(light.GameObject, ModelEnums.Light);
         }
-        public void AddPart(ModelLocker part, bool addToList = true)
+        public void AddPart(ModelLocker locker, bool addToList = true)
         {
-            if (addToList) lockers.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Locker);
+            if (addToList)
+                lockers.Add(locker);
+
+            parts.Add(locker.GameObject, ModelEnums.Locker);
         }
-        public void AddPart(ModelPickup part, bool addToList = true)
+        public void AddPart(ModelPickup pick, bool addToList = true)
         {
-            if (addToList) pickups.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Pickup);
+            if (addToList)
+                pickups.Add(pick);
+
+            parts.Add(pick.GameObject, ModelEnums.Pickup);
         }
-        public void AddPart(ModelPrimitive part, bool addToList = true)
+        public void AddPart(ModelPrimitive prim, bool addToList = true)
         {
-            if (addToList) primitives.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Primitive);
+            if (addToList)
+                primitives.Add(prim);
+
+            parts.Add(prim.GameObject, ModelEnums.Primitive);
         }
-        public void AddPart(ModelTarget part, bool addToList = true)
+        public void AddPart(ModelTarget shoot, bool addToList = true)
         {
-            if (addToList) targets.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Target);
+            if (addToList)
+                targets.Add(shoot);
+
+            parts.Add(shoot.GameObject, ModelEnums.Target);
         }
-        public void AddPart(ModelWorkStation part, bool addToList = true)
+        public void AddPart(ModelWorkStation station, bool addToList = true)
         {
-            if (addToList) workStations.Add(part);
-            parts.Add(part.GameObject, ModelEnums.WorkStation);
+            if (addToList)
+                workStations.Add(station);
+
+            parts.Add(station.GameObject, ModelEnums.WorkStation);
         }
 
-        public Model(string id, Vector3 position, Vector3 rotation = default, Model root = null) : this(id, position, rotation, Vector3.one, root) { }
+        public Model(string id, Vector3 position, Vector3 rotation = default, Model root = null)
+            : this(id, position, rotation, Vector3.one, root) { }
+
         public Model(string id, Vector3 position, Vector3 rotation, Vector3 scale, Model root = null)
         {
             gameObject = new GameObject(id);
@@ -109,7 +129,8 @@ namespace Qurre.API.Addons.Models
 
         public void Destroy()
         {
-            if (parts.Count == 0) return;
+            if (parts.Count == 0)
+                return;
 
             var _list = parts.Select(x => x.Key).ToList();
             _list.ForEach(part =>

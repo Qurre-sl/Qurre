@@ -2,7 +2,7 @@
 
 namespace Qurre.Internal.EventsManager
 {
-    internal struct EventCallMethod
+    internal readonly struct EventCallMethod
     {
         internal MethodInfo Info { get; }
         internal int Priority { get; }

@@ -52,6 +52,9 @@ namespace Qurre.Internal.Patches.Player.Network
                 if (Fields.Player.Dictionary.ContainsKey(player.GameObject))
                     Fields.Player.Dictionary.Remove(player.GameObject);
 
+                if (Fields.Player.Hubs.ContainsKey(player.ReferenceHub))
+                    Fields.Player.Hubs.Remove(player.ReferenceHub);
+
                 if (Fields.Player.IDs.ContainsKey(player.UserInformation.Id))
                     Fields.Player.IDs.Remove(player.UserInformation.Id);
 

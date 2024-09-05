@@ -16,8 +16,12 @@ namespace Qurre.API.Classification.Player
 
         internal List<KillElement> _kills = new();
 
-        public IReadOnlyCollection<KillElement> Kills => _kills.AsReadOnly();
-        public int KillsCount => _kills.Count;
+        public IReadOnlyCollection<KillElement> Kills
+            => _kills.AsReadOnly();
+
+        public int KillsCount
+            => _kills.Count;
+
         public int DeathsCount { get; internal set; }
     }
 }
