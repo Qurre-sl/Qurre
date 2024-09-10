@@ -1,28 +1,27 @@
-﻿using PlayerRoles.PlayableScps.Scp079.Cameras;
+﻿using JetBrains.Annotations;
+using PlayerRoles.PlayableScps.Scp079.Cameras;
 using UnityEngine;
 
-namespace Qurre.API.Controllers
+namespace Qurre.API.Controllers;
+
+[PublicAPI]
+public class Camera
 {
-    public class Camera
+    internal Camera(Scp079Camera camera, Room room)
     {
-        internal readonly Scp079Camera _camera;
+        Base = camera;
+        Room = room;
+    }
 
-        public Scp079Camera Base => _camera;
-        public GameObject GameObject => _camera.gameObject;
+    public Scp079Camera Base { get; }
+    public Room Room { get; }
 
-        public bool Active
-        {
-            get => _camera.IsActive;
-            set => _camera.IsActive = value;
-        }
-        public bool Main => _camera.IsMain;
+    public GameObject GameObject => Base.gameObject;
+    public bool Main => Base.IsMain;
 
-        public Room Room { get; private set; }
-
-        internal Camera(Scp079Camera camera, Room room)
-        {
-            _camera = camera;
-            Room = room;
-        }
+    public bool Active
+    {
+        get => Base.IsActive;
+        set => Base.IsActive = value;
     }
 }

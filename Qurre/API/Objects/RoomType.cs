@@ -1,5 +1,8 @@
-﻿namespace Qurre.API.Objects;
+﻿using JetBrains.Annotations;
 
+namespace Qurre.API.Objects;
+
+[PublicAPI]
 public enum RoomType : byte
 {
     LczClassDSpawn,
@@ -58,5 +61,5 @@ public enum RoomType : byte
     Surface,
     Pocket,
 
-    Unknown = 0,
+    Unknown = 0
 }

@@ -1,51 +1,61 @@
-﻿namespace Qurre.API;
-
+﻿using JetBrains.Annotations;
 using PlayerRoles;
 using PlayerRoles.FirstPersonControl;
 using Qurre.API.Objects;
 using Respawning;
 using UnityEngine;
 
-static public class Respawn
+namespace Qurre.API;
+
+[PublicAPI]
+public static class Respawn
 {
-    static public SpawnableTeamType NextKnownTeam
+    public static SpawnableTeamType NextKnownTeam
         => RespawnManager.Singleton.NextKnownTeam;
 
-    static public float NtfTickets
+    public static float MtfTickets
     {
         get => RespawnTokensManager.Counters[1].Amount;
         set => RespawnTokensManager.GrantTokens(SpawnableTeamType.NineTailedFox, value);
     }
-    static public float ChaosTickets
+
+    public static float ChaosTickets
     {
         get => RespawnTokensManager.Counters[0].Amount;
         set => RespawnTokensManager.GrantTokens(SpawnableTeamType.ChaosInsurgency, value);
     }
 
-    static public Vector3 GetPosition(RoleTypeId role)
-        => GetSpawnPoint(role).Position;
-    static public Transform GetTransform(RoleTypeId role)
+    public static Vector3 GetPosition(RoleTypeId role)
     {
-        GameObject obj = new("SpawnPoint (Clone)");
-        obj.transform.position = GetSpawnPoint(role).Position;
+        return GetSpawnPoint(role).Position;
+    }
+
+    public static Transform GetTransform(RoleTypeId role)
+    {
+        GameObject obj = new("SpawnPoint (Clone)")
+        {
+            transform =
+            {
+                position = GetSpawnPoint(role).Position
+            }
+        };
         return obj.transform;
     }
-    static public SpawnPoint GetSpawnPoint(RoleTypeId role, bool checkFlags = true)
+
+    public static SpawnPoint GetSpawnPoint(RoleTypeId role)
     {
-        var roleBase = Server.Host.ReferenceHub.roleManager.GetRoleBase(role);
+        PlayerRoleBase? roleBase = Server.Host.ReferenceHub.roleManager.GetRoleBase(role);
 
         if (roleBase is not IFpcRole fpc)
-            return new(Vector3.zero, 0);
+            return new SpawnPoint(Vector3.zero, 0);
 
         if (fpc.SpawnpointHandler is null)
-            return new(Vector3.zero, 0);
+            return new SpawnPoint(Vector3.zero, 0);
 
+        // ReSharper disable once ConvertIfStatementToReturnStatement
         if (!fpc.SpawnpointHandler.TryGetSpawnpoint(out Vector3 pos, out float horizontal))
-            return new(Vector3.zero, 0);
+            return new SpawnPoint(Vector3.zero, 0);
 
-        if (checkFlags && !roleBase.ServerSpawnFlags.HasFlag(RoleSpawnFlags.UseSpawnpoint))
-            return new(Vector3.zero, 0);
-
-        return new(pos, horizontal);
+        return new SpawnPoint(pos, horizontal);
     }
 }

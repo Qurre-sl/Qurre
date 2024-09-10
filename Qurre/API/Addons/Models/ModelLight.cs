@@ -1,31 +1,31 @@
-﻿using UnityEngine;
-using System;
+﻿using System;
+using JetBrains.Annotations;
 using Qurre.API.Controllers;
+using UnityEngine;
 
-namespace Qurre.API.Addons.Models
+namespace Qurre.API.Addons.Models;
+
+[PublicAPI]
+public class ModelLight
 {
-    public class ModelLight
+    public ModelLight(Model model, Color color, Vector3 position, float lightIntensivity = 5, float lightRange = 10,
+        bool shadows = true)
     {
-        private readonly GameObject gameObject;
-        private readonly LightPoint light;
+        Light = new LightPoint(position, color, lightIntensivity, lightRange, shadows);
+        GameObject = Light.Base.gameObject;
 
-        public GameObject GameObject => gameObject;
-        public LightPoint Light => light;
-
-        public ModelLight(Model model, Color color, Vector3 position, float lightIntensivity = 5, float lightRange = 10, bool shadows = true)
+        try
         {
-            try
-            {
-                light = new(position, color, lightIntensivity, lightRange, shadows);
-                gameObject = Light.Base.gameObject;
-
-                GameObject.transform.parent = model?.GameObject?.transform;
-                GameObject.transform.localPosition = position;
-            }
-            catch (Exception ex)
-            {
-                Log.Warn($"{ex}\n{ex.StackTrace}");
-            }
+            GameObject.transform.parent = model.GameObject.transform;
+            GameObject.transform.localPosition = position;
+        }
+        catch (Exception ex)
+        {
+            Log.Warn($"{ex}\n{ex.StackTrace}");
         }
     }
+
+    public GameObject GameObject { get; }
+
+    public LightPoint Light { get; }
 }

@@ -1,12 +1,31 @@
-﻿namespace Qurre.Events.Structs;
-
+﻿using System;
+using System.Net;
+using JetBrains.Annotations;
 using LiteNetLib;
 using Qurre.API;
-using System.Net;
 
+// ReSharper disable once CheckNamespace
+namespace Qurre.Events.Structs;
+
+[PublicAPI]
 public class PreauthEvent : IBaseEvent
 {
-    public uint EventId { get; } = PlayerEvents.Preauth;
+    internal PreauthEvent(string userid, IPAddress ip, CentralAuthPreauthFlags flags, string region,
+        ConnectionRequest req)
+    {
+        UserId = userid;
+        Ip = ip;
+        Flags = flags;
+        Region = region;
+        Request = req;
+        Allowed = true;
+
+        RejectionReason = RejectionReason.NotSpecified;
+        RejectionCustomReason = string.Empty;
+        RejectionExpiration = DateTime.UtcNow.Ticks;
+        RejectionRedirectPort = Server.Port;
+        RejectionDelay = 10;
+    }
 
     public string UserId { get; }
     public IPAddress Ip { get; }
@@ -20,66 +39,57 @@ public class PreauthEvent : IBaseEvent
     public long RejectionExpiration { get; set; }
     public ushort RejectionRedirectPort { get; set; }
     public byte RejectionDelay { get; set; }
-
-    internal PreauthEvent(string userid, IPAddress ip, CentralAuthPreauthFlags flags, string region, ConnectionRequest req)
-    {
-        UserId = userid;
-        Ip = ip;
-        Flags = flags;
-        Region = region;
-        Request = req;
-        Allowed = true;
-
-        RejectionReason = RejectionReason.NotSpecified;
-        RejectionCustomReason = string.Empty;
-        RejectionExpiration = System.DateTime.UtcNow.Ticks;
-        RejectionRedirectPort = Server.Port;
-        RejectionDelay = 10;
-    }
+    public uint EventId { get; } = PlayerEvents.Preauth;
 }
 
+[PublicAPI]
 public class JoinEvent : IBaseEvent
 {
-    public uint EventId { get; } = PlayerEvents.Join;
+    internal JoinEvent(Player player)
+    {
+        Player = player;
+    }
 
     public Player Player { get; }
-
-    internal JoinEvent(Player player) => Player = player;
+    public uint EventId { get; } = PlayerEvents.Join;
 }
 
+[PublicAPI]
 public class LeaveEvent : IBaseEvent
 {
-    public uint EventId { get; } = PlayerEvents.Leave;
+    internal LeaveEvent(Player player)
+    {
+        Player = player;
+    }
 
     public Player Player { get; }
-
-    internal LeaveEvent(Player player) => Player = player;
+    public uint EventId { get; } = PlayerEvents.Leave;
 }
 
+[PublicAPI]
 public class CheckReserveSlotEvent : IBaseEvent
 {
-    public uint EventId { get; } = PlayerEvents.CheckReserveSlot;
-
-    public string UserId { get; }
-    public bool Allowed { get; set; }
-
     internal CheckReserveSlotEvent(string userid, bool allowed = true)
     {
         UserId = userid;
         Allowed = allowed;
     }
-}
-
-public class CheckWhiteListEvent : IBaseEvent
-{
-    public uint EventId { get; } = PlayerEvents.CheckWhiteList;
 
     public string UserId { get; }
     public bool Allowed { get; set; }
+    public uint EventId { get; } = PlayerEvents.CheckReserveSlot;
+}
 
+[PublicAPI]
+public class CheckWhiteListEvent : IBaseEvent
+{
     internal CheckWhiteListEvent(string userid, bool allowed = true)
     {
         UserId = userid;
         Allowed = allowed;
     }
+
+    public string UserId { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = PlayerEvents.CheckWhiteList;
 }

@@ -1,62 +1,77 @@
-﻿namespace Qurre.Events.Structs
+﻿// ReSharper disable once CheckNamespace
+
+using JetBrains.Annotations;
+
+namespace Qurre.Events.Structs;
+
+[PublicAPI]
+public class WaitingEvent : IBaseEvent
 {
-    public class WaitingEvent : IBaseEvent
+    internal WaitingEvent()
     {
-        public uint EventId { get; } = RoundEvents.Waiting;
-
-        internal WaitingEvent() { }
     }
 
-    public class RoundStartedEvent : IBaseEvent
-    {
-        public uint EventId { get; } = RoundEvents.Start;
+    public uint EventId { get; } = RoundEvents.Waiting;
+}
 
-        internal RoundStartedEvent() { }
+[PublicAPI]
+public class RoundStartedEvent : IBaseEvent
+{
+    internal RoundStartedEvent()
+    {
     }
 
-    public class RoundForceStartEvent : IBaseEvent
-    {
-        public uint EventId { get; } = RoundEvents.ForceStart;
+    public uint EventId { get; } = RoundEvents.Start;
+}
 
-        internal RoundForceStartEvent() { }
+[PublicAPI]
+public class RoundForceStartEvent : IBaseEvent
+{
+    internal RoundForceStartEvent()
+    {
     }
 
-    public class RoundRestartEvent : IBaseEvent
-    {
-        public uint EventId { get; } = RoundEvents.Restart;
+    public uint EventId { get; } = RoundEvents.ForceStart;
+}
 
-        internal RoundRestartEvent() { }
+[PublicAPI]
+public class RoundRestartEvent : IBaseEvent
+{
+    internal RoundRestartEvent()
+    {
     }
 
-    public class RoundCheckEvent : IBaseEvent
+    public uint EventId { get; } = RoundEvents.Restart;
+}
+
+[PublicAPI]
+public class RoundCheckEvent : IBaseEvent
+{
+    internal RoundCheckEvent(LeadingTeam winner, RoundSummary.SumInfo_ClassList info, bool end)
     {
-        public uint EventId { get; } = RoundEvents.Check;
-
-        public LeadingTeam Winner { get; set; }
-        public RoundSummary.SumInfo_ClassList Info { get; set; }
-        public bool End { get; set; }
-
-        internal RoundCheckEvent(LeadingTeam winner, RoundSummary.SumInfo_ClassList info, bool end)
-        {
-            Winner = winner;
-            Info = info;
-            End = end;
-        }
+        Winner = winner;
+        Info = info;
+        End = end;
     }
 
-    public class RoundEndEvent : IBaseEvent
+    public LeadingTeam Winner { get; set; }
+    public RoundSummary.SumInfo_ClassList Info { get; set; }
+    public bool End { get; set; }
+    public uint EventId { get; } = RoundEvents.Check;
+}
+
+[PublicAPI]
+public class RoundEndEvent : IBaseEvent
+{
+    internal RoundEndEvent(LeadingTeam winner, RoundSummary.SumInfo_ClassList info, int toRestart)
     {
-        public uint EventId { get; } = RoundEvents.End;
-
-        public LeadingTeam Winner { get; }
-        public RoundSummary.SumInfo_ClassList Info { get; set; }
-        public int ToRestart { get; set; }
-
-        internal RoundEndEvent(LeadingTeam winner, RoundSummary.SumInfo_ClassList info, int toRestart)
-        {
-            Winner = winner;
-            Info = info;
-            ToRestart = toRestart;
-        }
+        Winner = winner;
+        Info = info;
+        ToRestart = toRestart;
     }
+
+    public LeadingTeam Winner { get; }
+    public RoundSummary.SumInfo_ClassList Info { get; set; }
+    public int ToRestart { get; set; }
+    public uint EventId { get; } = RoundEvents.End;
 }

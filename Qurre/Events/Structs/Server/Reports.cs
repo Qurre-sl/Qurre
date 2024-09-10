@@ -1,40 +1,41 @@
-﻿using Qurre.API;
+﻿using JetBrains.Annotations;
+using Qurre.API;
 
-namespace Qurre.Events.Structs
+// ReSharper disable once CheckNamespace
+namespace Qurre.Events.Structs;
+
+[PublicAPI]
+public class CheaterReportEvent : IBaseEvent
 {
-    public class CheaterReportEvent : IBaseEvent
+    internal CheaterReportEvent(Player issuer, Player target, string reason)
     {
-        public uint EventId { get; } = ServerEvents.CheaterReport;
-
-        public Player Issuer { get; }
-        public Player Target { get; }
-        public string Reason { get; }
-        public bool Allowed { get; set; }
-
-        internal CheaterReportEvent(Player issuer, Player target, string reason)
-        {
-            Issuer = issuer;
-            Target = target;
-            Reason = reason;
-            Allowed = true;
-        }
+        Issuer = issuer;
+        Target = target;
+        Reason = reason;
+        Allowed = true;
     }
 
-    public class LocalReportEvent : IBaseEvent
+    public Player Issuer { get; }
+    public Player Target { get; }
+    public string Reason { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = ServerEvents.CheaterReport;
+}
+
+[PublicAPI]
+public class LocalReportEvent : IBaseEvent
+{
+    internal LocalReportEvent(Player issuer, Player target, string reason)
     {
-        public uint EventId { get; } = ServerEvents.LocalReport;
-
-        public Player Issuer { get; }
-        public Player Target { get; }
-        public string Reason { get; }
-        public bool Allowed { get; set; }
-
-        internal LocalReportEvent(Player issuer, Player target, string reason)
-        {
-            Issuer = issuer;
-            Target = target;
-            Reason = reason;
-            Allowed = true;
-        }
+        Issuer = issuer;
+        Target = target;
+        Reason = reason;
+        Allowed = true;
     }
+
+    public Player Issuer { get; }
+    public Player Target { get; }
+    public string Reason { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = ServerEvents.LocalReport;
 }

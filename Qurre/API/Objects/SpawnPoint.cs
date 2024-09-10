@@ -1,7 +1,9 @@
-﻿namespace Qurre.API.Objects;
-
+﻿using JetBrains.Annotations;
 using UnityEngine;
 
+namespace Qurre.API.Objects;
+
+[PublicAPI]
 public readonly struct SpawnPoint
 {
     public Vector3 Position { get; }

@@ -1,94 +1,114 @@
-﻿using Qurre.API.Addons.Models;
-using System.Linq;
+﻿using System.Linq;
 using System.Reflection;
+using JetBrains.Annotations;
+using Qurre.API.Addons.Models;
 using UnityEngine;
 
-namespace Qurre.API.Controllers
+namespace Qurre.API.Controllers;
+
+[PublicAPI]
+public class Lights
 {
-    public class Lights
+    internal Lights(Room room)
     {
-        readonly Room _room;
-        readonly CustomRoom _custom;
-
-#nullable enable
-        public Room? Room => _room;
-        public CustomRoom? CustomRoom => _custom;
-#nullable disable
-
-        public bool LockChange { get; set; } = false;
-        public bool Override
-        {
-            get => _room is null || _room._lights.Any(x => x.NetworkOverrideColor != _room.defaultColor);
-            set
-            {
-                if (LockChange)
-                {
-                    Log.Debug($"Lights locked. Called field.set: [Override]. Called from {Assembly.GetCallingAssembly().GetName().Name}");
-                    return;
-                }
-
-                if (_room is not null)
-                {
-                    if (value) Log.Debug($"Override.set = true is not supported in Default Room. Called from {Assembly.GetCallingAssembly().GetName().Name}");
-                    else foreach (var light in _room._lights) light.NetworkOverrideColor = _room.defaultColor;
-                }
-                else if (_custom is not null)
-                {
-                    if (value) Log.Debug($"Override.set = true is not supported in Custom Room. Called from {Assembly.GetCallingAssembly().GetName().Name}");
-                    else foreach (var light in _custom._colors) light.Key.Light.Color = light.Value;
-                }
-            }
-        }
-
-        public float Intensity
-        {
-            get => _room is not null ? 1 : _custom._intensity;
-            set
-            {
-                if (LockChange)
-                {
-                    Log.Debug($"Lights locked. Called field.set: [Intensity]. Called from {Assembly.GetCallingAssembly().GetName().Name}");
-                    return;
-                }
-
-                if (_room is not null)
-                {
-                    Log.Debug($"Lights Intensity.set doesnt support on default rooms. Called from {Assembly.GetCallingAssembly().GetName().Name}");
-                    return;
-                }
-                else if (_custom is not null)
-                {
-                    _custom._intensity = value;
-                    foreach (var light in _custom.Lights) light.Light.Intensivity = value;
-                }
-            }
-        }
-
-        public Color Color
-        {
-            get => _room is not null ? (_room._lights.Length > 0 ? _room._lights[0].NetworkOverrideColor : _room.defaultColor) : _custom._lastColor;
-            set
-            {
-                if (LockChange)
-                {
-                    Log.Debug($"Lights locked. Called field.set: [Color]. Called from {Assembly.GetCallingAssembly().GetName().Name}");
-                    return;
-                }
-
-                if (_room is not null)
-                {
-                    foreach (var light in _room._lights)
-                        light.NetworkOverrideColor = value;
-                }
-                else if (_custom is not null)
-                {
-                    foreach (var light in _custom.Lights) light.Light.Color = value;
-                    _custom._lastColor = value;
-                }
-            }
-        }
-
-        internal Lights(Room room) => _room = room;
-        internal Lights(CustomRoom room) => _custom = room;
+        Room = room;
     }
+
+    internal Lights(CustomRoom room)
+    {
+        CustomRoom = room;
+    }
+
+    public Room? Room { get; }
+    public CustomRoom? CustomRoom { get; }
+
+    public bool LockChange { get; set; }
+
+    public bool Override
+    {
+        get => Room is null || Room.GameLights.Any(x => x.NetworkOverrideColor != Room.DefaultColor);
+        set
+        {
+            if (LockChange)
+            {
+                Log.Debug(
+                    $"Lights locked. Called field.set: [Override]. Called from {Assembly.GetCallingAssembly().GetName().Name}");
+                return;
+            }
+
+            if (Room is not null)
+            {
+                if (value)
+                    Log.Debug(
+                        $"Override.set = true is not supported in Default Room. Called from {Assembly.GetCallingAssembly().GetName().Name}");
+                else
+                    foreach (RoomLightController light in Room.GameLights)
+                        light.NetworkOverrideColor = Room.DefaultColor;
+            }
+            else if (CustomRoom is not null)
+            {
+                if (value)
+                    Log.Debug(
+                        $"Override.set = true is not supported in Custom Room. Called from {Assembly.GetCallingAssembly().GetName().Name}");
+                else
+                    foreach (var light in CustomRoom.Colors)
+                        light.Key.Light.Color = light.Value;
+            }
+        }
+    }
+
+    public float Intensity
+    {
+        get => Room is not null ? 1 : CustomRoom?.Intensity ?? 1;
+        set
+        {
+            if (LockChange)
+            {
+                Log.Debug(
+                    $"Lights locked. Called field.set: [Intensity]. Called from {Assembly.GetCallingAssembly().GetName().Name}");
+                return;
+            }
+
+            if (Room is not null)
+            {
+                Log.Debug(
+                    $"Lights Intensity.set doesnt support on default rooms. Called from {Assembly.GetCallingAssembly().GetName().Name}");
+                return;
+            }
+
+            // ReSharper disable once InvertIf
+            if (CustomRoom is not null)
+            {
+                CustomRoom.Intensity = value;
+                foreach (ModelLight light in CustomRoom.Lights) light.Light.Intensivity = value;
+            }
+        }
+    }
+
+    public Color Color
+    {
+        get => Room is not null
+            ? Room.GameLights.Length > 0 ? Room.GameLights[0].NetworkOverrideColor : Room.DefaultColor
+            : CustomRoom?.LastColor ?? Color.white;
+        set
+        {
+            if (LockChange)
+            {
+                Log.Debug(
+                    $"Lights locked. Called field.set: [Color]. Called from {Assembly.GetCallingAssembly().GetName().Name}");
+                return;
+            }
+
+            if (Room is not null)
+            {
+                foreach (RoomLightController light in Room.GameLights)
+                    light.NetworkOverrideColor = value;
+            }
+            else if (CustomRoom is not null)
+            {
+                foreach (ModelLight light in CustomRoom.Lights) light.Light.Color = value;
+                CustomRoom.LastColor = value;
+            } // end if
+        } // end field_set
+    } // end field
 }

@@ -1,6 +1,6 @@
-﻿namespace Qurre.API;
-
+﻿using System;
 using CentralAuth;
+using JetBrains.Annotations;
 using MEC;
 using Mirror;
 using PlayerRoles;
@@ -8,27 +8,29 @@ using PlayerRoles.FirstPersonControl;
 using Qurre.API.Addons.Audio;
 using Qurre.API.Addons.Audio.Objects;
 using Qurre.API.Addons.Audio.Objects.Mirror;
-using System;
 using UnityEngine;
+using VoiceChat;
 using Object = UnityEngine.Object;
 
+namespace Qurre.API;
+
+using Object = Object;
+
 /// <summary>
-/// A layer for simplified work with audio.
+///     A layer for simplified work with audio.
 /// </summary>
+[PublicAPI]
 public static class Audio
 {
+    internal static AudioPlayer? LocalHostAudioPlayer;
+
     /// <summary>
-    /// Audio player that plays on behalf of the host.
+    ///     Audio player that plays on behalf of the host.
     /// </summary>
-    public static AudioPlayer HostAudioPlayer
-    {
-        get => _hostAudioPlayer ??= new AudioPlayer(ReferenceHub.HostHub);
-    }
-
-    internal static AudioPlayer _hostAudioPlayer;
+    public static AudioPlayer HostAudioPlayer => LocalHostAudioPlayer ??= new AudioPlayer(ReferenceHub.HostHub);
 
     /// <summary>
-    /// Play audio to a global channel.
+    ///     Play audio to a global channel.
     /// </summary>
     /// <param name="audioPlayer">Audio player for playback</param>
     /// <param name="nickname">Audio player nickname</param>
@@ -37,8 +39,8 @@ public static class Audio
     /// <param name="isMute">Mute the audio task?</param>
     /// <param name="isPause">Pause the audio task?</param>
     /// <param name="isLoop">Loop the audio task?</param>
-    /// <returns>New instance of <see cref="AudioTask"/>.</returns>
-    /// <exception cref="ArgumentNullException"/>
+    /// <returns>New instance of <see cref="AudioTask" />.</returns>
+    /// <exception cref="System.ArgumentNullException" />
     public static AudioTask PlayAudioInGlobalChannel(
         AudioPlayer audioPlayer,
         string nickname,
@@ -47,23 +49,19 @@ public static class Audio
         bool isMute = false,
         bool isPause = false,
         bool isLoop = false
-        )
+    )
     {
-        if (audioPlayer == null)
-        {
+        if (audioPlayer is null)
             throw new ArgumentNullException(nameof(audioPlayer));
-        }
-        else if (audio == null)
-        {
+        if (audio is null)
             throw new ArgumentNullException(nameof(audio));
-        }
 
         audioPlayer.ReferenceHub.nicknameSync.Network_myNickSync = nickname;
-        return audioPlayer.Play(audio, VoiceChat.VoiceChatChannel.Intercom, addDecibels, isMute, isPause, isLoop);
+        return audioPlayer.Play(audio, VoiceChatChannel.Intercom, addDecibels, isMute, isPause, isLoop);
     }
 
     /// <summary>
-    /// Play audio into a global channel on behalf of the host.
+    ///     Play audio into a global channel on behalf of the host.
     /// </summary>
     /// <param name="nickname">Host nickname.</param>
     /// <param name="audio">Audio to play</param>
@@ -71,8 +69,8 @@ public static class Audio
     /// <param name="isMute">Mute the audio task?</param>
     /// <param name="isPause">Pause the audio task?</param>
     /// <param name="isLoop">Loop the audio task?</param>
-    /// <returns>New instance of <see cref="AudioTask"/>.</returns>
-    /// <exception cref="ArgumentNullException"/>
+    /// <returns>New instance of <see cref="AudioTask" />.</returns>
+    /// <exception cref="System.ArgumentNullException" />
     public static AudioTask PlayAudioInGlobalChannel(
         string nickname,
         IAudio audio,
@@ -80,18 +78,16 @@ public static class Audio
         bool isMute = false,
         bool isPause = false,
         bool isLoop = false
-        )
+    )
     {
-        if (audio == null)
-        {
+        if (audio is null)
             throw new ArgumentNullException(nameof(audio));
-        }
 
-        return PlayAudioInGlobalChannel(HostAudioPlayer, nickname, audio, addDecibels, isMute, isPause, isLoop); ;
+        return PlayAudioInGlobalChannel(HostAudioPlayer, nickname, audio, addDecibels, isMute, isPause, isLoop);
     }
 
     /// <summary>
-    /// Create a new bot to play audio in the Proximity channel.
+    ///     Create a new bot to play audio in the Proximity channel.
     /// </summary>
     /// <param name="nickname">Bot nickname</param>
     /// <param name="role">Bot role</param>
@@ -100,27 +96,26 @@ public static class Audio
     /// <returns>Audio player played on behalf of a bot.</returns>
     public static AudioPlayer CreateNewAudioPlayer(string nickname, RoleTypeId role, Vector3 position, Vector3 rotation)
     {
-        // We spawn a new bot.
-        var botObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
-        var zeroConnection = new ZeroConnectionToClient();
-        var referenceHub = botObject.GetComponent<ReferenceHub>();
+        // Spawn a new bot.
+        GameObject? botObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
+        ZeroConnectionToClient zeroConnection = new();
+        ReferenceHub? referenceHub = botObject.GetComponent<ReferenceHub>();
 
-        // We setting up the bot.
+        // Setting up the bot.
         NetworkServer.AddPlayerForConnection(zeroConnection, botObject);
         referenceHub.authManager.InstanceMode = ClientInstanceMode.ReadyClient;
         referenceHub.nicknameSync.Network_myNickSync = nickname;
         referenceHub.nicknameSync.Network_displayName = nickname;
         referenceHub.roleManager.ServerSetRole(role, RoleChangeReason.None);
 
-        // We are doing additional bot setup.
+        // Doing additional bot setup.
         Timing.CallDelayed(0.2F, () =>
         {
             referenceHub.characterClassManager.GodMode = true;
             referenceHub.TryOverridePosition(position, rotation);
         });
 
-        // We are creating a new player.
-        var audioPlayer = new AudioPlayer(referenceHub);
-        return audioPlayer;
+        // Creating a new player.
+        return new AudioPlayer(referenceHub);
     }
 }

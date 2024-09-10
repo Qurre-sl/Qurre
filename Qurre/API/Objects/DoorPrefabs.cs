@@ -1,8 +1,13 @@
-﻿namespace Qurre.API.Objects;
+﻿// ReSharper disable InconsistentNaming
 
+using JetBrains.Annotations;
+
+namespace Qurre.API.Objects;
+
+[PublicAPI]
 public enum DoorPrefabs : byte
 {
     DoorLCZ,
     DoorHCZ,
-    DoorEZ,
+    DoorEZ
 }

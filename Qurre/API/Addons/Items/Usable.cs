@@ -1,46 +1,42 @@
 ﻿using InventorySystem.Items.Usables;
+using JetBrains.Annotations;
 using Qurre.API.Controllers;
 
-namespace Qurre.API.Addons.Items
+namespace Qurre.API.Addons.Items;
+
+[PublicAPI]
+public sealed class Usable(UsableItem itemBase) : Item(itemBase)
 {
-    public sealed class Usable : Item
+    public Usable(ItemType type) : this((UsableItem)type.CreateItemInstance())
     {
-        public new UsableItem Base { get; }
+    }
 
-        public bool Equippable => Base.AllowEquip;
-        public bool Holsterable => Base.AllowHolster;
+    public new UsableItem Base { get; } = itemBase;
 
-        public new float Weight
-        {
-            get => Base._weight;
-            set => Base._weight = value;
-        }
+    public bool Equippable => Base.AllowEquip;
+    public bool Holsterable => Base.AllowHolster;
 
-        public float UseTime
-        {
-            get => Base.UseTime;
-            set => Base.UseTime = value;
-        }
+    public new float Weight
+    {
+        get => Base._weight;
+        set => Base._weight = value;
+    }
 
-        public float MaxCancellableTime
-        {
-            get => Base.MaxCancellableTime;
-            set => Base.MaxCancellableTime = value;
-        }
+    public float UseTime
+    {
+        get => Base.UseTime;
+        set => Base.UseTime = value;
+    }
 
-        public float RemainingCooldown
-        {
-            get => Base.RemainingCooldown;
-            set => Base.RemainingCooldown = value;
-        }
+    public float MaxCancellableTime
+    {
+        get => Base.MaxCancellableTime;
+        set => Base.MaxCancellableTime = value;
+    }
 
-        public Usable(UsableItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public Usable(ItemType type) : this((UsableItem)type.CreateItemInstance())
-        {
-        }
+    public float RemainingCooldown
+    {
+        get => Base.RemainingCooldown;
+        set => Base.RemainingCooldown = value;
     }
 }

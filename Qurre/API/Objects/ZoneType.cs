@@ -1,10 +1,13 @@
-﻿namespace Qurre.API.Objects;
+﻿using JetBrains.Annotations;
 
+namespace Qurre.API.Objects;
+
+[PublicAPI]
 public enum ZoneType : byte
 {
-	Surface,
-	Office,
-	Heavy,
-	Light,
-	Unknown
+    Surface,
+    Office,
+    Heavy,
+    Light,
+    Unknown
 }

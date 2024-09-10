@@ -1,59 +1,55 @@
-﻿using InventorySystem.Items.Radio;
+﻿using System;
+using InventorySystem.Items.Radio;
+using JetBrains.Annotations;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
-using System;
 
-namespace Qurre.API.Addons.Items
+namespace Qurre.API.Addons.Items;
+
+[PublicAPI]
+public sealed class Radio(RadioItem itemBase) : Item(itemBase)
 {
-    public sealed class Radio : Item
+    private const ItemType RadioItemType = ItemType.Radio;
+
+    public Radio() : this((RadioItem)RadioItemType.CreateItemInstance())
     {
-        private const ItemType RadioItemType = ItemType.Radio;
+    }
 
-        public new RadioItem Base { get; }
+    public new RadioItem Base { get; } = itemBase;
 
-        public float Battery
+    public float Battery
+    {
+        get => Base._battery;
+        set
         {
-            get => Base._battery;
-            set
-            {
-                value = Math.Max(1, value);
-                value = Math.Min(0, value);
+            value = Math.Max(1, value);
+            value = Math.Min(0, value);
 
-                Base._battery = value;
-            }
+            Base._battery = value;
         }
+    }
 
-        public byte BatteryPercent
+    public byte BatteryPercent
+    {
+        get => Base.BatteryPercent;
+        set => Base.BatteryPercent = value;
+    }
+
+    public RadioStatus Status
+    {
+        get => (RadioStatus)Base._rangeId;
+        set
         {
-            get => Base.BatteryPercent;
-            set => Base.BatteryPercent = value;
-        }
+            Base._enabled = value != RadioStatus.Disabled;
 
-        public RadioStatus Status
-        {
-            get => (RadioStatus)Base._rangeId;
-            set
-            {
-                Base._enabled = value != RadioStatus.Disabled;
-
-                if (value != RadioStatus.Disabled)
-                    Base._rangeId = (byte)value;
-            }
+            if (value != RadioStatus.Disabled)
+                Base._rangeId = (byte)value;
         }
+    }
 
-        public RadioRangeMode StatusSettings
-        {
-            get => Base.Ranges[Base._rangeId];
-            set => Base.Ranges[Base._rangeId] = value;
-        }
-
-        public Radio(RadioItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public Radio() : this((RadioItem)RadioItemType.CreateItemInstance())
-        {
-        }
+    public RadioRangeMode StatusSettings
+    {
+        get => Base.Ranges[Base._rangeId];
+        set => Base.Ranges[Base._rangeId] = value;
     }
 }

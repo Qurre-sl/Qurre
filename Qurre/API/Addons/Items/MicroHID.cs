@@ -1,51 +1,46 @@
-﻿using InventorySystem.Items.MicroHID;
+﻿using System.Diagnostics.CodeAnalysis;
+using InventorySystem.Items.MicroHID;
+using JetBrains.Annotations;
 using Qurre.API.Controllers;
 
-namespace Qurre.API.Addons.Items
+namespace Qurre.API.Addons.Items;
+
+[PublicAPI]
+[SuppressMessage("ReSharper", "InconsistentNaming")]
+public sealed class MicroHID(MicroHIDItem itemBase) : Item(itemBase)
 {
-    public sealed class MicroHID : Item
+    private const ItemType MicroHIDItemType = ItemType.MicroHID;
+
+    public MicroHID() : this((MicroHIDItem)MicroHIDItemType.CreateItemInstance())
     {
-        private const ItemType MicroHIDItemType = ItemType.MicroHID;
+    }
 
-        public new MicroHIDItem Base { get; }
+    public new MicroHIDItem Base { get; } = itemBase;
 
-        public float Energy
-        {
-            get => Base.RemainingEnergy;
-            set => Base.RemainingEnergy = value;
-        }
+    public float Energy
+    {
+        get => Base.RemainingEnergy;
+        set => Base.RemainingEnergy = value;
+    }
 
-        /// <summary>
-        /// 0 - 255
-        /// </summary>
-        public byte EnergyPercent
-        {
-            get => Base.EnergyToByte;
-            set
-            {
-                Base.RemainingEnergy = value / 225f;
-            }
-        }
+    /// <summary>
+    ///     0 - 255
+    /// </summary>
+    public byte EnergyPercent
+    {
+        get => Base.EnergyToByte;
+        set => Base.RemainingEnergy = value / 225f;
+    }
 
-        public HidState State
-        {
-            get => Base.State;
-            set => Base.State = value;
-        }
+    public HidState State
+    {
+        get => Base.State;
+        set => Base.State = value;
+    }
 
-        public MicroHID(MicroHIDItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public MicroHID() : this((MicroHIDItem)MicroHIDItemType.CreateItemInstance())
-        {
-        }
-
-        public void Fire()
-        {
-            Base.UserInput = HidUserInput.Fire;
-            State = HidState.Firing;
-        }
+    public void Fire()
+    {
+        Base.UserInput = HidUserInput.Fire;
+        State = HidState.Firing;
     }
 }

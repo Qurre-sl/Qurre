@@ -1,32 +1,34 @@
-﻿using AdminToys;
-using HarmonyLib;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
+using AdminToys;
+using HarmonyLib;
 
-namespace Qurre.Internal.Patches.Misc.Fixes
+namespace Qurre.Internal.Patches.Misc.Fixes;
+
+[HarmonyPatch(typeof(AdminToyBase), nameof(AdminToyBase.UpdatePositionServer))]
+[SuppressMessage("ReSharper", "UnusedMember.Local")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+internal static class FixToysScale
 {
-    [HarmonyPatch(typeof(AdminToyBase), nameof(AdminToyBase.UpdatePositionServer))]
-    static class FixToysScale
+    [HarmonyTranspiler]
+    private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> _)
     {
-        [HarmonyTranspiler]
-        static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
-        {
-            yield return new CodeInstruction(OpCodes.Ldarg_0); // instance [AdminToyBase]
-            yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(FixToysScale), nameof(FixToysScale.Invoke)));
-            yield return new CodeInstruction(OpCodes.Ret);
-        }
+        yield return new CodeInstruction(OpCodes.Ldarg_0); // instance [AdminToyBase]
+        yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(FixToysScale), nameof(Invoke)));
+        yield return new CodeInstruction(OpCodes.Ret);
+    }
 
-        static void Invoke(AdminToyBase instance)
-        {
-            if (instance.IsStatic)
-                return;
+    private static void Invoke(AdminToyBase instance)
+    {
+        if (instance.IsStatic)
+            return;
 
-            if (instance.transform is null)
-                return;
+        if (instance.transform == null)
+            return;
 
-            instance.NetworkPosition = instance.transform.position;
-            instance.NetworkRotation = new LowPrecisionQuaternion(instance.transform.rotation);
-            instance.NetworkScale = instance.transform.lossyScale;
-        }
+        instance.NetworkPosition = instance.transform.position;
+        instance.NetworkRotation = new LowPrecisionQuaternion(instance.transform.rotation);
+        instance.NetworkScale = instance.transform.lossyScale;
     }
 }

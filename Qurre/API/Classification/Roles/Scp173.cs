@@ -1,39 +1,39 @@
-﻿using PlayerRoles.PlayableScps.Scp173;
-using PlayerRoles.Subroutines;
+﻿using System;
 using System.Collections.Generic;
+using JetBrains.Annotations;
+using PlayerRoles.PlayableScps.Scp173;
+using PlayerRoles.Subroutines;
 
-namespace Qurre.API.Classification.Roles
+namespace Qurre.API.Classification.Roles;
+
+[PublicAPI]
+public sealed class Scp173
 {
-    using Qurre.API;
+    private readonly API.Player _pl;
 
-    public sealed class Scp173
+    internal Scp173(API.Player pl)
     {
-        static public HashSet<Player> IgnoredPlayers { get; } = new();
+        _pl = pl;
 
+        if (_pl.ReferenceHub.roleManager.CurrentRole is not Scp173Role roleBase)
+            throw new NullReferenceException(nameof(roleBase));
 
-        public Scp173Role Base { get; }
+        Base = roleBase;
 
-        public bool IsWork => pl.RoleInformation.Role is PlayerRoles.RoleTypeId.Scp173;
-
-        public Scp173ObserversTracker Observers { get; }
-
-        public SubroutineManagerModule Subroutine => Base.SubroutineModule;
-
-
-        private readonly Player pl;
-        internal Scp173(Player _pl)
-        {
-            pl = _pl;
-
-            Base = pl.ReferenceHub.roleManager.CurrentRole as Scp173Role;
-
-            if (Base is null)
-                return;
-
-            if (Subroutine.TryGetSubroutine(out Scp173ObserversTracker observers))
-                Observers = observers;
-            else
-                Log.Debug($"Null Debug: [Roles > Scp173] >> Scp173ObserversTracker is null");
-        }
+        if (Subroutine.TryGetSubroutine(out Scp173ObserversTracker observers))
+            Observers = observers;
+        else
+            Log.Debug("Null Debug: [Roles > Scp173] >> Scp173ObserversTracker is null");
     }
+
+    public static HashSet<API.Player> IgnoredPlayers { get; } = [];
+
+    public Scp173Role Base { get; }
+
+    public bool IsWork => Base != null;
+
+    public Scp173ObserversTracker? Observers { get; }
+
+    public SubroutineManagerModule Subroutine
+        => Base.SubroutineModule;
 }

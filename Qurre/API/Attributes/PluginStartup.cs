@@ -1,9 +1,16 @@
 ﻿using System;
-namespace Qurre.API.Attributes
-{
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class PluginEnable : Attribute { }
+using JetBrains.Annotations;
 
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class PluginDisable : Attribute { }
+namespace Qurre.API.Attributes;
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Method)]
+public class PluginEnable : Attribute
+{
+}
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Method)]
+public class PluginDisable : Attribute
+{
 }

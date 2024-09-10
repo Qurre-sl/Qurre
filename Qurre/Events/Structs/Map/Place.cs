@@ -1,52 +1,53 @@
 ﻿using InventorySystem;
 using InventorySystem.Items.Pickups;
+using JetBrains.Annotations;
 using PlayerStatsSystem;
 using Qurre.API;
 using Qurre.API.Controllers;
 
-namespace Qurre.Events.Structs
+// ReSharper disable once CheckNamespace
+namespace Qurre.Events.Structs;
+
+[PublicAPI]
+public class CreatePickupEvent : IBaseEvent
 {
-    public class CreatePickupEvent : IBaseEvent
+    internal CreatePickupEvent(PickupSyncInfo psi, Inventory inv)
     {
-        public uint EventId { get; } = MapEvents.CreatePickup;
-
-        public PickupSyncInfo Info { get; }
-        public Inventory Inventory { get; }
-        public bool Allowed { get; set; }
-
-        internal CreatePickupEvent(PickupSyncInfo psi, Inventory inv)
-        {
-            Info = psi;
-            Inventory = inv;
-            Allowed = true;
-        }
+        Info = psi;
+        Inventory = inv;
+        Allowed = true;
     }
 
-    public class RagdollSpawnEvent : IBaseEvent
+    public PickupSyncInfo Info { get; }
+    public Inventory Inventory { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = MapEvents.CreatePickup;
+}
+
+[PublicAPI]
+public class RagdollSpawnEvent : IBaseEvent
+{
+    internal RagdollSpawnEvent(Player owner, DamageHandlerBase handler)
     {
-        public uint EventId { get; } = MapEvents.RagdollSpawn;
-
-        public Player Owner { get; }
-        public DamageHandlerBase Handler { get; }
-        public bool Allowed { get; set; }
-
-        internal RagdollSpawnEvent(Player owner, DamageHandlerBase handler)
-        {
-            Owner = owner ?? Server.Host;
-            Handler = handler;
-            Allowed = true;
-        }
+        Owner = owner ?? Server.Host;
+        Handler = handler;
+        Allowed = true;
     }
 
-    public class RagdollSpawnedEvent : IBaseEvent
+    public Player Owner { get; }
+    public DamageHandlerBase Handler { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = MapEvents.RagdollSpawn;
+}
+
+[PublicAPI]
+public class RagdollSpawnedEvent : IBaseEvent
+{
+    internal RagdollSpawnedEvent(Ragdoll ragdoll)
     {
-        public uint EventId { get; } = MapEvents.RagdollSpawned;
-
-        public Ragdoll Ragdoll { get; }
-
-        internal RagdollSpawnedEvent(Ragdoll ragdoll)
-        {
-            Ragdoll = ragdoll;
-        }
+        Ragdoll = ragdoll;
     }
+
+    public Ragdoll Ragdoll { get; }
+    public uint EventId { get; } = MapEvents.RagdollSpawned;
 }

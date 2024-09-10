@@ -1,117 +1,120 @@
-﻿using Qurre.API;
-using System.Reflection;
+﻿using System.Reflection;
+using JetBrains.Annotations;
+using Qurre.API;
 
-namespace Qurre.Events.Structs
+// ReSharper disable once CheckNamespace
+namespace Qurre.Events.Structs;
+
+[PublicAPI]
+public class RequestPlayerListCommandEvent : IBaseEvent
 {
-    public class RequestPlayerListCommandEvent : IBaseEvent
+    internal RequestPlayerListCommandEvent(CommandSender sender, Player? player, string command)
     {
-        public uint EventId { get; } = ServerEvents.RequestPlayerListCommand;
+        Sender = sender;
+        Player = player ?? Server.Host;
+        Command = command;
+        Reply = string.Empty;
+        Allowed = true;
+    }
 
-        public CommandSender Sender { get; }
-        public Player Player { get; }
-        public string Command { get; }
-        public string Reply { get; set; }
-        public bool Allowed { get; set; }
+    public CommandSender Sender { get; }
+    public Player Player { get; }
+    public string Command { get; }
+    public string Reply { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = ServerEvents.RequestPlayerListCommand;
+}
 
-        internal RequestPlayerListCommandEvent(CommandSender sender, Player player, string command)
+[PublicAPI]
+public class RemoteAdminCommandEvent : IBaseEvent
+{
+    private string _reply = string.Empty;
+
+    internal RemoteAdminCommandEvent(CommandSender sender, Player? player, string command, string name, string[] args)
+    {
+        Sender = sender;
+        Player = player ?? Server.Host;
+
+        Command = command;
+        Name = name;
+        Args = args;
+
+        Prefix = string.Empty;
+        Success = true;
+        Allowed = true;
+    }
+
+    public CommandSender Sender { get; }
+    public Player Player { get; }
+
+    public string Command { get; }
+    public string Name { get; }
+    public string[] Args { get; }
+
+    public string Reply
+    {
+        get => _reply;
+        set
         {
-            Sender = sender;
-            Player = player ?? Server.Host;
-            Command = command;
-            Reply = string.Empty;
-            Allowed = true;
+            if (string.IsNullOrEmpty(Prefix))
+                Prefix = Assembly.GetCallingAssembly().GetName().Name;
+
+            _reply = value;
         }
     }
 
-    public class RemoteAdminCommandEvent : IBaseEvent
+    public string Prefix { get; set; }
+    public bool Success { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = ServerEvents.RemoteAdminCommand;
+}
+
+[PublicAPI]
+public class GameConsoleCommandEvent : IBaseEvent
+{
+    internal GameConsoleCommandEvent(Player? player, string command, string name, string[] args)
     {
-        public uint EventId { get; } = ServerEvents.RemoteAdminCommand;
+        Player = player ?? Server.Host;
 
-        public CommandSender Sender { get; }
-        public Player Player { get; }
+        Command = command;
+        Name = name;
+        Args = args;
 
-        public string Command { get; }
-        public string Name { get; }
-        public string[] Args { get; }
-
-        public string Reply
-        {
-            get => _reply;
-            set
-            {
-                if (string.IsNullOrEmpty(Prefix))
-                    Prefix = Assembly.GetCallingAssembly().GetName().Name;
-
-                _reply = value;
-            }
-        }
-        public string Prefix { get; set; }
-        public bool Success { get; set; }
-        public bool Allowed { get; set; }
-
-        private string _reply = string.Empty;
-        internal RemoteAdminCommandEvent(CommandSender sender, Player player, string command, string name, string[] args)
-        {
-            Sender = sender;
-            Player = player ?? Server.Host;
-
-            Command = command;
-            Name = name;
-            Args = args;
-
-            Prefix = string.Empty;
-            Success = true;
-            Allowed = true;
-        }
+        Reply = string.Empty;
+        Color = "white";
+        Allowed = true;
     }
 
-    public class GameConsoleCommandEvent : IBaseEvent
+    public Player Player { get; }
+
+    public string Command { get; }
+    public string Name { get; }
+    public string[] Args { get; }
+
+    public string Reply { get; set; }
+    public string Color { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = ServerEvents.GameConsoleCommand;
+}
+
+[PublicAPI]
+public class ServerConsoleCommandEvent : IBaseEvent
+{
+    internal ServerConsoleCommandEvent(string command, string name, string[] args)
     {
-        public uint EventId { get; } = ServerEvents.GameConsoleCommand;
+        Command = command;
+        Name = name;
+        Args = args;
 
-        public Player Player { get; }
-
-        public string Command { get; }
-        public string Name { get; }
-        public string[] Args { get; }
-
-        public string Reply { get; set; }
-        public string Color { get; set; }
-        public bool Allowed { get; set; }
-
-        internal GameConsoleCommandEvent(Player player, string command, string name, string[] args)
-        {
-            Player = player ?? Server.Host;
-
-            Command = command;
-            Name = name;
-            Args = args;
-
-            Reply = string.Empty;
-            Color = "white";
-            Allowed = true;
-        }
+        Reply = string.Empty;
+        Allowed = true;
     }
 
-    public class ServerConsoleCommandEvent : IBaseEvent
-    {
-        public uint EventId { get; } = ServerEvents.ServerConsoleCommand;
+    public string Command { get; }
+    public string Name { get; }
+    public string[] Args { get; }
 
-        public string Command { get; }
-        public string Name { get; }
-        public string[] Args { get; }
-
-        public string Reply { get; set; }
-        public bool Allowed { get; set; }
-
-        internal ServerConsoleCommandEvent(string command, string name, string[] args)
-        {
-            Command = command;
-            Name = name;
-            Args = args;
-
-            Reply = string.Empty;
-            Allowed = true;
-        }
-    }
+    public string Reply { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = ServerEvents.ServerConsoleCommand;
 }

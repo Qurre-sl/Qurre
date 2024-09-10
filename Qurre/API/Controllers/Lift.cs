@@ -1,48 +1,84 @@
-﻿using Interactables.Interobjects;
+﻿using System;
+using Interactables.Interobjects;
+using JetBrains.Annotations;
 using UnityEngine;
 
-namespace Qurre.API.Controllers
+namespace Qurre.API.Controllers;
+
+[PublicAPI]
+public class Lift
 {
-    public class Lift
+    internal Lift(ElevatorChamber elevator)
     {
-        public ElevatorChamber Elevator
-            => _elevator;
+        Elevator = elevator;
+    }
 
-        public GameObject GameObject
-            => _elevator.gameObject;
+    public ElevatorChamber Elevator { get; }
 
-        public Transform Transform
-            => _elevator.transform;
+    public GameObject GameObject
+        => Elevator.gameObject;
 
-        public Vector3 Position
-        {
-            get => Transform.position;
-            set => Transform.position = value;
-        }
-        public Quaternion Rotation
-        {
-            get => Transform.rotation;
-            set => Transform.rotation = value;
-        }
-        public Vector3 Scale
-            => Transform.localScale;
+    public Transform Transform
+        => Elevator.transform;
 
-        public ElevatorChamber.ElevatorSequence Status
-        {
-            get => _elevator._curSequence;
-            set => _elevator._curSequence = value;
-        }
+    public ElevatorManager.ElevatorGroup Type
+        => Elevator.AssignedGroup;
 
-        public ElevatorManager.ElevatorGroup Type
-            => _elevator.AssignedGroup;
+    public Bounds Bounds
+        => Elevator.WorldspaceBounds;
 
-        public Bounds Bounds
-            => _elevator.WorldspaceBounds;
+    public Vector3 Scale
+        => Transform.localScale;
 
-        public void Use() => Status = ElevatorChamber.ElevatorSequence.Ready;
+    public Vector3 Position
+    {
+        get => Transform.position;
+        set => Transform.position = value;
+    }
 
+    public Quaternion Rotation
+    {
+        get => Transform.rotation;
+        set => Transform.rotation = value;
+    }
 
-        private readonly ElevatorChamber _elevator;
-        internal Lift(ElevatorChamber elevator) => _elevator = elevator;
+    public ElevatorChamber.ElevatorSequence Status
+    {
+        get => Elevator._curSequence;
+        set => Elevator._curSequence = value;
+    }
+
+    public void Use()
+    {
+        Status = ElevatorChamber.ElevatorSequence.Ready;
+    }
+
+    public static bool operator ==(Lift? lhs, Lift? rhs)
+    {
+        if (rhs is null)
+            return lhs?.Transform == null;
+
+        if (lhs is null)
+            return rhs.Transform == null;
+
+        return lhs.Transform == rhs.Transform;
+    }
+
+    public static bool operator !=(Lift lhs, Lift rhs)
+    {
+        return !(lhs == rhs);
+    }
+
+    public override bool Equals(object? obj)
+    {
+        if (obj is Lift lift)
+            return this == lift;
+
+        return false;
+    }
+
+    public override int GetHashCode()
+    {
+        return Tuple.Create(this, GameObject).GetHashCode();
     }
 }

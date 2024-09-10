@@ -1,8 +1,11 @@
-﻿namespace Qurre.API.Objects;
+﻿using JetBrains.Annotations;
 
+namespace Qurre.API.Objects;
+
+[PublicAPI]
 public enum LiteDamageTypes : byte
 {
-    Unknow,
+    Unknown,
     Custom,
     Disruptor,
     Explosion,
@@ -16,5 +19,5 @@ public enum LiteDamageTypes : byte
     Universal,
     Warhead,
     Jailbird,
-    Snowball,
+    Snowball
 }

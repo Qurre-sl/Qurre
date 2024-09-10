@@ -1,41 +1,46 @@
-﻿using Mirror;
+﻿using System;
+using JetBrains.Annotations;
+using Mirror;
 using PlayerRoles.Voice;
-using System;
 using BaseIntercom = PlayerRoles.Voice.Intercom;
 
-namespace Qurre.API.Controllers
+namespace Qurre.API.Controllers;
+
+[PublicAPI]
+public static class Intercom
 {
-    static public class Intercom
+    public static IntercomDisplay Display => IntercomDisplay._singleton;
+    public static BaseIntercom Base => BaseIntercom._singleton;
+
+    public static Player? Speaker => Base._curSpeaker.GetPlayer();
+
+    public static string Text
     {
-        static public IntercomDisplay Display => IntercomDisplay._singleton;
-        static public BaseIntercom Base => BaseIntercom._singleton;
+        get => Display._overrideText;
+        set => Display.Network_overrideText = value;
+    }
 
-        static public Player Speaker => Base._curSpeaker.GetPlayer();
+    public static IntercomState Status
+    {
+        get => BaseIntercom.State;
+        set => BaseIntercom.State = value;
+    }
 
-        static public string Text
-        {
-            get => Display._overrideText;
-            set => Display.Network_overrideText = value;
-        }
-        static public IntercomState Status
-        {
-            get => BaseIntercom.State;
-            set => BaseIntercom.State = value;
-        }
-        static public double RemainingCooldown
-        {
-            get => Status == IntercomState.Cooldown ? Math.Max(Base._nextTime - NetworkTime.time, 0) : 0;
-            set => Base._nextTime = value + NetworkTime.time;
-        }
-        static public float RechargeCooldown
-        {
-            get => Base._cooldownTime;
-            set => Base._cooldownTime = value;
-        }
-        static public float SpeechRemaining
-        {
-            get => Base.RemainingTime;
-            set => Base._nextTime = NetworkTime.time + value;
-        }
+    public static double RemainingCooldown
+    {
+        get => Status == IntercomState.Cooldown ? Math.Max(Base._nextTime - NetworkTime.time, 0) : 0;
+        set => Base._nextTime = value + NetworkTime.time;
+    }
+
+    public static float RechargeCooldown
+    {
+        get => Base._cooldownTime;
+        set => Base._cooldownTime = value;
+    }
+
+    public static float SpeechRemaining
+    {
+        get => Base.RemainingTime;
+        set => Base._nextTime = NetworkTime.time + value;
     }
 }

@@ -1,125 +1,135 @@
-﻿using MapGeneration.Distributors;
+﻿using System;
+using JetBrains.Annotations;
+using MapGeneration.Distributors;
 using Mirror;
+using Qurre.API.Addons;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-namespace Qurre.API.Controllers
+namespace Qurre.API.Controllers;
+
+[PublicAPI]
+public class Generator
 {
-    public class Generator
+    private readonly Scp079Generator _generator;
+    private readonly StructurePositionSync _positionSync;
+    private string _name = string.Empty;
+
+    internal Generator(Scp079Generator g)
     {
-        private string name;
-        private readonly Scp079Generator generator;
-        private readonly StructurePositionSync positionsync;
+        _generator = g;
+        _positionSync = _generator.GetComponent<StructurePositionSync>();
+    }
 
-        public GameObject GameObject => generator.gameObject;
-        public Transform Transform => GameObject.transform;
+    public Generator(Vector3 position, Quaternion? rotation = null)
+    {
+        if (Prefabs.Generator == null)
+            throw new NullReferenceException(nameof(Prefabs.Generator));
 
-        public string Name
-        {
-            get
-            {
-                if (string.IsNullOrEmpty(name)) return GameObject.name;
-                return name;
-            }
-            set => name = value;
-        }
+        _generator = Object.Instantiate(Prefabs.Generator);
 
-        public Vector3 Position
-        {
-            get => Transform.position;
-            set
-            {
-                positionsync.Network_position = value;
-                NetworkServer.UnSpawn(GameObject);
-                Transform.position = value;
-                NetworkServer.Spawn(GameObject);
-            }
-        }
-        public Quaternion Rotation
-        {
-            get => Transform.localRotation;
-            set
-            {
-                positionsync.Network_rotationY = (sbyte)(value.eulerAngles.y / 5.625f);
-                NetworkServer.UnSpawn(GameObject);
-                Transform.rotation = value;
-                NetworkServer.Spawn(GameObject);
-            }
-        }
-        public Vector3 Scale
-        {
-            get => Transform.localScale;
-            set
-            {
-                NetworkServer.UnSpawn(GameObject);
-                Transform.localScale = value;
-                NetworkServer.Spawn(GameObject);
-            }
-        }
+        _generator.transform.position = position;
+        _generator.transform.rotation = rotation ?? new Quaternion();
 
-        public bool Open
-        {
-            get => generator.HasFlag(generator._flags, Scp079Generator.GeneratorFlags.Open);
-            set
-            {
-                generator.ServerSetFlag(Scp079Generator.GeneratorFlags.Open, value);
-                generator._targetCooldown = generator._doorToggleCooldownTime;
-            }
-        }
-        public bool Lock
-        {
-            get => !generator.HasFlag(generator._flags, Scp079Generator.GeneratorFlags.Unlocked);
-            set
-            {
-                generator.ServerSetFlag(Scp079Generator.GeneratorFlags.Unlocked, !value);
-                generator._targetCooldown = generator._unlockCooldownTime;
-            }
-        }
-        public bool Active
-        {
-            get => generator.Activating;
-            set
-            {
-                generator.Activating = value;
-                if (value) generator._leverStopwatch.Restart();
-                generator._targetCooldown = generator._doorToggleCooldownTime;
-            }
-        }
-        public bool Engaged
-        {
-            get => generator.Engaged;
-            set => generator.Engaged = value;
-        }
-        public short Time
-        {
-            get => generator._syncTime;
-            set => generator.Network_syncTime = value;
-        }
+        _positionSync = _generator.GetComponent<StructurePositionSync>();
 
-        public void Destroy()
+        NetworkServer.Spawn(_generator.gameObject);
+
+        _generator.netIdentity.UpdateData();
+
+        Map.Generators.Add(this);
+    }
+
+    public GameObject GameObject => _generator.gameObject;
+    public Transform Transform => GameObject.transform;
+
+    public string Name
+    {
+        get => string.IsNullOrEmpty(_name) ? GameObject.name : _name;
+        set => _name = value;
+    }
+
+    public Vector3 Position
+    {
+        get => Transform.position;
+        set
         {
-            Map.Generators.Remove(this);
-            NetworkServer.Destroy(GameObject);
+            _positionSync.Network_position = value;
+            NetworkServer.UnSpawn(GameObject);
+            Transform.position = value;
+            NetworkServer.Spawn(GameObject);
         }
+    }
 
-        internal Generator(Scp079Generator g)
+    public Quaternion Rotation
+    {
+        get => Transform.localRotation;
+        set
         {
-            generator = g;
-            positionsync = generator.GetComponent<StructurePositionSync>();
+            _positionSync.Network_rotationY = (sbyte)(value.eulerAngles.y / 5.625f);
+            NetworkServer.UnSpawn(GameObject);
+            Transform.rotation = value;
+            NetworkServer.Spawn(GameObject);
         }
-        public Generator(Vector3 position, Quaternion? rotation = null)
+    }
+
+    public Vector3 Scale
+    {
+        get => Transform.localScale;
+        set
         {
-            generator = Object.Instantiate(Addons.Prefabs.Generator);
-
-            generator.transform.position = position;
-            generator.transform.rotation = rotation ?? new();
-
-            positionsync = generator.GetComponent<StructurePositionSync>();
-
-            NetworkServer.Spawn(generator.gameObject);
-
-            generator.netIdentity.UpdateData();
-
-            Map.Generators.Add(this);
+            NetworkServer.UnSpawn(GameObject);
+            Transform.localScale = value;
+            NetworkServer.Spawn(GameObject);
         }
+    }
+
+    public bool Open
+    {
+        get => _generator.HasFlag(_generator._flags, Scp079Generator.GeneratorFlags.Open);
+        set
+        {
+            _generator.ServerSetFlag(Scp079Generator.GeneratorFlags.Open, value);
+            _generator._targetCooldown = _generator._doorToggleCooldownTime;
+        }
+    }
+
+    public bool Lock
+    {
+        get => !_generator.HasFlag(_generator._flags, Scp079Generator.GeneratorFlags.Unlocked);
+        set
+        {
+            _generator.ServerSetFlag(Scp079Generator.GeneratorFlags.Unlocked, !value);
+            _generator._targetCooldown = _generator._unlockCooldownTime;
+        }
+    }
+
+    public bool Active
+    {
+        get => _generator.Activating;
+        set
+        {
+            _generator.Activating = value;
+            if (value) _generator._leverStopwatch.Restart();
+            _generator._targetCooldown = _generator._doorToggleCooldownTime;
+        }
+    }
+
+    public bool Engaged
+    {
+        get => _generator.Engaged;
+        set => _generator.Engaged = value;
+    }
+
+    public short Time
+    {
+        get => _generator._syncTime;
+        set => _generator.Network_syncTime = value;
+    }
+
+    public void Destroy()
+    {
+        Map.Generators.Remove(this);
+        NetworkServer.Destroy(GameObject);
     }
 }

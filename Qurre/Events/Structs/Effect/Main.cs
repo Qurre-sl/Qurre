@@ -1,42 +1,43 @@
 ﻿using CustomPlayerEffects;
+using JetBrains.Annotations;
 using Qurre.API;
 using Qurre.API.Objects;
 
-namespace Qurre.Events.Structs
+// ReSharper disable once CheckNamespace
+namespace Qurre.Events.Structs;
+
+[PublicAPI]
+public class EffectEnabledEvent : IBaseEvent
 {
-    public class EffectEnabledEvent : IBaseEvent
+    internal EffectEnabledEvent(Player player, StatusEffectBase effect)
     {
-        public uint EventId { get; } = EffectEvents.Enabled;
-
-        public Player Player { get; }
-        public StatusEffectBase Effect { get; }
-        public EffectType Type { get; }
-        public bool Allowed { get; set; }
-
-        internal EffectEnabledEvent(Player player, StatusEffectBase effect)
-        {
-            Player = player;
-            Effect = effect;
-            Type = effect.GetEffectType();
-            Allowed = true;
-        }
+        Player = player;
+        Effect = effect;
+        Type = effect.GetEffectType();
+        Allowed = true;
     }
 
-    public class EffectDisabledEvent : IBaseEvent
+    public Player Player { get; }
+    public StatusEffectBase Effect { get; }
+    public EffectType Type { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = EffectEvents.Enabled;
+}
+
+[PublicAPI]
+public class EffectDisabledEvent : IBaseEvent
+{
+    internal EffectDisabledEvent(Player player, StatusEffectBase effect)
     {
-        public uint EventId { get; } = EffectEvents.Disabled;
-
-        public Player Player { get; }
-        public StatusEffectBase Effect { get; }
-        public EffectType Type { get; }
-        public bool Allowed { get; set; }
-
-        internal EffectDisabledEvent(Player player, StatusEffectBase effect)
-        {
-            Player = player;
-            Effect = effect;
-            Type = effect.GetEffectType();
-            Allowed = true;
-        }
+        Player = player;
+        Effect = effect;
+        Type = effect.GetEffectType();
+        Allowed = true;
     }
+
+    public Player Player { get; }
+    public StatusEffectBase Effect { get; }
+    public EffectType Type { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = EffectEvents.Disabled;
 }

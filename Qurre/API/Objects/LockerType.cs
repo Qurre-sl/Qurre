@@ -1,5 +1,8 @@
-﻿namespace Qurre.API.Objects;
+﻿using JetBrains.Annotations;
 
+namespace Qurre.API.Objects;
+
+[PublicAPI]
 public enum LockerType : byte
 {
     Unknown,
@@ -8,5 +11,5 @@ public enum LockerType : byte
     Pedestal,
     MiscLocker,
     RifleRack,
-    LargeGun,
+    LargeGun
 }

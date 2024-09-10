@@ -1,19 +1,22 @@
-﻿namespace Qurre.API;
-
-using System;
+﻿using System;
 using System.IO;
+using JetBrains.Annotations;
 
-static public class Pathes
+namespace Qurre.API;
+
+[PublicAPI]
+public static class Pathes
 {
-    static public string AppData { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-    static public string Qurre { get; } = Path.Combine(AppData, "Qurre");
+    public static string AppData { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+    public static string Qurre { get; } = Path.Combine(AppData, "Qurre");
 
-    static public string Plugins { get; } = Path.Combine(Qurre, "Plugins");
-    static public string Dependencies { get; } = Path.Combine(Plugins, "Dependencies");
+    public static string Plugins { get; } = Path.Combine(Qurre, "Plugins");
+    public static string Dependencies { get; } = Path.Combine(Plugins, "Dependencies");
 
-    static public string Configs { get; } = Path.Combine(Qurre, "Configs");
+    public static string Configs { get; } = Path.Combine(Qurre, "Configs");
 
-    static public string Logs { get; } = Path.Combine(Qurre, "Logs");
+    public static string Logs { get; } = Path.Combine(Qurre, "Logs");
 
-    public static string Assemblies { get; private set; } = Path.Combine(Path.Combine(Environment.CurrentDirectory, "SCPSL_Data"), "Managed");
+    public static string Assemblies { get; } =
+        Path.Combine(Path.Combine(Environment.CurrentDirectory, "SCPSL_Data"), "Managed");
 }

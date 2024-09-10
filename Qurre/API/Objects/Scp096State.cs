@@ -1,8 +1,11 @@
-﻿namespace Qurre.API.Objects;
+﻿using JetBrains.Annotations;
 
+namespace Qurre.API.Objects;
+
+[PublicAPI]
 public enum Scp096State
 {
-    Unknow = 0,
+    Unknown = 0,
 
     Charging = 1,
     Enraging = 2,
@@ -13,5 +16,5 @@ public enum Scp096State
     Calming = 5,
     Enraged = 6,
     Distressed = 7,
-    Docile = 8,
+    Docile = 8
 }

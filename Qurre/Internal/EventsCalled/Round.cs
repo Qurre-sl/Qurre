@@ -1,187 +1,183 @@
-﻿using Hazards;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using System.Linq;
+using Hazards;
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items.Firearms.Attachments;
 using MapGeneration;
 using MEC;
 using Qurre.API;
+using Qurre.API.Addons;
 using Qurre.API.Addons.Audio;
+using Qurre.API.Addons.Models;
 using Qurre.API.Attributes;
 using Qurre.API.Controllers;
 using Qurre.API.Controllers.Structs;
 using Qurre.Events;
-using System.Collections.Generic;
-using System.Linq;
+using Qurre.Internal.Patches.PlayerEvents.Admins;
+using Scp914;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-#pragma warning disable IDE0051
-namespace Qurre.Internal.EventsCalled
+namespace Qurre.Internal.EventsCalled;
+
+[SuppressMessage("ReSharper", "UnusedMember.Local")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+internal static class Round
 {
-    static class Round
+    static Round()
     {
-        [EventMethod(RoundEvents.Start)]
-        static void Started()
+        SceneManager.sceneUnloaded += SceneUnloaded;
+    }
+
+    [EventMethod(RoundEvents.Start)]
+    private static void Started()
+    {
+        API.Round.LocalStarted = true;
+        API.Round.LocalWaiting = false;
+    }
+
+    [EventMethod(RoundEvents.Restart)]
+    private static void DestroyAudio()
+    {
+        API.Audio.LocalHostAudioPlayer = null;
+
+        foreach (AudioPlayer? player in AudioPlayer.Players.ToList())
+            player.DestroyPlayer();
+
+        AudioPlayer.Players.Clear();
+    }
+
+    [EventMethod(RoundEvents.Waiting)]
+    private static void Waiting()
+    {
+        Server.WaitingRefresh();
+
+        API.Round.LocalStarted = false;
+        API.Round.ForceEnd = false;
+        API.Round.LocalWaiting = true;
+        API.Round.ActiveGenerators = 0;
+
+        BcComponent.Refresh();
+
+        Extensions.DamagesCached.Clear();
+        Banned.Cached.Clear();
+
+        if (API.Round.CurrentRound == 0)
+            Prefabs.InitLate();
+
+        API.Round.CurrentRound++;
+
+        RoundSummary.RoundLock = false;
+
+        MapRoundInit();
+    }
+
+    private static void MapRoundInit()
+    {
+        Map.AmbientSoundPlayer = Server.Host.GameObject.GetComponent<AmbientSoundPlayer>();
+
+        // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+        foreach (RoomIdentifier? roomIdent in RoomIdentifier.AllRoomIdentifiers)
         {
-            API.Round._started = true;
-            API.Round._waiting = false;
+            Room room = new(roomIdent);
+            Map.Rooms.Add(room);
+            Map.Cameras.AddRange(room.Cameras);
         }
 
-        [EventMethod(RoundEvents.Restart)]
-        static void DestroyAudio()
+        foreach (DoorVariant? door in Server.GetObjectsOf<DoorVariant>())
+            Map.Doors.Add(new Door(door));
+
+        foreach (SinkholeEnvironmentalHazard? hole in Server.GetObjectsOf<SinkholeEnvironmentalHazard>())
+            Map.Sinkholes.Add(new Sinkhole(hole));
+
+        foreach (TeslaGate? tesla in Server.GetObjectsOf<TeslaGate>())
+            Map.Teslas.Add(new Tesla(tesla));
+
+        foreach (BreakableWindow? window in Server.GetObjectsOf<BreakableWindow>())
+            Map.Windows.Add(new Window(window));
+
+        foreach (WorkstationController? station in WorkstationController.AllWorkstations)
+            Map.WorkStations.Add(new WorkStation(station));
+
+
+        API.Controllers.Scp914.Controller = Object.FindObjectOfType<Scp914Controller>();
+
+
+        List<Door> updateDoors = [.. Map.Doors];
+
+        UpdateDoors();
+        return;
+
+        void UpdateDoors()
         {
-            API.Audio._hostAudioPlayer = null;
+            List<Door> updates = [.. updateDoors];
 
-            foreach (var player in AudioPlayer._players.ToList())
-            {
-                AudioExtensions.DestroyPlayer(player);
-            }
-
-            AudioPlayer._players.Clear();
-        }
-
-        [EventMethod(RoundEvents.Waiting)]
-        static void Waiting()
-        {
-            Server.host = null;
-            Server.hinv = null;
-
-            API.Round._started = false;
-            API.Round._forceEnd = false;
-            API.Round._waiting = true;
-
-            BcComponent.Refresh();
-
-            Extensions.DamagesCached.Clear();
-            Patches.Player.Admins.Banned.Cached.Clear();
-
-            if (API.Round.CurrentRound == 0)
-                API.Addons.Prefabs.InitLate();
-
-            API.Round.CurrentRound++;
-
-            RoundSummary.RoundLock = false;
-
-            MapRoundInit();
-        }
-
-        static void MapRoundInit()
-        {
-            Map.AmbientSoundPlayer = Server.Host.GameObject.GetComponent<AmbientSoundPlayer>();
-
-            foreach (var room in RoomIdentifier.AllRoomIdentifiers)
-            {
-                Room _room = new(room);
-                Map.Rooms.Add(_room);
-                Map.Cameras.AddRange(_room.Cameras);
-            }
-
-            foreach (var door in Server.GetObjectsOf<DoorVariant>())
-                Map.Doors.Add(new(door));
-
-            foreach (var hole in Server.GetObjectsOf<SinkholeEnvironmentalHazard>())
-                Map.Sinkholes.Add(new(hole));
-
-            foreach (var tesla in Server.GetObjectsOf<TeslaGate>())
-                Map.Teslas.Add(new(tesla));
-
-            foreach (var window in Server.GetObjectsOf<BreakableWindow>())
-                Map.Windows.Add(new(window));
-
-            foreach (var station in WorkstationController.AllWorkstations)
-                Map.WorkStations.Add(new(station));
-
-
-            API.Controllers.Scp914.Controller = Object.FindObjectOfType<Scp914.Scp914Controller>();
-
-
-            List<Door> updateDoors = new();
-            updateDoors.AddRange(Map.Doors);
-
-            UpdateDoors();
-
-            void UpdateDoors()
-            {
-                List<Door> updates = new();
-                updates.AddRange(updateDoors);
-
-                foreach (var door in updates)
+            foreach (Door? door in updates)
+                try
                 {
-                    try
-                    {
-                        foreach (var room in door.Rooms)
-                        {
-                            room.Doors.Add(door);
-                        }
-                        updateDoors.Remove(door);
-                    }
-                    catch { }
+                    foreach (Room? room in door.Rooms)
+                        room.Doors.Add(door);
+                    updateDoors.Remove(door);
+                }
+                catch
+                {
+                    // ignored
                 }
 
-                updates.Clear();
+            updates.Clear();
 
-                if (updateDoors.Count == 0)
-                    return;
+            if (updateDoors.Count == 0)
+                return;
 
-                Timing.CallDelayed(0.5f, () =>
-                {
-                    UpdateDoors();
-                });
-            }
-        }
-
-        static void MapClearLists()
-        {
-            foreach (var x in Map.Teslas)
-            {
-                if (x is null) continue;
-                x.ImmunityRoles.Clear();
-                x.ImmunityPlayers.Clear();
-            }
-
-            Map.Cassies.Clear();
-
-            Map.Lights.Clear();
-            Map.Primitives.Clear();
-            Map.ShootingTargets.Clear();
-            Map.WorkStations.Clear();
-
-            Map.Cameras.Clear();
-            Map.Doors.Clear();
-            Map.Generators.Clear();
-            Map.Lifts.Clear();
-            Map.Lockers.Clear();
-            Map.Ragdolls.Clear();
-            Map.Rooms.Clear();
-            Map.Sinkholes.Clear();
-            Map.Teslas.Clear();
-            Map.Windows.Clear();
-
-            Room.NetworkIdentities.Clear();
-
-            Patches.Player.Admins.Banned.Cached.Clear();
-
-            Extensions.DamagesCached.Clear();
-
-            try { API.Addons.Models.Model.ClearCache(); } catch { }
-
-            Item.BaseToItem.Clear();
-            Pickup.BaseToItem.Clear();
-        }
-
-        static void SceneUnloaded(Scene _)
-        {
-            MapClearLists();
-            Fields.Player.IDs.Clear();
-            Fields.Player.UserIDs.Clear();
-            Fields.Player.Args.Clear();
-            Fields.Player.Hubs.Clear();
-            Fields.Player.Dictionary.Clear();
-        }
-
-        static Round()
-        {
-            SceneManager.sceneUnloaded += SceneUnloaded;
+            Timing.CallDelayed(0.5f, UpdateDoors);
         }
     }
+
+    private static void MapClearLists()
+    {
+        foreach (Tesla? x in Map.Teslas.OfType<Tesla>())
+        {
+            x.ImmunityRoles.Clear();
+            x.ImmunityPlayers.Clear();
+        }
+
+        Map.Cassies.Clear();
+
+        Map.Lights.Clear();
+        Map.Primitives.Clear();
+        Map.ShootingTargets.Clear();
+        Map.WorkStations.Clear();
+
+        Map.Cameras.Clear();
+        Map.Doors.Clear();
+        Map.Generators.Clear();
+        Map.Lifts.Clear();
+        Map.Lockers.Clear();
+        Map.Ragdolls.Clear();
+        Map.Rooms.Clear();
+        Map.Sinkholes.Clear();
+        Map.Teslas.Clear();
+        Map.Windows.Clear();
+
+        Room.NetworkIdentities.Clear();
+
+        Banned.Cached.Clear();
+
+        Extensions.DamagesCached.Clear();
+
+        Item.BaseToItem.Clear();
+        Pickup.BaseToItem.Clear();
+
+        Model.ClearCache();
+    }
+
+    private static void SceneUnloaded(Scene _)
+    {
+        Fields.Player.Ids.Clear();
+        Fields.Player.Args.Clear();
+        Fields.Player.Hubs.Clear();
+        Fields.Player.Dictionary.Clear();
+        MapClearLists();
+    }
 }
-#pragma warning restore IDE0051

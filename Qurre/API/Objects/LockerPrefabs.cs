@@ -1,5 +1,8 @@
-﻿namespace Qurre.API.Objects;
+﻿using JetBrains.Annotations;
 
+namespace Qurre.API.Objects;
+
+[PublicAPI]
 public enum LockerPrefabs : byte
 {
     AdrenalineMedkit,
@@ -15,5 +18,5 @@ public enum LockerPrefabs : byte
     Pedestal2176,
     MiscLocker,
     RifleRack,
-    LargeGun,
+    LargeGun
 }

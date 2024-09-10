@@ -1,45 +1,53 @@
-﻿using Interactables.Interobjects.DoorUtils;
+﻿using System.Collections.Generic;
+using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items.Pickups;
+using JetBrains.Annotations;
 using MapGeneration.Distributors;
-using System.Collections.Generic;
 
-namespace Qurre.API.Controllers.Structs
+namespace Qurre.API.Controllers.Structs;
+
+[PublicAPI]
+public class Chamber
 {
-    public class Chamber
+    internal Chamber(LockerChamber chamber, Locker locker)
     {
-        public LockerChamber LockerChamber { get; private set; }
-        public Locker Locker { get; private set; }
+        LockerChamber = chamber;
+        Locker = locker;
+    }
 
-        public HashSet<ItemPickupBase> ToBeSpawned => LockerChamber._toBeSpawned;
+    public LockerChamber LockerChamber { get; }
+    public Locker Locker { get; }
 
-        public bool CanInteract => LockerChamber.CanInteract;
-        public bool Open
-        {
-            get => LockerChamber.IsOpen;
-            set => LockerChamber.SetDoor(value, Locker.GrantedBeep);
-        }
-        public ItemType[] AcceptableItems
-        {
-            get => LockerChamber.AcceptableItems;
-            set => LockerChamber.AcceptableItems = value;
-        }
-        public float Cooldown
-        {
-            get => LockerChamber._targetCooldown;
-            set => LockerChamber._targetCooldown = value;
-        }
-        public KeycardPermissions Permissions
-        {
-            get => LockerChamber.RequiredPermissions;
-            set => LockerChamber.RequiredPermissions = value;
-        }
+    public HashSet<ItemPickupBase> ToBeSpawned => LockerChamber._toBeSpawned;
 
-        public void SpawnItem(ItemType id, int amount) => LockerChamber.SpawnItem(id, amount);
+    public bool CanInteract => LockerChamber.CanInteract;
 
-        internal Chamber(LockerChamber _chamber, Locker _locker)
-        {
-            LockerChamber = _chamber;
-            Locker = _locker;
-        }
+    public bool Open
+    {
+        get => LockerChamber.IsOpen;
+        set => LockerChamber.SetDoor(value, Locker.GrantedBeep);
+    }
+
+    public ItemType[] AcceptableItems
+    {
+        get => LockerChamber.AcceptableItems;
+        set => LockerChamber.AcceptableItems = value;
+    }
+
+    public float Cooldown
+    {
+        get => LockerChamber._targetCooldown;
+        set => LockerChamber._targetCooldown = value;
+    }
+
+    public KeycardPermissions Permissions
+    {
+        get => LockerChamber.RequiredPermissions;
+        set => LockerChamber.RequiredPermissions = value;
+    }
+
+    public void SpawnItem(ItemType id, int amount)
+    {
+        LockerChamber.SpawnItem(id, amount);
     }
 }

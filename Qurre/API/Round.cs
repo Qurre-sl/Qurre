@@ -1,123 +1,168 @@
-﻿namespace Qurre.API;
-
+﻿using System;
 using GameCore;
+using JetBrains.Annotations;
 using Respawning;
 using RoundRestarting;
-using System;
 using UnityEngine;
 
-static public class Round
-{
-    static internal bool _forceEnd = false;
-    static internal bool _started = false;
-    static internal bool _waiting = false;
+namespace Qurre.API;
 
-    static public TimeSpan ElapsedTime
+[PublicAPI]
+public static class Round
+{
+    internal static bool ForceEnd;
+    internal static bool LocalStarted;
+    internal static bool LocalWaiting;
+
+    public static TimeSpan ElapsedTime
         => RoundStart.RoundLength;
-    static public DateTime StartedTime
+
+    public static DateTime StartedTime
         => DateTime.Now - ElapsedTime;
 
-    static public int CurrentRound { get; internal set; } = 0;
-    static public int ActiveGenerators { get; internal set; } = 0;
+    public static int CurrentRound { get; internal set; }
+    public static int ActiveGenerators { get; internal set; }
 
-    static public float NextRespawn
+    public static float NextRespawn
     {
-        get => RespawnManager.Singleton._timeForNextSequence - (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
-        set => RespawnManager.Singleton._timeForNextSequence = value + (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
+        get => RespawnManager.Singleton._timeForNextSequence -
+               (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
+        set => RespawnManager.Singleton._timeForNextSequence =
+            value + (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
     }
 
-    static public short WaitTime
+    public static short WaitTime
     {
         get => RoundStart.singleton.NetworkTimer;
         set => RoundStart.singleton.NetworkTimer = value;
     }
 
-    static public bool Started
-    {
-        get
-        {
-            try { return ReferenceHub.LocalHub.characterClassManager.RoundStarted; }
-            catch { return _started; }
-        }
-    }
-
-    static public bool Ended
-        => RoundSummary.singleton._roundEnded;
-    static public bool Waiting
+    public static bool Started
     {
         get
         {
             try
             {
-                if (RoundStart.singleton is not null)
-                    return !Started && !Ended;
+                return ReferenceHub.LocalHub.characterClassManager.RoundStarted;
             }
-            catch { }
-
-            return _waiting;
+            catch
+            {
+                return LocalStarted;
+            }
         }
     }
 
-    static public bool Lock
+    public static bool Ended
+        => RoundSummary.singleton._roundEnded;
+
+    public static bool Waiting
+    {
+        get
+        {
+            try
+            {
+                if (RoundStart.singleton is null)
+                    throw new NullReferenceException("RoundStart.singleton is null");
+
+                return !Started && !Ended;
+            }
+            catch
+            {
+                return LocalWaiting;
+            }
+        }
+    }
+
+    public static bool Lock
     {
         get => RoundSummary.RoundLock;
         set => RoundSummary.RoundLock = value;
     }
-    static public bool LobbyLock
+
+    public static bool LobbyLock
     {
         get => RoundStart.LobbyLock;
         set => RoundStart.LobbyLock = value;
     }
 
-    static public int EscapedClassD
+    public static int EscapedClassD
     {
         get => RoundSummary.EscapedClassD;
         set => RoundSummary.EscapedClassD = value;
     }
-    static public int EscapedScientists
+
+    public static int EscapedScientists
     {
         get => RoundSummary.EscapedScientists;
         set => RoundSummary.EscapedScientists = value;
     }
-    static public int ScpKills
+
+    public static int ScpKills
     {
         get => RoundSummary.KilledBySCPs;
         set => RoundSummary.KilledBySCPs = value;
     }
-    static public int RoundKills
+
+    public static int RoundKills
     {
         get => RoundSummary.Kills;
         set => RoundSummary.Kills = value;
     }
-    static public int ChangedZombies
+
+    public static int ChangedZombies
     {
         get => RoundSummary.ChangedIntoZombies;
         set => RoundSummary.ChangedIntoZombies = value;
     }
 
-    static public void Restart(bool fast = true, ServerStatic.NextRoundAction action = ServerStatic.NextRoundAction.DoNothing)
+    public static void Restart(bool fast = true,
+        ServerStatic.NextRoundAction action = ServerStatic.NextRoundAction.DoNothing)
     {
         ServerStatic.StopNextRound = action;
-        bool oldfast = CustomNetworkManager.EnableFastRestart;
+        bool oldFast = CustomNetworkManager.EnableFastRestart;
         CustomNetworkManager.EnableFastRestart = fast;
         RoundRestart.InitiateRoundRestart();
-        CustomNetworkManager.EnableFastRestart = oldfast;
+        CustomNetworkManager.EnableFastRestart = oldFast;
     }
-    static public void Start()
-        => CharacterClassManager.ForceRoundStart();
-    static public void End()
-        => _forceEnd = true;
 
-    static public void DimScreen() => RoundSummary.singleton.RpcDimScreen();
-    static public void ShowRoundSummary(RoundSummary.SumInfo_ClassList remainingPlayers, LeadingTeam team) =>
+    public static void Start()
+    {
+        CharacterClassManager.ForceRoundStart();
+    }
+
+    public static void End()
+    {
+        ForceEnd = true;
+    }
+
+    public static void DimScreen()
+    {
+        RoundSummary.singleton.RpcDimScreen();
+    }
+
+    public static void ShowRoundSummary(RoundSummary.SumInfo_ClassList remainingPlayers, LeadingTeam team)
+    {
         RoundSummary.singleton.RpcShowRoundSummary(RoundSummary.singleton.classlistStart, remainingPlayers, team,
             EscapedClassD, EscapedScientists, ScpKills, seconds: (int)ElapsedTime.TotalSeconds,
             roundCd: Mathf.Clamp(ConfigFile.ServerConfig.GetInt("auto_round_restart_time", 10), 5, 1000));
+    }
 
-    static public void ForceTeamRespawn(bool isCI)
-        => RespawnManager.Singleton.ForceSpawnTeam(isCI ? SpawnableTeamType.ChaosInsurgency : SpawnableTeamType.NineTailedFox);
-    static public void CallCICar()
-        => RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection, SpawnableTeamType.ChaosInsurgency);
-    static public void CallMTFHelicopter()
-        => RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection, SpawnableTeamType.NineTailedFox);
+    public static void ForceTeamRespawn(bool isChaos)
+    {
+        RespawnManager.Singleton.ForceSpawnTeam(isChaos
+            ? SpawnableTeamType.ChaosInsurgency
+            : SpawnableTeamType.NineTailedFox);
+    }
+
+    public static void CallChaosCar()
+    {
+        RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection,
+            SpawnableTeamType.ChaosInsurgency);
+    }
+
+    public static void CallMtfHelicopter()
+    {
+        RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection,
+            SpawnableTeamType.NineTailedFox);
+    }
 }

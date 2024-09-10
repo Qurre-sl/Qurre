@@ -1,5 +1,9 @@
-﻿namespace Qurre.API;
-
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using JetBrains.Annotations;
 using MEC;
 using Mirror;
 using PlayerRoles;
@@ -9,58 +13,58 @@ using PlayerRoles.Subroutines;
 using Qurre.API.Addons.Audio;
 using Qurre.API.Addons.Audio.Objects;
 using RelativePositioning;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
+using VoiceChat;
 
-static public class AudioExtensions
+namespace Qurre.API;
+
+[PublicAPI]
+public static class AudioExtensions
 {
     #region Mimic Point
+
     private const BindingFlags MimicPointPropertiesBindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
 
-    static public AudioPlayer PlayFromAll(
+    public static AudioPlayer PlayFromAll(
         string file,
         string botName = "Dummy",
-        List<IAccessConditions> whitelist = null,
-        List<IAccessConditions> blacklist = null
-        ) => PlayFromAll(
+        List<IAccessConditions>? whitelist = null,
+        List<IAccessConditions>? blacklist = null
+    )
+    {
+        return PlayFromAll(
             new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
             botName, whitelist, blacklist);
+    }
 
-    static public AudioPlayer PlayFromAll(
+    public static AudioPlayer PlayFromAll(
         Stream stream,
         string botName = "Dummy",
-        List<IAccessConditions> whitelist = null,
-        List<IAccessConditions> blacklist = null
-        )
+        List<IAccessConditions>? whitelist = null,
+        List<IAccessConditions>? blacklist = null
+    )
     {
         // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
-        var streamAudio = new StreamAudio(stream);
+        StreamAudio streamAudio = new(stream);
 
         // Create and run player
-        var audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
+        AudioPlayer audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
         audioPlayer.RunCoroutine();
-        var audioTask = audioPlayer.Play(streamAudio, VoiceChat.VoiceChatChannel.Mimicry);
+        AudioTask audioTask = audioPlayer.Play(streamAudio, VoiceChatChannel.Mimicry);
 
-        // Add white and black lists
-        if (whitelist?.Count > 0)
-        {
-            audioTask.Whitelist.AccessConditions.AddRange(whitelist);
-        }
-        if (blacklist?.Count > 0)
-        {
-            audioTask.Blacklist.AccessConditions.AddRange(blacklist);
-        }
+        // Add whitelist and blacklist
+        if (whitelist?.Count > 0) audioTask.Whitelist.AccessConditions.AddRange(whitelist);
+        if (blacklist?.Count > 0) audioTask.Blacklist.AccessConditions.AddRange(blacklist);
 
         Timing.CallDelayed(0.3f, () =>
         {
             try
             {
-                var scp939Role = audioPlayer.ReferenceHub.GetComponent<PlayerRoleManager>().CurrentRole as Scp939Role;
-                scp939Role.SubroutineModule.TryGetSubroutine<MimicPointController>(out var mimicPoint);
+                if (audioPlayer.ReferenceHub.GetComponent<PlayerRoleManager>().CurrentRole is not Scp939Role scp939Role)
+                    return;
+
+                scp939Role.SubroutineModule.TryGetSubroutine<MimicPointController>(
+                    out MimicPointController? mimicPoint);
 
                 DoMimicPointInit(mimicPoint);
                 Timing.RunCoroutine(DoMimicPointForcePositionJob(audioTask, mimicPoint, audioPlayer));
@@ -77,24 +81,21 @@ static public class AudioExtensions
             AudioTask audioTask,
             MimicPointController mimicPoint,
             AudioPlayer audioPlayer
-            )
+        )
         {
-            var type = typeof(MimicPointController);
+            Type type = typeof(MimicPointController);
 
             while (audioTask.IsRunning)
             {
-                foreach (var pl in Player.List)
+                foreach (Player? pl in Player.List)
                 {
-                    var connection = pl.ConnectionToClient;
-                    if (!connection.isReady)
-                    {
-                        continue;
-                    }
+                    NetworkConnectionToClient connection = pl.ConnectionToClient;
+                    if (!connection.isReady) continue;
 
                     type.GetField(nameof(MimicPointController._syncPos), MimicPointPropertiesBindingFlags)
-                        .SetValue(mimicPoint, new RelativePosition(pl.CameraTransform.position));
+                        ?.SetValue(mimicPoint, new RelativePosition(pl.CameraTransform.position));
 
-                    var message = new SubroutineMessage(mimicPoint, true);
+                    SubroutineMessage message = new(mimicPoint, true);
                     using NetworkWriterPooled networkWriterPooled = NetworkWriterPool.Get();
                     NetworkMessages.Pack(message, networkWriterPooled);
 
@@ -110,48 +111,48 @@ static public class AudioExtensions
     }
 
 
-    static public AudioPlayer PlayFromPlayer(
+    public static AudioPlayer PlayFromPlayer(
         string file,
         Player source,
         string botName = "Dummy",
-        List<IAccessConditions> whitelist = null,
-        List<IAccessConditions> blacklist = null
-        ) => PlayFromPlayer(
+        List<IAccessConditions>? whitelist = null,
+        List<IAccessConditions>? blacklist = null
+    )
+    {
+        return PlayFromPlayer(
             new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
             source, botName, whitelist, blacklist);
+    }
 
-    static public AudioPlayer PlayFromPlayer(
+    public static AudioPlayer PlayFromPlayer(
         Stream stream,
         Player source,
         string botName = "Dummy",
-        List<IAccessConditions> whitelist = null,
-        List<IAccessConditions> blacklist = null
-        )
+        List<IAccessConditions>? whitelist = null,
+        List<IAccessConditions>? blacklist = null
+    )
     {
         // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
-        var streamAudio = new StreamAudio(stream);
+        StreamAudio streamAudio = new(stream);
 
         // Create and run player
-        var audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
+        AudioPlayer audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
         audioPlayer.RunCoroutine();
-        var audioTask = audioPlayer.Play(streamAudio, VoiceChat.VoiceChatChannel.Mimicry);
+        AudioTask audioTask = audioPlayer.Play(streamAudio, VoiceChatChannel.Mimicry);
 
-        // Add white and black lists
-        if (whitelist?.Count > 0)
-        {
-            audioTask.Whitelist.AccessConditions.AddRange(whitelist);
-        }
-        if (blacklist?.Count > 0)
-        {
-            audioTask.Blacklist.AccessConditions.AddRange(blacklist);
-        }
+        // Add whitelist and blacklist
+        if (whitelist?.Count > 0) audioTask.Whitelist.AccessConditions.AddRange(whitelist);
+        if (blacklist?.Count > 0) audioTask.Blacklist.AccessConditions.AddRange(blacklist);
 
         Timing.CallDelayed(0.5f, () =>
         {
             try
             {
-                var scp939Role = audioPlayer.ReferenceHub.GetComponent<PlayerRoleManager>().CurrentRole as Scp939Role;
-                scp939Role.SubroutineModule.TryGetSubroutine<MimicPointController>(out var mimicPoint);
+                if (audioPlayer.ReferenceHub.GetComponent<PlayerRoleManager>().CurrentRole is not Scp939Role scp939Role)
+                    return;
+
+                scp939Role.SubroutineModule.TryGetSubroutine<MimicPointController>(
+                    out MimicPointController? mimicPoint);
 
                 DoMimicPointInit(mimicPoint);
                 Timing.RunCoroutine(DoMimicPointPlayerPositionJob(source, audioTask, mimicPoint, audioPlayer));
@@ -169,14 +170,14 @@ static public class AudioExtensions
             AudioTask audioTask,
             MimicPointController mimicPoint,
             AudioPlayer audioPlayer
-            )
+        )
         {
-            var type = typeof(MimicPointController);
+            Type type = typeof(MimicPointController);
 
-            while (audioTask.IsRunning && source is not null && !source.Disconnected)
+            while (audioTask.IsRunning && !source.Disconnected)
             {
                 type.GetField(nameof(MimicPointController._syncPos), MimicPointPropertiesBindingFlags)
-                    .SetValue(mimicPoint, new RelativePosition(source.CameraTransform.position));
+                    ?.SetValue(mimicPoint, new RelativePosition(source.CameraTransform.position));
 
                 NetworkServer.SendToReady(new SubroutineMessage(mimicPoint, true));
                 yield return Timing.WaitForOneFrame;
@@ -187,55 +188,55 @@ static public class AudioExtensions
     }
 
 
-    static public AudioPlayer PlayFromPosition(
+    public static AudioPlayer PlayFromPosition(
         string file,
         Vector3 source,
         string botName = "Dummy",
-        List<IAccessConditions> whitelist = null,
-        List<IAccessConditions> blacklist = null
-        ) => PlayFromPosition(
+        List<IAccessConditions>? whitelist = null,
+        List<IAccessConditions>? blacklist = null
+    )
+    {
+        return PlayFromPosition(
             new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
             source, botName, whitelist, blacklist);
+    }
 
-    static public AudioPlayer PlayFromPosition(
+    public static AudioPlayer PlayFromPosition(
         Stream stream,
         Vector3 source,
         string botName = "Dummy",
-        List<IAccessConditions> whitelist = null,
-        List<IAccessConditions> blacklist = null
-        )
+        List<IAccessConditions>? whitelist = null,
+        List<IAccessConditions>? blacklist = null
+    )
     {
         // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
-        var streamAudio = new StreamAudio(stream);
+        StreamAudio streamAudio = new(stream);
 
         // Create and run player
-        var audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
+        AudioPlayer audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
         audioPlayer.RunCoroutine();
-        var audioTask = audioPlayer.Play(streamAudio, VoiceChat.VoiceChatChannel.Mimicry);
+        AudioTask audioTask = audioPlayer.Play(streamAudio, VoiceChatChannel.Mimicry);
 
-        // Add white and black lists
-        if (whitelist?.Count > 0)
-        {
-            audioTask.Whitelist.AccessConditions.AddRange(whitelist);
-        }
-        if (blacklist?.Count > 0)
-        {
-            audioTask.Blacklist.AccessConditions.AddRange(blacklist);
-        }
+        // Add whitelist and blacklist
+        if (whitelist?.Count > 0) audioTask.Whitelist.AccessConditions.AddRange(whitelist);
+        if (blacklist?.Count > 0) audioTask.Blacklist.AccessConditions.AddRange(blacklist);
 
         Timing.CallDelayed(0.5f, () =>
         {
             try
             {
-                var scp939Role = audioPlayer.ReferenceHub.GetComponent<PlayerRoleManager>().CurrentRole as Scp939Role;
-                scp939Role.SubroutineModule.TryGetSubroutine<MimicPointController>(out var mimicPoint);
+                if (audioPlayer.ReferenceHub.GetComponent<PlayerRoleManager>().CurrentRole is not Scp939Role scp939Role)
+                    return;
+
+                scp939Role.SubroutineModule.TryGetSubroutine<MimicPointController>(
+                    out MimicPointController? mimicPoint);
 
                 DoMimicPointInit(mimicPoint);
 
-                var type = typeof(MimicPointController);
+                Type type = typeof(MimicPointController);
 
                 type.GetField(nameof(MimicPointController._syncPos), MimicPointPropertiesBindingFlags)
-                    .SetValue(mimicPoint, new RelativePosition(source));
+                    ?.SetValue(mimicPoint, new RelativePosition(source));
 
                 NetworkServer.SendToReady(new SubroutineMessage(mimicPoint, true));
 
@@ -250,82 +251,88 @@ static public class AudioExtensions
         return audioPlayer;
     }
 
-    static void DoMimicPointInit(MimicPointController mimicPoint)
+    private static void DoMimicPointInit(MimicPointController mimicPoint)
     {
-        var type = typeof(MimicPointController);
+        Type type = typeof(MimicPointController);
 
         type.GetField(nameof(MimicPointController._syncMessage), MimicPointPropertiesBindingFlags)
-            .SetValue(mimicPoint, MimicPointController.RpcStateMsg.PlacedByUser);
+            ?.SetValue(mimicPoint, MimicPointController.RpcStateMsg.PlacedByUser);
 
         type.GetField(nameof(MimicPointController._syncPos), MimicPointPropertiesBindingFlags)
-            .SetValue(mimicPoint, new RelativePosition(Vector3.zero));
+            ?.SetValue(mimicPoint, new RelativePosition(Vector3.zero));
 
         type.GetField(nameof(MimicPointController._active), MimicPointPropertiesBindingFlags)
-            .SetValue(mimicPoint, true);
+            ?.SetValue(mimicPoint, true);
     }
+
     #endregion
 
     #region Standart
-    static public AudioPlayer PlayInIntercom(
+
+    public static AudioPlayer PlayInIntercom(
         string file,
         string botName = "Dummy",
-        List<IAccessConditions> whitelist = null,
-        List<IAccessConditions> blacklist = null
-        ) => PlayInIntercom(
+        List<IAccessConditions>? whitelist = null,
+        List<IAccessConditions>? blacklist = null
+    )
+    {
+        return PlayInIntercom(
             new FileStream(file, FileMode.Open, FileAccess.Read, FileShare.Read),
             botName, whitelist, blacklist);
+    }
 
-    static public AudioPlayer PlayInIntercom(
+    public static AudioPlayer PlayInIntercom(
         Stream stream,
         string botName = "Dummy",
-        List<IAccessConditions> whitelist = null,
-        List<IAccessConditions> blacklist = null
-        )
+        List<IAccessConditions>? whitelist = null,
+        List<IAccessConditions>? blacklist = null
+    )
     {
         // new FileStream("/root/.../...", FileMode.Open, FileAccess.Read, FileShare.Read)
-        var streamAudio = new StreamAudio(stream);
+        StreamAudio streamAudio = new(stream);
 
         // Create and run player
-        var audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Spectator, Vector3.zero, Vector3.zero);
+        AudioPlayer audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Spectator, Vector3.zero, Vector3.zero);
         audioPlayer.RunCoroutine();
-        var audioTask = audioPlayer.Play(streamAudio, VoiceChat.VoiceChatChannel.Intercom);
+        AudioTask audioTask = audioPlayer.Play(streamAudio, VoiceChatChannel.Intercom);
 
-        // Add white and black lists
-        if (whitelist?.Count > 0)
-        {
-            audioTask.Whitelist.AccessConditions.AddRange(whitelist);
-        }
-        if (blacklist?.Count > 0)
-        {
-            audioTask.Blacklist.AccessConditions.AddRange(blacklist);
-        }
+        // Add whitelist and blacklist
+        if (whitelist?.Count > 0) audioTask.Whitelist.AccessConditions.AddRange(whitelist);
+        if (blacklist?.Count > 0) audioTask.Blacklist.AccessConditions.AddRange(blacklist);
 
         Timing.RunCoroutine(CheckPlayingAndDestroy(audioPlayer));
 
         return audioPlayer;
-
     }
+
     #endregion
 
     #region Extensions
-    static public IEnumerator<float> CheckPlayingAndDestroy(this AudioPlayer audioPlayer)
+
+    public static IEnumerator<float> CheckPlayingAndDestroy(this AudioPlayer audioPlayer)
     {
         yield return Timing.WaitForSeconds(5f);
 
-        while (audioPlayer.AudioTasks.Any(x => !x.IsDone) || (audioPlayer?.CurrentAudioTask?.IsDone == false))
-        {
+        while (audioPlayer.AudioTasks.Any(x => !x.IsDone) || audioPlayer.CurrentAudioTask?.IsDone == false)
             yield return Timing.WaitForSeconds(0.1f);
-        }
 
         yield return Timing.WaitForSeconds(2f);
 
         audioPlayer.DestroyPlayer();
     }
 
-    static public void DestroyPlayer(this AudioPlayer audioPlayer)
+    public static void DestroyPlayer(this AudioPlayer audioPlayer)
     {
         audioPlayer.KillCoroutine();
-        NetworkServer.Destroy(audioPlayer.ReferenceHub.gameObject);
+        try
+        {
+            NetworkServer.Destroy(audioPlayer.ReferenceHub.gameObject);
+        }
+        catch
+        {
+            Log.Debug("Can not destroy audio player");
+        }
     }
+
     #endregion
 }

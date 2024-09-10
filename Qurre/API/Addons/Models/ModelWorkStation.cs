@@ -1,45 +1,52 @@
-﻿using Qurre.API.Controllers;
-using UnityEngine;
+﻿using System;
+using JetBrains.Annotations;
 using Mirror;
+using Qurre.API.Controllers;
+using UnityEngine;
+using Object = UnityEngine.Object;
 
-namespace Qurre.API.Addons.Models
+namespace Qurre.API.Addons.Models;
+
+[PublicAPI]
+public class ModelWorkStation
 {
-    public class ModelWorkStation
+    public ModelWorkStation(Model model, Vector3 position, Vector3 rotation, Vector3 size = default)
     {
-        private readonly GameObject gameObject;
-        private readonly WorkStation workStation;
-
-        public GameObject GameObject => gameObject;
-        public WorkStation WorkStation => workStation;
-
-        public ModelWorkStation(Model model, Vector3 position, Vector3 rotation, Vector3 size = default)
+        GameObject transformer = new("GetPosition")
         {
-            try
+            transform =
             {
-                GameObject transformer = new("GetPosition");
-                transformer.transform.parent = model.GameObject.transform;
-                transformer.transform.localPosition = position;
-                transformer.transform.localRotation = Quaternion.Euler(rotation);
-                transformer.transform.localScale = size;
-
-                workStation = new(transformer.transform.position, transformer.transform.rotation.eulerAngles, transformer.transform.lossyScale);
-                gameObject = WorkStation.GameObject;
-
-                NetworkServer.UnSpawn(GameObject);
-                GameObject.transform.parent = model.GameObject.transform;
-                GameObject.transform.position = transformer.transform.position;
-                GameObject.transform.rotation = transformer.transform.rotation;
-                GameObject.transform.localScale = transformer.transform.lossyScale;
-                NetworkServer.Spawn(GameObject);
-
-                WorkStation.workStation.netIdentity.UpdateData();
-
-                Object.Destroy(transformer);
+                parent = model.GameObject.transform,
+                localPosition = position,
+                localRotation = Quaternion.Euler(rotation),
+                localScale = size
             }
-            catch (System.Exception ex)
-            {
-                Log.Warn($"{ex}\n{ex.StackTrace}");
-            }
+        };
+
+        WorkStation = new WorkStation(transformer.transform.position, transformer.transform.rotation.eulerAngles,
+            transformer.transform.lossyScale);
+        GameObject = WorkStation.GameObject;
+
+        try
+        {
+            NetworkServer.UnSpawn(GameObject);
+            GameObject.transform.parent = model.GameObject.transform;
+            GameObject.transform.position = transformer.transform.position;
+            GameObject.transform.rotation = transformer.transform.rotation;
+            GameObject.transform.localScale = transformer.transform.lossyScale;
+            NetworkServer.Spawn(GameObject);
+
+            WorkStation.Controller.netIdentity.UpdateData();
         }
+        catch (Exception ex)
+        {
+            Log.Warn($"{ex}\n{ex.StackTrace}");
+        }
+
+        Object.Destroy(transformer);
     }
+
+    public GameObject GameObject { get; }
+
+    public WorkStation WorkStation { get; }
 }

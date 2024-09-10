@@ -1,12 +1,15 @@
-﻿namespace Qurre.API.Objects;
+﻿using JetBrains.Annotations;
 
+namespace Qurre.API.Objects;
+
+[PublicAPI]
 public enum DoorType : byte
 {
     Unknown,
 
-    LczStandart, // LCZ BreakableDoor
-    HczStandart, // HCZ BreakableDoor
-    EzStandart, // EZ BreakableDoor
+    LczStandard, // LCZ BreakableDoor
+    HczStandard, // HCZ BreakableDoor
+    EzStandard, // EZ BreakableDoor
 
 
     LczAirlock, // LCZ PortallessBreakableDoor (n)
@@ -82,5 +85,5 @@ public enum DoorType : byte
     Elevator049, // RoomName: Hcz049
     ElevatorNuke, // RoomName: HczWarhead
     ElevatorGateA, // RoomName: EzGateA / Outside & ElevatorGroup: GateA
-    ElevatorGateB, // RoomName: EzGateB / Outside & ElevatorGroup: GateB
+    ElevatorGateB // RoomName: EzGateB / Outside & ElevatorGroup: GateB
 }

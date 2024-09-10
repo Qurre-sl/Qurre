@@ -1,3 +1,5 @@
-.vs/*
-/Qurre/obj/*
-.bin/*
+_bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/

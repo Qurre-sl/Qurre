@@ -1,20 +1,21 @@
-﻿using Qurre.API;
+﻿using JetBrains.Annotations;
+using Qurre.API;
 
-namespace Qurre.Events.Structs
+// ReSharper disable once CheckNamespace
+namespace Qurre.Events.Structs;
+
+[PublicAPI]
+public class Scp106AttackEvent : IBaseEvent
 {
-    public class Scp106AttackEvent : IBaseEvent
+    internal Scp106AttackEvent(Player attacker, Player target)
     {
-        public uint EventId { get; } = ScpEvents.Scp106Attack;
-
-        public Player Attacker { get; }
-        public Player Target { get; }
-        public bool Allowed { get; set; }
-
-        internal Scp106AttackEvent(Player attacker, Player target)
-        {
-            Attacker = attacker;
-            Target = target;
-            Allowed = true;
-        }
+        Attacker = attacker;
+        Target = target;
+        Allowed = true;
     }
+
+    public Player Attacker { get; }
+    public Player Target { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = ScpEvents.Scp106Attack;
 }

@@ -1,351 +1,73 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
-  <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{64C5CF82-8B1A-4B79-94B5-DFE0F0E605B4}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Qurre</RootNamespace>
-    <AssemblyName>Qurre</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <Deterministic>true</Deterministic>
-    <LangVersion>latest</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\.bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>..\.bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <ItemGroup>
-    <Reference Include="0Harmony">
-      <HintPath>..\depedencies\0Harmony.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp-firstpass">
-      <HintPath>..\depedencies\Assembly-CSharp-firstpass.dll</HintPath>
-    </Reference>
-    <Reference Include="Assembly-CSharp_public">
-      <HintPath>..\depedencies\Assembly-CSharp_public.dll</HintPath>
-    </Reference>
-    <Reference Include="CommandSystem.Core">
-      <HintPath>..\depedencies\CommandSystem.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror.Components">
-      <HintPath>..\depedencies\Mirror.Components.dll</HintPath>
-    </Reference>
-    <Reference Include="Mirror_edit">
-      <HintPath>..\depedencies\Mirror_edit.dll</HintPath>
-    </Reference>
-    <Reference Include="Newtonsoft.Json, Version=13.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\depedencies\Newtonsoft.Json.dll</HintPath>
-    </Reference>
-    <Reference Include="NorthwoodLib">
-      <HintPath>..\depedencies\NorthwoodLib.dll</HintPath>
-    </Reference>
-    <Reference Include="Pooling">
-      <HintPath>..\depedencies\Pooling.dll</HintPath>
-    </Reference>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Net.Http" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UnityEngine">
-      <HintPath>..\depedencies\UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.AudioModule">
-      <HintPath>..\depedencies\UnityEngine.AudioModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.CoreModule">
-      <HintPath>..\depedencies\UnityEngine.CoreModule.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEngine.PhysicsModule">
-      <HintPath>..\depedencies\UnityEngine.PhysicsModule.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="API\Addons\Audio\AudioPlayer.cs" />
-    <Compile Include="API\Addons\Audio\AudioTask.cs" />
-    <Compile Include="API\Addons\Audio\Objects\AccessConditions.cs" />
-    <Compile Include="API\Addons\Audio\Objects\AudioTaskBlacklist.cs" />
-    <Compile Include="API\Addons\Audio\Objects\AudioTaskWhitelist.cs" />
-    <Compile Include="API\Addons\Audio\Objects\IAudio.cs" />
-    <Compile Include="API\Addons\Audio\Objects\IAccessConditions.cs" />
-    <Compile Include="API\Addons\Audio\Objects\Mirror\ZeroConnectionToClient.cs" />
-    <Compile Include="API\Addons\Audio\Objects\PlaybackAudio.cs" />
-    <Compile Include="API\Addons\Audio\Objects\StreamAudio.cs" />
-    <Compile Include="API\Addons\BetterColors.cs" />
-    <Compile Include="API\Addons\VariableDictionary.cs" />
-    <Compile Include="API\Addons\Version.cs" />
-    <Compile Include="API\Addons\Items\Ammo.cs" />
-    <Compile Include="API\Addons\Items\Armor.cs" />
-    <Compile Include="API\Addons\Items\Usable.cs" />
-    <Compile Include="API\Addons\Items\Throwable.cs" />
-    <Compile Include="API\Addons\Items\Radio.cs" />
-    <Compile Include="API\Addons\Items\MicroHID.cs" />
-    <Compile Include="API\Addons\Items\Keycard.cs" />
-    <Compile Include="API\Addons\Items\GrenadeFrag.cs" />
-    <Compile Include="API\Addons\Items\GrenadeFlash.cs" />
-    <Compile Include="API\Addons\Items\Flashlight.cs" />
-    <Compile Include="API\Addons\Items\Gun.cs" />
-    <Compile Include="API\Addons\Models\ModelWorkStation.cs" />
-    <Compile Include="API\Addons\Models\ModelTarget.cs" />
-    <Compile Include="API\Addons\Models\ModelPrimitive.cs" />
-    <Compile Include="API\Addons\Models\ModelPickup.cs" />
-    <Compile Include="API\Addons\Models\ModelLocker.cs" />
-    <Compile Include="API\Addons\Models\ModelLight.cs" />
-    <Compile Include="API\Addons\Models\ModelGenerator.cs" />
-    <Compile Include="API\Addons\Models\ModelBot.cs" />
-    <Compile Include="API\Addons\Models\ModelEnums.cs" />
-    <Compile Include="API\Addons\Models\ModelDoor.cs" />
-    <Compile Include="API\Addons\Models\ModelBody.cs" />
-    <Compile Include="API\Addons\Models\Model.cs" />
-    <Compile Include="API\Addons\Models\CustomRoom.cs" />
-    <Compile Include="API\Addons\Prefabs.cs" />
-    <Compile Include="API\Addons\JsonConfig.cs" />
-    <Compile Include="API\Addons\KillElement.cs" />
-    <Compile Include="API\Attributes\EventsIgnore.cs" />
-    <Compile Include="API\Attributes\PluginPriority.cs" />
-    <Compile Include="API\Attributes\PluginStartup.cs" />
-    <Compile Include="API\Attributes\PluginInit.cs" />
-    <Compile Include="API\Attributes\EventMethod.cs" />
-    <Compile Include="API\Audio.cs" />
-    <Compile Include="API\AudioExtensions.cs" />
-    <Compile Include="API\Classification\Player\Administrative.cs" />
-    <Compile Include="API\Classification\Player\EffectsManager.cs" />
-    <Compile Include="API\Classification\Roles\Scp096.cs" />
-    <Compile Include="API\Classification\Roles\Scp106.cs" />
-    <Compile Include="API\Classification\Roles\Scp173.cs" />
-    <Compile Include="API\Classification\Structs\AmmoBox.cs" />
-    <Compile Include="API\Classification\Structs\Hand.cs" />
-    <Compile Include="API\Controllers\Intercom.cs" />
-    <Compile Include="API\Objects\Scp096State.cs" />
-    <Compile Include="API\Objects\SpawnPoint.cs" />
-    <Compile Include="API\Objects\ScpAttackType.cs" />
-    <Compile Include="API\Respawn.cs" />
-    <Compile Include="API\Core.cs" />
-    <Compile Include="API\Classification\Player\Inventory.cs" />
-    <Compile Include="API\Classification\Roles\Scp079.cs" />
-    <Compile Include="API\Controllers\Broadcast.cs" />
-    <Compile Include="API\Controllers\Camera.cs" />
-    <Compile Include="API\Controllers\Cassie.cs" />
-    <Compile Include="API\Controllers\Lift.cs" />
-    <Compile Include="API\Controllers\MapBroadcast.cs" />
-    <Compile Include="API\Controllers\GlobalLights.cs" />
-    <Compile Include="API\Controllers\Pickup.cs" />
-    <Compile Include="API\Controllers\Item.cs" />
-    <Compile Include="API\Controllers\Lights.cs" />
-    <Compile Include="API\Controllers\Locker.cs" />
-    <Compile Include="API\Controllers\Generator.cs" />
-    <Compile Include="API\Controllers\Door.cs" />
-    <Compile Include="API\Controllers\Ragdoll.cs" />
-    <Compile Include="API\Controllers\Scp914.cs" />
-    <Compile Include="API\Controllers\Sinkhole.cs" />
-    <Compile Include="API\Controllers\Structs\Chamber.cs" />
-    <Compile Include="API\Controllers\Tesla.cs" />
-    <Compile Include="API\Controllers\Window.cs" />
-    <Compile Include="API\Controllers\WorkStation.cs" />
-    <Compile Include="API\Controllers\ShootingTarget.cs" />
-    <Compile Include="API\Controllers\Primitive.cs" />
-    <Compile Include="API\Controllers\LightPoint.cs" />
-    <Compile Include="API\Controllers\Decontamination.cs" />
-    <Compile Include="API\Controllers\Room.cs" />
-    <Compile Include="API\Controllers\Structs\BcComponent.cs" />
-    <Compile Include="API\Controllers\Structs\CassieList.cs" />
-    <Compile Include="API\Controllers\Structs\BroadcastsList.cs" />
-    <Compile Include="API\Network.cs" />
-    <Compile Include="API\Classification\Player\Client.cs" />
-    <Compile Include="API\Classification\Player\GamePlay.cs" />
-    <Compile Include="API\Classification\Player\MovementState.cs" />
-    <Compile Include="API\Classification\Player\StatsInformation.cs" />
-    <Compile Include="API\Classification\Player\RoleInformation.cs" />
-    <Compile Include="API\Classification\Player\HealthInformation.cs" />
-    <Compile Include="API\Controllers\Alpha.cs" />
-    <Compile Include="API\Map.cs" />
-    <Compile Include="API\Objects\AmmoType.cs" />
-    <Compile Include="API\Objects\GeneratorStatus.cs" />
-    <Compile Include="API\Objects\RoomType.cs" />
-    <Compile Include="API\Objects\ZoneType.cs" />
-    <Compile Include="API\Objects\RadioStatus.cs" />
-    <Compile Include="API\Objects\LockerType.cs" />
-    <Compile Include="API\Objects\DoorType.cs" />
-    <Compile Include="API\Objects\EffectType.cs" />
-    <Compile Include="API\Objects\WorkstationStatus.cs" />
-    <Compile Include="API\Objects\TargetPrefabs.cs" />
-    <Compile Include="API\Objects\LockerPrefabs.cs" />
-    <Compile Include="API\Objects\DoorPrefabs.cs" />
-    <Compile Include="API\Objects\DamageTypesPrimitive.cs" />
-    <Compile Include="API\Objects\DamageTypes.cs" />
-    <Compile Include="API\Round.cs" />
-    <Compile Include="API\Server.cs" />
-    <Compile Include="API\Classification\Player\UserInformation.cs" />
-    <Compile Include="API\Pathes.cs" />
-    <Compile Include="API\Log.cs" />
-    <Compile Include="API\Player.cs" />
-    <Compile Include="API\Extensions.cs" />
-    <Compile Include="Events\EventTypes.cs" />
-    <Compile Include="Events\Structs\Alpha\Main.cs" />
-    <Compile Include="Events\Structs\Base.cs" />
-    <Compile Include="Events\Structs\Effect\Player.cs" />
-    <Compile Include="Events\Structs\Effect\Main.cs" />
-    <Compile Include="Events\Structs\Map\Doors.cs" />
-    <Compile Include="Events\Structs\Map\Objects.cs" />
-    <Compile Include="Events\Structs\Map\Place.cs" />
-    <Compile Include="Events\Structs\Player\Admins.cs" />
-    <Compile Include="Events\Structs\Player\Socialization.cs" />
-    <Compile Include="Events\Structs\Player\Role.cs" />
-    <Compile Include="Events\Structs\Player\Interact.cs" />
-    <Compile Include="Events\Structs\Player\Pickups.cs" />
-    <Compile Include="Events\Structs\Player\Items.cs" />
-    <Compile Include="Events\Structs\Player\Health.cs" />
-    <Compile Include="Events\Structs\Player\Network.cs" />
-    <Compile Include="Events\Structs\Player\Utils.cs" />
-    <Compile Include="Events\Structs\Round\Main.cs" />
-    <Compile Include="Events\Structs\Scp\Scp049.cs" />
-    <Compile Include="Events\Structs\Scp\Scp079.cs" />
-    <Compile Include="Events\Structs\Scp\Main.cs" />
-    <Compile Include="Events\Structs\Scp\Scp096.cs" />
-    <Compile Include="Events\Structs\Scp\Scp106.cs" />
-    <Compile Include="Events\Structs\Scp\Scp173.cs" />
-    <Compile Include="Events\Structs\Scp\Scp914.cs" />
-    <Compile Include="Events\Structs\Server\Reports.cs" />
-    <Compile Include="Events\Structs\Server\Commands.cs" />
-    <Compile Include="Internal\EventsCalled\Primitives.cs" />
-    <Compile Include="Internal\EventsCalled\Testing.cs" />
-    <Compile Include="Internal\EventsCalled\Round.cs" />
-    <Compile Include="Internal\EventsCalled\Player.cs" />
-    <Compile Include="Internal\EventsManager\EventCallMethod.cs" />
-    <Compile Include="Internal\EventsManager\Loader.cs" />
-    <Compile Include="Internal\EventsManager\Lists.cs" />
-    <Compile Include="Internal\Fields\Player.cs" />
-    <Compile Include="Internal\Misc\BanSender.cs" />
-    <Compile Include="Internal\Misc\LockersUpdater.cs" />
-    <Compile Include="Internal\Misc\DoorsUpdater.cs" />
-    <Compile Include="Internal\Patches\Alpha\UnlockPanel.cs" />
-    <Compile Include="Internal\Patches\Alpha\Detonate.cs" />
-    <Compile Include="Internal\Patches\Alpha\Stop.cs" />
-    <Compile Include="Internal\Patches\Alpha\Start.cs" />
-    <Compile Include="Internal\Patches\Effect\ChangeIntensity.cs" />
-    <Compile Include="Internal\Patches\Effect\Flashed.cs" />
-    <Compile Include="Internal\Patches\Map\Doors\OpenDoor.cs" />
-    <Compile Include="Internal\Patches\Map\Doors\LockDoor.cs" />
-    <Compile Include="Internal\Patches\Map\Doors\DamageDoor.cs" />
-    <Compile Include="Internal\Patches\Map\Objects\TriggerTesla.cs" />
-    <Compile Include="Internal\Patches\Map\Objects\WorkStationUpdate.cs" />
-    <Compile Include="Internal\Patches\Map\Place\CreatePickup.cs" />
-    <Compile Include="Internal\Patches\Map\Place\RagdollSpawned.cs" />
-    <Compile Include="Internal\Patches\Map\Place\RagdollSpawn.cs" />
-    <Compile Include="Internal\Patches\Misc\AddCredits.cs" />
-    <Compile Include="Internal\Patches\Misc\Fixes\CassieController.cs" />
-    <Compile Include="Internal\Patches\Misc\Fixes\FixBotHint.cs" />
-    <Compile Include="Internal\Patches\Misc\Fixes\FixBotInRa.cs" />
-    <Compile Include="Internal\Patches\Misc\Fixes\FixBotVerification.cs" />
-    <Compile Include="Internal\Patches\Misc\Fixes\FixToysScale.cs" />
-    <Compile Include="Internal\Patches\Misc\Fixes\FixNullFPMM.cs" />
-    <Compile Include="Internal\Patches\Misc\Fixes\FixNullAudioFlood.cs" />
-    <Compile Include="Internal\Patches\Misc\GetMaxHp.cs" />
-    <Compile Include="Internal\Patches\Misc\Creates\Lift.cs" />
-    <Compile Include="Internal\Patches\Misc\Creates\Ragdoll.cs" />
-    <Compile Include="Internal\Patches\Misc\Creates\Locker.cs" />
-    <Compile Include="Internal\Patches\Misc\Creates\Generator.cs" />
-    <Compile Include="Internal\Patches\Misc\Modules\LastSynced.cs" />
-    <Compile Include="Internal\Patches\Player\Admins\Banned.cs" />
-    <Compile Include="Internal\Patches\Player\Admins\Ban.cs" />
-    <Compile Include="Internal\Patches\Player\Admins\ChangeGroup.cs" />
-    <Compile Include="Internal\Patches\Player\Admins\UnMute.cs" />
-    <Compile Include="Internal\Patches\Player\Admins\Mute.cs" />
-    <Compile Include="Internal\Patches\Player\Admins\Kick.cs" />
-    <Compile Include="Internal\Patches\Player\Health\Attack.cs" />
-    <Compile Include="Internal\Patches\Player\Health\Heal.cs" />
-    <Compile Include="Internal\Patches\Player\Health\Damage.cs" />
-    <Compile Include="Internal\Patches\Player\Health\Dead.cs" />
-    <Compile Include="Internal\Patches\Player\Interact\InteractShootingTarget.cs" />
-    <Compile Include="Internal\Patches\Player\Interact\InteractScp330.cs" />
-    <Compile Include="Internal\Patches\Player\Interact\InteractDoor.cs" />
-    <Compile Include="Internal\Patches\Player\Interact\InteractLocker.cs" />
-    <Compile Include="Internal\Patches\Player\Interact\InteractLift.cs" />
-    <Compile Include="Internal\Patches\Player\Interact\InteractGenerator.cs" />
-    <Compile Include="Internal\Patches\Player\Interact\InteractWorkStation.cs" />
-    <Compile Include="Internal\Patches\Player\Items\ChangeItem.cs" />
-    <Compile Include="Internal\Patches\Player\Items\JailbirdTrigger.cs" />
-    <Compile Include="Internal\Patches\Player\Items\UsingRadio.cs" />
-    <Compile Include="Internal\Patches\Player\Items\UpdateRadio.cs" />
-    <Compile Include="Internal\Patches\Player\Items\UsedItem.cs" />
-    <Compile Include="Internal\Patches\Player\Items\UseItem.cs" />
-    <Compile Include="Internal\Patches\Player\Network\Preauth.cs" />
-    <Compile Include="Internal\Patches\Player\Network\Leave.cs" />
-    <Compile Include="Internal\Patches\Player\Network\ReserveSlot.cs" />
-    <Compile Include="Internal\Patches\Player\Network\Join.cs" />
-    <Compile Include="Internal\Patches\Player\Network\WhiteListPatch.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\DropAmmo.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\DroppedItem.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\DropItem.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\ThrowProjectile.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\PickupCandy.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\PickupArmor.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\PickupAmmo.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\PrePickupItem.cs" />
-    <Compile Include="Internal\Patches\Player\Pickups\PickupItem.cs" />
-    <Compile Include="Internal\Patches\Player\Role\ChangeRole.cs" />
-    <Compile Include="Internal\Patches\Player\Role\Escape.cs" />
-    <Compile Include="Internal\Patches\Player\Role\Spawn.cs" />
-    <Compile Include="Internal\Patches\Player\Socialization\ChangeSpectate.cs" />
-    <Compile Include="Internal\Patches\Player\Socialization\Cuff.cs" />
-    <Compile Include="Internal\Patches\Player\Utils\PressAlt.cs" />
-    <Compile Include="Internal\Patches\Round\Check.cs" />
-    <Compile Include="Internal\Patches\Round\ForceStart.cs" />
-    <Compile Include="Internal\Patches\Round\Restart.cs" />
-    <Compile Include="Internal\Patches\Round\Start.cs" />
-    <Compile Include="Internal\Patches\Round\Waiting.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp049\RaisingEnd.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp049\RaisingStart.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp079\ActivateGenerator.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp079\GeneratorStatus.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp079\NewLvl.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp079\GetExp.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp079\Recontain.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp096\AddTarget.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp096\StateCharge.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp096\StateCry.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp096\StateEnraging.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp096\StateRageUpdate.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp106\Attack.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp173\AddObserver.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp173\EnableSpeed.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp173\RemovedObserver.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp914\Upgrade.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp914\UpgradePickup.cs" />
-    <Compile Include="Internal\Patches\Scp\Scp914\UpgradePlayer.cs" />
-    <Compile Include="Internal\Patches\Server\CheaterReport.cs" />
-    <Compile Include="Internal\Patches\Server\LocalReport.cs" />
-    <Compile Include="Internal\Patches\Server\ServerConsole.cs" />
-    <Compile Include="Internal\Patches\Server\GameConsole.cs" />
-    <Compile Include="Internal\Patches\Server\RemoteAdmin.cs" />
-    <Compile Include="Loader\PluginStruct.cs" />
-    <Compile Include="Loader\Configs.cs" />
-    <Compile Include="Loader\Plugins.cs" />
-    <Compile Include="Loader\EntryPoint.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>netstandard2.1</TargetFramework>
+        <LangVersion>latest</LangVersion>
+        <Nullable>enable</Nullable>
+        <Title>Qurre SL</Title>
+        <Authors>Qurre Team</Authors>
+        <Description>Simple, convenient and functional plugin loader for SCP: Secret Laboratory</Description>
+        <Copyright>Copyright © Qurre Team</Copyright>
+        <Company>Qurre Team</Company>
+        <Product>Qurre SL</Product>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <OutputPath>..\_bin\Debug\</OutputPath>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+        <OutputPath>..\_bin\Release\</OutputPath>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup>
+        <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
+        <GenerateAssemblyInformationalVersionAttribute>false</GenerateAssemblyInformationalVersionAttribute>
+        <GenerateAssemblyVersionAttribute>false</GenerateAssemblyVersionAttribute>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Reference Include="0Harmony">
+            <HintPath>..\depedencies\0Harmony.dll</HintPath>
+        </Reference>
+        <Reference Include="Assembly-CSharp">
+            <HintPath>..\depedencies\Assembly-CSharp_public.dll</HintPath>
+        </Reference>
+        <Reference Include="Assembly-CSharp-firstpass">
+            <HintPath>..\depedencies\Assembly-CSharp-firstpass.dll</HintPath>
+        </Reference>
+        <Reference Include="CommandSystem.Core">
+            <HintPath>..\depedencies\CommandSystem.Core.dll</HintPath>
+        </Reference>
+        <Reference Include="Mirror">
+            <HintPath>..\depedencies\Mirror_edit.dll</HintPath>
+        </Reference>
+        <Reference Include="Mirror.Components">
+            <HintPath>..\depedencies\Mirror.Components.dll</HintPath>
+        </Reference>
+        <Reference Include="Newtonsoft.Json">
+            <HintPath>..\depedencies\Newtonsoft.Json.dll</HintPath>
+        </Reference>
+        <Reference Include="NorthwoodLib">
+            <HintPath>..\depedencies\NorthwoodLib.dll</HintPath>
+        </Reference>
+        <Reference Include="Pooling">
+            <HintPath>..\depedencies\Pooling.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine">
+            <HintPath>..\depedencies\UnityEngine.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.AudioModule">
+            <HintPath>..\depedencies\UnityEngine.AudioModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.CoreModule">
+            <HintPath>..\depedencies\UnityEngine.CoreModule.dll</HintPath>
+        </Reference>
+        <Reference Include="UnityEngine.PhysicsModule">
+            <HintPath>..\depedencies\UnityEngine.PhysicsModule.dll</HintPath>
+        </Reference>
+    </ItemGroup>
+
 </Project>

@@ -1,16 +1,14 @@
-﻿namespace Qurre.API.Addons.Models
+﻿namespace Qurre.API.Addons.Models;
+
+public enum ModelEnums : byte
 {
-    public enum ModelEnums : byte
-    {
-        Body,
-        Bot,
-        Door,
-        Generator,
-        Light,
-        Locker,
-        Pickup,
-        Primitive,
-        Target,
-        WorkStation
-    }
+    Body,
+    Door,
+    Generator,
+    Light,
+    Locker,
+    Pickup,
+    Primitive,
+    Target,
+    WorkStation
 }

@@ -1,41 +1,42 @@
-﻿namespace Qurre.API.Classification.Roles;
-
+﻿using System;
+using JetBrains.Annotations;
 using PlayerRoles.PlayableScps.Scp096;
 using PlayerRoles.Subroutines;
-using Qurre.API;
 
+namespace Qurre.API.Classification.Roles;
+
+[PublicAPI]
 public sealed class Scp096
 {
-    public Scp096Role Base { get; }
+    private readonly API.Player _pl;
 
-    public bool IsWork => pl.RoleInformation.Role is PlayerRoles.RoleTypeId.Scp096;
-
-    public Scp096RageManager RageManager { get; }
-    public Scp096TargetsTracker TargetsTracker { get; }
-
-    public SubroutineManagerModule Subroutine
-        => Base.SubroutineModule;
-
-
-    private readonly Player pl;
-    internal Scp096(Player _pl)
+    internal Scp096(API.Player pl)
     {
-        pl = _pl;
+        _pl = pl;
 
-        Base = pl.ReferenceHub.roleManager.CurrentRole as Scp096Role;
+        if (_pl.ReferenceHub.roleManager.CurrentRole is not Scp096Role roleBase)
+            throw new NullReferenceException(nameof(roleBase));
 
-        if (Base is null)
-            return;
-
+        Base = roleBase;
 
         if (Subroutine.TryGetSubroutine(out Scp096RageManager rageManager))
             RageManager = rageManager;
         else
-            Log.Debug($"Null Debug: [Roles > Scp096] >> Scp096RageManager is null");
+            Log.Debug("Null Debug: [Roles > Scp096] >> Scp096RageManager is null");
 
         if (Subroutine.TryGetSubroutine(out Scp096TargetsTracker targetsTracker))
             TargetsTracker = targetsTracker;
         else
-            Log.Debug($"Null Debug: [Roles > Scp096] >> Scp096TargetsTracker is null");
+            Log.Debug("Null Debug: [Roles > Scp096] >> Scp096TargetsTracker is null");
     }
+
+    public Scp096Role Base { get; }
+
+    public bool IsWork => Base != null;
+
+    public Scp096RageManager? RageManager { get; }
+    public Scp096TargetsTracker? TargetsTracker { get; }
+
+    public SubroutineManagerModule Subroutine
+        => Base.SubroutineModule;
 }

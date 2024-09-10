@@ -1,82 +1,71 @@
-﻿namespace Qurre.API;
-
+﻿using System;
+using System.Collections.Generic;
 using CentralAuth;
+using JetBrains.Annotations;
 using Mirror;
+using Mirror.LiteNetLib4Mirror;
 using Qurre.API.Addons;
+using Qurre.API.Classification.Player;
 using Qurre.API.Controllers.Structs;
 using RemoteAdmin;
-using System;
-using System.Collections.Generic;
 using UnityEngine;
-using Field = Internal.Fields.Player;
+using Field = Qurre.Internal.Fields.Player;
 
+namespace Qurre.API;
+
+[PublicAPI]
 public class Player
 {
-    internal bool Bot => false; // time field
-    internal bool Invisible => false; // time field
-    static public IEnumerable<Player> List => Field.Dictionary.Values;
+    private string _tag = string.Empty;
 
-    internal Player(ReferenceHub _rh)
+    internal Player(ReferenceHub rh)
     {
-        rh = _rh;
-        go = _rh.gameObject;
+        ReferenceHub = rh;
+        GameObject = rh.gameObject;
 
         Disconnected = false;
         LastSynced = Time.time;
         JoinedTime = DateTime.Now;
         SpawnedTime = DateTime.Now;
 
-        Variables = new();
+        Variables = [];
 
-        Broadcasts = new();
+        Broadcasts = new BroadcastsList();
 
-        Administrative = new(this);
-        Client = new(this);
-        Effects = new(this);
-        GamePlay = new(this);
-        HealthInformation = new(this);
-        Inventory = new(this);
-        MovementState = new(this);
-        StatsInformation = new(this);
-        RoleInformation = new(this);
-        UserInformation = new(this);
+        Administrative = new Administrative(this);
+        Client = new Client(this);
+        Effects = new EffectsManager(this);
+        GamePlay = new GamePlay(this);
+        HealthInformation = new HealthInformation(this);
+        Inventory = new Inventory(this);
+        MovementState = new MovementState(this);
+        StatsInformation = new StatsInformation(this);
+        RoleInformation = new RoleInformation(this);
+        UserInformation = new UserInformation(this);
 
-        if (_rh.isLocalPlayer)
+        if (rh.isLocalPlayer)
             return;
 
-        if (!Field.Dictionary.ContainsKey(go))
-            Field.Dictionary.Add(go, this);
-        else
-            Field.Dictionary[go] = this;
-
-        if (!Field.Hubs.ContainsKey(rh))
-            Field.Hubs.Add(rh, this);
-        else
-            Field.Hubs[rh] = this;
+        Field.Dictionary[GameObject] = this;
+        Field.Hubs[ReferenceHub] = this;
     }
 
-    private readonly ReferenceHub rh;
-    private readonly GameObject go;
-    private string _tag = "";
+    public static IEnumerable<Player> List => Field.Dictionary.Values;
 
-    public GameObject GameObject
-    {
-        get
-        {
-            if (rh is null || rh.gameObject is null)
-                return go;
+    public GameObject GameObject { get; }
+    public ReferenceHub ReferenceHub { get; }
 
-            return rh.gameObject;
-        }
-    }
-    public ReferenceHub ReferenceHub => rh;
-    public PlayerAuthenticationManager AuthManager => rh.authManager;
-    public CharacterClassManager ClassManager => rh.characterClassManager;
-    public QueryProcessor QueryProcessor => rh.queryProcessor;
-    public NetworkConnectionToClient ConnectionToClient => rh.networkIdentity.connectionToClient;
-    public NetworkConnection Connection => IsHost ? rh.networkIdentity.connectionToServer : rh.networkIdentity.connectionToClient;
-    public Transform Transform => rh.transform;
-    public Transform CameraTransform => rh.PlayerCameraReference;
+    public PlayerAuthenticationManager AuthManager => ReferenceHub.authManager;
+    public CharacterClassManager ClassManager => ReferenceHub.characterClassManager;
+    public QueryProcessor QueryProcessor => ReferenceHub.queryProcessor;
+    public NetworkConnectionToClient ConnectionToClient => ReferenceHub.networkIdentity.connectionToClient;
+
+    public NetworkConnection Connection => IsHost
+        ? ReferenceHub.networkIdentity.connectionToServer
+        : ReferenceHub.networkIdentity.connectionToClient;
+
+    public Transform Transform => ReferenceHub.transform;
+    public Transform CameraTransform => ReferenceHub.PlayerCameraReference;
 
     public CommandSender Sender
     {
@@ -89,21 +78,22 @@ public class Player
         }
     }
 
-    public int Ping => Mirror.LiteNetLib4Mirror.LiteNetLib4MirrorServer.Peers[Connection.connectionId].Ping;
-    public bool IsHost => rh.isLocalPlayer;
+    public int Ping => LiteNetLib4MirrorServer.Peers[Connection.connectionId].Ping;
+    public bool IsHost => ReferenceHub.isLocalPlayer;
     public bool Disconnected { get; internal set; }
     public bool FriendlyFire { get; set; }
     public float LastSynced { get; internal set; }
     public DateTime JoinedTime { get; internal set; }
     public DateTime SpawnedTime { get; internal set; }
     public VariableDictionary<string, object> Variables { get; }
+
     public string Tag
     {
         get => _tag;
         set
         {
-            if (value is null)
-                return;
+            if (string.IsNullOrEmpty(value))
+                value = string.Empty;
 
             _tag = value;
         }
@@ -111,14 +101,14 @@ public class Player
 
     public BroadcastsList Broadcasts { get; }
 
-    public Classification.Player.Administrative Administrative { get; }
-    public Classification.Player.Client Client { get; }
-    public Classification.Player.EffectsManager Effects { get; }
-    public Classification.Player.GamePlay GamePlay { get; }
-    public Classification.Player.HealthInformation HealthInformation { get; }
-    public Classification.Player.Inventory Inventory { get; }
-    public Classification.Player.MovementState MovementState { get; }
-    public Classification.Player.StatsInformation StatsInformation { get; }
-    public Classification.Player.RoleInformation RoleInformation { get; }
-    public Classification.Player.UserInformation UserInformation { get; }
+    public Administrative Administrative { get; }
+    public Client Client { get; }
+    public EffectsManager Effects { get; }
+    public GamePlay GamePlay { get; }
+    public HealthInformation HealthInformation { get; }
+    public Inventory Inventory { get; }
+    public MovementState MovementState { get; }
+    public StatsInformation StatsInformation { get; }
+    public RoleInformation RoleInformation { get; }
+    public UserInformation UserInformation { get; }
 }

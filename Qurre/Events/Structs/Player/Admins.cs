@@ -1,111 +1,112 @@
-﻿using Qurre.API;
-using System;
+﻿using System;
+using JetBrains.Annotations;
+using Qurre.API;
 
-namespace Qurre.Events.Structs
+// ReSharper disable once CheckNamespace
+namespace Qurre.Events.Structs;
+
+[PublicAPI]
+public class BanEvent : IBaseEvent
 {
-    public class BanEvent : IBaseEvent
+    internal BanEvent(Player player, Player issuer, DateTime expires, string reason)
     {
-        public uint EventId { get; } = PlayerEvents.Ban;
-
-        public Player Player { get; }
-        public Player Issuer { get; }
-        public DateTime Expires { get; set; }
-        public string Reason { get; set; }
-        public bool Allowed { get; set; }
-
-        internal BanEvent(Player player, Player issuer, DateTime expires, string reason)
-        {
-            Player = player;
-            Issuer = issuer;
-            Expires = expires;
-            Reason = reason;
-            Allowed = true;
-        }
+        Player = player;
+        Issuer = issuer;
+        Expires = expires;
+        Reason = reason;
+        Allowed = true;
     }
 
-    public class BannedEvent : IBaseEvent
+    public Player Player { get; }
+    public Player Issuer { get; }
+    public DateTime Expires { get; set; }
+    public string Reason { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = PlayerEvents.Ban;
+}
+
+[PublicAPI]
+public class BannedEvent : IBaseEvent
+{
+    internal BannedEvent(Player? player, BanDetails details, BanHandler.BanType type, bool forced)
     {
-        public uint EventId { get; } = PlayerEvents.Banned;
-
-        public Player Player { get; }
-        public BanDetails Details { get; }
-        public BanHandler.BanType Type { get; }
-        public bool Forced { get; }
-        public bool UnsafeAllowed { get; set; }
-
-        internal BannedEvent(Player player, BanDetails details, BanHandler.BanType type, bool forced)
-        {
-            Player = player;
-            Details = details;
-            Type = type;
-            Forced = forced;
-            UnsafeAllowed = true;
-        }
+        Player = player;
+        Details = details;
+        Type = type;
+        Forced = forced;
+        UnsafeAllowed = true;
     }
 
-    public class KickEvent : IBaseEvent
+    public Player? Player { get; }
+    public BanDetails Details { get; }
+    public BanHandler.BanType Type { get; }
+    public bool Forced { get; }
+    public bool UnsafeAllowed { get; set; }
+    public uint EventId { get; } = PlayerEvents.Banned;
+}
+
+[PublicAPI]
+public class KickEvent : IBaseEvent
+{
+    internal KickEvent(Player player, Player issuer, string reason)
     {
-        public uint EventId { get; } = PlayerEvents.Kick;
-
-        public Player Player { get; }
-        public Player Issuer { get; }
-        public string Reason { get; set; }
-        public bool Allowed { get; set; }
-
-        internal KickEvent(Player player, Player issuer, string reason)
-        {
-            Player = player;
-            Issuer = issuer;
-            Reason = reason;
-            Allowed = true;
-        }
+        Player = player;
+        Issuer = issuer;
+        Reason = reason;
+        Allowed = true;
     }
 
-    public class MuteEvent : IBaseEvent
+    public Player Player { get; }
+    public Player Issuer { get; }
+    public string Reason { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = PlayerEvents.Kick;
+}
+
+[PublicAPI]
+public class MuteEvent : IBaseEvent
+{
+    internal MuteEvent(Player player, bool icom)
     {
-        public uint EventId { get; } = PlayerEvents.Mute;
-
-        public Player Player { get; }
-        public bool Intercom { get; set; }
-        public bool Allowed { get; set; }
-
-        internal MuteEvent(Player player, bool icom)
-        {
-            Player = player;
-            Intercom = icom;
-            Allowed = true;
-        }
+        Player = player;
+        Intercom = icom;
+        Allowed = true;
     }
 
-    public class UnMuteEvent : IBaseEvent
+    public Player Player { get; }
+    public bool Intercom { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = PlayerEvents.Mute;
+}
+
+[PublicAPI]
+public class UnMuteEvent : IBaseEvent
+{
+    internal UnMuteEvent(Player player, bool icom)
     {
-        public uint EventId { get; } = PlayerEvents.Unmute;
-
-        public Player Player { get; }
-        public bool Intercom { get; set; }
-        public bool Allowed { get; set; }
-
-        internal UnMuteEvent(Player player, bool icom)
-        {
-            Player = player;
-            Intercom = icom;
-            Allowed = true;
-        }
+        Player = player;
+        Intercom = icom;
+        Allowed = true;
     }
 
-    public class ChangeGroupEvent : IBaseEvent
+    public Player Player { get; }
+    public bool Intercom { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = PlayerEvents.Unmute;
+}
+
+[PublicAPI]
+public class ChangeGroupEvent : IBaseEvent
+{
+    internal ChangeGroupEvent(Player player, UserGroup group)
     {
-        public uint EventId { get; } = PlayerEvents.ChangeGroup;
-
-        public Player Player { get; }
-        public UserGroup Group { get; set; }
-        public bool Allowed { get; set; }
-
-        internal ChangeGroupEvent(Player player, UserGroup group)
-        {
-            Player = player;
-            Group = group;
-            Allowed = true;
-        }
+        Player = player;
+        Group = group;
+        Allowed = true;
     }
+
+    public Player Player { get; }
+    public UserGroup Group { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = PlayerEvents.ChangeGroup;
 }

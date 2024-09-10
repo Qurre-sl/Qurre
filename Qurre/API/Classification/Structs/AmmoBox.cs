@@ -1,56 +1,56 @@
-﻿namespace Qurre.API.Classification.Structs
+﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using Qurre.API.Objects;
+
+namespace Qurre.API.Classification.Structs;
+
+[PublicAPI]
+public sealed class AmmoBox
 {
-	using Qurre.API;
-	using Qurre.API.Objects;
+    private readonly API.Player _player;
 
-	public class AmmoBox
-	{
-		readonly Player _player;
-		internal AmmoBox(Player player)
-		{
-			_player = player;
-		}
+    internal AmmoBox(API.Player player)
+    {
+        _player = player;
+    }
 
-		public ushort Ammo12Gauge
-		{
-			get { try { return this[AmmoType.Ammo12Gauge]; } catch { return 0; } }
-			set { try { this[AmmoType.Ammo12Gauge] = value; } catch { } }
-		}
-		public ushort Ammo556
-		{
-			get { try { return this[AmmoType.Ammo556]; } catch { return 0; } }
-			set { try { this[AmmoType.Ammo556] = value; } catch { } }
-		}
-		public ushort Ammo44Cal
-		{
-			get { try { return this[AmmoType.Ammo44Cal]; } catch { return 0; } }
-			set { try { this[AmmoType.Ammo44Cal] = value; } catch { } }
-		}
-		public ushort Ammo762
-		{
-			get { try { return this[AmmoType.Ammo762]; } catch { return 0; } }
-			set { try { this[AmmoType.Ammo762] = value; } catch { } }
-		}
-		public ushort Ammo9
-		{
-			get { try { return this[AmmoType.Ammo9]; } catch { return 0; } }
-			set { try { this[AmmoType.Ammo9] = value; } catch { } }
-		}
+    public ushort Ammo12Gauge
+    {
+        get => this[AmmoType.Ammo12Gauge];
+        set => this[AmmoType.Ammo12Gauge] = value;
+    }
 
-		public ushort this[AmmoType ammo]
-		{
-			get
-			{
-				if (_player.Inventory.Base.UserInventory.ReserveAmmo.TryGetValue(ammo.GetItemType(), out ushort amount))
-					return amount;
+    public ushort Ammo556
+    {
+        get => this[AmmoType.Ammo556];
+        set => this[AmmoType.Ammo556] = value;
+    }
 
-				return 0;
-			}
-			set
-			{
-				_player.Inventory.Base.UserInventory.ReserveAmmo[ammo.GetItemType()] = value;
-				_player.Inventory.Base.SendAmmoNextFrame = true;
-			}
-		}
-	}
+    public ushort Ammo44Cal
+    {
+        get => this[AmmoType.Ammo44Cal];
+        set => this[AmmoType.Ammo44Cal] = value;
+    }
+
+    public ushort Ammo762
+    {
+        get => this[AmmoType.Ammo762];
+        set => this[AmmoType.Ammo762] = value;
+    }
+
+    public ushort Ammo9
+    {
+        get => this[AmmoType.Ammo9];
+        set => this[AmmoType.Ammo9] = value;
+    }
+
+    public ushort this[AmmoType ammo]
+    {
+        get => _player.Inventory.Base.UserInventory.ReserveAmmo.GetValueOrDefault(ammo.GetItemType(), (ushort)0);
+        set
+        {
+            _player.Inventory.Base.UserInventory.ReserveAmmo[ammo.GetItemType()] = value;
+            _player.Inventory.Base.SendAmmoNextFrame = true;
+        }
+    }
 }
