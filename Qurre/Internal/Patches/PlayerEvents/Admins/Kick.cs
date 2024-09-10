@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics.CodeAnalysis;
 using CommandSystem;
 using HarmonyLib;
@@ -18,13 +18,13 @@ namespace Qurre.Internal.Patches.PlayerEvents.Admins;
 internal static class Kick
 {
     [HarmonyPrefix]
-    private static bool Call(ReferenceHub targetHub, ICommandSender issuer, string reason, ref bool __result)
+    private static bool Call(ReferenceHub target, ICommandSender issuer, string reason, ref bool __result)
     {
         try
         {
-            Player? target = targetHub.GetPlayer();
+            Player? targetPlayer = target.GetPlayer();
 
-            if (target is null)
+            if (targetPlayer is null)
                 return false;
 
             Player? issue = issuer switch
@@ -34,13 +34,13 @@ internal static class Kick
                 _ => null
             };
 
-            KickEvent ev = new(target, issue ?? Server.Host, reason);
+            KickEvent ev = new(targetPlayer, issue ?? Server.Host, reason);
             ev.InvokeEvent();
 
             if (!ev.Allowed)
                 return false;
 
-            ServerConsole.Disconnect(target.GameObject, Configs.Kicked + reason);
+            ServerConsole.Disconnect(targetPlayer.GameObject, Configs.Kicked + reason);
 
             __result = true;
             return false;
