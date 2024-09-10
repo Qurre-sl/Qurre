@@ -1,4 +1,4 @@
-<p>
+<p align="center">
    <a href="https://discord.gg/zGUqfJQebn" alt="Discord">
       <img src="https://discord.com/api/guilds/779412392651653130/embed.png" alt="Discord"/>
    </a>
@@ -9,11 +9,8 @@
       <img src="https://img.shields.io/github/v/release/Qurre-sl/Qurre.svg?style=plastic" alt="Release"/>
    </a>
 </p>
-<a href="https://discord.gg/zGUqfJQebn" alt="Discord">
-<img src="https://cdn.fydne.dev/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
-</a>
 
-# Qurre
+<h1 align="center">Qurre</h1>
 <p align="center">
 <img src="https://readme-typing-svg.herokuapp.com/?font=Fira+Code&pause=1000&color=3FF781&center=true&vCenter=true&width=435&lines=Simplicity.;Convenience.;Functionality.">
 </p>
@@ -21,8 +18,8 @@
 Simple, convenient and functional plugin loader for SCP: Secret Laboratory
 </p>
 
-# Select language
-### EN [RU](https://github.com/Qurre-sl/Qurre/blob/main/README-RU.md)
+<h1 align="center">Select language</h1>
+<h3 align="center">EN <a href=https://github.com/Qurre-sl/Qurre/blob/main/README-RU.md>RU</a></h3>
 
 # Installation
 1. Download `Qurre.tar.gz` file from [releases](https://github.com/Qurre-sl/Qurre/releases/latest)
@@ -92,3 +89,9 @@ static class Plugin
 **Assembly-CSharp - Owned by [Northwood Studios](https://github.com/northwood-studios)**
 
 **Because we are writing code for one game, it can be similar to the code of other plugin loaders {[Exiled](https://github.com/Exiled-Team/EXILED) or [Synapse](https://github.com/SynapseSL/Synapse)} (Always can carp to something somehow)**
+
+<p align="right">
+   <a href="https://discord.gg/zGUqfJQebn" alt="Discord">
+      <img src="https://cdn.fydne.dev/qurre/img/qurreLogo200x200-cyrcle.png" align="right" style="border-radius: 50%;" />
+   </a>
+</p>
