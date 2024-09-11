@@ -1,77 +1,64 @@
-﻿using PlayerRoles;
+﻿using JetBrains.Annotations;
+using PlayerRoles;
+using Qurre.API.Classification.Roles;
+using RemoteAdmin;
 using Respawning;
 
-namespace Qurre.API.Classification.Player
+namespace Qurre.API.Classification.Player;
+
+[PublicAPI]
+public sealed class RoleInformation
 {
-    using Qurre.API;
-    using Qurre.API.Classification.Roles;
-    using RemoteAdmin;
+    private readonly API.Player _player;
 
-    public sealed class RoleInformation
+    internal RoleInformation(API.Player pl)
     {
-        readonly Player _player;
-        internal RoleTypeId cachedRole;
-        internal RoleInformation(Player pl)
-        {
-            _player = pl;
-            cachedRole = RoleTypeId.None;
-        }
+        _player = pl;
+        CachedRole = RoleTypeId.None;
+    }
 
-        public PlayerRoleBase Base => _player.ReferenceHub.roleManager.CurrentRole;
-        public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
-        public QueryProcessor QueryProcessor => _player.ReferenceHub.queryProcessor;
+    public PlayerRoleBase Base => _player.ReferenceHub.roleManager.CurrentRole;
+    public ServerRoles ServerRoles => _player.ReferenceHub.serverRoles;
+    public QueryProcessor QueryProcessor => _player.ReferenceHub.queryProcessor;
 
-        public bool IsAlive => Team != Team.Dead;
-        public bool IsScp => Team == Team.SCPs;
-        public bool IsHuman => IsAlive && !IsScp;
-        public bool IsDirty => _player.ReferenceHub.IsDirty();
+    public bool IsAlive => Team != Team.Dead;
+    public bool IsScp => Team == Team.SCPs;
+    public bool IsHuman => IsAlive && !IsScp;
+    public bool IsDirty => _player.ReferenceHub.IsDirty();
 
-        public Scp079 Scp079 { get; internal set; }
-        public Scp106 Scp106 { get; internal set; }
-        public Scp173 Scp173 { get; internal set; }
+    public Scp079? Scp079 { get; internal set; }
+    public Scp096? Scp096 { get; internal set; }
+    public Scp106? Scp106 { get; internal set; }
+    public Scp173? Scp173 { get; internal set; }
 
-        public RoleTypeId Role
-        {
-            get
-            {
-                if (_player.Disconnected)
-                    return cachedRole;
-                return _player.ReferenceHub.GetRoleId();
-            }
-            set => _player.ReferenceHub.roleManager.ServerSetRole(value, RoleChangeReason.RemoteAdmin);
-        }
-        public Team Team
-        {
-            get
-            {
-                if (_player.Disconnected)
-                    return cachedRole.GetTeam();
-                return _player.ReferenceHub.GetTeam();
-            }
-        }
-        public Faction Faction
-        {
-            get
-            {
-                if (_player.Disconnected)
-                    return cachedRole.GetFaction();
-                return _player.ReferenceHub.GetFaction();
-            }
-        }
-        public float TimeForNextSequence
-        {
-            get => RespawnManager.Singleton._timeForNextSequence;
-        }
+    public RoleTypeId CachedRole { get; internal set; }
 
-        public void SetNew(RoleTypeId newRole, RoleChangeReason reason)
-            => _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason);
-        public void SetNew(RoleTypeId newRole, RoleChangeReason reason, RoleSpawnFlags spawnFlags)
-            => _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason, spawnFlags);
+    public float TimeForNextSequence => RespawnManager.Singleton._timeForNextSequence;
 
-        public void SetSyncModel(RoleTypeId roleTypeId)
-        {
-            foreach (ReferenceHub referenceHub in ReferenceHub.AllHubs)
-                _player.ReferenceHub.connectionToClient.Send(new RoleSyncInfo(_player.ReferenceHub, roleTypeId, referenceHub), 0);
-        }
+    public Team Team => _player.Disconnected ? CachedRole.GetTeam() : _player.ReferenceHub.GetTeam();
+
+    public Faction Faction => _player.Disconnected ? CachedRole.GetFaction() : _player.ReferenceHub.GetFaction();
+
+    public RoleTypeId Role
+    {
+        get => _player.Disconnected ? CachedRole : _player.ReferenceHub.GetRoleId();
+        set => _player.ReferenceHub.roleManager.ServerSetRole(value, RoleChangeReason.RemoteAdmin);
+    }
+
+    public void SetNew(RoleTypeId newRole, RoleChangeReason reason)
+    {
+        _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason);
+    }
+
+    public void SetNew(RoleTypeId newRole, RoleChangeReason reason, RoleSpawnFlags spawnFlags)
+    {
+        _player.ReferenceHub.roleManager.ServerSetRole(newRole, reason, spawnFlags);
+    }
+
+    public void SetSyncModel(RoleTypeId roleTypeId)
+    {
+        foreach (ReferenceHub referenceHub in ReferenceHub.AllHubs)
+            _player.ReferenceHub.connectionToClient.Send(new RoleSyncInfo(_player.ReferenceHub, roleTypeId,
+                referenceHub));
     }
 }

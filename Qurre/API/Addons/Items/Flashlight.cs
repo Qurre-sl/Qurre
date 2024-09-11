@@ -1,33 +1,29 @@
 ﻿using InventorySystem.Items.ToggleableLights;
 using InventorySystem.Items.ToggleableLights.Flashlight;
+using JetBrains.Annotations;
 using Qurre.API.Controllers;
 using Utils.Networking;
 
-namespace Qurre.API.Addons.Items
+namespace Qurre.API.Addons.Items;
+
+[PublicAPI]
+public sealed class Flashlight(FlashlightItem itemBase) : Item(itemBase)
 {
-    public sealed class Flashlight : Item
+    private const ItemType FlashlightItemType = ItemType.Flashlight;
+
+    public Flashlight() : this((FlashlightItem)FlashlightItemType.CreateItemInstance())
     {
-        private const ItemType FlashlightItemType = ItemType.Flashlight;
+    }
 
-        public new FlashlightItem Base { get; }
+    public new FlashlightItem Base { get; } = itemBase;
 
-        public bool Active
+    public bool Active
+    {
+        get => Base.IsEmittingLight;
+        set
         {
-            get => Base.IsEmittingLight;
-            set
-            {
-                Base.IsEmittingLight = value;
-                NetworkUtils.SendToAuthenticated(new FlashlightNetworkHandler.FlashlightMessage(base.Serial, value));
-            }
-        }
-
-        public Flashlight(FlashlightItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public Flashlight() : this((FlashlightItem)FlashlightItemType.CreateItemInstance())
-        {
+            Base.IsEmittingLight = value;
+            new FlashlightNetworkHandler.FlashlightMessage(Serial, value).SendToAuthenticated();
         }
     }
 }

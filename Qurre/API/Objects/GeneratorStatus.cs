@@ -1,11 +1,13 @@
-﻿namespace Qurre.API.Objects
+﻿using JetBrains.Annotations;
+
+namespace Qurre.API.Objects;
+
+[PublicAPI]
+public enum GeneratorStatus : byte
 {
-    public enum GeneratorStatus : byte
-    {
-        Activate,
-        Deactivate,
-        Unlock,
-        OpenDoor,
-        CloseDoor
-    }
+    Activate,
+    Deactivate,
+    Unlock,
+    OpenDoor,
+    CloseDoor
 }

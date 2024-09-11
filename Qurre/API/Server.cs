@@ -1,76 +1,98 @@
-﻿using CustomPlayerEffects;
-using InventorySystem;
-using RoundRestarting;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using CustomPlayerEffects;
+using InventorySystem;
+using JetBrains.Annotations;
+using PlayerStatsSystem;
+using RoundRestarting;
 using UnityEngine;
+using Object = UnityEngine.Object;
 
-namespace Qurre.API
+namespace Qurre.API;
+
+[PublicAPI]
+public static class Server
 {
-    static public class Server
+    private static Player? _host;
+    private static Inventory? _hostInv;
+
+    public static ushort Port
+        => ServerStatic.ServerPort;
+
+    public static string Ip
+        => ServerConsole.Ip;
+
+    public static double Tps
+        => Math.Round(1f / Time.smoothDeltaTime);
+
+    public static Player Host
     {
-        static internal Player host;
-        static internal Inventory hinv;
-
-        static public ushort Port => ServerStatic.ServerPort;
-        static public string Ip => ServerConsole.Ip;
-
-        static public double TPS => Math.Round(1f / Time.smoothDeltaTime);
-
-        static public Player Host
+        get
         {
-            get
-            {
-                if (host is null || host.ReferenceHub is null)
-                    host = new Player(ReferenceHub.HostHub);
+            if (_host?.ReferenceHub is null)
+                _host = new Player(ReferenceHub.HostHub);
 
-                return host;
-            }
+            return _host;
         }
+    }
 
-        static public Inventory InventoryHost
+    public static Inventory InventoryHost
+    {
+        get
         {
-            get
-            {
-                if (hinv is null)
-                    hinv = ReferenceHub.HostHub.inventory;
-
-                return hinv;
-            }
+            _hostInv ??= ReferenceHub.HostHub.inventory;
+            return _hostInv;
         }
+    }
 
-        static public bool FriendlyFire
+    public static bool FriendlyFire
+    {
+        get => ServerConsole.FriendlyFire;
+        set
         {
-            get => ServerConsole.FriendlyFire;
-            set
-            {
-                if (FriendlyFire == value)
-                    return;
+            if (FriendlyFire == value)
+                return;
 
-                ServerConsole.FriendlyFire = value;
-                ServerConfigSynchronizer.Singleton.RefreshMainBools();
-                ServerConfigSynchronizer.OnRefreshed?.Invoke();
-                PlayerStatsSystem.AttackerDamageHandler.RefreshConfigs();
+            ServerConsole.FriendlyFire = value;
+            ServerConfigSynchronizer.Singleton.RefreshMainBools();
+            ServerConfigSynchronizer.OnRefreshed?.Invoke();
+            AttackerDamageHandler.RefreshConfigs();
 
-                foreach (Player pl in Player.List) pl.FriendlyFire = value;
-            }
+            foreach (Player pl in Player.List)
+                pl.FriendlyFire = value;
         }
+    }
 
-        static public float SpawnProtectDuration
-        {
-            get => SpawnProtected.SpawnDuration;
-            set => SpawnProtected.SpawnDuration = value;
-        }
+    public static float SpawnProtectDuration
+    {
+        get => SpawnProtected.SpawnDuration;
+        set => SpawnProtected.SpawnDuration = value;
+    }
 
-        static public List<TObject> GetObjectsOf<TObject>() where TObject : UnityEngine.Object => UnityEngine.Object.FindObjectsOfType<TObject>().ToList();
-        static public TObject GetObjectOf<TObject>() where TObject : UnityEngine.Object => UnityEngine.Object.FindObjectOfType<TObject>();
+    public static List<TObject> GetObjectsOf<TObject>() where TObject : Object
+    {
+        return [.. Object.FindObjectsOfType<TObject>()];
+    }
 
-        static public void Restart()
-        {
-            ServerStatic.StopNextRound = ServerStatic.NextRoundAction.Restart;
-            RoundRestart.ChangeLevel(true);
-        }
-        static public void Exit() => Shutdown.Quit();
+    public static TObject GetObjectOf<TObject>() where TObject : Object
+    {
+        return Object.FindObjectOfType<TObject>();
+    }
+
+    public static void Restart()
+    {
+        ServerStatic.StopNextRound = ServerStatic.NextRoundAction.Restart;
+        RoundRestart.ChangeLevel(true);
+    }
+
+    public static void Exit()
+    {
+        Shutdown.Quit();
+    }
+
+    internal static void WaitingRefresh()
+    {
+        _host = null;
+        _hostInv = null;
     }
 }

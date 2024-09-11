@@ -1,43 +1,34 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 
-namespace Qurre.API.Addons.Audio.Objects
+namespace Qurre.API.Addons.Audio.Objects;
+
+/// <summary>
+///     Blacklist for <see cref="AudioTask" />.
+/// </summary>
+/// <remarks>
+///     Initializes a new instance of the <see cref="AudioTaskBlacklist" /> class.
+/// </remarks>
+[PublicAPI]
+public class AudioTaskBlacklist(List<IAccessConditions>? accessConditions = null)
 {
     /// <summary>
-    /// Blaclist for <see cref="AudioTask"/>.
+    ///     A collection of required conditions to define a player as blacklisted.
     /// </summary>
-    public class AudioTaskBlacklist
+    public List<IAccessConditions> AccessConditions { get; set; } = accessConditions ?? [];
+
+    /// <summary>
+    ///     Check <see cref="ReferenceHub" /> for blacklisting.
+    /// </summary>
+    /// <param name="referenceHub"><see cref="ReferenceHub" /> to check</param>
+    /// <returns>Is <see cref="ReferenceHub" /> blacklisted?</returns>
+    public virtual bool Contains(ReferenceHub referenceHub)
     {
-        /// <summary>
-        /// A collection of required conditions to define a player as blacklisted.
-        /// </summary>
-        public List<IAccessConditions> AccessConditions { get; set; }
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (referenceHub == null)
+            return true;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AudioTaskBlacklist"/> class.
-        /// </summary>
-        public AudioTaskBlacklist(List<IAccessConditions> accessConditions = null)
-        {
-            AccessConditions = accessConditions ?? new List<IAccessConditions>();
-        }
-
-        /// <summary>
-        /// Check <see cref="ReferenceHub"/> for blacklisting.
-        /// </summary>
-        /// <param name="referenceHub"><see cref="ReferenceHub"/> to check</param>
-        /// <returns>Is <see cref="ReferenceHub"/> blacklisted?</returns>
-        public virtual bool Contains(ReferenceHub referenceHub)
-        {
-            if (referenceHub == null)
-            {
-                return true;
-            }
-            else if (!AccessConditions?.Any() ?? true)
-            {
-                return false;
-            }
-
-            return AccessConditions.All(condition => condition.CheckRequirements(referenceHub));
-        }
+        return AccessConditions.Any() && AccessConditions.All(condition => condition.CheckRequirements(referenceHub));
     }
 }

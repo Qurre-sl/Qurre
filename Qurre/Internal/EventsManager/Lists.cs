@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using System.Reflection;
 
-namespace Qurre.Internal.EventsManager
+namespace Qurre.Internal.EventsManager;
+
+internal static class Lists
 {
-    static internal class Lists
-    {
-        static internal Dictionary<uint, List<MethodInfo>> QurreMethods = new();
-        static internal Dictionary<uint, List<EventCallMethod>> CallMethods = new();
-        static internal Dictionary<MethodInfo, object> ClassesOfNonStaticMethods = new();
-    }
+    internal static readonly Dictionary<uint, List<MethodInfo>> QurreMethods = [];
+    internal static readonly Dictionary<uint, List<EventCallMethod>> CallMethods = [];
+    internal static readonly Dictionary<MethodInfo, object> ClassesOfNonStaticMethods = [];
 }

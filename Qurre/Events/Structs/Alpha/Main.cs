@@ -1,55 +1,59 @@
-﻿using Qurre.API;
+﻿using JetBrains.Annotations;
+using Qurre.API;
 
-namespace Qurre.Events.Structs
+// ReSharper disable once CheckNamespace
+namespace Qurre.Events.Structs;
+
+[PublicAPI]
+public class AlphaStartEvent : IBaseEvent
 {
-    public class AlphaStartEvent : IBaseEvent
+    internal AlphaStartEvent(Player? player, bool automatic)
     {
-        public uint EventId { get; } = AlphaEvents.Start;
-
-        public Player Player { get; }
-        public bool Automatic { get; set; }
-        public bool Allowed { get; set; }
-
-        internal AlphaStartEvent(Player player, bool automatic)
-        {
-            Player = player ?? Server.Host;
-            Automatic = automatic;
-            Allowed = true;
-        }
+        Player = player ?? Server.Host;
+        Automatic = automatic;
+        Allowed = true;
     }
 
-    public class AlphaStopEvent : IBaseEvent
+    public Player Player { get; }
+    public bool Automatic { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = AlphaEvents.Start;
+}
+
+[PublicAPI]
+public class AlphaStopEvent : IBaseEvent
+{
+    internal AlphaStopEvent(Player? player)
     {
-        public uint EventId { get; } = AlphaEvents.Stop;
-
-        public Player Player { get; }
-        public bool Allowed { get; set; }
-
-        internal AlphaStopEvent(Player player)
-        {
-            Player = player ?? Server.Host;
-            Allowed = true;
-        }
+        Player = player ?? Server.Host;
+        Allowed = true;
     }
 
-    public class AlphaDetonateEvent : IBaseEvent
-    {
-        public uint EventId { get; } = AlphaEvents.Detonate;
+    public Player Player { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = AlphaEvents.Stop;
+}
 
-        internal AlphaDetonateEvent() { }
+[PublicAPI]
+public class AlphaDetonateEvent : IBaseEvent
+{
+    internal AlphaDetonateEvent()
+    {
     }
 
-    public class UnlockPanelEvent : IBaseEvent
+    public uint EventId { get; } = AlphaEvents.Detonate;
+}
+
+[PublicAPI]
+public class UnlockPanelEvent : IBaseEvent
+{
+    internal UnlockPanelEvent(Player? player)
     {
-        public uint EventId { get; } = AlphaEvents.UnlockPanel;
-
-        public Player Player { get; }
-        public bool Allowed { get; set; }
-
-        internal UnlockPanelEvent(Player player)
-        {
-            Player = player ?? Server.Host;
-            Allowed = true;
-        }
+        Player = player ?? Server.Host;
+        Allowed = true;
     }
+
+    public Player Player { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = AlphaEvents.UnlockPanel;
 }

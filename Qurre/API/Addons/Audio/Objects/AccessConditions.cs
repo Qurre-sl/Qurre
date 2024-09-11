@@ -1,78 +1,72 @@
-﻿using PlayerRoles;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
+using PlayerRoles;
 
-namespace Qurre.API.Addons.Audio.Objects
+namespace Qurre.API.Addons.Audio.Objects;
+
+/// <summary>
+///     Conditions to determine player access.
+/// </summary>
+/// <remarks>
+///     Initializes a new instance of the <see cref="AccessConditions" /> class.
+/// </remarks>
+[PublicAPI]
+public class AccessConditions(
+    List<int>? ids = null,
+    List<uint>? networkIds = null,
+    List<string>? userIds = null,
+    List<RoleTypeId>? roles = null,
+    List<Team>? teams = null,
+    List<string>? tags = null,
+    List<ItemType>? items = null) : IAccessConditions
 {
+    public List<int> Ids { get; set; } = ids ?? [];
+
+    public List<uint> NetworkIds { get; set; } = networkIds ?? [];
+
+    public List<string> UserIds { get; set; } = userIds ?? [];
+
+    public List<RoleTypeId> Roles { get; set; } = roles ?? [];
+
+    public List<Team> Teams { get; set; } = teams ?? [];
+
+    public List<string> Tags { get; set; } = tags ?? [];
+
+    public List<ItemType> Items { get; set; } = items ?? [];
+
     /// <summary>
-    /// Conditions to determine player access.
+    ///     Check the player for satisfaction with all conditions.
     /// </summary>
-    public class AccessConditions : IAccessConditions
+    /// <param name="referenceHub"><see cref="ReferenceHub" /> to check</param>
+    /// <returns>Is <see cref="ReferenceHub" /> satisfying?</returns>
+    public virtual bool CheckRequirements(ReferenceHub referenceHub)
     {
-        public List<int> Ids { get; set; }
+        // ReSharper disable once ConditionIsAlwaysTrueOrFalseAccordingToNullableAPIContract
+        if (referenceHub == null) return false;
 
-        public List<uint> NetworkIds { get; set; }
+        bool allowed = Ids.Contains(referenceHub.PlayerId);
 
-        public List<string> UserIds { get; set; }
+        allowed |= NetworkIds.Contains(referenceHub.netId);
 
-        public List<RoleTypeId> Roles { get; set; }
+        allowed |= referenceHub.authManager != null &&
+                   UserIds.Contains(referenceHub.authManager.UserId);
 
-        public List<Team> Teams { get; set; }
+        allowed |= referenceHub.roleManager?.CurrentRole != null &&
+                   Roles.Contains(referenceHub.roleManager.CurrentRole.RoleTypeId);
 
-        public List<string> Tags { get; set; }
+        allowed |= referenceHub.roleManager?.CurrentRole != null &&
+                   Teams.Contains(referenceHub.roleManager.CurrentRole.Team);
 
-        public List<ItemType> Items { get; set; }
+        allowed |= Tags.Any() &&
+                   Player.List.Any(player =>
+                       player.ReferenceHub == referenceHub && Tags.Any(tag => player.Tag.Contains(tag)));
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AccessConditions"/> class.
-        /// </summary>
-        public AccessConditions(List<int> ids = null, List<uint> networkIds = null,
-            List<string> userIds = null, List<RoleTypeId> roles = null,
-            List<Team> teams = null, List<string> tags = null, List<ItemType> items = null)
-        {
-            Ids = ids;
-            NetworkIds = networkIds;
-            UserIds = userIds;
-            Roles = roles;
-            Teams = teams;
-            Tags = tags;
-            Items = items;
-        }
+        allowed |= Items.Any() &&
+                   (referenceHub.inventory?.UserInventory?.Items?.Any(
+                       item => Items.Any(requiredItem => requiredItem.Equals(item.Value?.ItemTypeId)
+                       )) ?? false);
 
-        /// <summary>
-        /// Check the player for satisfaction with all conditions.
-        /// </summary>
-        /// <param name="referenceHub"><see cref="ReferenceHub"/> to check</param>
-        /// <returns>Is <see cref="ReferenceHub"/> satisfying?</returns>
-        public virtual bool CheckRequirements(ReferenceHub referenceHub)
-        {
-            if (referenceHub == null)
-            {
-                return false;
-            }
-
-            var allowed = Ids?.Contains(referenceHub.PlayerId) ?? false;
-
-            allowed |= NetworkIds?.Contains(referenceHub.netId) ?? false;
-
-            allowed |= (referenceHub.authManager != null) &&
-                (UserIds?.Contains(referenceHub.authManager.UserId) ?? false);
-
-            allowed |= (referenceHub.roleManager?.CurrentRole != null) &&
-                (Roles?.Contains(referenceHub.roleManager.CurrentRole.RoleTypeId) ?? false);
-
-            allowed |= (referenceHub.roleManager?.CurrentRole != null) &&
-                (Teams?.Contains(referenceHub.roleManager.CurrentRole.Team) ?? false);
-
-            allowed |= (Tags?.Any() ?? false) &&
-                Player.List.Any(player => player.ReferenceHub == referenceHub && Tags.Any(tag => player.Tag.Contains(tag)));
-
-            allowed |= (Items?.Any() ?? false) &&
-                (referenceHub.inventory?.UserInventory?.Items?.Any(
-                    item => Items.Any(requiredItem => requiredItem.Equals(item.Value?.ItemTypeId)
-                    )) ?? false);
-
-            return allowed;
-        }
+        return allowed;
     }
 }

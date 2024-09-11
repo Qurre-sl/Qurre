@@ -1,10 +1,11 @@
 ﻿using System;
-namespace Qurre.API.Attributes
+using JetBrains.Annotations;
+
+namespace Qurre.API.Attributes;
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Method)]
+internal class PluginPriority(int priority) : Attribute
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    internal class PluginPriority : Attribute
-    {
-        public int Priority { get; }
-        public PluginPriority(int priority) => Priority = priority;
-    }
+    public int Priority { get; } = priority;
 }

@@ -1,35 +1,50 @@
-﻿using PlayerRoles.PlayableScps.Scp106;
+﻿using System;
+using JetBrains.Annotations;
+using PlayerRoles.PlayableScps.Scp106;
 using PlayerRoles.Subroutines;
 
-namespace Qurre.API.Classification.Roles
+namespace Qurre.API.Classification.Roles;
+
+[PublicAPI]
+public sealed class Scp106
 {
-    using Qurre.API;
+    private readonly API.Player _pl;
 
-    public sealed class Scp106
+    internal Scp106(API.Player pl)
     {
-        public Scp106Role Base { get; }
+        _pl = pl;
 
-        public bool IsWork => pl.RoleInformation.Role is PlayerRoles.RoleTypeId.Scp106;
+        if (_pl.ReferenceHub.roleManager.CurrentRole is not Scp106Role roleBase)
+            throw new NullReferenceException(nameof(roleBase));
 
-        public Scp106Attack Attack { get; }
+        Base = roleBase;
 
-        public SubroutineManagerModule Subroutine => Base.SubroutineModule;
+        if (Subroutine.TryGetSubroutine(out Scp106Attack attack))
+            Attack = attack;
+        else
+            Log.Debug("Null Debug: [Roles > Scp106] >> Scp106Attack is null");
 
 
-        private readonly Player pl;
-        internal Scp106(Player _pl)
-        {
-            pl = _pl;
+        if (Subroutine.TryGetSubroutine(out Scp106SinkholeController sinkholeController))
+            SinkholeController = sinkholeController;
+        else
+            Log.Debug("Null Debug: [Roles > Scp106] >> Scp106SinkholeController is null");
 
-            Base = pl.ReferenceHub.roleManager.CurrentRole as Scp106Role;
 
-            if (Base is null)
-                return;
-
-            if (Subroutine.TryGetSubroutine(out Scp106Attack attack))
-                Attack = attack;
-            else
-                Log.Debug($"Null Debug: [Roles > Scp106] >> Scp106Attack is null");
-        }
+        if (Subroutine.TryGetSubroutine(out Scp106StalkAbility stalkAbility))
+            StalkAbility = stalkAbility;
+        else
+            Log.Debug("Null Debug: [Roles > Scp106] >> Scp106StalkAbility is null");
     }
+
+    public Scp106Role Base { get; }
+
+    public bool IsWork => Base != null;
+
+    public Scp106Attack? Attack { get; }
+    public Scp106SinkholeController? SinkholeController { get; }
+    public Scp106StalkAbility? StalkAbility { get; }
+
+    public SubroutineManagerModule Subroutine
+        => Base.SubroutineModule;
 }

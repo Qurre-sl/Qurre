@@ -1,23 +1,27 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
+using Qurre.API.Addons;
 
-namespace Qurre.API.Classification.Player
+namespace Qurre.API.Classification.Player;
+
+[PublicAPI]
+public sealed class StatsInformation
 {
-    using Qurre.API;
-    using Qurre.API.Addons;
+    private readonly API.Player _player;
 
-    public sealed class StatsInformation
+    internal List<KillElement> LocalKills = [];
+
+    internal StatsInformation(API.Player pl)
     {
-        private readonly Player _player;
-        internal StatsInformation(Player pl)
-        {
-            _player = pl;
-            DeathsCount = 0;
-        }
-
-        internal List<KillElement> _kills = new();
-
-        public IReadOnlyCollection<KillElement> Kills => _kills.AsReadOnly();
-        public int KillsCount => _kills.Count;
-        public int DeathsCount { get; internal set; }
+        _player = pl;
+        DeathsCount = 0;
     }
+
+    public int DeathsCount { get; internal set; }
+
+    public IReadOnlyCollection<KillElement> Kills
+        => LocalKills.AsReadOnly();
+
+    public int KillsCount
+        => LocalKills.Count;
 }

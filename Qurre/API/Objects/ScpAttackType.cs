@@ -1,11 +1,13 @@
-﻿namespace Qurre.API.Objects
+﻿using JetBrains.Annotations;
+
+namespace Qurre.API.Objects;
+
+[PublicAPI]
+public enum ScpAttackType : byte
 {
-    public enum ScpAttackType : byte
-    {
-        Scp049,
-        Scp0492,
-        Scp096,
-        Scp173,
-        Scp939,
-    }
+    Scp049,
+    Scp0492,
+    Scp096,
+    Scp173,
+    Scp939
 }

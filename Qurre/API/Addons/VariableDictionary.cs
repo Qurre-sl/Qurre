@@ -1,74 +1,87 @@
 ﻿using System.Collections.Generic;
+using JetBrains.Annotations;
 
-namespace Qurre.API.Addons
+namespace Qurre.API.Addons;
+
+[PublicAPI]
+public class VariableDictionary<TKey, TValue> : Dictionary<TKey, TValue>
 {
-    public class VariableDictionary<TKey, TValue> : Dictionary<TKey, TValue>
+    public new TValue this[TKey key]
     {
-        public VariableDictionary() : base() { }
-
-        new public bool TryGetValue(TKey key, out TValue value)
+        get
         {
             try
             {
-                return base.TryGetValue(key, out value);
+                return base[key];
             }
             catch
             {
-                value = default;
-                return false;
+                return default!;
             }
         }
+        set => base[key] = value;
+    }
 
-        new public bool ContainsKey(TKey key)
+    public bool TryGetAndParse<T>(TKey key, out T value)
+    {
+        if (TryGetValue(key, out TValue pre))
+            if (pre is T res)
+            {
+                value = res;
+                return true;
+            }
+
+        value = default!;
+        return false;
+    }
+
+    public new bool TryGetValue(TKey key, out TValue value)
+    {
+        try
         {
-            try
-            {
-                return base.ContainsKey(key);
-            }
-            catch
-            {
-                return false;
-            }
+            return base.TryGetValue(key, out value);
         }
-
-        new public void Add(TKey key, TValue value)
+        catch
         {
-            try
-            {
-                base.Add(key, value);
-            }
-            catch { }
+            value = default!;
+            return false;
         }
+    }
 
-        new public bool Remove(TKey key)
+    public new bool ContainsKey(TKey key)
+    {
+        try
         {
-            try
-            {
-                return base.Remove(key);
-            }
-            catch
-            {
-                return false;
-            }
+            return base.ContainsKey(key);
         }
-
-        new public TValue this[TKey key]
+        catch
         {
-            get
-            {
-                try
-                {
-                    return base[key];
-                }
-                catch
-                {
-                    return default;
-                }
-            }
-            set
-            {
-                base[key] = value;
-            }
+            return false;
+        }
+    }
+
+    public new bool Add(TKey key, TValue value)
+    {
+        try
+        {
+            base.Add(key, value);
+            return true;
+        }
+        catch
+        {
+            return false;
+        }
+    }
+
+    public new bool Remove(TKey key)
+    {
+        try
+        {
+            return base.Remove(key);
+        }
+        catch
+        {
+            return false;
         }
     }
 }

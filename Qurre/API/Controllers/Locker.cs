@@ -1,103 +1,112 @@
-﻿using MapGeneration.Distributors;
-using BaseLocker = MapGeneration.Distributors.Locker;
-using Qurre.API.Objects;
-using UnityEngine;
+﻿using System.Linq;
+using JetBrains.Annotations;
+using MapGeneration.Distributors;
 using Mirror;
 using Qurre.API.Controllers.Structs;
-using System.Linq;
+using Qurre.API.Objects;
 using Qurre.Internal.Misc;
+using UnityEngine;
 
-namespace Qurre.API.Controllers
+namespace Qurre.API.Controllers;
+
+using BaseLocker = MapGeneration.Distributors.Locker;
+
+[PublicAPI]
+public class Locker
 {
-    public class Locker
+    private LockerType _typeCached = LockerType.Unknown;
+
+    internal Locker(BaseLocker locker)
     {
-        internal readonly BaseLocker _locker;
-        private LockerType _typeCached = LockerType.Unknown;
+        Custom = false;
+        GlobalLocker = locker;
+        Chambers = GlobalLocker.Chambers.Select(x => new Chamber(x, this)).ToArray();
+    }
 
-        public GameObject GameObject => _locker.gameObject;
-        public Transform Transform => _locker.transform;
-        public BaseLocker GlobalLocker => _locker;
-        public LockerLoot[] Loot => _locker.Loot;
-        public AudioClip GrantedBeep => _locker._grantedBeep;
-        public AudioClip DeniedBeep => _locker._deniedBeep;
-        public Chamber[] Chambers { get; private set; }
+    public Locker(Vector3 position, LockerPrefabs type, Quaternion? rotation = null)
+    {
+        Custom = true;
+        GlobalLocker = Object.Instantiate(type.GetPrefab());
 
-        public bool Custom { get; private set; }
+        GlobalLocker.transform.position = position;
+        GlobalLocker.transform.rotation = rotation ?? new Quaternion();
 
-        public string Name => _locker.name;
+        Chambers = GlobalLocker.Chambers.Select(x => new Chamber(x, this)).ToArray();
 
-        public Vector3 Position
+        NetworkServer.Spawn(GlobalLocker.gameObject);
+        GlobalLocker.netIdentity.UpdateData();
+
+        LockersUpdater? comp = GameObject.AddComponent<LockersUpdater>();
+        if (comp)
         {
-            get => Transform.position;
-            set
-            {
-                NetworkServer.UnSpawn(GameObject);
-                Transform.position = value;
-                NetworkServer.Spawn(GameObject);
-            }
-        }
-        public Quaternion Rotation
-        {
-            get => Transform.rotation;
-            set
-            {
-                NetworkServer.UnSpawn(GameObject);
-                Transform.rotation = value;
-                NetworkServer.Spawn(GameObject);
-            }
-        }
-        public Vector3 Scale
-        {
-            get => Transform.localScale;
-            set
-            {
-                NetworkServer.UnSpawn(GameObject);
-                Transform.localScale = value;
-                NetworkServer.Spawn(GameObject);
-            }
+            comp.Locker = GlobalLocker;
+            comp.Init();
         }
 
-        public LockerType Type
+        Map.Lockers.Add(this);
+    }
+
+    public GameObject GameObject => GlobalLocker.gameObject;
+    public Transform Transform => GlobalLocker.transform;
+    public LockerLoot[] Loot => GlobalLocker.Loot;
+    public AudioClip GrantedBeep => GlobalLocker._grantedBeep;
+    public AudioClip DeniedBeep => GlobalLocker._deniedBeep;
+    public string Name => GlobalLocker.name;
+
+    public BaseLocker GlobalLocker { get; }
+    public Chamber[] Chambers { get; private set; }
+    public bool Custom { get; private set; }
+
+    public Vector3 Position
+    {
+        get => Transform.position;
+        set
         {
-            get
-            {
-                if (_typeCached is LockerType.Unknown) _typeCached = _get();
-                return _typeCached;
-                LockerType _get()
-                {
-                    if (Name.Contains("AdrenalineMedkit")) return LockerType.AdrenalineMedkit;
-                    if (Name.Contains("RegularMedkit")) return LockerType.RegularMedkit;
-                    if (Name.Contains("Pedestal")) return LockerType.Pedestal;
-                    if (Name.Contains("MiscLocker")) return LockerType.MiscLocker;
-                    if (Name.Contains("RifleRack")) return LockerType.RifleRack;
-                    if (Name.Contains("LargeGunLocker")) return LockerType.LargeGun;
-                    return LockerType.Unknown;
-                };
-            }
-        }
-
-        internal Locker(BaseLocker locker)
-        {
-            Custom = false;
-            _locker = locker;
-            Chambers = _locker.Chambers.Select(x => new Chamber(x, this)).ToArray();
-        }
-        public Locker(Vector3 position, LockerPrefabs type, Quaternion? rotation = null)
-        {
-            Custom = true;
-            _locker = Object.Instantiate(type.GetPrefab());
-
-            _locker.transform.position = position;
-            _locker.transform.rotation = rotation ?? new();
-
-            Chambers = _locker.Chambers.Select(x => new Chamber(x, this)).ToArray();
-
-            NetworkServer.Spawn(_locker.gameObject);
-            _locker.netIdentity.UpdateData();
-            var comp = GameObject.AddComponent<LockersUpdater>();
-            if (comp) comp.Locker = _locker;
-
-            Map.Lockers.Add(this);
+            NetworkServer.UnSpawn(GameObject);
+            Transform.position = value;
+            NetworkServer.Spawn(GameObject);
         }
     }
+
+    public Quaternion Rotation
+    {
+        get => Transform.rotation;
+        set
+        {
+            NetworkServer.UnSpawn(GameObject);
+            Transform.rotation = value;
+            NetworkServer.Spawn(GameObject);
+        }
+    }
+
+    public Vector3 Scale
+    {
+        get => Transform.localScale;
+        set
+        {
+            NetworkServer.UnSpawn(GameObject);
+            Transform.localScale = value;
+            NetworkServer.Spawn(GameObject);
+        }
+    }
+
+    public LockerType Type
+    {
+        get
+        {
+            if (_typeCached is LockerType.Unknown) _typeCached = Get();
+            return _typeCached;
+
+            LockerType Get()
+            {
+                if (Name.Contains("AdrenalineMedkit")) return LockerType.AdrenalineMedkit;
+                if (Name.Contains("RegularMedkit")) return LockerType.RegularMedkit;
+                if (Name.Contains("Pedestal")) return LockerType.Pedestal;
+                if (Name.Contains("MiscLocker")) return LockerType.MiscLocker;
+                if (Name.Contains("RifleRack")) return LockerType.RifleRack;
+                if (Name.Contains("LargeGunLocker")) return LockerType.LargeGun;
+                return LockerType.Unknown;
+            } // end void 'Get'
+        } // end Type_get
+    } // end field
 }

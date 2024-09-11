@@ -1,30 +1,26 @@
 ﻿using InventorySystem.Items.Firearms.Ammo;
-using Qurre.API.Objects;
+using JetBrains.Annotations;
 using Qurre.API.Controllers;
+using Qurre.API.Objects;
 
-namespace Qurre.API.Addons.Items
+namespace Qurre.API.Addons.Items;
+
+[PublicAPI]
+public sealed class Ammo(AmmoItem itemBase) : Item(itemBase)
 {
-    public sealed class Ammo : Item
+    public Ammo(ItemType itemType) : this((AmmoItem)itemType.CreateItemInstance())
     {
-        public int UnitPrice
-        {
-            get => Base.UnitPrice;
-            set => Base.UnitPrice = value;
-        }
-
-        public new AmmoItem Base { get; }
-
-        public Ammo(AmmoItem itemBase) : base(itemBase)
-        {
-            Base = itemBase;
-        }
-
-        public Ammo(ItemType itemType) : this((AmmoItem)itemType.CreateItemInstance())
-        {
-        }
-
-        public Ammo(AmmoType ammoType) : this(ammoType.GetItemType())
-        {
-        }
     }
+
+    public Ammo(AmmoType ammoType) : this(ammoType.GetItemType())
+    {
+    }
+
+    public int UnitPrice
+    {
+        get => Base.UnitPrice;
+        set => Base.UnitPrice = value;
+    }
+
+    public new AmmoItem Base { get; } = itemBase;
 }

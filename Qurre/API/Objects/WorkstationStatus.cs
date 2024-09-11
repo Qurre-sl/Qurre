@@ -1,10 +1,12 @@
-﻿namespace Qurre.API.Objects
+﻿using JetBrains.Annotations;
+
+namespace Qurre.API.Objects;
+
+[PublicAPI]
+public enum WorkstationStatus : byte
 {
-    public enum WorkstationStatus : byte
-    {
-        Offline,
-        PoweringUp,
-        PoweringDown,
-        Online
-    }
+    Offline,
+    PoweringUp,
+    PoweringDown,
+    Online
 }

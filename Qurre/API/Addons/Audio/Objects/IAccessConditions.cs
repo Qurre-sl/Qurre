@@ -1,7 +1,6 @@
-﻿namespace Qurre.API.Addons.Audio.Objects
+﻿namespace Qurre.API.Addons.Audio.Objects;
+
+public interface IAccessConditions
 {
-    public interface IAccessConditions
-    {
-        public bool CheckRequirements(ReferenceHub referenceHub);
-    }
+    public bool CheckRequirements(ReferenceHub referenceHub);
 }

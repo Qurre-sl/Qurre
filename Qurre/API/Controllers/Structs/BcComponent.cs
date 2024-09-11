@@ -1,21 +1,21 @@
-﻿namespace Qurre.API.Controllers.Structs
+﻿namespace Qurre.API.Controllers.Structs;
+
+internal static class BcComponent
 {
-    static class BcComponent
+    private static global::Broadcast? _bc;
+
+    internal static global::Broadcast Component
     {
-        static private global::Broadcast bc;
-        static internal global::Broadcast Component
+        get
         {
-            get
-            {
-                bc ??= Server.Host.GameObject.GetComponent<global::Broadcast>();
+            _bc ??= Server.Host.GameObject.GetComponent<global::Broadcast>();
 
-                return bc;
-            }
+            return _bc;
         }
+    }
 
-        static internal void Refresh()
-        {
-            bc = null;
-        }
+    internal static void Refresh()
+    {
+        _bc = null;
     }
 }

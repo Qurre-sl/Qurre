@@ -1,56 +1,105 @@
-﻿using MEC;
+﻿using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
+using MEC;
+using Qurre.API;
 using Qurre.API.Attributes;
 using Qurre.API.Controllers;
-using Qurre.API;
-using Qurre.Events.Structs;
 using Qurre.Events;
 
-#pragma warning disable IDE0051
-namespace Qurre.Internal.EventsCalled
+namespace Qurre.Internal.EventsCalled;
+
+[SuppressMessage("ReSharper", "UnusedMember.Local")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+internal static class Primitives
 {
-    static class Primitives
+    private const string CoroutineName = "ToysCustomOptimizeUpdate";
+
+    [EventMethod(RoundEvents.Start)]
+    private static void Started()
     {
-        [EventMethod(RoundEvents.Start)]
-        static void Started()
-        {
-            Primitive._allowStatic = true;
+        Primitive.AllowStatic = true;
 
-            foreach (Primitive prim in Primitive._cachedToSetStatic)
-                prim.IsStatic = true;
+        foreach (Primitive prim in Primitive.CachedToSetStatic)
+            prim.IsStatic = true;
 
-            Primitive._cachedToSetStatic.Clear();
-        }
-
-        [EventMethod(RoundEvents.Restart)]
-        [EventMethod(RoundEvents.Waiting)]
-        static void Clear()
-        {
-            Primitive._allowStatic = false;
-            Primitive._cachedToSetStatic.Clear();
-        }
-
-        [EventMethod(PlayerEvents.Join)]
-        static void UpdateJoin(JoinEvent ev)
-        {
-            if (API.Round.Waiting)
-                return;
-
-            foreach (Primitive prim in Map.Primitives)
-            {
-                if (!prim.IsStatic)
-                    continue;
-
-                prim.IsStatic = false;
-                Primitive._cachedToSetStatic.Add(prim);
-            }
-
-            Timing.CallDelayed(1f, () =>
-            {
-                foreach (Primitive prim in Primitive._cachedToSetStatic)
-                    prim.IsStatic = true;
-                Primitive._cachedToSetStatic.Clear();
-            });
-        }
+        Primitive.CachedToSetStatic.Clear();
     }
+
+    [EventMethod(RoundEvents.Restart)]
+    [EventMethod(RoundEvents.Waiting)]
+    private static void Clear()
+    {
+        Primitive.AllowStatic = false;
+        Primitive.CachedToSetStatic.Clear();
+        Primitive.NonStaticPrims.Clear();
+
+
+        Timing.KillCoroutines(CoroutineName);
+
+        if (API.Round.Waiting) Timing.RunCoroutine(ToysUpdate(), Segment.LateUpdate, CoroutineName);
+    }
+
+    [EventMethod(PlayerEvents.Join)]
+    private static void UpdateJoin()
+    {
+        if (API.Round.Waiting)
+            return;
+
+        // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
+        foreach (Primitive prim in Map.Primitives)
+        {
+            if (!prim.IsStatic)
+                continue;
+
+            prim.Base.NetworkIsStatic = false;
+            Primitive.CachedToSetStatic.Add(prim);
+        }
+
+        Timing.CallDelayed(0.1f, () =>
+        {
+            foreach (Primitive prim in Primitive.CachedToSetStatic)
+                prim.Base.NetworkIsStatic = true;
+            Primitive.CachedToSetStatic.Clear();
+        });
+    }
+
+
+    [SuppressMessage("ReSharper", "IteratorNeverReturns")]
+    private static IEnumerator<float> ToysUpdate()
+    {
+        while (true)
+        {
+            foreach (Primitive prim in Primitive.NonStaticPrims)
+                try
+                {
+                    prim.Base.UpdatePositionServer();
+                }
+                catch
+                {
+                    // may flood, so disabled
+                }
+
+            foreach (LightPoint light in Map.Lights)
+                try
+                {
+                    light.Base.UpdatePositionServer();
+                }
+                catch
+                {
+                    // may flood, so disabled
+                }
+
+            foreach (ShootingTarget shoot in Map.ShootingTargets)
+                try
+                {
+                    shoot.Base.UpdatePositionServer();
+                }
+                catch
+                {
+                    // may flood, so disabled
+                }
+
+            yield return Timing.WaitForOneFrame;
+        } // while end
+    } // coroutine end
 }
-#pragma warning restore IDE0051

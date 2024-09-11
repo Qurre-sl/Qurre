@@ -1,45 +1,60 @@
-﻿using Interactables.Interobjects.DoorUtils;
+﻿using System.Collections.Generic;
+using Interactables.Interobjects.DoorUtils;
+using MEC;
 using Qurre.API;
 using UnityEngine;
 
-namespace Qurre.Internal.Misc
+namespace Qurre.Internal.Misc;
+
+internal class DoorsUpdater : MonoBehaviour
 {
-    internal class DoorsUpdater : MonoBehaviour
+    private const float Interval = 0.1f;
+
+    private Vector3 _cachedPosition = Vector3.zero;
+    private Quaternion _cachedRotation = Quaternion.identity;
+    private Vector3 _cachedScale = Vector3.zero;
+    private CoroutineHandle? _coroutine;
+
+    internal DoorVariant? Door;
+
+    private void OnDestroy()
     {
-        readonly float _interval = 0.1f;
-        float _nextCycle = 0f;
+        if (_coroutine is null)
+            return;
 
-        internal DoorVariant Door;
-
-        Vector3 _cachedPosition = Vector3.zero;
-        Vector3 _cachedScale = Vector3.zero;
-        Quaternion _cachedRotation = Quaternion.identity;
-
-        private void Start()
-        {
-            _nextCycle = Time.time;
-        }
-        internal void Update()
-        {
-            if (Door is null)
-                return;
-
-            if (Time.time < _nextCycle)
-                return;
-
-            _nextCycle += _interval;
-
-            Transform transform = Door.netIdentity.gameObject.transform;
-            if (_cachedPosition == transform.position &&
-                _cachedRotation == transform.rotation &&
-                _cachedScale == transform.lossyScale)
-                return;
-
-            _cachedPosition = transform.position;
-            _cachedRotation = transform.rotation;
-            _cachedScale = transform.lossyScale;
-
-            try { Door.netIdentity.UpdateData(); } catch { }
-        }
+        Timing.KillCoroutines(_coroutine.Value);
     }
+
+    internal void Init()
+    {
+        _coroutine = Timing.RunCoroutine(Coroutine());
+    }
+
+    private IEnumerator<float> Coroutine()
+    {
+        while (Door != null)
+        {
+            yield return Timing.WaitForSeconds(Interval);
+
+            Transform trans = Door.netIdentity.gameObject.transform;
+
+            if (_cachedPosition == trans.position &&
+                _cachedRotation == trans.rotation &&
+                _cachedScale == trans.lossyScale)
+                continue;
+
+            _cachedPosition = trans.position;
+            _cachedRotation = trans.rotation;
+            _cachedScale = trans.lossyScale;
+
+            try
+            {
+                Door.netIdentity.UpdateData();
+            }
+            catch
+            {
+                // ignored
+            } // end try-catch
+        } // end while
+    } // end Coroutine
 }

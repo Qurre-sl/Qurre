@@ -1,157 +1,178 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using JetBrains.Annotations;
 using Mirror;
 using UnityEngine;
 
-namespace Qurre.API.Addons.Models
+namespace Qurre.API.Addons.Models;
+
+/// <summary>
+///     <para>Example:</para>
+///     <para>var Model = new Model("Test", position, rotation);</para>
+///     <para>
+///         Model.AddPart(new ModelPrimitive(Model, PrimitiveType.Cube, new Color32(0, 0, 0, 155), Vector3.zero,
+///         Vector3.zero, Vector3.one));
+///     </para>
+///     <para>Model.AddPart(new ModelLight(Model, new Color(1, 0, 0), Vector3.zero, 1, 10));</para>
+/// </summary>
+[PublicAPI]
+public class Model
 {
-    /// <summary>
-    ///  <para>Example:</para>
-    ///  <para>var Model = new Model("Test", position, rotation);</para>
-    ///  <para>Model.AddPart(new ModelPrimitive(Model, PrimitiveType.Cube, new Color32(0, 0, 0, 155), Vector3.zero, Vector3.zero, Vector3.one));</para>
-    ///  <para>Model.AddPart(new ModelLight(Model, new Color(1, 0, 0), Vector3.zero, 1, 10));</para>
-    /// </summary>
-    public class Model
+    private static readonly List<Model> ModelsList = [];
+    private readonly List<ModelBody> _body = [];
+    private readonly List<ModelDoor> _doors = [];
+
+    private readonly List<ModelGenerator> _generators = [];
+    private readonly List<ModelLight> _lights = [];
+    private readonly List<ModelLocker> _lockers = [];
+    private readonly Dictionary<GameObject, ModelEnums> _parts = [];
+    private readonly List<ModelPickup> _pickups = [];
+    private readonly List<ModelPrimitive> _primitives = [];
+    private readonly List<ModelTarget> _targets = [];
+    private readonly List<ModelWorkStation> _workStations = [];
+
+    public Model(string id, Vector3 position, Vector3 rotation = default, Model? root = null)
+        : this(id, position, rotation, Vector3.one, root)
     {
-        static readonly List<Model> ModelsList = new();
-        internal readonly Dictionary<GameObject, ModelEnums> parts = new();
+    }
 
-        readonly GameObject gameObject;
-        readonly List<ModelBody> body = new();
-        readonly List<object> bots = new(); // ModelBot
-        readonly List<ModelDoor> doors = new();
-        readonly List<ModelGenerator> generators = new();
-        internal readonly List<ModelLight> lights = new();
-        readonly List<ModelLocker> lockers = new();
-        readonly List<ModelPickup> pickups = new();
-        readonly List<ModelPrimitive> primitives = new();
-        readonly List<ModelTarget> targets = new();
-        readonly List<ModelWorkStation> workStations = new();
-
-        public GameObject GameObject => gameObject;
-        public IReadOnlyList<ModelBody> Body => body.AsReadOnly();
-        public IReadOnlyList<object> Bots => bots.AsReadOnly(); // ModelBot
-        public IReadOnlyList<ModelDoor> Doors => doors.AsReadOnly();
-        public IReadOnlyList<ModelGenerator> Generators => generators.AsReadOnly();
-        public IReadOnlyList<ModelLight> Lights => lights.AsReadOnly();
-        public IReadOnlyList<ModelLocker> Lockers => lockers.AsReadOnly();
-        public IReadOnlyList<ModelPickup> Pickups => pickups.AsReadOnly();
-        public IReadOnlyList<ModelPrimitive> Primitives => primitives.AsReadOnly();
-        public IReadOnlyList<ModelTarget> Targets => targets.AsReadOnly();
-        public IReadOnlyList<ModelWorkStation> WorkStations => workStations.AsReadOnly();
-
-        public void AddPart(ModelBody part, bool addToList = true)
+    public Model(string id, Vector3 position, Vector3 rotation, Vector3 scale, Model? root = null)
+    {
+        GameObject = new GameObject(id)
         {
-            if (addToList) body.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Body);
-        }
-        /*
-        public void AddPart(ModelBot part, bool addToList = true)
-        {
-            if (addToList) bots.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Bot);
-        }
-        */
-        public void AddPart(ModelDoor part, bool addToList = true)
-        {
-            if (addToList) doors.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Door);
-        }
-        public void AddPart(ModelGenerator part, bool addToList = true)
-        {
-            if (addToList) generators.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Generator);
-        }
-        public void AddPart(ModelLight part, bool addToList = true)
-        {
-            if (addToList) lights.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Light);
-        }
-        public void AddPart(ModelLocker part, bool addToList = true)
-        {
-            if (addToList) lockers.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Locker);
-        }
-        public void AddPart(ModelPickup part, bool addToList = true)
-        {
-            if (addToList) pickups.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Pickup);
-        }
-        public void AddPart(ModelPrimitive part, bool addToList = true)
-        {
-            if (addToList) primitives.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Primitive);
-        }
-        public void AddPart(ModelTarget part, bool addToList = true)
-        {
-            if (addToList) targets.Add(part);
-            parts.Add(part.GameObject, ModelEnums.Target);
-        }
-        public void AddPart(ModelWorkStation part, bool addToList = true)
-        {
-            if (addToList) workStations.Add(part);
-            parts.Add(part.GameObject, ModelEnums.WorkStation);
-        }
-
-        public Model(string id, Vector3 position, Vector3 rotation = default, Model root = null) : this(id, position, rotation, Vector3.one, root) { }
-        public Model(string id, Vector3 position, Vector3 rotation, Vector3 scale, Model root = null)
-        {
-            gameObject = new GameObject(id);
-            GameObject.transform.parent = root?.GameObject?.transform;
-            GameObject.transform.localPosition = position;
-            GameObject.transform.localRotation = Quaternion.Euler(rotation);
-            GameObject.transform.localScale = scale == default ? Vector3.one : scale;
-
-            NetworkServer.Spawn(GameObject);
-
-            ModelsList.Add(this);
-        }
-
-        public void Destroy()
-        {
-            if (parts.Count == 0) return;
-
-            var _list = parts.Select(x => x.Key).ToList();
-            _list.ForEach(part =>
+            transform =
             {
-                NetworkServer.Destroy(part);
-            });
+                parent = root?.GameObject.transform,
+                localPosition = position,
+                localRotation = Quaternion.Euler(rotation),
+                localScale = scale == default ? Vector3.one : scale
+            }
+        };
 
-            Object.Destroy(GameObject);
-            parts.Clear();
-            body.Clear();
-            bots.Clear();
-            doors.Clear();
-            generators.Clear();
-            lights.Clear();
-            lockers.Clear();
-            pickups.Clear();
-            primitives.Clear();
-            targets.Clear();
-            workStations.Clear();
-        }
+        NetworkServer.Spawn(GameObject);
 
-        static internal void ClearCache()
+        ModelsList.Add(this);
+    }
+
+    public GameObject GameObject { get; }
+
+    public IReadOnlyList<ModelBody> Body => _body.AsReadOnly();
+    public IReadOnlyList<ModelDoor> Doors => _doors.AsReadOnly();
+    public IReadOnlyList<ModelGenerator> Generators => _generators.AsReadOnly();
+    public IReadOnlyList<ModelLight> Lights => _lights.AsReadOnly();
+    public IReadOnlyList<ModelLocker> Lockers => _lockers.AsReadOnly();
+    public IReadOnlyList<ModelPickup> Pickups => _pickups.AsReadOnly();
+    public IReadOnlyList<ModelPrimitive> Primitives => _primitives.AsReadOnly();
+    public IReadOnlyList<ModelTarget> Targets => _targets.AsReadOnly();
+    public IReadOnlyList<ModelWorkStation> WorkStations => _workStations.AsReadOnly();
+
+    public void AddPart(ModelBody ragdoll, bool addToList = true)
+    {
+        if (addToList)
+            _body.Add(ragdoll);
+
+        _parts.Add(ragdoll.GameObject, ModelEnums.Body);
+    }
+
+    public void AddPart(ModelDoor door, bool addToList = true)
+    {
+        if (addToList)
+            _doors.Add(door);
+
+        _parts.Add(door.GameObject, ModelEnums.Door);
+    }
+
+    public void AddPart(ModelGenerator gen, bool addToList = true)
+    {
+        if (addToList)
+            _generators.Add(gen);
+
+        _parts.Add(gen.GameObject, ModelEnums.Generator);
+    }
+
+    public void AddPart(ModelLight light, bool addToList = true)
+    {
+        if (addToList)
+            _lights.Add(light);
+
+        _parts.Add(light.GameObject, ModelEnums.Light);
+    }
+
+    public void AddPart(ModelLocker locker, bool addToList = true)
+    {
+        if (addToList)
+            _lockers.Add(locker);
+
+        _parts.Add(locker.GameObject, ModelEnums.Locker);
+    }
+
+    public void AddPart(ModelPickup pick, bool addToList = true)
+    {
+        if (addToList)
+            _pickups.Add(pick);
+
+        _parts.Add(pick.GameObject, ModelEnums.Pickup);
+    }
+
+    public void AddPart(ModelPrimitive prim, bool addToList = true)
+    {
+        if (addToList)
+            _primitives.Add(prim);
+
+        _parts.Add(prim.GameObject, ModelEnums.Primitive);
+    }
+
+    public void AddPart(ModelTarget shoot, bool addToList = true)
+    {
+        if (addToList)
+            _targets.Add(shoot);
+
+        _parts.Add(shoot.GameObject, ModelEnums.Target);
+    }
+
+    public void AddPart(ModelWorkStation station, bool addToList = true)
+    {
+        if (addToList)
+            _workStations.Add(station);
+
+        _parts.Add(station.GameObject, ModelEnums.WorkStation);
+    }
+
+    public void Destroy()
+    {
+        if (_parts.Count == 0)
+            return;
+
+        _parts.Select(x => x.Key).ForEach(NetworkServer.Destroy);
+
+        Object.Destroy(GameObject);
+        _parts.Clear();
+        _body.Clear();
+        _doors.Clear();
+        _generators.Clear();
+        _lights.Clear();
+        _lockers.Clear();
+        _pickups.Clear();
+        _primitives.Clear();
+        _targets.Clear();
+        _workStations.Clear();
+    }
+
+    internal static void ClearCache()
+    {
+        ModelsList.ForEach(model =>
         {
-            ModelsList.ForEach(model =>
-            {
-                try
-                {
-                    model.parts.Clear();
-                    model.body.Clear();
-                    model.bots.Clear();
-                    model.doors.Clear();
-                    model.generators.Clear();
-                    model.lights.Clear();
-                    model.lockers.Clear();
-                    model.pickups.Clear();
-                    model.primitives.Clear();
-                    model.targets.Clear();
-                    model.workStations.Clear();
-                }
-                catch { }
-            });
-            ModelsList.Clear();
-        }
+            model._parts.Clear();
+            model._body.Clear();
+            model._doors.Clear();
+            model._generators.Clear();
+            model._lights.Clear();
+            model._lockers.Clear();
+            model._pickups.Clear();
+            model._primitives.Clear();
+            model._targets.Clear();
+            model._workStations.Clear();
+        });
+        ModelsList.Clear();
     }
 }

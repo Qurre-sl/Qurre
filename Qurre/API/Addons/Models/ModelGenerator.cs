@@ -1,35 +1,35 @@
-﻿using Qurre.API.Controllers;
-using UnityEngine;
-using System;
+﻿using System;
+using JetBrains.Annotations;
 using Mirror;
+using Qurre.API.Controllers;
+using UnityEngine;
 
-namespace Qurre.API.Addons.Models
+namespace Qurre.API.Addons.Models;
+
+[PublicAPI]
+public class ModelGenerator
 {
-    public class ModelGenerator
+    public ModelGenerator(Model model, Vector3 position, Vector3 rotation, Vector3 size = default)
     {
-        private readonly GameObject gameObject;
-        private readonly Generator generator;
+        Generator = new Generator(position);
+        GameObject = Generator.GameObject;
 
-        public GameObject GameObject => gameObject;
-        public Generator Generator => generator;
-
-        public ModelGenerator(Model model, Vector3 position, Vector3 rotation, Vector3 size = default)
+        try
         {
-            try
-            {
-                generator = new(position);
-                gameObject = Generator.GameObject;
-                NetworkServer.UnSpawn(GameObject);
-                GameObject.transform.parent = model?.GameObject?.transform;
-                GameObject.transform.localPosition = position;
-                GameObject.transform.localRotation = Quaternion.Euler(rotation);
-                GameObject.transform.localScale = size;
-                NetworkServer.Spawn(GameObject);
-            }
-            catch (Exception ex)
-            {
-                Log.Warn($"{ex}\n{ex.StackTrace}");
-            }
+            NetworkServer.UnSpawn(GameObject);
+            GameObject.transform.parent = model.GameObject.transform;
+            GameObject.transform.localPosition = position;
+            GameObject.transform.localRotation = Quaternion.Euler(rotation);
+            GameObject.transform.localScale = size;
+            NetworkServer.Spawn(GameObject);
+        }
+        catch (Exception ex)
+        {
+            Log.Warn($"{ex}\n{ex.StackTrace}");
         }
     }
+
+    public GameObject GameObject { get; }
+
+    public Generator Generator { get; }
 }

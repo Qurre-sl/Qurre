@@ -1,9 +1,11 @@
-﻿namespace Qurre.API.Objects
+﻿using JetBrains.Annotations;
+
+namespace Qurre.API.Objects;
+
+[PublicAPI]
+public enum TargetPrefabs : byte
 {
-    public enum TargetPrefabs : byte
-    {
-        Sport,
-        Dboy,
-        Binary,
-    }
+    Sport,
+    Dboy,
+    Binary
 }

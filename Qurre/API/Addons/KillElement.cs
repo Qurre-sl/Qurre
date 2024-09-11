@@ -1,43 +1,62 @@
-﻿using Qurre.API.Objects;
-using System;
-namespace Qurre.API.Addons
+﻿using System;
+using JetBrains.Annotations;
+using Qurre.API.Objects;
+
+namespace Qurre.API.Addons;
+
+[PublicAPI]
+public readonly struct KillElement : IEquatable<KillElement>
 {
-    public struct KillElement
+    internal KillElement(Player killer, Player target, DamageTypes type, DateTime offset)
     {
-        internal KillElement(Player killer, Player target, DamageTypes type, DateTime offset)
-        {
-            Killer = killer;
-            Target = target;
-            Type = type;
-            Time = offset;
-        }
+        Killer = killer;
+        Target = target;
+        Type = type;
+        Time = offset;
+    }
 
-        public Player Killer { get; }
-        public Player Target { get; }
-        public DamageTypes Type { get; }
-        public DateTime Time { get; }
+    public Player Killer { get; }
+    public Player Target { get; }
+    public DamageTypes Type { get; }
+    public DateTime Time { get; }
 
-        public override bool Equals(object obj)
-        {
-            if (obj is not KillElement other)
-                return false;
+    public override bool Equals(object? obj)
+    {
+        return obj is KillElement other && Equals(other);
+    }
 
-            return this == other;
-        }
+    public bool Equals(KillElement obj)
+    {
+        return this == obj;
+    }
 
-        public override int GetHashCode()
-        {
-            return Tuple.Create(Killer, Target, Type, Time).GetHashCode();
-        }
+    public override int GetHashCode()
+    {
+        return Tuple.Create(Killer, Target, Type, Time).GetHashCode();
+    }
 
-        public override string ToString()
-        {
-            return $"({Target} killed by {Killer} with {Type} at {Time})";
-        }
+    public override string ToString()
+    {
+        return $"({Target} killed by {Killer} with {Type} at {Time})";
+    }
 
-        public static bool operator ==(KillElement a, KillElement b) => a.Killer == b.Killer && a.Target == b.Target && a.Time == b.Time && a.Type == b.Type;
-        public static bool operator !=(KillElement a, KillElement b) => !(a == b);
-        public static bool operator >(KillElement a, KillElement b) => a.Time > b.Time;
-        public static bool operator <(KillElement a, KillElement b) => a.Time < b.Time;
+    public static bool operator ==(KillElement a, KillElement b)
+    {
+        return a.Killer == b.Killer && a.Target == b.Target && a.Time == b.Time && a.Type == b.Type;
+    }
+
+    public static bool operator !=(KillElement a, KillElement b)
+    {
+        return !(a == b);
+    }
+
+    public static bool operator >(KillElement a, KillElement b)
+    {
+        return a.Time > b.Time;
+    }
+
+    public static bool operator <(KillElement a, KillElement b)
+    {
+        return a.Time < b.Time;
     }
 }

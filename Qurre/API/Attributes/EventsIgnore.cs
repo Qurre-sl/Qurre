@@ -1,10 +1,10 @@
 ﻿using System;
+using JetBrains.Annotations;
 
-namespace Qurre.API.Attributes
+namespace Qurre.API.Attributes;
+
+[PublicAPI]
+[AttributeUsage(AttributeTargets.Method)]
+public class EventsIgnore : Attribute
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public class EventsIgnore : Attribute
-    {
-        public EventsIgnore() { }
-    }
 }

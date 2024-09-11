@@ -1,51 +1,61 @@
-﻿using PlayerRoles;
+﻿using JetBrains.Annotations;
+using PlayerRoles;
 using PlayerRoles.FirstPersonControl;
 using Qurre.API.Objects;
 using Respawning;
 using UnityEngine;
 
-namespace Qurre.API
+namespace Qurre.API;
+
+[PublicAPI]
+public static class Respawn
 {
-    static public class Respawn
+    public static SpawnableTeamType NextKnownTeam
+        => RespawnManager.Singleton.NextKnownTeam;
+
+    public static float MtfTickets
     {
-        static public SpawnableTeamType NextKnownTeam => RespawnManager.Singleton.NextKnownTeam;
+        get => RespawnTokensManager.Counters[1].Amount;
+        set => RespawnTokensManager.GrantTokens(SpawnableTeamType.NineTailedFox, value);
+    }
 
-        static public float NtfTickets
+    public static float ChaosTickets
+    {
+        get => RespawnTokensManager.Counters[0].Amount;
+        set => RespawnTokensManager.GrantTokens(SpawnableTeamType.ChaosInsurgency, value);
+    }
+
+    public static Vector3 GetPosition(RoleTypeId role)
+    {
+        return GetSpawnPoint(role).Position;
+    }
+
+    public static Transform GetTransform(RoleTypeId role)
+    {
+        GameObject obj = new("SpawnPoint (Clone)")
         {
-            get => RespawnTokensManager.Counters[1].Amount;
-            set => RespawnTokensManager.GrantTokens(SpawnableTeamType.NineTailedFox, value);
-        }
-        static public float ChaosTickets
-        {
-            get => RespawnTokensManager.Counters[0].Amount;
-            set => RespawnTokensManager.GrantTokens(SpawnableTeamType.ChaosInsurgency, value);
-        }
+            transform =
+            {
+                position = GetSpawnPoint(role).Position
+            }
+        };
+        return obj.transform;
+    }
 
-        static public Vector3 GetPosition(RoleTypeId role)
-            => GetSpawnPoint(role).Position;
-        static public Transform GetTransform(RoleTypeId role)
-        {
-            GameObject obj = new("SpawnPoint (Clone)");
-            obj.transform.position = GetSpawnPoint(role).Position;
-            return obj.transform;
-        }
-        static public SpawnPoint GetSpawnPoint(RoleTypeId role, bool checkFlags = true)
-        {
-            var roleBase = Server.Host.ReferenceHub.roleManager.GetRoleBase(role);
+    public static SpawnPoint GetSpawnPoint(RoleTypeId role)
+    {
+        PlayerRoleBase? roleBase = Server.Host.ReferenceHub.roleManager.GetRoleBase(role);
 
-            if (roleBase is not IFpcRole fpc)
-                return new(Vector3.zero, 0);
+        if (roleBase is not IFpcRole fpc)
+            return new SpawnPoint(Vector3.zero, 0);
 
-            if (fpc.SpawnpointHandler is null)
-                return new(Vector3.zero, 0);
+        if (fpc.SpawnpointHandler is null)
+            return new SpawnPoint(Vector3.zero, 0);
 
-            if (!fpc.SpawnpointHandler.TryGetSpawnpoint(out Vector3 pos, out float horizontal))
-                return new(Vector3.zero, 0);
+        // ReSharper disable once ConvertIfStatementToReturnStatement
+        if (!fpc.SpawnpointHandler.TryGetSpawnpoint(out Vector3 pos, out float horizontal))
+            return new SpawnPoint(Vector3.zero, 0);
 
-            if (checkFlags && !roleBase.ServerSpawnFlags.HasFlag(RoleSpawnFlags.UseSpawnpoint))
-                return new(Vector3.zero, 0);
-
-            return new(pos, horizontal);
-        }
+        return new SpawnPoint(pos, horizontal);
     }
 }

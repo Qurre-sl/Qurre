@@ -1,12 +1,16 @@
-﻿using HarmonyLib;
+﻿using System.Diagnostics.CodeAnalysis;
+using HarmonyLib;
 
-namespace Qurre.Internal.Patches.Misc.Fixes
+namespace Qurre.Internal.Patches.Misc.Fixes;
+
+[HarmonyPatch(typeof(ServerConsole), nameof(ServerConsole.HandlePlayerJoin))]
+[SuppressMessage("ReSharper", "UnusedMember.Local")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
+internal static class FixBotVerification
 {
-    [HarmonyPatch(typeof(ServerConsole), nameof(ServerConsole.HandlePlayerJoin))]
-    static class FixBotVerification
+    [HarmonyPrefix]
+    private static bool Call(ReferenceHub rh)
     {
-        [HarmonyPrefix]
-        static bool Call(ReferenceHub rh)
-            => !(string.IsNullOrEmpty(rh.authManager.UserId) || rh.authManager.UserId.EndsWith("@bot"));
+        return !(string.IsNullOrEmpty(rh.authManager.UserId) || rh.authManager.UserId.EndsWith("@bot"));
     }
 }

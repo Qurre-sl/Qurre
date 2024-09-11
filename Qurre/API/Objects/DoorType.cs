@@ -1,87 +1,89 @@
-﻿namespace Qurre.API.Objects
+﻿using JetBrains.Annotations;
+
+namespace Qurre.API.Objects;
+
+[PublicAPI]
+public enum DoorType : byte
 {
-    public enum DoorType : byte
-    {
-        Unknown,
+    Unknown,
 
-        LczStandart, // LCZ BreakableDoor
-        HczStandart, // HCZ BreakableDoor
-        EzStandart, // EZ BreakableDoor
+    LczStandard, // LCZ BreakableDoor
+    HczStandard, // HCZ BreakableDoor
+    EzStandard, // EZ BreakableDoor
 
 
-        LczAirlock, // LCZ PortallessBreakableDoor (n)
-        LczArmory, // LCZ_ARMORY
-        LczCafe, // LCZ_CAFE
-        LczGr18, // GR18_INNER
-        LczGr18Gate, // GR18
-        LczPrison, // Prison BreakableDoor (n)
-        LczWc, // LCZ_WC
+    LczAirlock, // LCZ PortallessBreakableDoor (n)
+    LczArmory, // LCZ_ARMORY
+    LczCafe, // LCZ_CAFE
+    LczGr18, // GR18_INNER
+    LczGr18Gate, // GR18
+    LczPrison, // Prison BreakableDoor (n)
+    LczWc, // LCZ_WC
 
-        LczCheckpointA, // CHECKPOINT_LCZ_A
-        LczCheckpointB, // CHECKPOINT_LCZ_B
+    LczCheckpointA, // CHECKPOINT_LCZ_A
+    LczCheckpointB, // CHECKPOINT_LCZ_B
 
-        Lcz173Armory, // 173_ARMORY
-        Lcz173Bottom, // 173_BOTTOM
-        Lcz173Connector, // 173_CONNECTOR
-        Lcz173Gate, // 173_GATE
+    Lcz173Armory, // 173_ARMORY
+    Lcz173Bottom, // 173_BOTTOM
+    Lcz173Connector, // 173_CONNECTOR
+    Lcz173Gate, // 173_GATE
 
-        Lcz330, // 330
-        Lcz330Chamber, // 330_CHAMBER
+    Lcz330, // 330
+    Lcz330Chamber, // 330_CHAMBER
 
-        Lcz914Chamber, // 914 Door // 914 Door (1)
-        Lcz914Gate, // 914
-
-
-        HczArmory, // HCZ_ARMORY
-
-        HczHid, // HID
-        HczHidLeft, // HID_LEFT
-        HczHidRight, // HID_RIGHT
-
-        HczNukeArmory, // NUKE_ARMORY
-        HczServers, // SERVERS_BOTTOM
-
-        Hcz049Armory, // 049_ARMORY
-        Hcz049Gate, // Unsecured...
-
-        Hcz079Armory, // 079_ARMORY
-        Hcz079First, // 079_FIRST
-        Hcz079Second, // 079_SECOND
-
-        Hcz096, // 096
-
-        Hcz106First, // 106_PRIMARY
-        Hcz106Second, // 106_SECONDARY
-
-        Hcz173Gate, // Unsecured...
-
-        Hcz939, // 939_CRYO
+    Lcz914Chamber, // 914 Door // 914 Door (1)
+    Lcz914Gate, // 914
 
 
-        EzIntercom, // INTERCOM
+    HczArmory, // HCZ_ARMORY
 
-        EzCheckpointA, // CHECKPOINT_EZ_HCZ_A
-        EzCheckpointB, // CHECKPOINT_EZ_HCZ_B
-        EzCheckpointArmoryA, // Intercom BreakableDoor (n)
-        EzCheckpointArmoryB, // Intercom BreakableDoor (n)
-        EzCheckpointGate, // Unsecured...
+    HczHid, // HID
+    HczHidLeft, // HID_LEFT
+    HczHidRight, // HID_RIGHT
 
-        EzGateA, // GATE_A
-        EzGateB, // GATE_B
+    HczNukeArmory, // NUKE_ARMORY
+    HczServers, // SERVERS_BOTTOM
+
+    Hcz049Armory, // 049_ARMORY
+    Hcz049Gate, // Unsecured...
+
+    Hcz079Armory, // 079_ARMORY
+    Hcz079First, // 079_FIRST
+    Hcz079Second, // 079_SECOND
+
+    Hcz096, // 096
+
+    Hcz106First, // 106_PRIMARY
+    Hcz106Second, // 106_SECONDARY
+
+    Hcz173Gate, // Unsecured...
+
+    Hcz939, // 939_CRYO
 
 
-        SurfaceGate, // SURFACE_GATE
-        SurfaceEscapeFirst, // ESCAPE_PRIMARY
-        SurfaceEscapeSecond, // ESCAPE_SECONDARY
-        SurfaceNuke, // SURFACE_NUKE
+    EzIntercom, // INTERCOM
 
-        ElevatorLczChkpA, // RoomName: LczCheckpointA
-        ElevatorLczChkpB, // RoomName: LczCheckpointB
-        ElevatorHczChkpA, // RoomName: HczCheckpointA
-        ElevatorHczChkpB, // RoomName: HczCheckpointB
-        Elevator049, // RoomName: Hcz049
-        ElevatorNuke, // RoomName: HczWarhead
-        ElevatorGateA, // RoomName: EzGateA / Outside & ElevatorGroup: GateA
-        ElevatorGateB, // RoomName: EzGateB / Outside & ElevatorGroup: GateB
-    }
+    EzCheckpointA, // CHECKPOINT_EZ_HCZ_A
+    EzCheckpointB, // CHECKPOINT_EZ_HCZ_B
+    EzCheckpointArmoryA, // Intercom BreakableDoor (n)
+    EzCheckpointArmoryB, // Intercom BreakableDoor (n)
+    EzCheckpointGate, // Unsecured...
+
+    EzGateA, // GATE_A
+    EzGateB, // GATE_B
+
+
+    SurfaceGate, // SURFACE_GATE
+    SurfaceEscapeFirst, // ESCAPE_PRIMARY
+    SurfaceEscapeSecond, // ESCAPE_SECONDARY
+    SurfaceNuke, // SURFACE_NUKE
+
+    ElevatorLczChkpA, // RoomName: LczCheckpointA
+    ElevatorLczChkpB, // RoomName: LczCheckpointB
+    ElevatorHczChkpA, // RoomName: HczCheckpointA
+    ElevatorHczChkpB, // RoomName: HczCheckpointB
+    Elevator049, // RoomName: Hcz049
+    ElevatorNuke, // RoomName: HczWarhead
+    ElevatorGateA, // RoomName: EzGateA / Outside & ElevatorGroup: GateA
+    ElevatorGateB // RoomName: EzGateB / Outside & ElevatorGroup: GateB
 }

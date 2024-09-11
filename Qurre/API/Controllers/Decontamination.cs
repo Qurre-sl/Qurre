@@ -1,24 +1,29 @@
-﻿using LightContainmentZoneDecontamination;
+﻿using JetBrains.Annotations;
+using LightContainmentZoneDecontamination;
 
-namespace Qurre.API.Controllers
+namespace Qurre.API.Controllers;
+
+[PublicAPI]
+public static class Decontamination
 {
-    static public class Decontamination
+    public static DecontaminationController Controller => DecontaminationController.Singleton;
+    public static bool Begun => Controller.IsDecontaminating;
+    public static bool InProgress => Controller._decontaminationBegun;
+
+    public static DecontaminationController.DecontaminationStatus Status
     {
-        static public DecontaminationController Controller => DecontaminationController.Singleton;
+        get => Controller.NetworkDecontaminationOverride;
+        set => Controller.NetworkDecontaminationOverride = value;
+    }
 
-        static public DecontaminationController.DecontaminationStatus Status
-        {
-            get => Controller.NetworkDecontaminationOverride;
-            set => Controller.NetworkDecontaminationOverride = value;
-        }
-        static public bool Locked
-        {
-            get => Controller._stopUpdating;
-            set => Controller._stopUpdating = value;
-        }
+    public static bool Locked
+    {
+        get => Controller._stopUpdating;
+        set => Controller._stopUpdating = value;
+    }
 
-        static public bool Begun => Controller.IsDecontaminating;
-        static public bool InProgress => Controller._decontaminationBegun;
-        static public void InstantStart() => Controller.FinishDecontamination();
+    public static void InstantStart()
+    {
+        Controller.FinishDecontamination();
     }
 }

@@ -1,39 +1,38 @@
-﻿using Qurre.API.Controllers;
+﻿using System;
+using JetBrains.Annotations;
+using Qurre.API.Controllers;
 using UnityEngine;
-using System;
 
-namespace Qurre.API.Addons.Models
+namespace Qurre.API.Addons.Models;
+
+[PublicAPI]
+public class ModelPrimitive
 {
-    public class ModelPrimitive
+    public ModelPrimitive(Model model, PrimitiveType primitiveType, Color color, Vector3 position,
+        Vector3 rotation, Vector3 size = default, bool collider = true)
     {
-        private readonly GameObject gameObject;
-        private readonly Primitive primitive;
+        Primitive = new Primitive(primitiveType, position, color);
+        GameObject = Primitive.Base.gameObject;
 
-        public GameObject GameObject => gameObject;
-        public Primitive Primitive => primitive;
-
-        public ModelPrimitive(Model model, PrimitiveType primitiveType, Color color, Vector3 position,
-            Vector3 rotation, Vector3 size = default, bool collider = true)
+        try
         {
-            try
-            {
-                primitive = new(primitiveType, position, color);
-                gameObject = Primitive.Base.gameObject;
+            GameObject.transform.parent = model.GameObject.transform;
+            GameObject.transform.localPosition = position;
+            GameObject.transform.localRotation = Quaternion.Euler(rotation);
+            GameObject.transform.localScale = size;
+            Primitive.Collider = collider;
 
-                GameObject.transform.parent = model?.GameObject?.transform;
-                GameObject.transform.localPosition = position;
-                GameObject.transform.localRotation = Quaternion.Euler(rotation);
-                GameObject.transform.localScale = size;
-                Primitive.Collider = collider;
-
-                Primitive.Base.NetworkScale = GameObject.transform.lossyScale;
-                Primitive.Base.NetworkPosition = GameObject.transform.position;
-                Primitive.Base.NetworkRotation = new LowPrecisionQuaternion(GameObject.transform.rotation);
-            }
-            catch (Exception ex)
-            {
-                Log.Warn($"{ex}\n{ex.StackTrace}");
-            }
+            Primitive.Base.NetworkScale = GameObject.transform.lossyScale;
+            Primitive.Base.NetworkPosition = GameObject.transform.position;
+            Primitive.Base.NetworkRotation = new LowPrecisionQuaternion(GameObject.transform.rotation);
+        }
+        catch (Exception ex)
+        {
+            Log.Warn($"{ex}\n{ex.StackTrace}");
         }
     }
+
+    public GameObject GameObject { get; }
+
+    public Primitive Primitive { get; }
 }

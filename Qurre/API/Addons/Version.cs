@@ -1,54 +1,52 @@
-﻿namespace Qurre.API.Addons
+﻿namespace Qurre.API.Addons;
+
+public class Version
 {
-    public class Version
+    private const string SMajor = "2";
+    private const string SMinor = "0";
+    private const string SBuild = "0";
+    private const string SRevision = "153";
+
+    private const string STesting = "zeta";
+
+    internal const string AssemblyVersion = $"{SMajor}.{SMinor}.{SBuild}.{SRevision}";
+    internal const string AssemblyCustom = $"v2-{STesting}";
+
+    internal Version()
     {
-        const string s_major = "2";
-        const string s_minor = "0";
-        const string s_build = "0";
-        const string s_revision = "106";
+    }
 
-        const string s_testing = "delta";
+    public static int Major { get; } = int.Parse(SMajor);
 
-        internal const string AssemblyVersion = $"{s_major}.{s_minor}.{s_build}.{s_revision}";
-        internal const string AssemblyCustom = $"v2-{s_testing}";
+    public static int Minor { get; } = int.Parse(SMinor);
 
-        static readonly int _major = int.Parse(s_major);
-        static readonly int _minor = int.Parse(s_minor);
-        static readonly int _build = int.Parse(s_build);
-        static readonly int _revision = int.Parse(s_revision);
+    public static int Build { get; } = int.Parse(SBuild);
 
-        static public int Major => _major;
-        static public int Minor => _minor;
-        static public int Build => _build;
-        static public int Revision => _revision;
+    public static int Revision { get; } = int.Parse(SRevision);
 
-        static public string Testing => s_testing;
+    public static string Testing => STesting;
 
-        internal Version() { }
+    public override string ToString()
+    {
+        if (!string.IsNullOrEmpty(Testing)) return $"{Major}-{Testing} r-{Revision}";
 
-        public override string ToString()
-        {
-            if (!string.IsNullOrEmpty(Testing))
-            {
-                return $"{Major}-{Testing} r-{Revision}";
-            }
+        string version = $"{Major}";
 
-            string vers = $"{Major}";
+        if (Minor <= 0)
+            return version;
 
-            if (Minor > 0)
-            {
-                vers += $".{Minor}";
+        version += $".{Minor}";
 
-                if (Build > 0)
-                {
-                    vers += $".{Build}";
+        if (Build <= 0)
+            return version;
 
-                    if (Revision > 0)
-                        vers += $".{Revision}";
-                }
-            }
+        version += $".{Build}";
 
-            return vers;
-        }
+        if (Revision <= 0)
+            return version;
+
+        version += $".{Revision}";
+
+        return version;
     }
 }
