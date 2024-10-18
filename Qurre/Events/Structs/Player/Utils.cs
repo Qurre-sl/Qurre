@@ -15,5 +15,7 @@ public class PressAltEvent : IBaseEvent
 
     public Player Player { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.PressAlt;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.PressAlt;
 }

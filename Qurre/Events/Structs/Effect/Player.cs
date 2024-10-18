@@ -25,5 +25,7 @@ public class PlayerFlashedEvent : IBaseEvent
     public FlashbangGrenade Grenade { get; }
     public Vector3 Position { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = EffectEvents.Flashed;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = EffectEvents.Flashed;
 }

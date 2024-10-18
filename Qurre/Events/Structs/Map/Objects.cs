@@ -22,7 +22,9 @@ public class TriggerTeslaEvent : IBaseEvent
     public bool InIdlingRange { get; }
     public bool InRageRange { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = MapEvents.TriggerTesla;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = MapEvents.TriggerTesla;
 }
 
 [PublicAPI]
@@ -36,5 +38,7 @@ public class WorkStationUpdateEvent : IBaseEvent
 
     public WorkStation Station { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = MapEvents.WorkStationUpdate;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = MapEvents.WorkStationUpdate;
 }

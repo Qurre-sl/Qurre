@@ -28,7 +28,9 @@ public class PrePickupItemEvent : IBaseEvent
     public Player Player { get; }
     public Pickup Pickup { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.PrePickupItem;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.PrePickupItem;
 }
 
 [PublicAPI]
@@ -44,7 +46,9 @@ public class PickupItemEvent : IBaseEvent
     public Player Player { get; }
     public Pickup Pickup { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.PickupItem;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.PickupItem;
 }
 
 [PublicAPI]
@@ -62,7 +66,9 @@ public class PickupAmmoEvent : IBaseEvent
     public Pickup Pickup { get; }
     public AmmoPickup Ammo { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.PickupAmmo;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.PickupAmmo;
 }
 
 [PublicAPI]
@@ -78,7 +84,9 @@ public class PickupArmorEvent : IBaseEvent
     public Player Player { get; }
     public Pickup Pickup { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.PickupArmor;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.PickupArmor;
 }
 
 [PublicAPI]
@@ -96,7 +104,9 @@ public class PickupCandyEvent : IBaseEvent
     public Scp330Bag Bag { get; }
     public List<CandyKindID> List { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.PickupCandy;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.PickupCandy;
 }
 
 [PublicAPI]
@@ -116,7 +126,9 @@ public class ThrowProjectileEvent : IBaseEvent
     public ProjectileSettings Settings { get; }
     public bool FullForce { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.ThrowProjectile;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.ThrowProjectile;
 }
 
 [PublicAPI]
@@ -132,7 +144,9 @@ public class DropItemEvent : IBaseEvent
     public Player Player { get; }
     public Item Item { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.DropItem;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.DropItem;
 }
 
 [PublicAPI]
@@ -146,7 +160,9 @@ public class DroppedItemEvent : IBaseEvent
 
     public Player Player { get; }
     public Pickup Pickup { get; }
-    public uint EventId { get; } = PlayerEvents.DroppedItem;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.DroppedItem;
 }
 
 [PublicAPI]
@@ -164,7 +180,9 @@ public class DropAmmoEvent : IBaseEvent
     public AmmoType Type { get; set; }
     public ushort Amount { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.DropAmmo;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.DropAmmo;
 }
 
 [PublicAPI]
@@ -194,5 +212,7 @@ public class JailbirdTriggerEvent : IBaseEvent
     public JailbirdItem JailbirdBase { get; }
     public JailbirdMessageType Message { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.JailbirdTrigger;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.JailbirdTrigger;
 }

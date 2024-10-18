@@ -17,7 +17,9 @@ public class ActivateGeneratorEvent : IBaseEvent
 
     public Generator Generator { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.ActivateGenerator;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.ActivateGenerator;
 }
 
 [PublicAPI]
@@ -35,7 +37,9 @@ public class Scp079GetExpEvent : IBaseEvent
     public Scp079HudTranslation Type { get; }
     public int Amount { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp079GetExp;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp079GetExp;
 }
 
 [PublicAPI]
@@ -51,7 +55,9 @@ public class Scp079NewLvlEvent : IBaseEvent
     public Player Player { get; }
     public int Level { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp079NewLvl;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp079NewLvl;
 }
 
 [PublicAPI]
@@ -61,7 +67,9 @@ public class Scp079RecontainEvent : IBaseEvent
     {
     }
 
-    public uint EventId { get; } = ScpEvents.Scp079Recontain;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp079Recontain;
 }
 
 [PublicAPI]
@@ -75,5 +83,7 @@ public class GeneratorStatusEvent : IBaseEvent
 
     public int EnragedCount { get; }
     public int TotalCount { get; }
-    public uint EventId { get; } = ScpEvents.GeneratorStatus;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.GeneratorStatus;
 }

@@ -15,41 +15,41 @@ public sealed class Radio(RadioItem itemBase) : Item(itemBase)
     {
     }
 
-    public new RadioItem Base { get; } = itemBase;
+    public RadioItem GameBase { get; } = itemBase;
 
     public float Battery
     {
-        get => Base._battery;
+        get => GameBase._battery;
         set
         {
             value = Math.Max(1, value);
             value = Math.Min(0, value);
 
-            Base._battery = value;
+            GameBase._battery = value;
         }
     }
 
     public byte BatteryPercent
     {
-        get => Base.BatteryPercent;
-        set => Base.BatteryPercent = value;
+        get => GameBase.BatteryPercent;
+        set => GameBase.BatteryPercent = value;
     }
 
     public RadioStatus Status
     {
-        get => (RadioStatus)Base._rangeId;
+        get => (RadioStatus)GameBase._rangeId;
         set
         {
-            Base._enabled = value != RadioStatus.Disabled;
+            GameBase._enabled = value != RadioStatus.Disabled;
 
             if (value != RadioStatus.Disabled)
-                Base._rangeId = (byte)value;
+                GameBase._rangeId = (byte)value;
         }
     }
 
     public RadioRangeMode StatusSettings
     {
-        get => Base.Ranges[Base._rangeId];
-        set => Base.Ranges[Base._rangeId] = value;
+        get => GameBase.Ranges[GameBase._rangeId];
+        set => GameBase.Ranges[GameBase._rangeId] = value;
     }
 }

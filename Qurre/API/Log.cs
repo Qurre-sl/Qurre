@@ -114,14 +114,14 @@ public static class Log
         if (!Logging)
             return;
 
-        if (!Directory.Exists(Pathes.Logs))
+        if (!Directory.Exists(Paths.Logs))
         {
-            Directory.CreateDirectory(Pathes.Logs);
-            Custom($"Logs directory not found. Creating: {Pathes.Logs}", BetterColors.Yellow("WARN"),
+            Directory.CreateDirectory(Paths.Logs);
+            Custom($"Logs directory not found. Creating: {Paths.Logs}", BetterColors.Yellow("WARN"),
                 ConsoleColor.DarkYellow);
         }
 
-        File.AppendAllText(Path.Combine(Pathes.Logs, $"{Server.Port}-log.txt"),
+        File.AppendAllText(Path.Combine(Paths.Logs, $"{Server.Port}-log.txt"),
             $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
     }
 
@@ -130,14 +130,14 @@ public static class Log
         if (!AllLogging)
             return;
 
-        if (!Directory.Exists(Pathes.Logs))
+        if (!Directory.Exists(Paths.Logs))
         {
-            Directory.CreateDirectory(Pathes.Logs);
-            Custom($"Logs directory not found. Creating: {Pathes.Logs}", BetterColors.Yellow("WARN"),
+            Directory.CreateDirectory(Paths.Logs);
+            Custom($"Logs directory not found. Creating: {Paths.Logs}", BetterColors.Yellow("WARN"),
                 ConsoleColor.DarkYellow);
         }
 
-        File.AppendAllText(Path.Combine(Pathes.Logs, $"{Server.Port}-all-logs.txt"),
+        File.AppendAllText(Path.Combine(Paths.Logs, $"{Server.Port}-all-logs.txt"),
             $"[{DateTime.Now:dd.MM.yyyy HH:mm:ss}] {message}\n");
     }
 }

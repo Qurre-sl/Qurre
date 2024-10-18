@@ -14,24 +14,24 @@ namespace Qurre.API.Addons.Items;
 [PublicAPI]
 public sealed class Gun(Firearm itemBase) : Item(itemBase)
 {
-    public new Firearm Base { get; } = itemBase;
+    public Firearm GameBase { get; } = itemBase;
 
     public byte Ammo
     {
-        get => Base.Status.Ammo;
-        set => Base.Status = new FirearmStatus(value, Base.Status.Flags, Base.Status.Attachments);
+        get => GameBase.Status.Ammo;
+        set => GameBase.Status = new FirearmStatus(value, GameBase.Status.Flags, GameBase.Status.Attachments);
     }
 
     public bool FlashlightEnabled
     {
-        get => Base.Status.Flags.HasFlagFast(FirearmStatusFlags.FlashlightEnabled);
-        set => Base.OverrideFlashlightFlags(value);
+        get => GameBase.Status.Flags.HasFlagFast(FirearmStatusFlags.FlashlightEnabled);
+        set => GameBase.OverrideFlashlightFlags(value);
     }
 
     public Attachment[] Attachments
     {
-        get => Base.Attachments;
-        set => Base.Attachments = value;
+        get => GameBase.Attachments;
+        set => GameBase.Attachments = value;
     }
 
     public float FireRate
@@ -57,7 +57,7 @@ public sealed class Gun(Firearm itemBase) : Item(itemBase)
         {
             if (Base is AutomaticFirearm automaticFirearm)
             {
-                automaticFirearm.ActionModule = new AutomaticAction(Base, automaticFirearm._semiAutomatic,
+                automaticFirearm.ActionModule = new AutomaticAction(GameBase, automaticFirearm._semiAutomatic,
                     automaticFirearm._boltTravelTime, 1f / automaticFirearm._fireRate,
                     automaticFirearm._dryfireClipId, automaticFirearm._triggerClipId,
                     automaticFirearm._gunshotPitchRandomization,
@@ -70,6 +70,6 @@ public sealed class Gun(Firearm itemBase) : Item(itemBase)
         }
     }
 
-    public AmmoType AmmoType => Base.AmmoType.GetAmmoType();
-    public byte MaxAmmo => Base.AmmoManagerModule.MaxAmmo;
+    public AmmoType AmmoType => GameBase.AmmoType.GetAmmoType();
+    public byte MaxAmmo => GameBase.AmmoManagerModule.MaxAmmo;
 }

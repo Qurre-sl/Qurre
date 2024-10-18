@@ -11,7 +11,9 @@ public class WaitingEvent : IBaseEvent
     {
     }
 
-    public uint EventId { get; } = RoundEvents.Waiting;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = RoundEvents.Waiting;
 }
 
 [PublicAPI]
@@ -21,7 +23,9 @@ public class RoundStartedEvent : IBaseEvent
     {
     }
 
-    public uint EventId { get; } = RoundEvents.Start;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = RoundEvents.Start;
 }
 
 [PublicAPI]
@@ -31,7 +35,9 @@ public class RoundForceStartEvent : IBaseEvent
     {
     }
 
-    public uint EventId { get; } = RoundEvents.ForceStart;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = RoundEvents.ForceStart;
 }
 
 [PublicAPI]
@@ -41,7 +47,9 @@ public class RoundRestartEvent : IBaseEvent
     {
     }
 
-    public uint EventId { get; } = RoundEvents.Restart;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = RoundEvents.Restart;
 }
 
 [PublicAPI]
@@ -57,7 +65,9 @@ public class RoundCheckEvent : IBaseEvent
     public LeadingTeam Winner { get; set; }
     public RoundSummary.SumInfo_ClassList Info { get; set; }
     public bool End { get; set; }
-    public uint EventId { get; } = RoundEvents.Check;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = RoundEvents.Check;
 }
 
 [PublicAPI]
@@ -73,5 +83,7 @@ public class RoundEndEvent : IBaseEvent
     public LeadingTeam Winner { get; }
     public RoundSummary.SumInfo_ClassList Info { get; set; }
     public int ToRestart { get; set; }
-    public uint EventId { get; } = RoundEvents.End;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = RoundEvents.End;
 }

@@ -17,7 +17,9 @@ public class CuffEvent : IBaseEvent
     public Player Target { get; }
     public Player Cuffer { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.Cuff;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Cuff;
 }
 
 [PublicAPI]
@@ -33,7 +35,9 @@ public class UnCuffEvent : IBaseEvent
     public Player Target { get; }
     public Player Cuffer { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.UnCuff;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.UnCuff;
 }
 
 [PublicAPI]
@@ -49,5 +53,7 @@ public class ChangeSpectateEvent : IBaseEvent
     public Player Player { get; }
     public Player? Old { get; }
     public Player? New { get; }
-    public uint EventId { get; } = PlayerEvents.ChangeSpectate;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.ChangeSpectate;
 }

@@ -20,7 +20,9 @@ public class Scp049RaisingStartEvent : IBaseEvent
     public Player Target { get; }
     public BasicRagdoll Ragdoll { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp049RaisingStart;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp049RaisingStart;
 }
 
 [PublicAPI]
@@ -38,5 +40,7 @@ public class Scp049RaisingEndEvent : IBaseEvent
     public Player Target { get; }
     public BasicRagdoll Ragdoll { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp049RaisingEnd;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp049RaisingEnd;
 }

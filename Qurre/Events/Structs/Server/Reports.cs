@@ -19,7 +19,9 @@ public class CheaterReportEvent : IBaseEvent
     public Player Target { get; }
     public string Reason { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ServerEvents.CheaterReport;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ServerEvents.CheaterReport;
 }
 
 [PublicAPI]
@@ -37,5 +39,7 @@ public class LocalReportEvent : IBaseEvent
     public Player Target { get; }
     public string Reason { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ServerEvents.LocalReport;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ServerEvents.LocalReport;
 }

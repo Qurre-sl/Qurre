@@ -188,13 +188,13 @@ public sealed class Inventory
 
         if (AttachmentsServerHandler.PlayerPreferences.TryGetValue(_player.ReferenceHub, out var dict)
             && dict.TryGetValue(itemType, out uint code))
-            gun.Base.ApplyAttachmentsCode(code, true);
+            gun.GameBase.ApplyAttachmentsCode(code, true);
 
         FirearmStatusFlags status = FirearmStatusFlags.MagazineInserted;
-        if (gun.Base.HasAdvantageFlag(AttachmentDescriptiveAdvantages.Flashlight))
+        if (gun.GameBase.HasAdvantageFlag(AttachmentDescriptiveAdvantages.Flashlight))
             status |= FirearmStatusFlags.FlashlightEnabled;
 
-        gun.Base.Status = new FirearmStatus(gun.MaxAmmo, status, gun.Base.GetCurrentAttachmentsCode());
+        gun.GameBase.Status = new FirearmStatus(gun.MaxAmmo, status, gun.GameBase.GetCurrentAttachmentsCode());
 
         return item;
     }

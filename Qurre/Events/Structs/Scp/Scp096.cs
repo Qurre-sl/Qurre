@@ -34,7 +34,9 @@ public class Scp096SetStateEvent : IBaseEvent
     public Player Player { get; }
     public Scp096State State { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp096SetState;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp096SetState;
 }
 
 [PublicAPI]
@@ -52,5 +54,7 @@ public class Scp096AddTargetEvent : IBaseEvent
     public Player Target { get; }
     public bool IsLooking { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp096AddTarget;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp096AddTarget;
 }

@@ -22,7 +22,9 @@ public class BanEvent : IBaseEvent
     public DateTime Expires { get; set; }
     public string Reason { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.Ban;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Ban;
 }
 
 [PublicAPI]
@@ -42,7 +44,9 @@ public class BannedEvent : IBaseEvent
     public BanHandler.BanType Type { get; }
     public bool Forced { get; }
     public bool UnsafeAllowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.Banned;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Banned;
 }
 
 [PublicAPI]
@@ -60,7 +64,9 @@ public class KickEvent : IBaseEvent
     public Player Issuer { get; }
     public string Reason { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.Kick;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Kick;
 }
 
 [PublicAPI]
@@ -76,7 +82,9 @@ public class MuteEvent : IBaseEvent
     public Player Player { get; }
     public bool Intercom { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.Mute;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Mute;
 }
 
 [PublicAPI]
@@ -92,7 +100,9 @@ public class UnMuteEvent : IBaseEvent
     public Player Player { get; }
     public bool Intercom { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.Unmute;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Unmute;
 }
 
 [PublicAPI]
@@ -108,5 +118,7 @@ public class ChangeGroupEvent : IBaseEvent
     public Player Player { get; }
     public UserGroup Group { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.ChangeGroup;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.ChangeGroup;
 }

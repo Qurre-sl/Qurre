@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using JetBrains.Annotations;
 using Qurre.API.Attributes;
+using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 using EventLists = Qurre.Internal.EventsManager.Lists;
 using Version = Qurre.API.Addons.Version;
@@ -28,7 +29,7 @@ public static class Core
                 EventLists.CallMethods.Add(attr.Type, [new EventCallMethod(method, attr.Priority)]);
     }
 
-    public static void UnjectEventMethod(MethodInfo method)
+    public static void ExtractEventMethod(MethodInfo method)
     {
         if (method.IsAbstract)
             throw new Exception($"InjectEventMethod: '{method.Name}' is abstract");
@@ -40,9 +41,27 @@ public static class Core
             if (!EventLists.CallMethods.TryGetValue(attr.Type, out var list))
                 continue;
 
-            list.RemoveAll(x => x.Info == method);
+            list.RemoveAll(x => x is EventCallMethod call && call.Info == method);
         }
     }
+
+
+    public static void InjectAction(uint eventId, int priority, Action<IBaseEvent> action)
+    {
+        if (EventLists.CallMethods.TryGetValue(eventId, out var list))
+            list.Add(new EventCallAction(action, priority));
+        else
+            EventLists.CallMethods.Add(eventId, [new EventCallAction(action, priority)]);
+    }
+
+    public static void ExtractAction(uint eventId, Action<IBaseEvent> action)
+    {
+        if (!EventLists.CallMethods.TryGetValue(eventId, out var list))
+            return;
+
+        list.RemoveAll(x => x is EventCallAction call && call.Action == action);
+    }
+
 
     public static void SortMethodsPriority()
     {
@@ -54,8 +73,6 @@ public static class Core
         if (!EventLists.CallMethods.TryGetValue(eventId, out var list))
             return;
 
-        var onetime = list.ToList().OrderByDescending(x => x.Priority);
-        list.Clear();
-        list.InsertRange(0, onetime);
+        list.Sort((x, y) => y.Priority.CompareTo(x.Priority));
     }
 }

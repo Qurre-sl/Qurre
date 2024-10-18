@@ -21,5 +21,7 @@ public class ScpAttackEvent : IBaseEvent
     public ScpAttackType Type { get; }
     public float Damage { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Attack;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Attack;
 }

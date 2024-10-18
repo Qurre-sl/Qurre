@@ -39,7 +39,9 @@ public class PreauthEvent : IBaseEvent
     public long RejectionExpiration { get; set; }
     public ushort RejectionRedirectPort { get; set; }
     public byte RejectionDelay { get; set; }
-    public uint EventId { get; } = PlayerEvents.Preauth;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Preauth;
 }
 
 [PublicAPI]
@@ -51,7 +53,9 @@ public class JoinEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public uint EventId { get; } = PlayerEvents.Join;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Join;
 }
 
 [PublicAPI]
@@ -63,7 +67,9 @@ public class LeaveEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public uint EventId { get; } = PlayerEvents.Leave;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Leave;
 }
 
 [PublicAPI]
@@ -77,7 +83,9 @@ public class CheckReserveSlotEvent : IBaseEvent
 
     public string UserId { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.CheckReserveSlot;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.CheckReserveSlot;
 }
 
 [PublicAPI]
@@ -91,5 +99,7 @@ public class CheckWhiteListEvent : IBaseEvent
 
     public string UserId { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.CheckWhiteList;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.CheckWhiteList;
 }

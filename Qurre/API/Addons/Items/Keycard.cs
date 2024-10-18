@@ -12,11 +12,11 @@ public sealed class Keycard(KeycardItem itemBase) : Item(itemBase)
     {
     }
 
-    public new KeycardItem Base { get; } = itemBase;
+    public KeycardItem GameBase { get; } = itemBase;
 
     public KeycardPermissions Permissions
     {
-        get => Base.Permissions;
-        set => Base.Permissions = value;
+        get => GameBase.Permissions;
+        set => GameBase.Permissions = value;
     }
 }

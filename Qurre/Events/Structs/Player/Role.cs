@@ -21,7 +21,9 @@ public class SpawnEvent : IBaseEvent
     public RoleTypeId Role { get; }
     public Vector3 Position { get; set; }
     public Vector3 Rotation { get; set; }
-    public uint EventId { get; } = PlayerEvents.Spawn;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Spawn;
 }
 
 [PublicAPI]
@@ -41,7 +43,9 @@ public class ChangeRoleEvent : IBaseEvent
     public RoleTypeId Role { get; set; }
     public RoleChangeReason Reason { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.ChangeRole;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.ChangeRole;
 }
 
 [PublicAPI]
@@ -57,5 +61,7 @@ public class EscapeEvent : IBaseEvent
     public Player Player { get; }
     public RoleTypeId Role { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.Escape;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Escape;
 }

@@ -23,7 +23,9 @@ public class DeadEvent : IBaseEvent
     public DamageTypes DamageType { get; }
     public LiteDamageTypes LiteType { get; }
     public DamageHandlerBase DamageInfo { get; }
-    public uint EventId { get; } = PlayerEvents.Dead;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Dead;
 }
 
 [PublicAPI]
@@ -64,7 +66,9 @@ public class DiesEvent : IBaseEvent
         }
     }
 
-    public uint EventId { get; } = PlayerEvents.Dies;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Dies;
 }
 
 [PublicAPI]
@@ -107,7 +111,9 @@ public class DamageEvent : IBaseEvent
         }
     }
 
-    public uint EventId { get; } = PlayerEvents.Damage;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Damage;
 }
 
 [PublicAPI]
@@ -153,7 +159,9 @@ public class AttackEvent : IBaseEvent
         }
     }
 
-    public uint EventId { get; } = PlayerEvents.Attack;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Attack;
 }
 
 [PublicAPI]
@@ -169,5 +177,7 @@ public class HealEvent : IBaseEvent
     public Player Player { get; }
     public float Amount { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.Heal;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Heal;
 }

@@ -23,7 +23,9 @@ public class CancelUseItemEvent : IBaseEvent
     public Player Player { get; }
     public Item Item { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.CancelUseItem;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.CancelUseItem;
 }
 
 [PublicAPI]
@@ -39,7 +41,9 @@ public class UseItemEvent : IBaseEvent
     public Player Player { get; }
     public Item Item { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.UseItem;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.UseItem;
 }
 
 [PublicAPI]
@@ -53,7 +57,9 @@ public class UsedItemEvent : IBaseEvent
 
     public Player Player { get; }
     public Item Item { get; }
-    public uint EventId { get; } = PlayerEvents.UsedItem;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.UsedItem;
 }
 
 [PublicAPI]
@@ -71,7 +77,9 @@ public class ChangeItemEvent : IBaseEvent
     public Item? OldItem { get; }
     public Item? NewItem { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.ChangeItem;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.ChangeItem;
 }
 
 [PublicAPI]
@@ -91,7 +99,9 @@ public class UpdateRadioEvent : IBaseEvent
     public RadioStatus Range { get; set; }
     public bool Enabled { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.UpdateRadio;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.UpdateRadio;
 }
 
 [PublicAPI]
@@ -111,5 +121,7 @@ public class UsingRadioEvent : IBaseEvent
     public float Battery { get; set; }
     public float Consumption { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.UsingRadio;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.UsingRadio;
 }

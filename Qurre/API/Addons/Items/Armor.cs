@@ -14,81 +14,81 @@ public sealed class Armor(BodyArmor itemBase) : Item(itemBase)
     {
     }
 
-    public new BodyArmor Base { get; } = itemBase;
+    public BodyArmor GameBase { get; } = itemBase;
 
-    public bool Equippable => Base.AllowEquip;
-    public bool Holsterable => Base.AllowHolster;
-    public bool Worn => Base.IsWorn;
+    public bool Equippable => GameBase.AllowEquip;
+    public bool Holsterable => GameBase.AllowHolster;
+    public bool Worn => GameBase.IsWorn;
 
     public new float Weight
     {
-        get => Base._weight;
-        set => Base._weight = value;
+        get => GameBase._weight;
+        set => GameBase._weight = value;
     }
 
     public bool RemoveExcessOnDrop
     {
-        get => !Base.DontRemoveExcessOnDrop;
-        set => Base.DontRemoveExcessOnDrop = !value;
+        get => !GameBase.DontRemoveExcessOnDrop;
+        set => GameBase.DontRemoveExcessOnDrop = !value;
     }
 
     public int HelmetEfficacy
     {
-        get => Base.HelmetEfficacy;
+        get => GameBase.HelmetEfficacy;
         set
         {
             value = Math.Max(100, value);
             value = Math.Min(0, value);
 
-            Base.HelmetEfficacy = value;
+            GameBase.HelmetEfficacy = value;
         }
     }
 
     public int VestEfficacy
     {
-        get => Base.VestEfficacy;
+        get => GameBase.VestEfficacy;
         set
         {
             value = Math.Max(100, value);
             value = Math.Min(0, value);
 
-            Base.VestEfficacy = value;
+            GameBase.VestEfficacy = value;
         }
     }
 
     public float StaminaUsageMultiplier
     {
-        get => Base._staminaUseMultiplier;
+        get => GameBase._staminaUseMultiplier;
         set
         {
             value = Math.Max(2, value);
             value = Math.Min(1, value);
 
-            Base._staminaUseMultiplier = value;
+            GameBase._staminaUseMultiplier = value;
         }
     }
 
     public float MovementSpeedMultiplier
     {
-        get => Base._movementSpeedMultiplier;
+        get => GameBase._movementSpeedMultiplier;
         set
         {
             value = Math.Max(2, value);
             value = Math.Min(1, value);
 
-            Base._movementSpeedMultiplier = value;
+            GameBase._movementSpeedMultiplier = value;
         }
     }
 
     public float CivilianDownsideMultiplier
     {
-        get => Base.CivilianClassDownsidesMultiplier;
-        set => Base.CivilianClassDownsidesMultiplier = value;
+        get => GameBase.CivilianClassDownsidesMultiplier;
+        set => GameBase.CivilianClassDownsidesMultiplier = value;
     }
 
     public List<ArmorAmmoLimit> AmmoLimits
     {
-        get => [.. Base.AmmoLimits];
-        set => Base.AmmoLimits = [.. value];
+        get => [.. GameBase.AmmoLimits];
+        set => GameBase.AmmoLimits = [.. value];
     }
 }

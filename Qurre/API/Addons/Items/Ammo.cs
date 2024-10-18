@@ -16,11 +16,11 @@ public sealed class Ammo(AmmoItem itemBase) : Item(itemBase)
     {
     }
 
+    public AmmoItem GameBase { get; } = itemBase;
+
     public int UnitPrice
     {
-        get => Base.UnitPrice;
-        set => Base.UnitPrice = value;
+        get => GameBase.UnitPrice;
+        set => GameBase.UnitPrice = value;
     }
-
-    public new AmmoItem Base { get; } = itemBase;
 }

@@ -20,7 +20,9 @@ public class DamageDoorEvent : IBaseEvent
     public DoorDamageType Type { get; }
     public float Damage { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = MapEvents.DamageDoor;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = MapEvents.DamageDoor;
 }
 
 [PublicAPI]
@@ -38,7 +40,9 @@ public class LockDoorEvent : IBaseEvent
     public DoorLockReason Reason { get; }
     public bool NewState { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = MapEvents.LockDoor;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = MapEvents.LockDoor;
 }
 
 [PublicAPI]
@@ -54,5 +58,7 @@ public class OpenDoorEvent : IBaseEvent
     public Door Door { get; }
     public DoorEventOpenerExtension.OpenerEventType Type { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = MapEvents.OpenDoor;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = MapEvents.OpenDoor;
 }

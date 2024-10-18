@@ -17,7 +17,9 @@ public class AlphaStartEvent : IBaseEvent
     public Player Player { get; }
     public bool Automatic { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = AlphaEvents.Start;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = AlphaEvents.Start;
 }
 
 [PublicAPI]
@@ -31,7 +33,9 @@ public class AlphaStopEvent : IBaseEvent
 
     public Player Player { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = AlphaEvents.Stop;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = AlphaEvents.Stop;
 }
 
 [PublicAPI]
@@ -41,7 +45,9 @@ public class AlphaDetonateEvent : IBaseEvent
     {
     }
 
-    public uint EventId { get; } = AlphaEvents.Detonate;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = AlphaEvents.Detonate;
 }
 
 [PublicAPI]
@@ -55,5 +61,7 @@ public class UnlockPanelEvent : IBaseEvent
 
     public Player Player { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = AlphaEvents.UnlockPanel;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = AlphaEvents.UnlockPanel;
 }

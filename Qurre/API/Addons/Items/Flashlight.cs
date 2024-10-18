@@ -15,14 +15,14 @@ public sealed class Flashlight(FlashlightItem itemBase) : Item(itemBase)
     {
     }
 
-    public new FlashlightItem Base { get; } = itemBase;
+    public FlashlightItem GameBase { get; } = itemBase;
 
     public bool Active
     {
-        get => Base.IsEmittingLight;
+        get => GameBase.IsEmittingLight;
         set
         {
-            Base.IsEmittingLight = value;
+            GameBase.IsEmittingLight = value;
             new FlashlightNetworkHandler.FlashlightMessage(Serial, value).SendToAuthenticated();
         }
     }

@@ -17,7 +17,9 @@ public class Scp173AddObserverEvent : IBaseEvent
     public Player Player { get; }
     public Player Scp { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp173AddObserver;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp173AddObserver;
 }
 
 [PublicAPI]
@@ -31,7 +33,9 @@ public class Scp173RemovedObserverEvent : IBaseEvent
 
     public Player Player { get; }
     public Player Scp { get; }
-    public uint EventId { get; } = ScpEvents.Scp173RemovedObserver;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp173RemovedObserver;
 }
 
 [PublicAPI]
@@ -47,5 +51,7 @@ public class Scp173EnableSpeedEvent : IBaseEvent
     public Player Player { get; }
     public bool Value { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp173EnableSpeed;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp173EnableSpeed;
 }

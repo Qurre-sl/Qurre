@@ -12,27 +12,27 @@ public class Throwable(ThrowableItem itemBase) : Item(itemBase)
     {
     }
 
-    public new ThrowableItem Base { get; } = itemBase;
+    public ThrowableItem GameBase { get; } = itemBase;
 
-    public ThrownProjectile Projectile => Base.Projectile;
+    public ThrownProjectile Projectile => GameBase.Projectile;
 
     public new float Weight
     {
-        get => Base._weight;
-        set => Base._weight = value;
+        get => GameBase._weight;
+        set => GameBase._weight = value;
     }
 
     public float PinPullTime
     {
-        get => Base._pinPullTime;
-        set => Base._pinPullTime = value;
+        get => GameBase._pinPullTime;
+        set => GameBase._pinPullTime = value;
     }
 
     public void Throw(bool fullForce = true)
     {
         ThrowableItem.ProjectileSettings projectileSettings =
-            fullForce ? Base.FullThrowSettings : Base.WeakThrowSettings;
-        Base.ServerThrow(projectileSettings.StartVelocity, projectileSettings.UpwardsFactor,
+            fullForce ? GameBase.FullThrowSettings : GameBase.WeakThrowSettings;
+        GameBase.ServerThrow(projectileSettings.StartVelocity, projectileSettings.UpwardsFactor,
             projectileSettings.StartTorque,
             ThrowableNetworkHandler.GetLimitedVelocity(Base.Owner.GetVelocity()));
     }

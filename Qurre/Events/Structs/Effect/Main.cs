@@ -21,7 +21,9 @@ public class EffectEnabledEvent : IBaseEvent
     public StatusEffectBase Effect { get; }
     public EffectType Type { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = EffectEvents.Enabled;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = EffectEvents.Enabled;
 }
 
 [PublicAPI]
@@ -39,5 +41,7 @@ public class EffectDisabledEvent : IBaseEvent
     public StatusEffectBase Effect { get; }
     public EffectType Type { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = EffectEvents.Disabled;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = EffectEvents.Disabled;
 }

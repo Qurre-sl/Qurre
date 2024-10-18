@@ -21,7 +21,9 @@ public class InteractDoorEvent : IBaseEvent
     public Player Player { get; }
     public Door Door { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.InteractDoor;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.InteractDoor;
 }
 
 [PublicAPI]
@@ -39,7 +41,9 @@ public class InteractGeneratorEvent : IBaseEvent
     public Generator Generator { get; }
     public GeneratorStatus Status { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.InteractGenerator;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.InteractGenerator;
 }
 
 [PublicAPI]
@@ -55,7 +59,9 @@ public class InteractLiftEvent : IBaseEvent
     public Player Player { get; }
     public Lift Lift { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.InteractLift;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.InteractLift;
 }
 
 [PublicAPI]
@@ -73,7 +79,9 @@ public class InteractLockerEvent : IBaseEvent
     public Locker Locker { get; }
     public Chamber? Chamber { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.InteractLocker;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.InteractLocker;
 }
 
 [PublicAPI]
@@ -89,7 +97,9 @@ public class InteractScp330Event : IBaseEvent
     public Player Player { get; }
     public Scp330Interobject Scp330 { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.InteractScp330;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.InteractScp330;
 }
 
 [PublicAPI]
@@ -108,7 +118,9 @@ public class InteractShootingTargetEvent : IBaseEvent
     public ShootingTarget ShootingTarget { get; }
     public AdminToys.ShootingTarget.TargetButton Button { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.InteractShootingTarget;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.InteractShootingTarget;
 }
 
 [PublicAPI]
@@ -126,5 +138,7 @@ public class InteractWorkStationEvent : IBaseEvent
     public WorkStation Station { get; }
     public byte ColliderId { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = PlayerEvents.InteractWorkStation;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.InteractWorkStation;
 }

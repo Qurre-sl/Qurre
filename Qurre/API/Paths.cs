@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace Qurre.API;
 
 [PublicAPI]
-public static class Pathes
+public static class Paths
 {
     public static string AppData { get; } = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
     public static string Qurre { get; } = Path.Combine(AppData, "Qurre");

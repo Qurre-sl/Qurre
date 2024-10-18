@@ -11,32 +11,32 @@ public sealed class Usable(UsableItem itemBase) : Item(itemBase)
     {
     }
 
-    public new UsableItem Base { get; } = itemBase;
+    public UsableItem GameBase { get; } = itemBase;
 
-    public bool Equippable => Base.AllowEquip;
-    public bool Holsterable => Base.AllowHolster;
+    public bool Equippable => GameBase.AllowEquip;
+    public bool Holsterable => GameBase.AllowHolster;
 
     public new float Weight
     {
-        get => Base._weight;
-        set => Base._weight = value;
+        get => GameBase._weight;
+        set => GameBase._weight = value;
     }
 
     public float UseTime
     {
-        get => Base.UseTime;
-        set => Base.UseTime = value;
+        get => GameBase.UseTime;
+        set => GameBase.UseTime = value;
     }
 
     public float MaxCancellableTime
     {
-        get => Base.MaxCancellableTime;
-        set => Base.MaxCancellableTime = value;
+        get => GameBase.MaxCancellableTime;
+        set => GameBase.MaxCancellableTime = value;
     }
 
     public float RemainingCooldown
     {
-        get => Base.RemainingCooldown;
-        set => Base.RemainingCooldown = value;
+        get => GameBase.RemainingCooldown;
+        set => GameBase.RemainingCooldown = value;
     }
 }

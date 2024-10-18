@@ -19,10 +19,10 @@ internal static class Plugins
 
     internal static void Init()
     {
-        if (!Directory.Exists(Pathes.Plugins))
+        if (!Directory.Exists(Paths.Plugins))
         {
-            Log.Warn($"Plugins directory not found. Creating: {Pathes.Plugins}");
-            Directory.CreateDirectory(Pathes.Plugins);
+            Log.Warn($"Plugins directory not found. Creating: {Paths.Plugins}");
+            Directory.CreateDirectory(Paths.Plugins);
         }
 
         try
@@ -52,10 +52,10 @@ internal static class Plugins
 
     private static void LoadDependencies()
     {
-        if (!Directory.Exists(Pathes.Dependencies))
-            Directory.CreateDirectory(Pathes.Dependencies);
+        if (!Directory.Exists(Paths.Dependencies))
+            Directory.CreateDirectory(Paths.Dependencies);
 
-        foreach (string dll in Directory.GetFiles(Pathes.Dependencies))
+        foreach (string dll in Directory.GetFiles(Paths.Dependencies))
         {
             if (!dll.EndsWith(".dll") || LoaderManager.Loaded(dll)) continue;
 
@@ -107,7 +107,7 @@ internal static class Plugins
 
     private static void LoadPlugins()
     {
-        foreach (string plugin in Directory.GetFiles(Pathes.Plugins))
+        foreach (string plugin in Directory.GetFiles(Paths.Plugins))
             try
             {
                 Log.Debug($"Loading {plugin}");

@@ -22,7 +22,9 @@ public class RequestPlayerListCommandEvent : IBaseEvent
     public string Command { get; }
     public string Reply { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ServerEvents.RequestPlayerListCommand;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ServerEvents.RequestPlayerListCommand;
 }
 
 [PublicAPI]
@@ -66,7 +68,9 @@ public class RemoteAdminCommandEvent : IBaseEvent
     public string Prefix { get; set; }
     public bool Success { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ServerEvents.RemoteAdminCommand;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ServerEvents.RemoteAdminCommand;
 }
 
 [PublicAPI]
@@ -94,7 +98,9 @@ public class GameConsoleCommandEvent : IBaseEvent
     public string Reply { get; set; }
     public string Color { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ServerEvents.GameConsoleCommand;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ServerEvents.GameConsoleCommand;
 }
 
 [PublicAPI]
@@ -116,5 +122,7 @@ public class ServerConsoleCommandEvent : IBaseEvent
 
     public string Reply { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ServerEvents.ServerConsoleCommand;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ServerEvents.ServerConsoleCommand;
 }

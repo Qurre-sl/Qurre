@@ -20,10 +20,7 @@ internal static class Loader
     {
         foreach (var item in Lists.CallMethods)
         {
-            var onetime = item.Value.OrderByDescending(x => x.Priority);
-
-            item.Value.Clear();
-            item.Value.AddRange(onetime);
+            item.Value.Sort((x, y) => y.Priority.CompareTo(x.Priority));
         }
     }
 
@@ -87,50 +84,20 @@ internal static class Loader
                 catch (Exception ex)
                 {
                     Log.Error(
-                        $"Method '{method.Name}' of class {method.ReflectedType?.FullName} threw an exception. Event ID: {@event.EventId}\n{ex}");
+                        $"Method '{method.Name}' of class '{method.ReflectedType?.FullName}' threw an exception. Event ID: {@event.EventId}\n{ex}");
                 }
 
         if (!Lists.CallMethods.TryGetValue(@event.EventId, out var list))
             return;
 
-        // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
-        foreach (EventCallMethod metStruct in list)
-        {
-            MethodInfo method = metStruct.Info;
+        foreach (IEventCall caller in list)
             try
             {
-                if (method.IsStatic)
-                {
-                    Invoke(null);
-                    continue;
-                }
-
-                if (Lists.ClassesOfNonStaticMethods.TryGetValue(method, out object @class))
-                {
-                    Invoke(@class);
-                }
-                else
-                {
-                    Type? type = method.DeclaringType;
-                    ConstructorInfo? constructor = type?.GetConstructor(Type.EmptyTypes);
-
-                    @class = constructor?.Invoke([]) ?? throw new NullReferenceException(nameof(constructor));
-                    Lists.ClassesOfNonStaticMethods.Add(method, @class);
-
-                    Invoke(@class);
-                }
-
-                void Invoke(object? root)
-                {
-                    if (method.GetParameters().Length == 0) method.Invoke(root, []);
-                    else method.Invoke(root, [@event]);
-                }
+                caller.Call(@event);
             }
             catch (Exception ex)
             {
-                Log.Error(
-                    $"Method '{method.Name}' of class {method.ReflectedType?.FullName} threw an exception. Event ID: {@event.EventId}\n{ex}");
+                Log.Error($"{caller.Identifier} threw an exception. Event ID: {@event.EventId}\n{ex}");
             }
-        }
     }
 }

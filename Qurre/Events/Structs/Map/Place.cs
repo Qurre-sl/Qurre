@@ -21,7 +21,9 @@ public class CreatePickupEvent : IBaseEvent
     public PickupSyncInfo Info { get; }
     public Inventory Inventory { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = MapEvents.CreatePickup;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = MapEvents.CreatePickup;
 }
 
 [PublicAPI]
@@ -37,7 +39,9 @@ public class RagdollSpawnEvent : IBaseEvent
     public Player Owner { get; }
     public DamageHandlerBase Handler { get; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = MapEvents.RagdollSpawn;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = MapEvents.RagdollSpawn;
 }
 
 [PublicAPI]
@@ -49,5 +53,7 @@ public class RagdollSpawnedEvent : IBaseEvent
     }
 
     public Ragdoll Ragdoll { get; }
-    public uint EventId { get; } = MapEvents.RagdollSpawned;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = MapEvents.RagdollSpawned;
 }

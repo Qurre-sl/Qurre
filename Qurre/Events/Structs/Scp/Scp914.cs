@@ -30,7 +30,9 @@ public class Scp914UpgradeEvent : IBaseEvent
     public Scp914Mode Mode { get; set; }
     public Scp914KnobSetting Setting { get; set; }
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp914Upgrade;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp914Upgrade;
 }
 
 [PublicAPI]
@@ -58,7 +60,9 @@ public class Scp914UpgradePickupEvent : IBaseEvent
     }
 
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp914UpgradePickup;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp914UpgradePickup;
 }
 
 [PublicAPI]
@@ -92,5 +96,7 @@ public class Scp914UpgradePlayerEvent : IBaseEvent
     }
 
     public bool Allowed { get; set; }
-    public uint EventId { get; } = ScpEvents.Scp914UpgradePlayer;
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = ScpEvents.Scp914UpgradePlayer;
 }

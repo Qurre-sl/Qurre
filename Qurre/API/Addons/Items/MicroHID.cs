@@ -15,12 +15,12 @@ public sealed class MicroHID(MicroHIDItem itemBase) : Item(itemBase)
     {
     }
 
-    public new MicroHIDItem Base { get; } = itemBase;
+    public MicroHIDItem GameBase { get; } = itemBase;
 
     public float Energy
     {
-        get => Base.RemainingEnergy;
-        set => Base.RemainingEnergy = value;
+        get => GameBase.RemainingEnergy;
+        set => GameBase.RemainingEnergy = value;
     }
 
     /// <summary>
@@ -28,19 +28,19 @@ public sealed class MicroHID(MicroHIDItem itemBase) : Item(itemBase)
     /// </summary>
     public byte EnergyPercent
     {
-        get => Base.EnergyToByte;
-        set => Base.RemainingEnergy = value / 225f;
+        get => GameBase.EnergyToByte;
+        set => GameBase.RemainingEnergy = value / 225f;
     }
 
     public HidState State
     {
-        get => Base.State;
-        set => Base.State = value;
+        get => GameBase.State;
+        set => GameBase.State = value;
     }
 
     public void Fire()
     {
-        Base.UserInput = HidUserInput.Fire;
+        GameBase.UserInput = HidUserInput.Fire;
         State = HidState.Firing;
     }
 }
