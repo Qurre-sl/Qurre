@@ -9,14 +9,14 @@ public readonly struct KillElement : IEquatable<KillElement>
 {
     internal KillElement(Player killer, Player target, DamageTypes type, DateTime offset)
     {
-        Killer = killer;
-        Target = target;
+        Killer = new CachedPlayer(killer);
+        Target = new CachedPlayer(target);
         Type = type;
         Time = offset;
     }
 
-    public Player Killer { get; }
-    public Player Target { get; }
+    public CachedPlayer Killer { get; }
+    public CachedPlayer Target { get; }
     public DamageTypes Type { get; }
     public DateTime Time { get; }
 

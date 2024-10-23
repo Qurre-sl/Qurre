@@ -31,7 +31,7 @@ public sealed class UserInformation
 
     public string CustomInfo
     {
-        get => NicknameSync.Network_customPlayerInfoString;
+        get => NicknameSync.Network_customPlayerInfoString ?? string.Empty;
         set => NicknameSync.Network_customPlayerInfoString = value;
     }
 

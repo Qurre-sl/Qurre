@@ -19,3 +19,17 @@ public class PressAltEvent : IBaseEvent
 
     private const uint EventID = PlayerEvents.PressAlt;
 }
+
+[PublicAPI]
+public class JumpEvent : IBaseEvent
+{
+    internal JumpEvent(Player player)
+    {
+        Player = player;
+    }
+
+    public Player Player { get; }
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = PlayerEvents.Jump;
+}

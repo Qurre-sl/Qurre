@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using PlayerRoles.Voice;
 using Qurre.API;
 using Qurre.API.Controllers;
 
@@ -41,4 +42,20 @@ public class WorkStationUpdateEvent : IBaseEvent
     public uint EventId { get; } = EventID;
 
     private const uint EventID = MapEvents.WorkStationUpdate;
+}
+
+[PublicAPI]
+public class IntercomSetStateEvent : IBaseEvent
+{
+    internal IntercomSetStateEvent(IntercomState state)
+    {
+        State = state;
+        Allowed = true;
+    }
+
+    public IntercomState State { get; set; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = EventID;
+
+    private const uint EventID = MapEvents.IntercomSetState;
 }
