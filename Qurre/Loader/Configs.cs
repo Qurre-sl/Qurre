@@ -27,6 +27,9 @@ internal static class Configs
         RoundEndChaos = Config.SafeGetValue("RoundEndWithScpAndChaos", true,
             "Allow round to end if only SCP and Chaos are left");
 
+        Paths.UpdatePluginsDirectory(
+            Config.SafeGetValue("PluginsDirectory", "Plugins", "Custom Plugins name directory"));
+
         SetupTranslations();
 
         JsonConfig.UpdateFile();

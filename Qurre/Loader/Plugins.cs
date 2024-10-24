@@ -50,24 +50,6 @@ internal static class Plugins
         }
     }
 
-    private static void LoadDependencies()
-    {
-        if (!Directory.Exists(Paths.Dependencies))
-            Directory.CreateDirectory(Paths.Dependencies);
-
-        foreach (string dll in Directory.GetFiles(Paths.Dependencies))
-        {
-            if (!dll.EndsWith(".dll") || LoaderManager.Loaded(dll)) continue;
-
-            Assembly assembly = Assembly.Load(LoaderManager.ReadFile(dll));
-            LoaderManager.LocalLoaded.Add(new AssemblyDep(assembly, dll));
-
-            Log.Custom("Loaded dependency " + assembly.FullName, "Loader", ConsoleColor.Blue);
-        }
-
-        Log.Custom("Dependencies loaded", "Loader", ConsoleColor.Green);
-    }
-
     private static void PatchMethods()
     {
         try
@@ -105,9 +87,39 @@ internal static class Plugins
         }
     }
 
+    private static void LoadDependencies()
+    {
+        if (!Directory.Exists(Paths.Dependencies))
+            Directory.CreateDirectory(Paths.Dependencies);
+
+        List<string> files = [..Directory.GetFiles(Paths.Dependencies)];
+
+        if (Paths.CustomDependencies != Paths.Dependencies && 
+            Directory.Exists(Paths.CustomDependencies))
+            files.AddRange(Directory.GetFiles(Paths.CustomDependencies));
+
+        foreach (string dll in files)
+        {
+            if (!dll.EndsWith(".dll") || LoaderManager.Loaded(dll)) continue;
+
+            Assembly assembly = Assembly.Load(LoaderManager.ReadFile(dll));
+            LoaderManager.LocalLoaded.Add(new AssemblyDep(assembly, dll));
+
+            Log.Custom("Loaded dependency " + assembly.FullName, "Loader", ConsoleColor.Blue);
+        }
+
+        Log.Custom("Dependencies loaded", "Loader", ConsoleColor.Green);
+    }
+
     private static void LoadPlugins()
     {
-        foreach (string plugin in Directory.GetFiles(Paths.Plugins))
+        List<string> files = [..Directory.GetFiles(Paths.Plugins)];
+
+        if (Paths.CustomPlugins != Paths.Plugins &&
+            Directory.Exists(Paths.CustomPlugins))
+            files.AddRange(Directory.GetFiles(Paths.CustomPlugins));
+
+        foreach (string plugin in files)
             try
             {
                 Log.Debug($"Loading {plugin}");
