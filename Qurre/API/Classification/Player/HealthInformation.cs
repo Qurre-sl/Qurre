@@ -19,7 +19,7 @@ public sealed class HealthInformation
 
     public PlayerStats PlayerStats
         => _player.ReferenceHub.playerStats;
-
+    
     public HealthStat HealthStat
         => (HealthStat)PlayerStats.StatModules[0];
 

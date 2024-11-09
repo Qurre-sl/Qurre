@@ -14,7 +14,7 @@ public static class Paths
     public static string Dependencies { get; } = Path.Combine(Plugins, "Dependencies");
 
     public static string CustomPlugins { get; private set; } = Path.Combine(Qurre, "Plugins");
-    public static string CustomDependencies { get; private set; } = Path.Combine(Plugins, "Dependencies");
+    public static string CustomDependencies { get; private set; } = Path.Combine(CustomPlugins, "Dependencies");
 
     public static string Configs { get; } = Path.Combine(Qurre, "Configs");
 
@@ -27,6 +27,6 @@ public static class Paths
     internal static void UpdatePluginsDirectory(string pluginsDirectory)
     {
         CustomPlugins = Path.Combine(Qurre, pluginsDirectory);
-        CustomDependencies = Path.Combine(Plugins, "Dependencies");
+        CustomDependencies = Path.Combine(CustomPlugins, "Dependencies");
     }
 }
