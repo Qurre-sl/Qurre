@@ -29,9 +29,13 @@ public static class Server
     {
         get
         {
-            if (_host?.ReferenceHub is null)
-                _host = new Player(ReferenceHub.HostHub);
+            if (_host?.ReferenceHub is not null)
+                return _host;
 
+            if (!ReferenceHub.TryGetHostHub(out ReferenceHub? hub))
+                throw new NullReferenceException("ReferenceHub could not be found");
+
+            _host = new Player(hub);
             return _host;
         }
     }
@@ -40,7 +44,7 @@ public static class Server
     {
         get
         {
-            _hostInv ??= ReferenceHub.HostHub.inventory;
+            _hostInv ??= Host.ReferenceHub.inventory;
             return _hostInv;
         }
     }

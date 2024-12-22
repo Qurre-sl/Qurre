@@ -22,8 +22,6 @@ public class Window
     public GameObject GameObject => Breakable.gameObject;
     public Transform Transform => Breakable.transform;
     public Footprint LastAttacker => Breakable.LastAttacker;
-    public bool Destroyed => Breakable.isBroken;
-    public Vector3 Size => Breakable.size;
 
     public string Name
     {
@@ -39,13 +37,9 @@ public class Window
 
     public Vector3 Position
     {
-        get => Status.position;
+        get => Transform.position;
         set
         {
-            BreakableWindow.BreakableWindowStatus status = Status;
-            status.position = value;
-            Status = status;
-
             NetworkServer.UnSpawn(GameObject);
             Transform.position = value;
             NetworkServer.Spawn(GameObject);
@@ -54,13 +48,9 @@ public class Window
 
     public Quaternion Rotation
     {
-        get => Status.rotation;
+        get => Transform.rotation;
         set
         {
-            BreakableWindow.BreakableWindowStatus status = Status;
-            status.rotation = value;
-            Status = status;
-
             NetworkServer.UnSpawn(GameObject);
             Transform.rotation = value;
             NetworkServer.Spawn(GameObject);
@@ -78,15 +68,21 @@ public class Window
         }
     }
 
+    public bool PreventScpDamage
+    {
+        get => Breakable._preventScpDamage;
+        set => Breakable._preventScpDamage = value;
+    }
+
     public float Hp
     {
         get => Breakable.health;
         set => Breakable.health = value;
     }
 
-    public BreakableWindow.BreakableWindowStatus Status
+    public bool IsBroken
     {
-        get => Breakable.NetworksyncStatus;
-        set => Breakable.UpdateStatus(value);
+        get => Breakable.NetworkisBroken;
+        set => Breakable.NetworkisBroken = value;
     }
 }

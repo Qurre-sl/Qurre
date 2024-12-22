@@ -10,7 +10,7 @@ using Qurre.Events.Structs;
 
 namespace Qurre.Internal.Patches.PlayerEvents.Interact;
 
-[HarmonyPatch(typeof(ElevatorManager), nameof(ElevatorManager.ServerReceiveMessage))]
+[HarmonyPatch(typeof(ElevatorChamber), nameof(ElevatorChamber.ServerInteract))]
 [SuppressMessage("ReSharper", "UnusedMember.Local")]
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 internal static class InteractLift
@@ -27,8 +27,8 @@ internal static class InteractLift
 
         int index = list.FindIndex(ins => ins.opcode == OpCodes.Call && ins.operand is MethodBase
         {
-            Name: nameof(ElevatorManager.TrySetDestination)
-        }) - 3;
+            Name: nameof(ElevatorChamber.ServerSetDestination)
+        }) - 4;
 
         if (index < 0)
         {
@@ -38,11 +38,11 @@ internal static class InteractLift
 
         list.InsertRange(index,
         [
-            new CodeInstruction(OpCodes.Ldloc_0).MoveLabelsFrom(list[index]), // hub [ReferenceHub]
+            new CodeInstruction(OpCodes.Ldarg_1).MoveLabelsFrom(list[index]), // ReferenceHub ply
             new CodeInstruction(OpCodes.Call,
                 AccessTools.Method(typeof(Extensions), nameof(Extensions.GetPlayer), [typeof(ReferenceHub)])),
 
-            new CodeInstruction(OpCodes.Ldloc_3), // [ElevatorChamber]
+            new CodeInstruction(OpCodes.Ldarg_0), // this
             new CodeInstruction(OpCodes.Call,
                 AccessTools.Method(typeof(Extensions), nameof(Extensions.GetLift), [typeof(ElevatorChamber)])),
 

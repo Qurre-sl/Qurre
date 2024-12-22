@@ -17,11 +17,6 @@ internal static class Detonate
     {
         List<CodeInstruction> list = [..instructions];
 
-        int index = list.FindIndex(ins => ins.opcode == OpCodes.Ldarg_0);
-
-        list[index].ExtractLabels();
-        list.RemoveRange(0, index);
-
         list.InsertRange(0,
         [
             new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(AlphaDetonateEvent))[0]),
@@ -33,7 +28,6 @@ internal static class Detonate
     }
 }
 /*
- * < Remove nwapi event, because "if(!allowed) return;" doesn't work, bruh >
  * new AlphaDetonateEvent().InvokeEvent();
  * ...
  */

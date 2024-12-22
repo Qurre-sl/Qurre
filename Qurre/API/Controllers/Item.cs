@@ -149,8 +149,6 @@ public class Item
         ipb.Position = position;
         ipb.Rotation = rotation;
 
-        if (ipb is FirearmPickup firearmPickup) firearmPickup.NetworkStatus = firearmPickup.Status;
-
         NetworkServer.Spawn(ipb.gameObject);
 
         Pickup? pickup = Pickup.Get(ipb);

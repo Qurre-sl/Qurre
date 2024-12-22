@@ -11,7 +11,7 @@ public static class Alpha
     public static AlphaWarheadNukesitePanel InnerPanel => Object.FindObjectOfType<AlphaWarheadNukesitePanel>();
     public static AlphaWarheadOutsitePanel OutsidePanel => Object.FindObjectOfType<AlphaWarheadOutsitePanel>();
     public static GameObject InnerPanelLever => InnerPanel.lever.gameObject;
-    public static bool Detonated => Controller._alreadyDetonated;
+    public static bool Detonated => Controller.AlreadyDetonated;
     public static bool Active => Controller.Info.InProgress;
 
     public static bool InnerPanelEnabled

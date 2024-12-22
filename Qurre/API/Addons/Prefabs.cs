@@ -29,6 +29,9 @@ public static class Prefabs
 
     public static GameObject? Light { get; private set; }
 
+
+    public static GameObject? Speaker { get; private set; }
+
     public static GameObject? Tantrum { get; private set; }
 
     public static GameObject? Cloud { get; private set; }
@@ -124,6 +127,16 @@ public static class Prefabs
                         LocalLockers[LockerPrefabs.AdrenalineMedkit] = locker;
                         break;
 
+                    case "1883254029" when prefab.Value.TryGetComponent<BreakableDoor>(out BreakableDoor? door):
+                        LocalDoors[DoorPrefabs.DoorEZ] = door;
+                        break;
+                    case "2295511789" when prefab.Value.TryGetComponent<BreakableDoor>(out BreakableDoor? door):
+                        LocalDoors[DoorPrefabs.DoorHCZ] = door;
+                        break;
+                    case "3038351124" when prefab.Value.TryGetComponent<BreakableDoor>(out BreakableDoor? door):
+                        LocalDoors[DoorPrefabs.DoorLCZ] = door;
+                        break;
+
                     case "1704345398":
                         LocalTargets[TargetPrefabs.Sport] = prefab.Value;
                         break;
@@ -142,6 +155,9 @@ public static class Prefabs
                         break;
                     case "825024811":
                         Cloud = prefab.Value;
+                        break;
+                    case "712426663":
+                        Speaker = prefab.Value;
                         break;
                 }
         }

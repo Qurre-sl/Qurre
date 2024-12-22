@@ -22,17 +22,17 @@ using Object = Object;
 [PublicAPI]
 public static class Audio
 {
-    internal static AudioPlayer? LocalHostAudioPlayer;
+    internal static AudioPlayerBot? LocalHostAudioPlayer;
 
     /// <summary>
     ///     Audio player that plays on behalf of the host.
     /// </summary>
-    public static AudioPlayer HostAudioPlayer => LocalHostAudioPlayer ??= new AudioPlayer(ReferenceHub.HostHub);
+    public static AudioPlayerBot HostBaseAudioPlayer => LocalHostAudioPlayer ??= new AudioPlayerBot(ReferenceHub._hostHub);
 
     /// <summary>
     ///     Play audio to a global channel.
     /// </summary>
-    /// <param name="audioPlayer">Audio player for playback</param>
+    /// <param name="audioPlayerBot">Audio player for playback</param>
     /// <param name="nickname">Audio player nickname</param>
     /// <param name="audio">Audio to play</param>
     /// <param name="addDecibels">The number of decibels added to the volume of the playback</param>
@@ -42,7 +42,7 @@ public static class Audio
     /// <returns>New instance of <see cref="AudioTask" />.</returns>
     /// <exception cref="System.ArgumentNullException" />
     public static AudioTask PlayAudioInGlobalChannel(
-        AudioPlayer audioPlayer,
+        AudioPlayerBot audioPlayerBot,
         string nickname,
         IAudio audio,
         float addDecibels = 0.0F,
@@ -51,13 +51,13 @@ public static class Audio
         bool isLoop = false
     )
     {
-        if (audioPlayer is null)
-            throw new ArgumentNullException(nameof(audioPlayer));
+        if (audioPlayerBot is null)
+            throw new ArgumentNullException(nameof(audioPlayerBot));
         if (audio is null)
             throw new ArgumentNullException(nameof(audio));
 
-        audioPlayer.ReferenceHub.nicknameSync.Network_myNickSync = nickname;
-        return audioPlayer.Play(audio, VoiceChatChannel.Intercom, addDecibels, isMute, isPause, isLoop);
+        audioPlayerBot.ReferenceHub.nicknameSync.Network_myNickSync = nickname;
+        return audioPlayerBot.Play(audio, VoiceChatChannel.Intercom, addDecibels, isMute, isPause, isLoop);
     }
 
     /// <summary>
@@ -83,7 +83,7 @@ public static class Audio
         if (audio is null)
             throw new ArgumentNullException(nameof(audio));
 
-        return PlayAudioInGlobalChannel(HostAudioPlayer, nickname, audio, addDecibels, isMute, isPause, isLoop);
+        return PlayAudioInGlobalChannel(HostBaseAudioPlayer, nickname, audio, addDecibels, isMute, isPause, isLoop);
     }
 
     /// <summary>
@@ -94,7 +94,7 @@ public static class Audio
     /// <param name="position">Bot position</param>
     /// <param name="rotation">Bot rotation</param>
     /// <returns>Audio player played on behalf of a bot.</returns>
-    public static AudioPlayer CreateNewAudioPlayer(string nickname, RoleTypeId role, Vector3 position, Vector3 rotation)
+    public static AudioPlayerBot CreateNewAudioPlayer(string nickname, RoleTypeId role, Vector3 position, Vector3 rotation)
     {
         // Spawn a new bot.
         GameObject? botObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
@@ -116,6 +116,6 @@ public static class Audio
         });
 
         // Creating a new player.
-        return new AudioPlayer(referenceHub);
+        return new AudioPlayerBot(referenceHub);
     }
 }

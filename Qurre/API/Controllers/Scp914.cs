@@ -17,6 +17,7 @@ public static class Scp914
 
     public static GameObject GameObject => Controller.gameObject;
     public static bool Working => Controller._isUpgrading;
+    public static Vector3 MoveVector => Scp914Controller.MoveVector;
 
     public static Scp914KnobSetting KnobState
     {

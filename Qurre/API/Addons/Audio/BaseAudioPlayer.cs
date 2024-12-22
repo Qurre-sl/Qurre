@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using MEC;
+using Mirror;
 using Qurre.API.Addons.Audio.Objects;
 using UnityEngine;
 using VoiceChat;
@@ -12,27 +13,21 @@ using VoiceChat.Networking;
 
 namespace Qurre.API.Addons.Audio;
 
-/// <summary>
-///     Audio player for playing sounds on behalf of an entity via SCP:SL voice chat.
-/// </summary>
 [PublicAPI]
-public sealed class AudioPlayer : IEquatable<AudioPlayer>
+public abstract class BaseAudioPlayer : IEquatable<BaseAudioPlayer>
 {
-    private const int SamplesBufferLength = 480; // VoiceChat.Networking.VoiceTransceiver._packageSize
-    private const int EncoderBufferLength = 512; // VoiceChat.Networking.VoiceTransceiver._encodedBuffer.Length
-    internal static readonly List<AudioPlayer> Players = [];
+    protected const int SamplesBufferLength = 480; // VoiceChat.Networking.VoiceTransceiver._packageSize
+    protected const int EncoderBufferLength = 512; // VoiceChat.Networking.VoiceTransceiver._encodedBuffer.Length
+    internal static readonly List<BaseAudioPlayer> Players = [];
 
     private static int _idCounter;
 
     /// <summary>
-    ///     Initializes a new instance of the <see cref="AudioPlayer" /> class.
+    ///     Initializes a new instance of the <see cref="BaseAudioPlayer" /> class.
     /// </summary>
-    /// <param name="referenceHub"><see cref="global::ReferenceHub" /> of the audio source.</param>
-    /// <exception cref="ArgumentNullException" />
-    public AudioPlayer(ReferenceHub referenceHub)
+    protected BaseAudioPlayer()
     {
         Id = _idCounter++;
-        ReferenceHub = referenceHub ?? throw new ArgumentNullException(nameof(referenceHub));
         AudioTasks = new Queue<AudioTask>();
         _encoder = new OpusEncoder(OpusApplicationType.Voip);
 
@@ -40,16 +35,16 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
     }
 
     /// <inheritdoc />
-    public bool Equals(AudioPlayer audioPlayer)
+    public bool Equals(BaseAudioPlayer baseAudioPlayer)
     {
-        return Id == audioPlayer.Id;
+        return Id == baseAudioPlayer.Id;
     }
 
     /// <summary>
     ///     Launch an instance of the <see cref="Timing" /> coroutine that executes the player code.
     /// </summary>
     /// <returns>Has a new coroutine instance been created? (false when it's already running)</returns>
-    public bool RunCoroutine()
+    public virtual bool RunCoroutine()
     {
         if (_coroutineHandler.IsRunning) return false;
 
@@ -61,7 +56,7 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
     ///     Kill an instance of the <see cref="Timing" /> coroutine that executes the player code.
     /// </summary>
     /// <returns>Was the current coroutine instance killed? (false when it's already killed)</returns>
-    public bool KillCoroutine()
+    public virtual bool KillCoroutine()
     {
         if (!_coroutineHandler.IsRunning) return false;
 
@@ -74,6 +69,11 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
     }
 
     /// <summary>
+    ///     Hook destroys method
+    /// </summary>
+    public abstract void DestroySelf();
+
+    /// <summary>
     ///     Force start playing a new audio task (Bypassing the queue)
     /// </summary>
     /// <param name="audio">Audio to play</param>
@@ -84,7 +84,7 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
     /// <param name="isLoop">Loop the audio task?</param>
     /// <returns>New instance of <see cref="AudioTask" />.</returns>
     /// <exception cref="ArgumentNullException" />
-    public AudioTask ForcePlay(
+    public virtual AudioTask ForcePlay(
         IAudio audio,
         VoiceChatChannel voiceChannel = VoiceChatChannel.Proximity,
         float addDecibels = 0.0F,
@@ -102,8 +102,9 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
 
     #region Internal Methods
 
-    private IEnumerator<float> MainCoroutine()
+    protected virtual IEnumerator<float> MainCoroutine()
     {
+        const int channelId = 0;
         float[] samplesBuffer = new float[SamplesBufferLength];
         byte[] encodedBuffer = new byte[EncoderBufferLength];
 
@@ -154,18 +155,12 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
                 // We encode the samples and create a new voice message.
                 int dataLength = _encoder.Encode(samplesBuffer, encodedBuffer);
 
-                VoiceMessage voiceMessage = new(
-                    ReferenceHub,
-                    CurrentAudioTask.VoiceChannel,
-                    encodedBuffer,
-                    dataLength,
-                    false
-                );
+                ArraySegment<byte> messageSegment = SerializeAndPackToDataSegment(dataLength, encodedBuffer, channelId);
 
                 // We send a voice message to every player on the server, except the host and speaker.
                 foreach (ReferenceHub? referenceHub in ReferenceHub.AllHubs)
                 {
-                    if (referenceHub == ReferenceHub || referenceHub?.connectionToClient == null) continue;
+                    if (!GetIsAllowedToPlay(referenceHub) || referenceHub?.connectionToClient == null) continue;
 
                     // We check the target for presence in the white and blacklists.
                     bool allowed = true;
@@ -175,7 +170,7 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
                         allowed &= CurrentAudioTask.Whitelist.Contains(referenceHub);
                     if (!allowed) continue;
 
-                    referenceHub.connectionToClient.Send(voiceMessage);
+                    referenceHub.connectionToClient.Send(messageSegment, channelId);
                 }
 
                 // We make a delay before the next iteration.
@@ -212,12 +207,16 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
         // ReSharper disable once IteratorNeverReturns
     }
 
+    protected virtual bool GetIsAllowedToPlay(ReferenceHub referenceHub) => true;
+
+    protected abstract ArraySegment<byte> SerializeAndPackToDataSegment(int dataLength, byte[] dataBuffer, int channelId = 0);
+
     #endregion
 
     /// <inheritdoc />
     public override bool Equals(object? obj)
     {
-        return obj is AudioPlayer audioPlayer && audioPlayer.Equals(this);
+        return obj is BaseAudioPlayer audioPlayer && audioPlayer.Equals(this);
     }
 
     /// <inheritdoc />
@@ -226,12 +225,12 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
         return Id;
     }
 
-    public static bool operator ==(AudioPlayer? a, AudioPlayer? b)
+    public static bool operator ==(BaseAudioPlayer? a, BaseAudioPlayer? b)
     {
         return a?.Id == b?.Id;
     }
 
-    public static bool operator !=(AudioPlayer? a, AudioPlayer? b)
+    public static bool operator !=(BaseAudioPlayer? a, BaseAudioPlayer? b)
     {
         return !(a == b);
     }
@@ -253,11 +252,6 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
     public int Id { get; }
 
     /// <summary>
-    ///     <see cref="global::ReferenceHub" /> of the entity on whose behalf the playback is taking place.
-    /// </summary>
-    public ReferenceHub ReferenceHub { get; }
-
-    /// <summary>
     ///     Queue of audio tasks for playback.
     /// </summary>
     public Queue<AudioTask> AudioTasks { get; }
@@ -265,7 +259,7 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
     /// <summary>
     ///     The currently playing audio task.
     /// </summary>
-    public AudioTask? CurrentAudioTask { get; private set; }
+    public AudioTask? CurrentAudioTask { get; protected set; }
 
     #endregion
 
@@ -290,7 +284,7 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
     /// <param name="isLoop">Loop the audio task?</param>
     /// <returns>New instance of <see cref="AudioTask" />.</returns>
     /// <exception cref="ArgumentNullException" />
-    public AudioTask Play(
+    public virtual AudioTask Play(
         IAudio audio,
         VoiceChatChannel voiceChannel = VoiceChatChannel.Proximity,
         float addDecibels = 0.0F,
@@ -312,7 +306,7 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
     /// </summary>
     /// <param name="audioTask">Audio task to skip</param>
     /// <exception cref="ArgumentNullException" />
-    public void Skip(AudioTask audioTask)
+    public virtual void Skip(AudioTask audioTask)
     {
         if (audioTask == null)
             throw new ArgumentNullException(nameof(audioTask));
@@ -326,7 +320,7 @@ public sealed class AudioPlayer : IEquatable<AudioPlayer>
     /// <summary>
     ///     Skip the current audio task.
     /// </summary>
-    public void Skip()
+    public virtual void Skip()
     {
         CurrentAudioTask?.Skip();
     }

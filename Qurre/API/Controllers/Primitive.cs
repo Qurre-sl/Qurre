@@ -17,39 +17,50 @@ public class Primitive
     internal static readonly HashSet<Primitive> CachedToSetStatic = [];
     internal static readonly HashSet<Primitive> NonStaticPrims = [];
 
-    public Primitive(PrimitiveType type, Vector3 position = default, Color color = default,
-        Quaternion rotation = default, Vector3 size = default, bool collider = true)
+    public PrimitiveObjectToy Base { get; }
+
+    public Vector3 Position
     {
-        if (Prefabs.Primitive == null)
-            throw new NullReferenceException(nameof(Prefabs.Primitive));
-
-        if (!Prefabs.Primitive.TryGetComponent<AdminToyBase>(out AdminToyBase? primitiveToyBase))
-            throw new NullReferenceException("AdminToyBase not found");
-
-        AdminToyBase prim = Object.Instantiate(primitiveToyBase, position, rotation);
-
-        Base = (PrimitiveObjectToy)prim;
-        Base.SpawnerFootprint = new Footprint(Server.Host.ReferenceHub);
-        NetworkServer.Spawn(Base.gameObject);
-
-        Base.NetworkPrimitiveType = type;
-        Base.NetworkMaterialColor = color == default ? Color.white : color;
-        Base.NetworkPrimitiveFlags = PrimitiveFlags.Collidable | PrimitiveFlags.Visible;
-
-        Base.transform.localPosition = position;
-        Base.transform.localRotation = rotation;
-        Base.transform.localScale = size == default ? Vector3.one : size;
-
-        Base.NetworkScale = Base.transform.lossyScale;
-        Base.NetworkPosition = Base.transform.position;
-        Base.NetworkRotation = new LowPrecisionQuaternion(Base.transform.rotation);
-
-        Collider = collider;
-        Map.Primitives.Add(this);
-        NonStaticPrims.Add(this);
+        get => Base.transform.position;
+        set
+        {
+            Base.transform.position = value;
+            Base.NetworkPosition = value;
+        }
     }
 
-    public PrimitiveObjectToy Base { get; }
+    public Quaternion RotationQuaternion
+    {
+        get => Base.transform.rotation;
+        set
+        {
+            Base.transform.rotation = value;
+            Base.NetworkRotation = value;
+        }
+    }
+
+    public Vector3 RotationEuler
+    {
+        get => Base.transform.localRotation.eulerAngles;
+        set
+        {
+            var quaternion = Quaternion.Euler(value);
+            Base.transform.localRotation = quaternion;
+            Base.NetworkRotation = quaternion;
+        }
+    }
+
+    public Vector3 Scale
+    {
+        get => Base.transform.localScale;
+        set
+        {
+            Base.transform.localScale = value;
+            Base.NetworkScale = Base.transform.lossyScale;
+        }
+    }
+
+    public Vector3 GlobalScale => Base.transform.lossyScale;
 
     public byte MovementSmoothing
     {
@@ -65,7 +76,7 @@ public class Primitive
             if (value)
             {
                 Base.NetworkPosition = Base.transform.position;
-                Base.NetworkRotation = new LowPrecisionQuaternion(Base.transform.rotation);
+                Base.NetworkRotation = Base.transform.rotation;
                 Base.NetworkScale = Base.transform.lossyScale;
             }
 
@@ -90,38 +101,23 @@ public class Primitive
         }
     }
 
-    public Vector3 Position
+    public Color Color
     {
-        get => Base.transform.position;
-        set
-        {
-            Base.transform.position = value;
-            Base.NetworkPosition = Base.transform.position;
-        }
+        get => Base.NetworkMaterialColor;
+        set => Base.NetworkMaterialColor = value;
     }
 
-    public Quaternion Rotation
+    public PrimitiveType Type
     {
-        get => Base.transform.rotation;
-        set
-        {
-            Base.transform.rotation = value;
-            Base.NetworkRotation = new LowPrecisionQuaternion(Base.transform.rotation);
-        }
+        get => Base.NetworkPrimitiveType;
+        set => Base.NetworkPrimitiveType = value;
     }
 
-    public Vector3 Scale
+    public PrimitiveFlags Flags
     {
-        get => Base.transform.localScale;
-        set
-        {
-            Base.transform.localScale = value;
-            Base.NetworkScale = Base.transform.lossyScale;
-        }
+        get => Base.NetworkPrimitiveFlags;
+        set => Base.NetworkPrimitiveFlags = value;
     }
-
-    public Vector3 GlobalScale
-        => Base.transform.lossyScale;
 
     public bool Collider
     {
@@ -135,22 +131,43 @@ public class Primitive
         }
     }
 
-    public PrimitiveFlags Flags
+    public bool Visible
     {
-        get => Base.NetworkPrimitiveFlags;
-        set => Base.NetworkPrimitiveFlags = value;
+        get => Flags.HasFlag(PrimitiveFlags.Visible);
+        set
+        {
+            if (!value)
+                Flags &= ~PrimitiveFlags.Visible;
+            else
+                Flags |= PrimitiveFlags.Visible;
+        }
     }
 
-    public Color Color
+    public Primitive(PrimitiveType type, Vector3 position = default, Color color = default,
+        Quaternion rotation = default, Vector3 size = default, bool collider = true,
+        bool visible = true)
     {
-        get => Base.MaterialColor;
-        set => Base.NetworkMaterialColor = value;
-    }
+        if (Prefabs.Primitive == null)
+            throw new NullReferenceException(nameof(Prefabs.Primitive));
 
-    public PrimitiveType Type
-    {
-        get => Base.PrimitiveType;
-        set => Base.NetworkPrimitiveType = value;
+        if (!Prefabs.Primitive.TryGetComponent<PrimitiveObjectToy>(out var primitiveToyBase))
+            throw new NullReferenceException("PrimitiveObjectToy not found");
+
+        Base = Object.Instantiate(primitiveToyBase);
+        Base.SpawnerFootprint = new Footprint(Server.Host.ReferenceHub);
+        NetworkServer.Spawn(Base.gameObject);
+
+        Position = position;
+        RotationQuaternion = rotation;
+        Scale = size == default ? Vector3.one : size;
+
+        Type = type;
+        Color = color == default ? Color.white : color;
+        Collider = collider;
+        Visible = visible;
+
+        Map.Primitives.Add(this);
+        NonStaticPrims.Add(this);
     }
 
     public void Destroy()

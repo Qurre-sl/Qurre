@@ -127,9 +127,13 @@ public class Door
     {
         get
         {
-            if (DoorVariant is PryableDoor pry)
-                return pry.TryPryGate(ReferenceHub.HostHub);
-            return false;
+            if (DoorVariant is not PryableDoor pry)
+                return false;
+
+            if (!ReferenceHub.TryGetHostHub(out ReferenceHub? hub))
+                return false;
+            
+            return pry.TryPryGate(hub);
         }
     }
 
@@ -438,10 +442,10 @@ public class Door
 
                         switch (elev.Group)
                         {
-                            case ElevatorManager.ElevatorGroup.GateA:
+                            case ElevatorGroup.GateA:
                                 Type = DoorType.EzGateA;
                                 return;
-                            case ElevatorManager.ElevatorGroup.GateB:
+                            case ElevatorGroup.GateB:
                                 Type = DoorType.EzGateB;
                                 return;
                         }

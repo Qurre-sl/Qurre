@@ -6,7 +6,6 @@ using InventorySystem.Items.Firearms;
 using InventorySystem.Items.Firearms.Attachments;
 using InventorySystem.Items.Pickups;
 using JetBrains.Annotations;
-using Qurre.API.Addons.Items;
 using Qurre.API.Classification.Structs;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
@@ -157,8 +156,8 @@ public sealed class Inventory
         Base.UserInventory.Items[itemBase.PickupDropModel.NetworkInfo.Serial] = itemBase;
         itemBase.OnAdded(itemBase.PickupDropModel);
 
-        if (itemBase is Firearm)
-            AttachmentsServerHandler.SetupProvidedWeapon(_player.ReferenceHub, itemBase);
+        if (itemBase is Firearm firearm)
+            SetupFirearmAttachments(_player.ReferenceHub, firearm);
 
         Base.SendItemsNextFrame = true;
 
@@ -181,22 +180,10 @@ public sealed class Inventory
 
     public Item? AddItem(ItemType itemType)
     {
-        Item? item = Item.Get(Base.ServerAddItem(itemType));
-
-        if (item is not Gun gun)
-            return item;
-
-        if (AttachmentsServerHandler.PlayerPreferences.TryGetValue(_player.ReferenceHub, out var dict)
-            && dict.TryGetValue(itemType, out uint code))
-            gun.GameBase.ApplyAttachmentsCode(code, true);
-
-        FirearmStatusFlags status = FirearmStatusFlags.MagazineInserted;
-        if (gun.GameBase.HasAdvantageFlag(AttachmentDescriptiveAdvantages.Flashlight))
-            status |= FirearmStatusFlags.FlashlightEnabled;
-
-        gun.GameBase.Status = new FirearmStatus(gun.MaxAmmo, status, gun.GameBase.GetCurrentAttachmentsCode());
-
-        return item;
+        ItemBase? itemBase = Base.ServerAddItem(itemType, ItemAddReason.Undefined);
+        if (itemBase is Firearm firearm)
+            SetupFirearmAttachments(_player.ReferenceHub, firearm);
+        return Item.Get(itemBase);
     }
 
     public void AddItem(ItemType itemType, uint amount)
@@ -230,5 +217,19 @@ public sealed class Inventory
             return;
 
         Base.ServerRemoveItem(item.Serial, item.Pickup.Base);
+    }
+    
+    
+    private static void SetupFirearmAttachments(ReferenceHub referenceHub, Firearm firearm)
+    {
+        if (!AttachmentsServerHandler.PlayerPreferences.TryGetValue(referenceHub, out var itemPreferences) ||
+            !itemPreferences.TryGetValue(firearm.ItemTypeId, out uint attachmentsCode))
+        {
+            attachmentsCode = 0U;
+        }
+
+        firearm.ApplyAttachmentsCode(attachmentsCode, reValidate: true);
+        firearm.ServerResendAttachmentCode();
+        AttachmentsServerHandler.ServerApplyPreference(referenceHub, firearm.ItemTypeId, attachmentsCode);
     }
 }

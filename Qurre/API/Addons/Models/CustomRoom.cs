@@ -36,7 +36,7 @@ public class CustomRoom : Model
     {
         if (addToList)
         {
-            Intensity = Math.Max(Intensity, light.Light.Intensivity);
+            Intensity = Math.Max(Intensity, light.Light.Intensity);
             _colors.Add(light, light.Light.Color);
             LastColor = light.Light.Color;
         }

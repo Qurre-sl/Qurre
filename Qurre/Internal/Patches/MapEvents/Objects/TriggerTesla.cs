@@ -35,7 +35,7 @@ internal static class TriggerTesla
 
             if (!NetworkServer.active)
             {
-                foreach (TeslaGate teslaGate2 in instance.TeslaGates)
+                foreach (TeslaGate teslaGate2 in TeslaGate.AllGates)
                     teslaGate2.ClientSideCode();
                 return;
             }
@@ -43,7 +43,7 @@ internal static class TriggerTesla
             List<Player> players = [..Player.List.Where(x => !x.IsHost && x.RoleInformation.IsAlive)];
 
             // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
-            foreach (TeslaGate teslaGate in instance.TeslaGates)
+            foreach (TeslaGate teslaGate in TeslaGate.AllGates)
             {
                 if (!teslaGate.isActiveAndEnabled)
                     continue;

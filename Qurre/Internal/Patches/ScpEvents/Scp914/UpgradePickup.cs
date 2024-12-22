@@ -16,19 +16,19 @@ namespace Qurre.Internal.Patches.ScpEvents.Scp914;
 internal static class UpgradePickup
 {
     [HarmonyPrefix]
-    private static bool Call(ItemPickupBase pickup, ref bool upgradeDropped, ref Vector3 moveVector,
+    private static bool Call(ItemPickupBase pickup, ref bool upgradeDropped,
         ref Scp914KnobSetting setting)
     {
         try
         {
-            Scp914UpgradePickupEvent ev = new(pickup, upgradeDropped, moveVector, setting);
+            Scp914UpgradePickupEvent ev = new(pickup, upgradeDropped, API.Controllers.Scp914.MoveVector, setting);
             ev.InvokeEvent();
 
             if (!ev.Allowed)
                 return false;
 
             upgradeDropped = ev.UpgradeDropped;
-            moveVector = ev.Move;
+            // moveVector = ev.Move;
             setting = ev.Setting;
 
             return true;

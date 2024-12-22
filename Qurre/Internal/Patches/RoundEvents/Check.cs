@@ -170,7 +170,7 @@ internal static class Check
             string text = $"Round finished! Anomalies: {scp} | Chaos: {list.chaos_insurgents} | " +
                           $"Facility Forces: {list.mtf_and_guards} | D escaped: {dBoys} | Scientists escaped: {scientists}";
             Console.AddLog(text, Color.gray);
-            ServerLogs.AddLog(ServerLogs.Modules.Logger, text, ServerLogs.ServerLogType.GameEvent);
+            ServerLogs.AddLog(ServerLogs.Modules.GameLogic, text, ServerLogs.ServerLogType.GameEvent);
 
             yield return Timing.WaitForSeconds(0.5f);
 

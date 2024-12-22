@@ -25,7 +25,7 @@ public static class AudioExtensions
 
     private const BindingFlags MimicPointPropertiesBindingFlags = BindingFlags.Instance | BindingFlags.NonPublic;
 
-    public static AudioPlayer PlayFromAll(
+    public static AudioPlayerBot PlayFromAll(
         string file,
         string botName = "Dummy",
         List<IAccessConditions>? whitelist = null,
@@ -37,7 +37,7 @@ public static class AudioExtensions
             botName, whitelist, blacklist);
     }
 
-    public static AudioPlayer PlayFromAll(
+    public static AudioPlayerBot PlayFromAll(
         Stream stream,
         string botName = "Dummy",
         List<IAccessConditions>? whitelist = null,
@@ -48,7 +48,7 @@ public static class AudioExtensions
         StreamAudio streamAudio = new(stream);
 
         // Create and run player
-        AudioPlayer audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
+        AudioPlayerBot audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
         audioPlayer.RunCoroutine();
         AudioTask audioTask = audioPlayer.Play(streamAudio, VoiceChatChannel.Mimicry);
 
@@ -80,7 +80,7 @@ public static class AudioExtensions
         static IEnumerator<float> DoMimicPointForcePositionJob(
             AudioTask audioTask,
             MimicPointController mimicPoint,
-            AudioPlayer audioPlayer
+            BaseAudioPlayer audioPlayer
         )
         {
             Type type = typeof(MimicPointController);
@@ -106,12 +106,12 @@ public static class AudioExtensions
                 yield return Timing.WaitForOneFrame;
             }
 
-            audioPlayer.DestroyPlayer();
+            audioPlayer.DestroySelf();
         }
     }
 
 
-    public static AudioPlayer PlayFromPlayer(
+    public static AudioPlayerBot PlayFromPlayer(
         string file,
         Player source,
         string botName = "Dummy",
@@ -124,7 +124,7 @@ public static class AudioExtensions
             source, botName, whitelist, blacklist);
     }
 
-    public static AudioPlayer PlayFromPlayer(
+    public static AudioPlayerBot PlayFromPlayer(
         Stream stream,
         Player source,
         string botName = "Dummy",
@@ -136,7 +136,7 @@ public static class AudioExtensions
         StreamAudio streamAudio = new(stream);
 
         // Create and run player
-        AudioPlayer audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
+        AudioPlayerBot audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
         audioPlayer.RunCoroutine();
         AudioTask audioTask = audioPlayer.Play(streamAudio, VoiceChatChannel.Mimicry);
 
@@ -169,7 +169,7 @@ public static class AudioExtensions
             Player source,
             AudioTask audioTask,
             MimicPointController mimicPoint,
-            AudioPlayer audioPlayer
+            BaseAudioPlayer audioPlayer
         )
         {
             Type type = typeof(MimicPointController);
@@ -183,12 +183,12 @@ public static class AudioExtensions
                 yield return Timing.WaitForOneFrame;
             }
 
-            audioPlayer.DestroyPlayer();
+            audioPlayer.DestroySelf();
         }
     }
 
 
-    public static AudioPlayer PlayFromPosition(
+    public static AudioPlayerBot PlayFromPosition(
         string file,
         Vector3 source,
         string botName = "Dummy",
@@ -201,7 +201,7 @@ public static class AudioExtensions
             source, botName, whitelist, blacklist);
     }
 
-    public static AudioPlayer PlayFromPosition(
+    public static AudioPlayerBot PlayFromPosition(
         Stream stream,
         Vector3 source,
         string botName = "Dummy",
@@ -213,7 +213,7 @@ public static class AudioExtensions
         StreamAudio streamAudio = new(stream);
 
         // Create and run player
-        AudioPlayer audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
+        AudioPlayerBot audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Scp939, Vector3.zero, Vector3.zero);
         audioPlayer.RunCoroutine();
         AudioTask audioTask = audioPlayer.Play(streamAudio, VoiceChatChannel.Mimicry);
 
@@ -269,7 +269,7 @@ public static class AudioExtensions
 
     #region Standart
 
-    public static AudioPlayer PlayInIntercom(
+    public static AudioPlayerBot PlayInIntercom(
         string file,
         string botName = "Dummy",
         List<IAccessConditions>? whitelist = null,
@@ -281,7 +281,7 @@ public static class AudioExtensions
             botName, whitelist, blacklist);
     }
 
-    public static AudioPlayer PlayInIntercom(
+    public static AudioPlayerBot PlayInIntercom(
         Stream stream,
         string botName = "Dummy",
         List<IAccessConditions>? whitelist = null,
@@ -292,7 +292,7 @@ public static class AudioExtensions
         StreamAudio streamAudio = new(stream);
 
         // Create and run player
-        AudioPlayer audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Spectator, Vector3.zero, Vector3.zero);
+        AudioPlayerBot audioPlayer = Audio.CreateNewAudioPlayer(botName, RoleTypeId.Spectator, Vector3.zero, Vector3.zero);
         audioPlayer.RunCoroutine();
         AudioTask audioTask = audioPlayer.Play(streamAudio, VoiceChatChannel.Intercom);
 
@@ -309,29 +309,16 @@ public static class AudioExtensions
 
     #region Extensions
 
-    public static IEnumerator<float> CheckPlayingAndDestroy(this AudioPlayer audioPlayer)
+    public static IEnumerator<float> CheckPlayingAndDestroy(this BaseAudioPlayer baseAudioPlayer)
     {
         yield return Timing.WaitForSeconds(5f);
 
-        while (audioPlayer.AudioTasks.Any(x => !x.IsDone) || audioPlayer.CurrentAudioTask?.IsDone == false)
+        while (baseAudioPlayer.AudioTasks.Any(x => !x.IsDone) || baseAudioPlayer.CurrentAudioTask?.IsDone == false)
             yield return Timing.WaitForSeconds(0.1f);
 
         yield return Timing.WaitForSeconds(2f);
 
-        audioPlayer.DestroyPlayer();
-    }
-
-    public static void DestroyPlayer(this AudioPlayer audioPlayer)
-    {
-        audioPlayer.KillCoroutine();
-        try
-        {
-            NetworkServer.Destroy(audioPlayer.ReferenceHub.gameObject);
-        }
-        catch
-        {
-            Log.Debug("Can not destroy audio player");
-        }
+        baseAudioPlayer.DestroySelf();
     }
 
     #endregion

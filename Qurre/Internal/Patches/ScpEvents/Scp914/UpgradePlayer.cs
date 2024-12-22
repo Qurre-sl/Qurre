@@ -26,13 +26,12 @@ internal static class UpgradePlayer
         yield return new CodeInstruction(OpCodes.Ldarg_0); // ply [ReferenceHub]
         yield return new CodeInstruction(OpCodes.Ldarg_1); // upgradeInventory [bool]
         yield return new CodeInstruction(OpCodes.Ldarg_2); // heldOnly [bool]
-        yield return new CodeInstruction(OpCodes.Ldarg_3); // moveVector [Vector3]
-        yield return new CodeInstruction(OpCodes.Ldarg_S, 4); // setting [Scp914KnobSetting]
+        yield return new CodeInstruction(OpCodes.Ldarg_3); // setting [Scp914KnobSetting]
         yield return new CodeInstruction(OpCodes.Call, AccessTools.Method(typeof(UpgradePlayer), nameof(Invoke)));
         yield return new CodeInstruction(OpCodes.Ret);
     }
 
-    private static void Invoke(ReferenceHub ply, bool upgradeInventory, bool heldOnly, Vector3 moveVector,
+    private static void Invoke(ReferenceHub ply, bool upgradeInventory, bool heldOnly,
         Scp914KnobSetting setting)
     {
         if (Physics.Linecast(ply.transform.position, Scp914Controller.Singleton.IntakeChamber.position,
@@ -44,7 +43,8 @@ internal static class UpgradePlayer
         if (pl is null)
             return;
 
-        Scp914UpgradePlayerEvent ev = new(pl, null, null, upgradeInventory, heldOnly, moveVector, setting);
+        Scp914UpgradePlayerEvent ev = new(pl, null, null, upgradeInventory, heldOnly, Scp914Controller.MoveVector,
+            setting);
 
         // ReSharper disable once ForeachCanBePartlyConvertedToQueryUsingAnotherGetEnumerator
         foreach (var pareItem in ply.inventory.UserInventory.Items)
@@ -76,13 +76,14 @@ internal static class UpgradePlayer
                 continue;
 
             Scp914Upgrader.OnInventoryItemUpgraded?.Invoke(upItem, ev.Setting);
-            processor.OnInventoryItemUpgraded(ev.Setting, ply, upItem.ItemSerial);
+            processor.UpgradeInventoryItem(setting, upItem);
         }
 
         HashSetPool<ItemBase>.Shared.Return(ev.Inventory);
         HashSetPool<ItemBase>.Shared.Return(ev.InstantUpgrade);
 
-        BodyArmorUtils.RemoveEverythingExceedingLimits(ply.inventory,
-            ply.inventory.TryGetBodyArmor(out BodyArmor? bodyArmor) ? bodyArmor : null);
+        ply.inventory.RemoveEverythingExceedingLimits(ply.inventory.TryGetBodyArmor(out BodyArmor? bodyArmor)
+            ? bodyArmor
+            : null);
     }
 }

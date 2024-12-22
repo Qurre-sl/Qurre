@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection.Emit;
 using HarmonyLib;
 using Qurre.API;
+using Qurre.Loader;
 
 namespace Qurre.Internal.Patches.Misc;
 
@@ -17,6 +18,9 @@ internal static class AddCredits
     private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
     {
         List<CodeInstruction> list = [..instructions];
+
+        if (!Configs.ShowCredits)
+            return list.AsEnumerable();
 
         int index = -1;
         for (int i = 0; i < list.Count; i++)

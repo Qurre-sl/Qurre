@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using InventorySystem.Items;
 using InventorySystem.Items.Pickups;
 using JetBrains.Annotations;
@@ -13,12 +14,11 @@ namespace Qurre.Events.Structs;
 [PublicAPI]
 public class Scp914UpgradeEvent : IBaseEvent
 {
-    internal Scp914UpgradeEvent(List<Player> players, List<ItemPickupBase> items, Vector3 moveVector, Scp914Mode mode,
+    internal Scp914UpgradeEvent(List<Player> players, List<ItemPickupBase> items, Scp914Mode mode,
         Scp914KnobSetting setting)
     {
         Players = players;
         Items = items;
-        Move = moveVector;
         Mode = mode;
         Setting = setting;
         Allowed = true;
@@ -26,7 +26,6 @@ public class Scp914UpgradeEvent : IBaseEvent
 
     public List<Player> Players { get; }
     public List<ItemPickupBase> Items { get; }
-    public Vector3 Move { get; set; }
     public Scp914Mode Mode { get; set; }
     public Scp914KnobSetting Setting { get; set; }
     public bool Allowed { get; set; }
@@ -44,18 +43,28 @@ public class Scp914UpgradePickupEvent : IBaseEvent
         Pickup = pickup;
         UpgradeDropped = upgradeDropped;
         Setting = setting;
-        Move = moveVector;
+        // Move = moveVector; todo
         Allowed = true;
     }
 
     public ItemPickupBase Pickup { get; }
     public bool UpgradeDropped { get; set; }
     public Scp914KnobSetting Setting { get; set; }
-    public Vector3 Move { get; set; }
+
+    public Vector3 Move
+    {
+        get => Scp914Controller.MoveVector;
+        // todo: update later
+        [Obsolete("Outdated in v14")]
+        // ReSharper disable once ValueParameterNotUsed
+        set { }
+    }
 
     public Vector3 TargetPosition
     {
         get => Pickup.Position + Move;
+        // todo: update later
+        [Obsolete("Outdated in v14")]
         set => Move = value - Pickup.Position;
     }
 
@@ -77,7 +86,7 @@ public class Scp914UpgradePlayerEvent : IBaseEvent
         UpgradeInventory = upInventory;
         HeldOnly = heldOnly;
         Setting = setting;
-        Move = moveVector;
+        // Move = moveVector; todo
         Allowed = true;
     }
 
@@ -87,11 +96,21 @@ public class Scp914UpgradePlayerEvent : IBaseEvent
     public bool UpgradeInventory { get; set; }
     public bool HeldOnly { get; set; }
     public Scp914KnobSetting Setting { get; set; }
-    public Vector3 Move { get; set; }
+
+    public Vector3 Move
+    {
+        get => Scp914Controller.MoveVector;
+        // todo: update later
+        [Obsolete("Outdated in v14")]
+        // ReSharper disable once ValueParameterNotUsed
+        set { }
+    }
 
     public Vector3 TargetPosition
     {
         get => Player.MovementState.Position + Move;
+        // todo: update later
+        [Obsolete("Outdated in v14")]
         set => Move = value - Player.MovementState.Position;
     }
 

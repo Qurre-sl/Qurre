@@ -80,7 +80,7 @@ public class Lights
             if (CustomRoom is not null)
             {
                 CustomRoom.Intensity = value;
-                foreach (ModelLight light in CustomRoom.Lights) light.Light.Intensivity = value;
+                foreach (ModelLight light in CustomRoom.Lights) light.Light.Intensity = value;
             }
         }
     }

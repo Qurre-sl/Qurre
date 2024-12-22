@@ -42,10 +42,10 @@ internal static class Round
     {
         API.Audio.LocalHostAudioPlayer = null;
 
-        foreach (AudioPlayer? player in AudioPlayer.Players.ToList())
-            player.DestroyPlayer();
+        foreach (AudioPlayerBot player in AudioPlayerBot.Players.ToList())
+            player.DestroySelf();
 
-        AudioPlayer.Players.Clear();
+        BaseAudioPlayer.Players.Clear();
     }
 
     [EventMethod(RoundEvents.Waiting)]

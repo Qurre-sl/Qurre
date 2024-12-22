@@ -18,7 +18,7 @@ public class Chamber
     public LockerChamber LockerChamber { get; }
     public Locker Locker { get; }
 
-    public HashSet<ItemPickupBase> ToBeSpawned => LockerChamber._toBeSpawned;
+    public List<ItemPickupBase> ToBeSpawned => LockerChamber._toBeSpawned;
 
     public bool CanInteract => LockerChamber.CanInteract;
 

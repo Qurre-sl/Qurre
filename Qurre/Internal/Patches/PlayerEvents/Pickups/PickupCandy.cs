@@ -4,6 +4,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
 using HarmonyLib;
 using InventorySystem;
+using InventorySystem.Items;
 using InventorySystem.Items.Usables.Scp330;
 using Qurre.API;
 using Qurre.Events.Structs;
@@ -33,7 +34,7 @@ internal static class PickupCandy
             if (!Scp330Bag.TryGetBag(ply, out bag))
             {
                 ushort serial = (ushort)(pickup == null ? 0 : pickup.Info.Serial);
-                return ply.inventory.ServerAddItem(ItemType.SCP330, serial, pickup) is not null;
+                return ply.inventory.ServerAddItem(ItemType.SCP330, ItemAddReason.Scp914Upgrade, serial, pickup) is not null;
             }
 
             List<CandyKindID> list = [];

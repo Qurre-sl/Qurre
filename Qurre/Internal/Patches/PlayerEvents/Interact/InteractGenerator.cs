@@ -83,7 +83,6 @@ internal static class InteractGenerator
                         if (ev.Allowed)
                         {
                             instance.ServerSetFlag(Scp079Generator.GeneratorFlags.Unlocked, true);
-                            instance.ServerGrantTicketsConditionally(new Footprint(ply), 0.5f);
                         }
                         else
                         {

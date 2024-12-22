@@ -6,15 +6,18 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using MapGeneration;
+using MEC;
 using Qurre.Events.Structs;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Internal.Patches.RoundEvents;
 
-[HarmonyPatch(typeof(SeedSynchronizer), nameof(SeedSynchronizer.Update))]
+[HarmonyPatch(typeof(SeedSynchronizer), nameof(SeedSynchronizer.GenerateLevel))]
 [SuppressMessage("ReSharper", "UnusedMember.Local")]
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 internal static class Waiting
 {
+    // TODO: переписать на ивенты LabAPI или что-то такое
     [HarmonyTranspiler]
     private static IEnumerable<CodeInstruction> Transpiler(IEnumerable<CodeInstruction> instructions)
     {
@@ -28,9 +31,8 @@ internal static class Waiting
 
         list.InsertRange(index,
         [
-            new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(WaitingEvent))[0]),
             new CodeInstruction(OpCodes.Call,
-                AccessTools.Method(typeof(EventsManager.Loader), nameof(EventsManager.Loader.InvokeEvent)))
+                AccessTools.Method(typeof(Waiting), nameof(Invoke)))
         ]);
 
         return list.AsEnumerable();
@@ -40,4 +42,12 @@ internal static class Waiting
      * Loader.InvokeEvent(new WaitingEvent());
      * ...
      */
+
+    private static void Invoke()
+    {
+        Timing.CallDelayed(1f, () =>
+        {
+            new WaitingEvent().InvokeEvent();
+        });
+    }
 }

@@ -33,8 +33,6 @@ public sealed class RoleInformation
 
     public RoleTypeId CachedRole { get; internal set; }
 
-    public float TimeForNextSequence => RespawnManager.Singleton._timeForNextSequence;
-
     public Team Team => _player.Disconnected ? CachedRole.GetTeam() : _player.ReferenceHub.GetTeam();
 
     public Faction Faction => _player.Disconnected ? CachedRole.GetFaction() : _player.ReferenceHub.GetFaction();

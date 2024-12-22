@@ -42,6 +42,7 @@ public class Player
         StatsInformation = new StatsInformation(this);
         RoleInformation = new RoleInformation(this);
         UserInformation = new UserInformation(this);
+        ServerSpecificSettings = new ServerSpecificSettings(this);
 
         if (rh.isLocalPlayer)
             return;
@@ -111,4 +112,5 @@ public class Player
     public StatsInformation StatsInformation { get; }
     public RoleInformation RoleInformation { get; }
     public UserInformation UserInformation { get; }
+    public ServerSpecificSettings ServerSpecificSettings { get; }
 }

@@ -8,6 +8,7 @@ internal static class Configs
 {
     private static JsonConfig Config { get; set; } = null!;
 
+    internal static bool ShowCredits { get; set; }
     internal static bool PrintLogo { get; private set; }
     internal static bool RoundEndChaos { get; private set; }
 
@@ -23,6 +24,7 @@ internal static class Configs
         Log.Logging = Config.SafeGetValue("Logging", true, "Are errors saved to the log file?");
         Log.AllLogging = Config.SafeGetValue("AllLogging", false, "Are all console output being saved to a log file?");
 
+        ShowCredits = Config.SafeGetValue("ShowCredits", true, "Show credits of Qurre?");
         PrintLogo = Config.SafeGetValue("PrintLogo", true, "Print Qurre Logo?");
         RoundEndChaos = Config.SafeGetValue("RoundEndWithScpAndChaos", true,
             "Allow round to end if only SCP and Chaos are left");

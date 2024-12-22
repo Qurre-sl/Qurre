@@ -23,14 +23,6 @@ public static class Round
     public static int CurrentRound { get; internal set; }
     public static int ActiveGenerators { get; internal set; }
 
-    public static float NextRespawn
-    {
-        get => RespawnManager.Singleton._timeForNextSequence -
-               (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
-        set => RespawnManager.Singleton._timeForNextSequence =
-            value + (float)RespawnManager.Singleton._stopwatch.Elapsed.TotalSeconds;
-    }
-
     public static short WaitTime
     {
         get => RoundStart.singleton.NetworkTimer;
@@ -145,24 +137,5 @@ public static class Round
         RoundSummary.singleton.RpcShowRoundSummary(RoundSummary.singleton.classlistStart, remainingPlayers, team,
             EscapedClassD, EscapedScientists, ScpKills, seconds: (int)ElapsedTime.TotalSeconds,
             roundCd: Mathf.Clamp(ConfigFile.ServerConfig.GetInt("auto_round_restart_time", 10), 5, 1000));
-    }
-
-    public static void ForceTeamRespawn(bool isChaos)
-    {
-        RespawnManager.Singleton.ForceSpawnTeam(isChaos
-            ? SpawnableTeamType.ChaosInsurgency
-            : SpawnableTeamType.NineTailedFox);
-    }
-
-    public static void CallChaosCar()
-    {
-        RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection,
-            SpawnableTeamType.ChaosInsurgency);
-    }
-
-    public static void CallMtfHelicopter()
-    {
-        RespawnEffectsController.ExecuteAllEffects(RespawnEffectsController.EffectType.Selection,
-            SpawnableTeamType.NineTailedFox);
     }
 }

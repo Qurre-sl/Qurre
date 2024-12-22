@@ -28,7 +28,7 @@ internal static class FixToysScale
             return;
 
         instance.NetworkPosition = instance.transform.position;
-        instance.NetworkRotation = new LowPrecisionQuaternion(instance.transform.rotation);
+        instance.NetworkRotation = instance.transform.rotation;
         instance.NetworkScale = instance.transform.lossyScale;
     }
 }

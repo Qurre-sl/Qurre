@@ -8,10 +8,10 @@ namespace Qurre.API.Addons.Models;
 [PublicAPI]
 public class ModelLight
 {
-    public ModelLight(Model model, Color color, Vector3 position, float lightIntensivity = 5, float lightRange = 10,
-        bool shadows = true)
+    public ModelLight(Model model, Color color, Vector3 position, float lightIntensity = 5.0F, float lightRange = 10.0F,
+        LightType type = LightType.Point, Quaternion rotation = default, LightShadows shadowType = LightShadows.None, float shadowStrength = 1.0F)
     {
-        Light = new LightPoint(position, color, lightIntensivity, lightRange, shadows);
+        Light = new LightPoint(position, color, lightIntensity, lightRange, type, rotation, shadowType, shadowStrength);
         GameObject = Light.Base.gameObject;
 
         try

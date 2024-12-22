@@ -24,7 +24,7 @@ public class ModelPrimitive
 
             Primitive.Base.NetworkScale = GameObject.transform.lossyScale;
             Primitive.Base.NetworkPosition = GameObject.transform.position;
-            Primitive.Base.NetworkRotation = new LowPrecisionQuaternion(GameObject.transform.rotation);
+            Primitive.Base.NetworkRotation = GameObject.transform.rotation;
         }
         catch (Exception ex)
         {

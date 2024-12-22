@@ -21,7 +21,7 @@ public class Lift
     public Transform Transform
         => Elevator.transform;
 
-    public ElevatorManager.ElevatorGroup Type
+    public ElevatorGroup Type
         => Elevator.AssignedGroup;
 
     public Bounds Bounds
@@ -44,8 +44,8 @@ public class Lift
 
     public ElevatorChamber.ElevatorSequence Status
     {
-        get => Elevator._curSequence;
-        set => Elevator._curSequence = value;
+        get => Elevator.CurSequence;
+        set => Elevator.CurSequence = value;
     }
 
     public void Use()

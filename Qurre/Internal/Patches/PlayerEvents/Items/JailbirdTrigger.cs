@@ -65,7 +65,7 @@ internal static class JailbirdTrigger
             case JailbirdMessageType.ChargeStarted:
                 @base._charging = true;
                 @base._firstChargeFrame = true;
-                @base._chargeLoading = false;
+                @base._chargeLoadStopwatch.Reset();
                 @base._chargeAnyDetected = false;
                 @base._chargeResetTime = NetworkTime.time;
                 @base.SendRpc(JailbirdMessageType.ChargeStarted,
