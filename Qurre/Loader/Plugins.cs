@@ -21,15 +21,6 @@ internal static class Plugins
     {
         if (!Directory.Exists(Paths.Plugins))
         {
-            Log.Warn($"Plugins directory not found. Creating: {Paths.Plugins}");
-            Directory.CreateDirectory(Paths.Plugins);
-        }
-
-        try
-        {
-            LoadDependencies();
-        }
-        catch (Exception ex)
         {
             ServerConsole.AddLog(ex.ToString(), ConsoleColor.Red);
         }
