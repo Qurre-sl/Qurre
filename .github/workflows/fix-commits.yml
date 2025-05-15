@@ -1,81 +1,27 @@
-name: 'OpenCommit Action'
+name: 'AI Commit Fixer'
 
 on:
   push:
 
 jobs:
-  validate-commit-message:
-    runs-on: ubuntu-latest
-    outputs:
-      is_invalid_message: ${{ steps.check_message.outputs.is_invalid }}
-    steps:
-      - name: Check commit message format
-        id: check_message
-        uses: actions/github-script@v7
-        with:
-          script: |
-            const commitMessage = context.payload.head_commit.message;
-            // Regex для проверки формата: type(scope?): message
-            // Пример: fix(core): resolve bug
-            // Пример: feat: add new feature
-            // Пример: chore(deps): update dependencies
-            const regex = /^\w+(\(\w+\))?:\s+.+$/; // Ваше регулярное выражение
-
-            if (regex.test(commitMessage)) {
-              console.log('Commit message IS VALID:', commitMessage);
-              core.setOutput('is_invalid', 'false');
-            } else {
-              console.log('Commit message IS INVALID:', commitMessage);
-              core.setOutput('is_invalid', 'true');
-            }
-          result-encoding: string # Важно для правильной передачи boolean как строки
-
-  opencommit:
+  fix-commits:
     timeout-minutes: 10
-    name: OpenCommit
+    name: AI Commit Fixer
     runs-on: ubuntu-latest
-    needs: validate-commit-message
-    if: needs.validate-commit-message.outputs.is_invalid_message == 'true'
     permissions: write-all
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           
-      - name: Run OpenCommit (primary)
-        id: opencommit
-        uses: Shiro-nn/opencommit@master
+      - uses: Shiro-nn/ai-commit-fixer@main
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-        env:
           OPENAI_API_KEY: ${{ secrets.AI_API_KEY }}
+          OPENAI_API_ENDPOINT: https://integrate.api.nvidia.com/v1
+          OPENAI_API_MODEL: nvidia/llama-3.3-nemotron-super-49b-v1
 
-          # customization
-          OCO_TOKENS_MAX_INPUT: 9999999
-          OCO_TOKENS_MAX_OUTPUT: 500
-          OCO_API_URL: 'https://integrate.api.nvidia.com/v1'
-          OCO_OMIT_SCOPE: true
-          OCO_DESCRIPTION: true
-          OCO_EMOJI: false
-          OCO_MODEL: nvidia/llama-3.3-nemotron-super-49b-v1
-          OCO_LANGUAGE: en
-          OCO_PROMPT_MODULE: conventional-commit
-
-      - name: Run OpenCommit (fallback on failure)
-        if: ${{ steps.opencommit.outcome == 'failure' }}
-        uses: Shiro-nn/opencommit@master
-        with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        env:
-          # здесь ваши альтернативные переменные окружения
-          OPENAI_API_KEY: ${{ secrets.AI_GEMINI_API_KEY }}
-          OCO_TOKENS_MAX_INPUT: 20000
-          OCO_TOKENS_MAX_OUTPUT: 500
-          OCO_API_URL: 'https://generativelanguage.googleapis.com/v1beta/openai/'
-          OCO_OMIT_SCOPE: true
-          OCO_DESCRIPTION: true
-          OCO_EMOJI: false
-          OCO_MODEL: gemini-2.0-flash
-          OCO_LANGUAGE: en
-          OCO_PROMPT_MODULE: conventional-commit
+          # Gemini
+          # OPENAI_API_KEY: ${{ secrets.AI_GEMINI_API_KEY }}
+          # OPENAI_API_ENDPOINT: https://generativelanguage.googleapis.com/v1beta/openai
+          # OPENAI_API_MODEL: gemini-2.0-flash
