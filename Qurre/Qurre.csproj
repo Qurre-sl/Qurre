@@ -86,10 +86,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="Internal\Patches\Unity\" />
-    </ItemGroup>
-
-    <ItemGroup>
         <ProjectReference Include="..\Qurre.Loader\Qurre.Loader.csproj"/>
     </ItemGroup>
 

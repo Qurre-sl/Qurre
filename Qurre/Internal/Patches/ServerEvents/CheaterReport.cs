@@ -18,8 +18,8 @@ internal static class CheaterReport
     {
         try
         {
-            var issuer = reporterUserId.GetPlayer();
-            var target = Player.Get(reportedUserId);
+            Player? issuer = reporterUserId.GetPlayer();
+            Player? target = Player.Get(reportedUserId);
 
             if (issuer is null || target is null)
                 return false;

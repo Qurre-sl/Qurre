@@ -1,8 +1,8 @@
+using InventorySystem.Items;
 using InventorySystem.Items.Radio;
+using InventorySystem.Items.Usables;
 using JetBrains.Annotations;
-using Qurre.API.Entities;
 using Qurre.API.Entities.Characters;
-using Qurre.API.Entities.Items;
 using Qurre.API.Enums;
 using UnityEngine;
 
@@ -14,7 +14,7 @@ public class CancelUseItemEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.CancelUseItem;
 
-    internal CancelUseItemEvent(Player player, IItem item)
+    internal CancelUseItemEvent(Player player, ItemBase item)
     {
         Player = player;
         Item = item;
@@ -22,7 +22,7 @@ public class CancelUseItemEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public IItem Item { get; }
+    public ItemBase Item { get; }
     public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
@@ -32,7 +32,7 @@ public class UseItemEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.UseItem;
 
-    internal UseItemEvent(Player player, IItem item)
+    internal UseItemEvent(Player player, ItemBase item)
     {
         Player = player;
         Item = item;
@@ -40,7 +40,7 @@ public class UseItemEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public IItem Item { get; }
+    public ItemBase Item { get; }
     public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
@@ -50,14 +50,14 @@ public class UsedItemEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.UsedItem;
 
-    internal UsedItemEvent(Player player, IItem item)
+    internal UsedItemEvent(Player player, UsableItem item)
     {
         Player = player;
         Item = item;
     }
 
     public Player Player { get; }
-    public IItem Item { get; }
+    public UsableItem Item { get; }
     public uint EventId { get; } = EventID;
 }
 
@@ -66,7 +66,7 @@ public class ChangeItemEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.ChangeItem;
 
-    internal ChangeItemEvent(Player player, IItem? oldItem, IItem? newItem)
+    internal ChangeItemEvent(Player player, ItemBase? oldItem, ItemBase? newItem)
     {
         Player = player;
         OldItem = oldItem;
@@ -75,8 +75,8 @@ public class ChangeItemEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public IItem? OldItem { get; }
-    public IItem? NewItem { get; }
+    public ItemBase? OldItem { get; }
+    public ItemBase? NewItem { get; }
     public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
@@ -89,14 +89,14 @@ public class UpdateRadioEvent : IBaseEvent
     internal UpdateRadioEvent(Player player, RadioItem radioBase, RadioStatus range, bool enabled)
     {
         Player = player;
-        Radio = EntityManager.GetOrException<IRadio>(radioBase);
+        Radio = radioBase;
         Range = range;
         Enabled = enabled;
         Allowed = true;
     }
 
     public Player Player { get; }
-    public IRadio Radio { get; }
+    public RadioItem Radio { get; }
     public RadioStatus Range { get; set; }
     public bool Enabled { get; set; }
     public bool Allowed { get; set; }
@@ -111,14 +111,14 @@ public class UsingRadioEvent : IBaseEvent
     internal UsingRadioEvent(Player player, RadioItem radioBase, float num)
     {
         Player = player;
-        Radio = EntityManager.GetOrException<IRadio>(radioBase);
+        Radio = radioBase;
         Battery = radioBase._battery * 100;
         Consumption = Time.deltaTime * (num / 60 / 100) * 100;
         Allowed = true;
     }
 
     public Player Player { get; }
-    public IRadio Radio { get; }
+    public RadioItem Radio { get; }
     public float Battery { get; set; }
     public float Consumption { get; set; }
     public bool Allowed { get; set; }

@@ -2,10 +2,8 @@ using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using InventorySystem;
+using LabApi.Features.Wrappers;
 using Qurre.API;
-using Qurre.API.Entities;
-using Qurre.API.Entities.Items;
-using Qurre.API.Utils.Entities;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -28,10 +26,7 @@ internal static class ChangeItem
             var player = __instance._hub.GetPlayer();
             if (player is null) return false;
 
-            if (!EntityManager.TryGet(__instance.CurInstance, out IItem? oldItem)) return true;
-            var newItem = itemSerial == 0 ? null : ItemsHelper.GetItemBySerial(itemSerial);
-
-            ChangeItemEvent ev = new(player, oldItem, newItem);
+            ChangeItemEvent ev = new(player, __instance.CurInstance, Item.Get(itemSerial)?.Base);
             ev.InvokeEvent();
 
             return ev.Allowed;

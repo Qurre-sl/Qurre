@@ -1,6 +1,5 @@
 using InventorySystem.Items;
 using JetBrains.Annotations;
-using Qurre.API.Entities.Items;
 
 namespace Qurre.API.Entities.Characters.Components.Structs;
 
@@ -26,6 +25,6 @@ public sealed class Hand
     public ItemBase? ItemBase
         => _player.Inventory.Base.CurInstance;
 
-    public IItem? Item
-        => EntityManager.Get<IItem>(_player.Inventory.Base.CurInstance);
+    public ItemBase? Item
+        => _player.Inventory.Base.CurInstance;
 }
