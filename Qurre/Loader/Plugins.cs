@@ -1,11 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
-using MEC;
 using Qurre.API;
 using Qurre.API.Addons;
 using Qurre.API.Attributes;
@@ -31,25 +29,43 @@ internal static class Plugins
         }
         catch (Exception ex)
         {
-            ServerConsole.AddLog(ex.ToString(), ConsoleColor.Red);
+            ServerConsole.AddLog($"[LoadDependencies] {ex}", ConsoleColor.Red);
         }
 
-        PatchMethods();
+        try
+        {
+            PatchMethods();
+        }
+        catch (Exception ex)
+        {
+            ServerConsole.AddLog($"[PatchMethods] {ex}", ConsoleColor.Red);
+        }
 
-        LoadPlugins();
+        try
+        {
+            LoadPlugins();
+        }
+        catch (Exception ex)
+        {
+            ServerConsole.AddLog($"[LoadPlugins] {ex}", ConsoleColor.Red);
+        }
 
-        Internal.EventsManager.Loader.SortMethods();
-        EnablePlugins();
+        try
+        {
+            Internal.EventsManager.Loader.SortMethods();
+        }
+        catch (Exception ex)
+        {
+            ServerConsole.AddLog($"[SortMethods] {ex}", ConsoleColor.Red);
+        }
 
-        // TODO: не имеет смысла, потому что Timing.RunCoroutine
-        // выполняет код в этом же потоке, просто в следующем кадре
-        //Timing.RunCoroutine(EnablePluginsInThread());
-        return;
-
-        static IEnumerator<float> EnablePluginsInThread()
+        try
         {
             EnablePlugins();
-            yield break;
+        }
+        catch (Exception ex)
+        {
+            ServerConsole.AddLog($"[EnablePlugins] {ex}", ConsoleColor.Red);
         }
     }
 
@@ -60,15 +76,8 @@ internal static class Plugins
             bool errored = false;
             _harmony = new Harmony("qurre.patches");
 
-            Type? reflectedType = new StackTrace().GetFrame(1)?.GetMethod()?.ReflectedType;
-            if (reflectedType is null)
-            {
-                Log.Error("Harmony Patching threw an error:\nReflectedType is null");
-                return;
-            }
-
-            Assembly assembly = reflectedType.Assembly;
-            AccessTools.GetTypesFromAssembly(assembly).Do(delegate (Type type)
+            Assembly assembly = Assembly.GetExecutingAssembly();
+            foreach (Type type in assembly.GetTypes())
             {
                 try
                 {
@@ -79,7 +88,7 @@ internal static class Plugins
                     Log.Error($"Excepted error in type: {BetterColors.Yellow(type)}\n{BetterColors.Grey(e)}");
                     errored = true;
                 }
-            });
+            }
 
             if (!errored)
                 Log.Info("Harmony successfully Patched");

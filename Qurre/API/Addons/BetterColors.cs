@@ -60,6 +60,7 @@ public static class BetterColors
 
     private static string ParseCode(int code)
     {
+        // ReSharper disable once CanSimplifyStringEscapeSequence
         return $"\u001b[{code}m";
     }
 
