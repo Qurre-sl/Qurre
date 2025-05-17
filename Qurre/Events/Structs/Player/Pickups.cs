@@ -14,23 +14,23 @@ namespace Qurre.Events.Structs;
 
 using static ThrowableItem;
 
-// [PublicAPI]
-// public class PrePickupItemEvent : IBaseEvent
-// {
-//     private const uint EventID = PlayerEvents.PrePickupItem;
-//
-//     internal PrePickupItemEvent(Player player, Pickup pickup)
-//     {
-//         Player = player;
-//         Pickup = pickup;
-//         Allowed = true;
-//     }
-//
-//     public Player Player { get; }
-//     public Pickup Pickup { get; }
-//     public bool Allowed { get; set; }
-//     public uint EventId { get; } = EventID;
-// }
+[PublicAPI]
+public class PrePickupItemEvent : IBaseEvent
+{
+    private const uint EventID = PlayerEvents.PrePickupItem;
+
+    internal PrePickupItemEvent(Player player, ItemPickupBase pickup)
+    {
+        Player = player;
+        Pickup = pickup;
+        Allowed = true;
+    }
+
+    public Player Player { get; }
+    public ItemPickupBase Pickup { get; }
+    public bool Allowed { get; set; }
+    public uint EventId { get; } = EventID;
+}
 
 [PublicAPI]
 public class PickupItemEvent : IBaseEvent

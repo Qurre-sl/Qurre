@@ -27,6 +27,7 @@ internal static class Moderation
         PlayerEvents.PickingUpArmor += OnPickupArmor;
         PlayerEvents.PickingUpAmmo += OnPickupAmmo;
         PlayerEvents.UsedItem += OnUsedItem;
+        PlayerEvents.SearchedPickup += OnSearch;
         PlayerEvents.Escaping += OnEscaping;
         PlayerEvents.ReportingPlayer += OnLocalReport;
         Scp173Events.AddingObserver += OnAddObserver;
@@ -73,21 +74,21 @@ internal static class Moderation
         switch (ev)
         {
             case { Intensity: > 0, Effect.Intensity: 0 }:
-                {
-                    EffectEnabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                        ev.Effect);
-                    rep.InvokeEvent();
-                    ev.IsAllowed = rep.Allowed;
-                    break;
-                }
+            {
+                EffectEnabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+                    ev.Effect);
+                rep.InvokeEvent();
+                ev.IsAllowed = rep.Allowed;
+                break;
+            }
             case { Effect.Intensity: > 0, Intensity: 0 }:
-                {
-                    EffectDisabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                        ev.Effect);
-                    rep.InvokeEvent();
-                    ev.IsAllowed = rep.Allowed;
-                    break;
-                }
+            {
+                EffectDisabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+                    ev.Effect);
+                rep.InvokeEvent();
+                ev.IsAllowed = rep.Allowed;
+                break;
+            }
         }
     }
 
@@ -127,6 +128,13 @@ internal static class Moderation
     {
         UsedItemEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
             ev.UsableItem.Base);
+        rep.InvokeEvent();
+    }
+
+    private static void OnSearch(LabEvents.PlayerSearchedPickupEventArgs ev)
+    {
+        PrePickupItemEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+            ev.Pickup.Base);
         rep.InvokeEvent();
     }
 
