@@ -58,7 +58,10 @@ public static class BetterColors
         return !IsEnabled ? text.ToString() : string.Concat(ParseCode(style.Begin), text, ParseCode(style.End));
     }
 
-    private static string ParseCode(int code) => $"\e[{code}m";
+    private static string ParseCode(int code)
+    {
+        return $"\u001b[{code}m";
+    }
 
     [SuppressMessage("ReSharper", "MemberHidesStaticFromOuterClass")]
     public readonly struct Style(int begin, int end)
