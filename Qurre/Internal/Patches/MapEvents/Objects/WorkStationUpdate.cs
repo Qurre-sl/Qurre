@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using InventorySystem.Items.Firearms.Attachments;
 using Mirror;

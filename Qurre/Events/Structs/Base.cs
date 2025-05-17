@@ -1,4 +1,4 @@
-﻿namespace Qurre.Events.Structs;
+namespace Qurre.Events.Structs;
 
 public interface IBaseEvent
 {

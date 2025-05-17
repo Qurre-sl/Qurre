@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using InventorySystem.Items;
 using InventorySystem.Items.Firearms.Ammo;
 using InventorySystem.Items.Jailbird;

@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using PlayerStatsSystem;
 using Qurre.API;
 using Qurre.API.Controllers;

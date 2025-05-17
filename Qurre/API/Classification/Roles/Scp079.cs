@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using PlayerRoles.PlayableScps.Scp079;
 using PlayerRoles.Subroutines;

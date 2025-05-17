@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Mirror;
 using PlayerRoles.Voice;

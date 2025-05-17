@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using GameCore;
 using JetBrains.Annotations;
 using RoundRestarting;

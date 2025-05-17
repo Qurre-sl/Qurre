@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +23,7 @@ internal static class UseItem
         LocalBuilder cancelUseEvent = generator.DeclareLocal(typeof(CancelUseItemEvent));
         LocalBuilder useEvent = generator.DeclareLocal(typeof(UseItemEvent));
 
-        List<CodeInstruction> list = [..instructions];
+        List<CodeInstruction> list = [.. instructions];
         list.Last().labels.Add(retLabel);
 
         int cancelIndex = list.FindLastIndex(ins =>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CustomPlayerEffects;
 using CustomRendering;
 using JetBrains.Annotations;

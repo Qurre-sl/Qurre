@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using PlayerRoles.PlayableScps.Scp079.Cameras;
 using UnityEngine;
 

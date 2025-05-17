@@ -1,4 +1,4 @@
-﻿using InventorySystem;
+using InventorySystem;
 using InventorySystem.Items.Pickups;
 using JetBrains.Annotations;
 using PlayerStatsSystem;

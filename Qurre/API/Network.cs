@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using JetBrains.Annotations;
 using Mirror;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -24,7 +24,7 @@ internal static class Attack
     {
         Label retLabel = generator.DefineLabel();
 
-        List<CodeInstruction> instructions = [..ins];
+        List<CodeInstruction> instructions = [.. ins];
         instructions.Last().labels.Add(retLabel);
 
         Label metLabel = retLabel;

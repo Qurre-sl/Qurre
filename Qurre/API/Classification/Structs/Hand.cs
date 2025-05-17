@@ -1,4 +1,4 @@
-﻿using InventorySystem.Items;
+using InventorySystem.Items;
 using JetBrains.Annotations;
 
 namespace Qurre.API.Classification.Structs;

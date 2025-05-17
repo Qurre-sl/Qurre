@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using MapGeneration;
@@ -56,7 +56,7 @@ public class Room
     public Tesla? Tesla => GameObject.GetComponentInChildren<TeslaGate>()?.GetTesla();
     public Transform Transform => GameObject.transform;
     public string Name => GameObject.name;
-    public IReadOnlyCollection<Player> Players => [..Player.List.Where(x => !x.IsHost && x.GamePlay.Room.Name == Name)];
+    public IReadOnlyCollection<Player> Players => [.. Player.List.Where(x => !x.IsHost && x.GamePlay.Room.Name == Name)];
     public bool LightsDisabled => GameLights.Length > 0 && GameLights.Any(x => !x.NetworkLightsEnabled);
 
     public Vector3 Position

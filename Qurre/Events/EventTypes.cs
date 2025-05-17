@@ -1,4 +1,4 @@
-﻿namespace Qurre.Events;
+namespace Qurre.Events;
 
 public static class PlayerEvents //1xxx
 {

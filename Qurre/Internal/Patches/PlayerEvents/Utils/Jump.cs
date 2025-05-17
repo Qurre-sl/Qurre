@@ -19,7 +19,7 @@ internal static class Jump
     [HarmonyTranspiler]
     private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
     {
-        List<CodeInstruction> list = [..instructions];
+        List<CodeInstruction> list = [.. instructions];
 
         list.InsertRange(list.Count - 1, [
             new CodeInstruction(OpCodes.Ldloc_0),

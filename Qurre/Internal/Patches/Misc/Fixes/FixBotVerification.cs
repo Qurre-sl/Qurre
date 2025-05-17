@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 
 namespace Qurre.Internal.Patches.Misc.Fixes;

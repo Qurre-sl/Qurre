@@ -94,25 +94,25 @@ internal static class Player
         switch (ev.Role)
         {
             case RoleTypeId.Scp079:
-            {
-                ev.Player.RoleInformation.Scp079 = new Scp079(ev.Player);
-                break;
-            }
+                {
+                    ev.Player.RoleInformation.Scp079 = new Scp079(ev.Player);
+                    break;
+                }
             case RoleTypeId.Scp096:
-            {
-                ev.Player.RoleInformation.Scp096 = new Scp096(ev.Player);
-                break;
-            }
+                {
+                    ev.Player.RoleInformation.Scp096 = new Scp096(ev.Player);
+                    break;
+                }
             case RoleTypeId.Scp106:
-            {
-                ev.Player.RoleInformation.Scp106 = new Scp106(ev.Player);
-                break;
-            }
+                {
+                    ev.Player.RoleInformation.Scp106 = new Scp106(ev.Player);
+                    break;
+                }
             case RoleTypeId.Scp173:
-            {
-                ev.Player.RoleInformation.Scp173 = new Scp173(ev.Player);
-                break;
-            }
+                {
+                    ev.Player.RoleInformation.Scp173 = new Scp173(ev.Player);
+                    break;
+                }
         }
     }
 

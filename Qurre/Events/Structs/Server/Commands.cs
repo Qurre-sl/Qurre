@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using JetBrains.Annotations;
 using Qurre.API;
 using Qurre.API.Controllers;

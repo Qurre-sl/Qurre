@@ -73,21 +73,21 @@ internal static class Moderation
         switch (ev)
         {
             case { Intensity: > 0, Effect.Intensity: 0 }:
-            {
-                EffectEnabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                    ev.Effect);
-                rep.InvokeEvent();
-                ev.IsAllowed = rep.Allowed;
-                break;
-            }
+                {
+                    EffectEnabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+                        ev.Effect);
+                    rep.InvokeEvent();
+                    ev.IsAllowed = rep.Allowed;
+                    break;
+                }
             case { Effect.Intensity: > 0, Intensity: 0 }:
-            {
-                EffectDisabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                    ev.Effect);
-                rep.InvokeEvent();
-                ev.IsAllowed = rep.Allowed;
-                break;
-            }
+                {
+                    EffectDisabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+                        ev.Effect);
+                    rep.InvokeEvent();
+                    ev.IsAllowed = rep.Allowed;
+                    break;
+                }
         }
     }
 

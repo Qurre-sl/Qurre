@@ -1,4 +1,4 @@
-﻿using InventorySystem.Items.ThrowableProjectiles;
+using InventorySystem.Items.ThrowableProjectiles;
 using JetBrains.Annotations;
 using Qurre.API;
 using Qurre.API.Controllers;

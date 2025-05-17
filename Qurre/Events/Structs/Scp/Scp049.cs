@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using PlayerRoles.Ragdolls;
 using Qurre.API;
 using Qurre.API.Controllers;

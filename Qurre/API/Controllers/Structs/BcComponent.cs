@@ -1,4 +1,4 @@
-﻿namespace Qurre.API.Controllers.Structs;
+namespace Qurre.API.Controllers.Structs;
 
 internal static class BcComponent
 {

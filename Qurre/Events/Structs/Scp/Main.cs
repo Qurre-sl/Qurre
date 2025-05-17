@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
 

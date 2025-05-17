@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -22,7 +22,7 @@ internal static class InteractLift
 
         LocalBuilder @event = generator.DeclareLocal(typeof(InteractLiftEvent));
 
-        List<CodeInstruction> list = [..instructions];
+        List<CodeInstruction> list = [.. instructions];
         list.Last().labels.Add(retLabel);
 
         int index = list.FindIndex(ins => ins.opcode == OpCodes.Call && ins.operand is MethodBase

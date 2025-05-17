@@ -1,4 +1,4 @@
-﻿namespace Qurre.API.Addons;
+namespace Qurre.API.Addons;
 
 public class Version
 {

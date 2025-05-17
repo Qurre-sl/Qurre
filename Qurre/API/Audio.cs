@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using CentralAuth;
 using JetBrains.Annotations;
 using MEC;

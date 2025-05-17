@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -80,13 +80,13 @@ internal static class Check
                             list.mtf_and_guards++;
                             break;
                         case Team.SCPs:
-                        {
-                            if (pl.RoleInformation.Role is RoleTypeId.Scp0492)
-                                list.zombies++;
-                            else
-                                list.scps_except_zombies++;
-                            break;
-                        }
+                            {
+                                if (pl.RoleInformation.Role is RoleTypeId.Scp0492)
+                                    list.zombies++;
+                                else
+                                    list.scps_except_zombies++;
+                                break;
+                            }
                     }
                 }
                 catch

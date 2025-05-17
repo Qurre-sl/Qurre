@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Interactables.Interobjects.DoorUtils;
 using JetBrains.Annotations;
 using Mirror;

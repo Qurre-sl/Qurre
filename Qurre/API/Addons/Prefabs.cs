@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using Interactables.Interobjects;
 using InventorySystem.Items.Firearms.Attachments;
@@ -60,10 +60,10 @@ public static class Prefabs
                         break;
 
                     case "TantrumObj":
-                    {
-                        Tantrum = prefab;
-                        break;
-                    }
+                        {
+                            Tantrum = prefab;
+                            break;
+                        }
                 }
             }
         }

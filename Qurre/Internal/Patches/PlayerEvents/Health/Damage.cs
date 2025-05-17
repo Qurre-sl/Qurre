@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -21,7 +21,7 @@ internal static class Damage
     [HarmonyTranspiler]
     private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
-        List<CodeInstruction> list = [..instructions];
+        List<CodeInstruction> list = [.. instructions];
 
         int index = list.FindIndex(ins =>
             ins.opcode == OpCodes.Callvirt && ins.operand is MethodBase

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using Interactables.Interobjects.DoorUtils;
 using InventorySystem.Items.Pickups;
 using JetBrains.Annotations;

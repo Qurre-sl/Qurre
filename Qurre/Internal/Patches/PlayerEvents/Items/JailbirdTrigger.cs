@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection.Emit;
@@ -20,7 +20,7 @@ internal static class JailbirdTrigger
     [HarmonyTranspiler]
     private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
     {
-        List<CodeInstruction> list = [..instructions];
+        List<CodeInstruction> list = [.. instructions];
 
         int index = list.FindLastIndex(ins => ins.opcode == OpCodes.Stloc_0) + 1;
 
@@ -70,7 +70,7 @@ internal static class JailbirdTrigger
                 @base._chargeAnyDetected = false;
                 @base._chargeResetTime = NetworkTime.time;
                 @base.SendRpc(JailbirdMessageType.ChargeStarted,
-                    delegate(NetworkWriter wr) { wr.WriteDouble(@base._chargeResetTime); });
+                    delegate (NetworkWriter wr) { wr.WriteDouble(@base._chargeResetTime); });
                 @base.SendRpc(JailbirdMessageType.ChargeFailed);
                 break;
             case JailbirdMessageType.ChargeFailed:

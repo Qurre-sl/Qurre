@@ -24,7 +24,7 @@ public readonly struct CachedPlayer : IEquatable<CachedPlayer>
         Position = player.MovementState.Position;
         Role = !player.RoleInformation.IsAlive ? player.RoleInformation.CachedRole : player.RoleInformation.Role;
         Tag = player.Tag;
-        Inventory = [..player.Inventory.Base.UserInventory.Items.Select(x => x.Value.ItemTypeId)];
+        Inventory = [.. player.Inventory.Base.UserInventory.Items.Select(x => x.Value.ItemTypeId)];
         InventoryHash = string.Join(',', Inventory.Select(x => $"{x}"));
     }
 

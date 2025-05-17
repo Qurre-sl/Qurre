@@ -1,4 +1,4 @@
-﻿using CustomPlayerEffects;
+using CustomPlayerEffects;
 using JetBrains.Annotations;
 using Qurre.API;
 using Qurre.API.Controllers;

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using InventorySystem.Items.Firearms.Attachments;
 using JetBrains.Annotations;
 using Mirror;
@@ -63,20 +63,20 @@ public class WorkStation : NetTransform
             switch (value)
             {
                 case WorkstationStatus.Offline:
-                {
-                    Controller.ServerStopwatch.Stop();
-                    break;
-                }
+                    {
+                        Controller.ServerStopwatch.Stop();
+                        break;
+                    }
                 case WorkstationStatus.PoweringUp:
-                {
-                    Controller.ServerStopwatch.Restart();
-                    break;
-                }
+                    {
+                        Controller.ServerStopwatch.Restart();
+                        break;
+                    }
                 default:
-                {
-                    Controller.ServerStopwatch.Restart();
-                    break;
-                }
+                    {
+                        Controller.ServerStopwatch.Restart();
+                        break;
+                    }
             } // end switch
         } // end field_set
     } // end field

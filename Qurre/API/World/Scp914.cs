@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using Scp914;
 using UnityEngine;
 using Utils.ConfigHandler;

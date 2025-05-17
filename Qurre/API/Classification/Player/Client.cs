@@ -1,4 +1,4 @@
-﻿using Hints;
+using Hints;
 using JetBrains.Annotations;
 using Mirror;
 using RoundRestarting;

@@ -1,4 +1,4 @@
-﻿namespace Qurre.API.Addons.Audio.Objects;
+namespace Qurre.API.Addons.Audio.Objects;
 
 public interface IAccessConditions
 {

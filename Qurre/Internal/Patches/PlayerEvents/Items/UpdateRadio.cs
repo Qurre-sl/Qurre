@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -47,14 +47,14 @@ internal static class UpdateRadio
                 break;
 
             case RadioMessages.RadioCommand.ChangeRange:
-            {
-                byte b = (byte)(range + 1);
-                if (b >= instance.Ranges.Length)
-                    b = 0;
+                {
+                    byte b = (byte)(range + 1);
+                    if (b >= instance.Ranges.Length)
+                        b = 0;
 
-                range = b;
-                break;
-            }
+                    range = b;
+                    break;
+                }
         }
 
         UpdateRadioEvent ev = new(player, instance, (RadioStatus)range, enabled);

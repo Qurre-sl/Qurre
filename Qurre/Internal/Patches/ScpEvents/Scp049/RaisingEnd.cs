@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using PlayerRoles.PlayableScps.Scp049;
 using Qurre.API;

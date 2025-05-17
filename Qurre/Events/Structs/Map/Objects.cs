@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using PlayerRoles.Voice;
 using Qurre.API.Controllers;
 

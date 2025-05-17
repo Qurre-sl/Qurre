@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -172,11 +172,11 @@ public class JsonConfig(string name)
             case bool bl:
                 return bl;
             case IEnumerable<object> list:
-            {
-                JArray jt = [];
-                MergeArray(jt, list);
-                return jt;
-            }
+                {
+                    JArray jt = [];
+                    MergeArray(jt, list);
+                    return jt;
+                }
             case Vector3 vec:
                 return new JObject
                 {

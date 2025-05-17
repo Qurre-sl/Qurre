@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using UnityEngine;
 
 namespace Qurre.API.Objects;

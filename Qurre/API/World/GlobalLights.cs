@@ -1,4 +1,4 @@
-﻿using System.Linq;
+using System.Linq;
 using JetBrains.Annotations;
 using Qurre.API.Addons.Models;
 using Qurre.API.Controllers;

@@ -1,4 +1,4 @@
-﻿using Footprinting;
+using Footprinting;
 using JetBrains.Annotations;
 using Mirror;
 using Qurre.API.Controllers.Components;

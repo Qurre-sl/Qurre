@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection.Emit;
@@ -17,7 +17,7 @@ internal static class AddCredits
     [HarmonyTranspiler]
     private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions)
     {
-        List<CodeInstruction> list = [..instructions];
+        List<CodeInstruction> list = [.. instructions];
 
         if (!Configs.ShowCredits)
             return list.AsEnumerable();

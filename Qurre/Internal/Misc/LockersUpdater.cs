@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using MapGeneration.Distributors;
 using MEC;
 using Qurre.API;

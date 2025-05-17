@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;

@@ -1,4 +1,4 @@
-﻿using JetBrains.Annotations;
+using JetBrains.Annotations;
 using LiteNetLib;
 using Qurre.API.Controllers;
 

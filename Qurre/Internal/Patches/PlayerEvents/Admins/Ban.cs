@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -27,7 +27,7 @@ internal static class Ban
     {
         Label retLabel = generator.DefineLabel();
 
-        List<CodeInstruction> list = [..instructions];
+        List<CodeInstruction> list = [.. instructions];
         list.Last().labels.Add(retLabel);
 
         int translate = list.FindLastIndex(ins =>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
@@ -50,46 +50,46 @@ internal static class InteractGenerator
             switch (colliderId)
             {
                 case 0: // Open, Close, Unlock
-                {
-                    if (instance.HasFlag(instance._flags, Scp079Generator.GeneratorFlags.Unlocked))
                     {
-                        bool opened = instance.HasFlag(instance._flags, Scp079Generator.GeneratorFlags.Open);
-
-                        InteractGeneratorEvent ev = new(pl, instance.GetGenerator(),
-                            opened ? GeneratorStatus.CloseDoor : GeneratorStatus.OpenDoor);
-                        ev.InvokeEvent();
-
-                        if (ev.Allowed)
-                            instance.ServerSetFlag(Scp079Generator.GeneratorFlags.Open, !opened);
-                        else
-                            instance.RpcDenied(ply.GetCombinedPermissions(instance));
-
-                        instance._targetCooldown = instance._doorToggleCooldownTime;
-                    }
-                    else
-                    {
-                        InteractGeneratorEvent ev = new(pl, instance.GetGenerator(), GeneratorStatus.Unlock);
-
-                        ev.Allowed =
-                            instance.PermissionsPolicy.CheckPermissions(ply, instance, out PermissionUsed callback);
-
-                        ev.InvokeEvent();
-
-                        if (ev.Allowed)
+                        if (instance.HasFlag(instance._flags, Scp079Generator.GeneratorFlags.Unlocked))
                         {
-                            instance.ServerSetFlag(Scp079Generator.GeneratorFlags.Unlocked, true);
-                            callback?.Invoke(instance, true);
+                            bool opened = instance.HasFlag(instance._flags, Scp079Generator.GeneratorFlags.Open);
+
+                            InteractGeneratorEvent ev = new(pl, instance.GetGenerator(),
+                                opened ? GeneratorStatus.CloseDoor : GeneratorStatus.OpenDoor);
+                            ev.InvokeEvent();
+
+                            if (ev.Allowed)
+                                instance.ServerSetFlag(Scp079Generator.GeneratorFlags.Open, !opened);
+                            else
+                                instance.RpcDenied(ply.GetCombinedPermissions(instance));
+
+                            instance._targetCooldown = instance._doorToggleCooldownTime;
                         }
                         else
                         {
-                            instance._targetCooldown = instance._unlockCooldownTime;
-                            instance.RpcDenied(ply.GetCombinedPermissions(instance));
-                            callback?.Invoke(instance, false);
-                        }
-                    }
+                            InteractGeneratorEvent ev = new(pl, instance.GetGenerator(), GeneratorStatus.Unlock);
 
-                    break;
-                }
+                            ev.Allowed =
+                                instance.PermissionsPolicy.CheckPermissions(ply, instance, out PermissionUsed callback);
+
+                            ev.InvokeEvent();
+
+                            if (ev.Allowed)
+                            {
+                                instance.ServerSetFlag(Scp079Generator.GeneratorFlags.Unlocked, true);
+                                callback?.Invoke(instance, true);
+                            }
+                            else
+                            {
+                                instance._targetCooldown = instance._unlockCooldownTime;
+                                instance.RpcDenied(ply.GetCombinedPermissions(instance));
+                                callback?.Invoke(instance, false);
+                            }
+                        }
+
+                        break;
+                    }
                 case 1: // Activate / Disable
                     if ((ply.IsHuman() || instance.Activating) && !instance.Engaged)
                     {

@@ -1,4 +1,4 @@
-﻿using CommandSystem;
+using CommandSystem;
 
 namespace Qurre.Internal.Misc;
 

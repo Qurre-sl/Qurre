@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Interactables.Interobjects;
@@ -262,25 +262,25 @@ public class Door : NetTransform
                 return;
 
             case "CHECKPOINT_EZ_HCZ_A":
-            {
-                foreach (RoomIdentifier? room in DoorVariant.Rooms)
-                    if (room.Name == RoomName.HczCheckpointToEntranceZone)
-                        switch (room.transform.position.z)
-                        {
-                            case > 75:
+                {
+                    foreach (RoomIdentifier? room in DoorVariant.Rooms)
+                        if (room.Name == RoomName.HczCheckpointToEntranceZone)
+                            switch (room.transform.position.z)
                             {
-                                Type = DoorType.EzCheckpointA;
-                                return;
+                                case > 75:
+                                    {
+                                        Type = DoorType.EzCheckpointA;
+                                        return;
+                                    }
+                                default:
+                                    {
+                                        Type = DoorType.EzCheckpointB;
+                                        return;
+                                    }
                             }
-                            default:
-                            {
-                                Type = DoorType.EzCheckpointB;
-                                return;
-                            }
-                        }
 
-                return;
-            }
+                    return;
+                }
 
             case "GATE_A":
                 Type = DoorType.EzGateA;
@@ -310,16 +310,16 @@ public class Door : NetTransform
         switch (Name.Split(' ')[0])
         {
             case "LCZ":
-            {
-                if (Name.StartsWith("LCZ PortallessBreakableDoor"))
                 {
-                    Type = DoorType.LczAirlock;
+                    if (Name.StartsWith("LCZ PortallessBreakableDoor"))
+                    {
+                        Type = DoorType.LczAirlock;
+                        return;
+                    }
+
+                    Type = DoorType.LczStandard;
                     return;
                 }
-
-                Type = DoorType.LczStandard;
-                return;
-            }
             case "HCZ":
                 if (Name.StartsWith("HCZ BulkDoor"))
                 {
@@ -342,101 +342,101 @@ public class Door : NetTransform
                 return;
 
             case "Unsecured":
-            {
-                if (DoorVariant.Rooms.Any(x => x.Name == RoomName.Hcz049))
                 {
-                    Type = Name.Contains("(1)") ? DoorType.Hcz173Gate : DoorType.Hcz049Gate;
-                    return;
-                }
-
-                if (DoorVariant.Rooms.Any(x => x.Name == RoomName.HczCheckpointToEntranceZone))
-                {
-                    Type = DoorType.EzCheckpointGate;
-                    return;
-                }
-
-                Type = DoorType.Unknown;
-                return;
-            }
-
-            case "Intercom":
-            {
-                foreach (RoomIdentifier? room in DoorVariant.Rooms)
-                    if (room.Name == RoomName.HczCheckpointToEntranceZone)
-                        switch (room.transform.position.z)
-                        {
-                            case > 75:
-                            {
-                                Type = DoorType.EzCheckpointArmoryA;
-                                return;
-                            }
-                            default:
-                            {
-                                Type = DoorType.EzCheckpointArmoryB;
-                                return;
-                            }
-                        }
-
-                Type = DoorType.Unknown;
-                return;
-            }
-
-            case "Elevator" or "Nuke":
-            {
-                if (!DoorVariant.Rooms.Any())
-                    return;
-
-                switch (DoorVariant.Rooms[0].Name)
-                {
-                    case RoomName.LczCheckpointA:
-                        Type = DoorType.ElevatorLczChkpA;
-                        return;
-                    case RoomName.LczCheckpointB:
-                        Type = DoorType.ElevatorLczChkpB;
-                        return;
-
-                    case RoomName.HczCheckpointA:
-                        Type = DoorType.ElevatorHczChkpA;
-                        return;
-                    case RoomName.HczCheckpointB:
-                        Type = DoorType.ElevatorHczChkpB;
-                        return;
-
-                    case RoomName.Hcz049:
-                        Type = DoorType.Elevator049;
-                        return;
-
-                    case RoomName.HczWarhead:
-                        Type = DoorType.ElevatorNuke;
-                        return;
-
-                    case RoomName.EzGateA:
-                        Type = DoorType.ElevatorGateA;
-                        return;
-                    case RoomName.EzGateB:
-                        Type = DoorType.ElevatorGateB;
-                        return;
-                    case RoomName.Outside:
+                    if (DoorVariant.Rooms.Any(x => x.Name == RoomName.Hcz049))
                     {
-                        if (DoorVariant is not ElevatorDoor elev)
-                            return;
-
-                        switch (elev.Group)
-                        {
-                            case ElevatorGroup.GateA:
-                                Type = DoorType.EzGateA;
-                                return;
-                            case ElevatorGroup.GateB:
-                                Type = DoorType.EzGateB;
-                                return;
-                        }
-
+                        Type = Name.Contains("(1)") ? DoorType.Hcz173Gate : DoorType.Hcz049Gate;
                         return;
                     }
-                } // end switch(Room.Name)
 
-                return;
-            } // end case
+                    if (DoorVariant.Rooms.Any(x => x.Name == RoomName.HczCheckpointToEntranceZone))
+                    {
+                        Type = DoorType.EzCheckpointGate;
+                        return;
+                    }
+
+                    Type = DoorType.Unknown;
+                    return;
+                }
+
+            case "Intercom":
+                {
+                    foreach (RoomIdentifier? room in DoorVariant.Rooms)
+                        if (room.Name == RoomName.HczCheckpointToEntranceZone)
+                            switch (room.transform.position.z)
+                            {
+                                case > 75:
+                                    {
+                                        Type = DoorType.EzCheckpointArmoryA;
+                                        return;
+                                    }
+                                default:
+                                    {
+                                        Type = DoorType.EzCheckpointArmoryB;
+                                        return;
+                                    }
+                            }
+
+                    Type = DoorType.Unknown;
+                    return;
+                }
+
+            case "Elevator" or "Nuke":
+                {
+                    if (!DoorVariant.Rooms.Any())
+                        return;
+
+                    switch (DoorVariant.Rooms[0].Name)
+                    {
+                        case RoomName.LczCheckpointA:
+                            Type = DoorType.ElevatorLczChkpA;
+                            return;
+                        case RoomName.LczCheckpointB:
+                            Type = DoorType.ElevatorLczChkpB;
+                            return;
+
+                        case RoomName.HczCheckpointA:
+                            Type = DoorType.ElevatorHczChkpA;
+                            return;
+                        case RoomName.HczCheckpointB:
+                            Type = DoorType.ElevatorHczChkpB;
+                            return;
+
+                        case RoomName.Hcz049:
+                            Type = DoorType.Elevator049;
+                            return;
+
+                        case RoomName.HczWarhead:
+                            Type = DoorType.ElevatorNuke;
+                            return;
+
+                        case RoomName.EzGateA:
+                            Type = DoorType.ElevatorGateA;
+                            return;
+                        case RoomName.EzGateB:
+                            Type = DoorType.ElevatorGateB;
+                            return;
+                        case RoomName.Outside:
+                            {
+                                if (DoorVariant is not ElevatorDoor elev)
+                                    return;
+
+                                switch (elev.Group)
+                                {
+                                    case ElevatorGroup.GateA:
+                                        Type = DoorType.EzGateA;
+                                        return;
+                                    case ElevatorGroup.GateB:
+                                        Type = DoorType.EzGateB;
+                                        return;
+                                }
+
+                                return;
+                            }
+                    } // end switch(Room.Name)
+
+                    return;
+                } // end case
         } // end switch(Name)
     } // end void
 }

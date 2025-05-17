@@ -1,4 +1,4 @@
-﻿using Interactables.Interobjects.DoorUtils;
+using Interactables.Interobjects.DoorUtils;
 using JetBrains.Annotations;
 using Qurre.API.Controllers;
 

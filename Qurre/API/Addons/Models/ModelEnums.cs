@@ -1,4 +1,4 @@
-﻿namespace Qurre.API.Addons.Models;
+namespace Qurre.API.Addons.Models;
 
 public enum ModelEnums : byte
 {

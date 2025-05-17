@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -24,7 +24,7 @@ internal static class Cuff
         LocalBuilder unCuffEvent = generator.DeclareLocal(typeof(UnCuffEvent));
         LocalBuilder cuffEvent = generator.DeclareLocal(typeof(CuffEvent));
 
-        List<CodeInstruction> list = [..instructions];
+        List<CodeInstruction> list = [.. instructions];
         list.Last().labels.Add(retLabel);
 
         int unCuffIndex = list.FindIndex(ins => ins.opcode == OpCodes.Call &&
