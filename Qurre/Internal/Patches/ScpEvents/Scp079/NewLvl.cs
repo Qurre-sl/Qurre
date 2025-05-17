@@ -1,8 +1,9 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using PlayerRoles.PlayableScps.Scp079;
 using Qurre.API;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -22,14 +23,17 @@ internal static class NewLvl
             if (__instance._accessTier == value)
                 return false;
 
-            var player = __instance.Owner.GetPlayer();
-            if (player is null) return false;
+            Player? pl = __instance.Owner.GetPlayer();
 
-            var ev = new Scp079NewLvlEvent(player, value);
+            if (pl is null)
+                return false;
+
+            Scp079NewLvlEvent ev = new(pl, value);
             ev.InvokeEvent();
 
             value = ev.Level;
-            return ev.IsAllowed;
+
+            return ev.Allowed;
         }
         catch (Exception e)
         {

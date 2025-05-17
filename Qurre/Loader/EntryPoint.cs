@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using JetBrains.Annotations;
-using MEC;
 using Qurre.API;
 using Qurre.API.Addons;
 using Qurre.Internal.EventsManager;
@@ -18,7 +17,7 @@ internal class EntryPoint : ICharacterLoader
     public void Enable()
     {
         if (StartupArgs.Args.Any(arg => string.Equals(arg, "-disableAnsiColors", StringComparison.OrdinalIgnoreCase)))
-            BetterColors.IsEnabled = false;
+            BetterColors.Enabled = false;
 
         Log.Info("Initializing Qurre...");
 
@@ -30,61 +29,15 @@ internal class EntryPoint : ICharacterLoader
 
             Internal.EventsManager.Loader.PathQurreEvents();
 
-            Init?.Invoke();
-
             SelfInvokeExecutor.InvokeAll();
             Plugins.Init();
 
-            Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{EventCore.Version}")} enabled"), "Loader",
+            Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{Core.Version}")} enabled"), "Loader",
                 ConsoleColor.Red);
         }
         catch (Exception e)
         {
             ServerConsole.AddLog(e.ToString(), ConsoleColor.Red);
         }
-
-
-        if (!Configs.PrintLogo || Log.Errored)
-            return;
-
-        Timing.CallDelayed(0.5f, () => ServerConsole.AddLog(BetterColors.Hidden("⠀") + """
-
-                                                                                            
-                                                                                            
-                       .:^:^:..:.                                         ..                
-                      .^^^^^^:^!~~^:.                              .::..:^^^^~^.            
-                     :~.:^^^~:.^:^^!7^.                          ^~~~^~!^^~^^^.~.           
-                     :::^^::::^:!~^7~:!~:                      ^^!!~~~:^^^^:^^:^^           
-                    .~..:^^~!~^^^^!!^!??7!~:                 .~!!~!7^!~^~~^:^^::::          
-                    ^^..::.^7^~:^:~~??7^.::~               .^!!~^~~?7^:~~?!^::..^^          
-                    ~^.^!~^....:!!!!~: :^.:~             .:~^^^~^..^~~~::^^:::~.:!.         
-                    ~^~7!:::^:: ~7: .^^~77~~7!77!~: .~~^^!^~~^~~~^^:.:~~^!?~.^^.:!.         
-                    .:~J!:    ::7?^ ..^!?7!~?JJJ?JJ?~???J7!~~~~~^~~^::!!^^^..:~~:^          
-                     :~!^:.:..  :~~.::::!??????J?!J?!J7!JJJ?7~~~^:^^^.^.  ..:^~~::          
-                     :!^^:^^:::      .:^~7??JJJJJ!!?7J77?JJ?7~^^::...  :..:..:~~~.          
-                     .~:^~!^^^!       ~???????JJJ7?7!J?J??JJ?~7!^      ^^::~~~^!^           
-                      :!^^^^.~!:     .???JJ?JJJJJ?7?!!JJJ7J?7?J??.     ~7^:~~!~!.           
-               :^::::..^^::^:^?~      :..:7J?JJJ?7?J!777JJJJJ!^:^:    .?7^^^~7?^   ....     
-             .^^^^^^^^^^^^^^^.!!:     ..  .!7?JJ7??7~?J7!JJ?7.        !?!:^:^!!:::^^^^^:.   
-             .^^::::^^^^^~~~~.:~~^    ~^  .77777!??!.?JJ!7~~~. .~~   ^!~^^^~~~^^:^^^^^:^:   
-             .^^:::::^^^^^^^~~:::~^   !7^:^7!?J?!?J!.!JJ7~:~!..~!:  ^^:::^^~^^~~~^^^::^~:   
-              ^!!: .::.^~~~^^^~~^:~.  .~~^^!^.7?!?J~^7?7!:!!^:^^.  :^:^^~~^^^^^^:::::^^~:   
-              .^~.    ..:~?7^~~~~~:~:      :~~^~!J?.!J7!~:^^      ..^!!~^^~7!~:...   ~~^.   
-               .~:        :~~!!!^^!!!.      ^!~!~J?:7?!~!!::     :~~~^^~7~!7^.      .~:.    
-                 .          ^~!!?77~^^.     ^7!?^7?^^?7~!?!:    :~~!~~7!~^^.        ^:      
-                             :!~~77~:::     ^777^~?~:??!7^~.   .^.^7??!!~:         ..       
-                               :^^^^:..     .!^~~:7!^7:!^ :    .::^~~^^:.                   
-                                             :::! :.!! !^:       ...:..                     
-                                               :!   .  !^.                                  
-                                               ^7     .!:                                   
-                                               ^7  ....7^                                   
-                                               :7:.^!.:7.                                   
-                                                ^~:7?^^^                                    
-                                                 :^^:^:                                     
-                                                                                            
-
-            """ + BetterColors.Hidden("⠀"), ConsoleColor.Red));
     }
-
-    internal static event Action? Init;
 }

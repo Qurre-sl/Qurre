@@ -1,19 +1,19 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
-using JetBrains.Annotations;
 using PlayerStatsSystem;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 
 namespace Qurre.Internal.Patches.Misc;
 
 [HarmonyPatch(typeof(HealthStat), nameof(HealthStat.MaxValue), MethodType.Getter)]
+[SuppressMessage("ReSharper", "UnusedMember.Local")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 [SuppressMessage("ReSharper", "InconsistentNaming")]
 internal static class GetMaxHp
 {
     [HarmonyPrefix]
-    [UsedImplicitly]
     private static bool Call(HealthStat __instance, ref float __result)
     {
         try
@@ -37,7 +37,6 @@ internal static class GetMaxHp
     }
 
     [HarmonyPostfix]
-    [UsedImplicitly]
     private static void FixZeroHp(ref float __result)
     {
         try

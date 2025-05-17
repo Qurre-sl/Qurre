@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using InventorySystem.Items;
 using InventorySystem.Items.Firearms.Ammo;
 using InventorySystem.Items.Jailbird;
@@ -6,31 +6,31 @@ using InventorySystem.Items.Pickups;
 using InventorySystem.Items.ThrowableProjectiles;
 using InventorySystem.Items.Usables.Scp330;
 using JetBrains.Annotations;
-using Qurre.API.Entities.Characters;
-using Qurre.API.Enums;
+using Qurre.API.Controllers;
+using Qurre.API.Objects;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
 
 using static ThrowableItem;
 
-[PublicAPI]
-public class PrePickupItemEvent : IBaseEvent
-{
-    private const uint EventID = PlayerEvents.PrePickupItem;
-
-    internal PrePickupItemEvent(Player player, ItemPickupBase pickup)
-    {
-        Player = player;
-        Pickup = pickup;
-        IsAllowed = true;
-    }
-
-    public Player Player { get; }
-    public ItemPickupBase Pickup { get; }
-    public bool IsAllowed { get; set; }
-    public uint EventId { get; } = EventID;
-}
+// [PublicAPI]
+// public class PrePickupItemEvent : IBaseEvent
+// {
+//     private const uint EventID = PlayerEvents.PrePickupItem;
+//
+//     internal PrePickupItemEvent(Player player, Pickup pickup)
+//     {
+//         Player = player;
+//         Pickup = pickup;
+//         Allowed = true;
+//     }
+//
+//     public Player Player { get; }
+//     public Pickup Pickup { get; }
+//     public bool Allowed { get; set; }
+//     public uint EventId { get; } = EventID;
+// }
 
 [PublicAPI]
 public class PickupItemEvent : IBaseEvent
@@ -41,12 +41,12 @@ public class PickupItemEvent : IBaseEvent
     {
         Player = player;
         Pickup = pickup;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Player { get; }
     public ItemPickupBase Pickup { get; }
-    public bool IsAllowed { get; set; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
 
@@ -55,18 +55,17 @@ public class PickupAmmoEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.PickupAmmo;
 
-    internal PickupAmmoEvent(Player player, ItemPickupBase pickup, AmmoPickup ammo)
+    internal PickupAmmoEvent(Player player, AmmoPickup ammo)
     {
         Player = player;
-        Pickup = pickup;
         Ammo = ammo;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Player { get; }
-    public ItemPickupBase Pickup { get; }
+    public ItemPickupBase Pickup => Ammo;
     public AmmoPickup Ammo { get; }
-    public bool IsAllowed { get; set; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
 
@@ -79,12 +78,12 @@ public class PickupArmorEvent : IBaseEvent
     {
         Player = player;
         Pickup = pickup;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Player { get; }
     public ItemPickupBase Pickup { get; }
-    public bool IsAllowed { get; set; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
 
@@ -98,13 +97,13 @@ public class PickupCandyEvent : IBaseEvent
         Player = player;
         Bag = bag;
         List = list;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Player { get; }
     public Scp330Bag Bag { get; }
     public List<CandyKindID> List { get; }
-    public bool IsAllowed { get; set; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
 
@@ -119,14 +118,14 @@ public class ThrowProjectileEvent : IBaseEvent
         Item = item;
         Settings = settings;
         FullForce = fullForce;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Player { get; }
     public ThrowableItem Item { get; }
     public ProjectileSettings Settings { get; }
     public bool FullForce { get; }
-    public bool IsAllowed { get; set; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
 
@@ -139,12 +138,12 @@ public class DropItemEvent : IBaseEvent
     {
         Player = player;
         Item = item;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Player { get; }
     public ItemBase Item { get; }
-    public bool IsAllowed { get; set; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
 
@@ -169,18 +168,18 @@ public class DropAmmoEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.DropAmmo;
 
-    internal DropAmmoEvent(Player player, AmmoTypes ammoType, ushort amount)
+    internal DropAmmoEvent(Player player, AmmoType type, ushort amount)
     {
         Player = player;
-        AmmoType = ammoType;
+        Type = type;
         Amount = amount;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Player { get; }
-    public AmmoTypes AmmoType { get; set; }
+    public AmmoType Type { get; set; }
     public ushort Amount { get; set; }
-    public bool IsAllowed { get; set; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
 
@@ -189,21 +188,20 @@ public class JailbirdTriggerEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.JailbirdTrigger;
 
-    internal JailbirdTriggerEvent(Player player, JailbirdItem jailbirdBase, JailbirdMessageType message)
+    internal JailbirdTriggerEvent(Player player, JailbirdItem @base, JailbirdMessageType message)
     {
         Player = player;
-        Item = jailbirdBase;
+        Item = @base;
         Message = message;
-        JailbirdBase = jailbirdBase;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Player { get; }
+
     public JailbirdItem Item { get; }
 
-    public JailbirdItem JailbirdBase { get; }
+    public JailbirdItem JailbirdBase => Item;
     public JailbirdMessageType Message { get; set; }
-    public bool IsAllowed { get; set; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }

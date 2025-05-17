@@ -1,12 +1,10 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using PlayerRoles;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 
 namespace Qurre.API.Addons.Audio.Objects;
-
-// TODO: раздробить класс на несколько
 
 /// <summary>
 ///     Conditions to determine player access.
@@ -66,8 +64,8 @@ public class AccessConditions(
                        player.ReferenceHub == referenceHub && Tags.Any(tag => player.Tag.Contains(tag)));
 
         allowed |= Items.Any() &&
-                   (referenceHub.inventory?.UserInventory?.Items?.Any(
-                       item => Items.Any(requiredItem => requiredItem.Equals(item.Value?.ItemTypeId)
+                   (referenceHub.inventory?.UserInventory?.Items?.Any(item =>
+                       Items.Any(requiredItem => requiredItem.Equals(item.Value?.ItemTypeId)
                        )) ?? false);
 
         return allowed;

@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -19,7 +19,7 @@ internal static class CheaterReport
         try
         {
             Player? issuer = reporterUserId.GetPlayer();
-            Player? target = Player.Get(reportedUserId);
+            Player? target = reportedUserId.GetPlayer();
 
             if (issuer is null || target is null)
                 return false;

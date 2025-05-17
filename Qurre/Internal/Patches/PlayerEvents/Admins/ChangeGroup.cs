@@ -1,8 +1,8 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 

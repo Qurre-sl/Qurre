@@ -19,21 +19,18 @@ internal static class Warhead
 
     private static void OnStart(LabApiEvents.WarheadStartingEventArgs ev)
     {
-        AlphaStartEvent @event = new(ev.Player.GetPlayer(), ev.IsAutomatic, ev.SuppressSubtitles, ev.WarheadState);
+        AlphaStartEvent @event = new(ev.Player.ReferenceHub.GetPlayer(), ev.IsAutomatic);
         @event.InvokeEvent();
 
         ev.IsAutomatic = @event.Automatic;
         ev.IsAllowed = @event.Allowed;
-        ev.SuppressSubtitles = @event.SuppressSubtitles;
-        ev.WarheadState = @event.State;
     }
 
     private static void OnStop(LabApiEvents.WarheadStoppingEventArgs ev)
     {
-        AlphaStopEvent @event = new(ev.Player.GetPlayer(), ev.WarheadState);
+        AlphaStopEvent @event = new(ev.Player.ReferenceHub.GetPlayer());
         @event.InvokeEvent();
 
-        ev.WarheadState = @event.State;
         ev.IsAllowed = @event.Allowed;
     }
 

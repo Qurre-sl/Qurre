@@ -1,9 +1,10 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using PlayerRoles.Ragdolls;
 using PlayerStatsSystem;
 using Qurre.API;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -19,7 +20,7 @@ internal static class CorpseSpawn
     {
         try
         {
-            var player = owner.GetPlayer();
+            Player? player = owner.GetPlayer();
 
             if (player is null)
                 return false;
@@ -27,7 +28,7 @@ internal static class CorpseSpawn
             CorpseSpawnEvent ev = new(player, handler);
             ev.InvokeEvent();
 
-            return ev.IsAllowed;
+            return ev.Allowed;
         }
         catch (Exception e)
         {

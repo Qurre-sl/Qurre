@@ -1,10 +1,10 @@
-using InventorySystem.Items;
-using InventorySystem.Items.Radio;
+﻿using InventorySystem.Items;
 using InventorySystem.Items.Usables;
 using JetBrains.Annotations;
-using Qurre.API.Entities.Characters;
-using Qurre.API.Enums;
+using Qurre.API.Objects;
 using UnityEngine;
+using Player = Qurre.API.Controllers.Player;
+using RadioItem = InventorySystem.Items.Radio.RadioItem;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
@@ -14,7 +14,7 @@ public class CancelUseItemEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.CancelUseItem;
 
-    internal CancelUseItemEvent(Player player, ItemBase item)
+    internal CancelUseItemEvent(Player player, UsableItem item)
     {
         Player = player;
         Item = item;
@@ -22,7 +22,7 @@ public class CancelUseItemEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public ItemBase Item { get; }
+    public UsableItem Item { get; }
     public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
@@ -32,7 +32,7 @@ public class UseItemEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.UseItem;
 
-    internal UseItemEvent(Player player, ItemBase item)
+    internal UseItemEvent(Player player, UsableItem item)
     {
         Player = player;
         Item = item;
@@ -40,7 +40,7 @@ public class UseItemEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public ItemBase Item { get; }
+    public UsableItem Item { get; }
     public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }
@@ -86,10 +86,10 @@ public class UpdateRadioEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.UpdateRadio;
 
-    internal UpdateRadioEvent(Player player, RadioItem radioBase, RadioStatus range, bool enabled)
+    internal UpdateRadioEvent(Player player, RadioItem radio, RadioStatus range, bool enabled)
     {
         Player = player;
-        Radio = radioBase;
+        Radio = radio;
         Range = range;
         Enabled = enabled;
         Allowed = true;
@@ -108,11 +108,11 @@ public class UsingRadioEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.UsingRadio;
 
-    internal UsingRadioEvent(Player player, RadioItem radioBase, float num)
+    internal UsingRadioEvent(Player player, RadioItem radio, float num)
     {
         Player = player;
-        Radio = radioBase;
-        Battery = radioBase._battery * 100;
+        Radio = radio;
+        Battery = radio._battery * 100;
         Consumption = Time.deltaTime * (num / 60 / 100) * 100;
         Allowed = true;
     }

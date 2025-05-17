@@ -1,39 +1,52 @@
-using System.Linq;
-using JetBrains.Annotations;
+﻿namespace Qurre.API.Addons;
 
-namespace Qurre.API.Addons;
-
-[PublicAPI]
 public class Version
 {
-    private const string SMajor = "3";
+    private const string SMajor = "2";
     private const string SMinor = "0";
     private const string SBuild = "0";
-    private const string SRevision = "7";
-    private const string SName = "alpha";
+    private const string SRevision = "185";
+
+    private const string STesting = "zeta";
 
     internal const string AssemblyVersion = $"{SMajor}.{SMinor}.{SBuild}.{SRevision}";
-    internal const string AssemblyCustom = $"v3-{SName}.{SBuild}";
+    internal const string AssemblyCustom = $"v2-{STesting}";
 
     internal Version()
     {
     }
 
-    public static uint Major { get; } = uint.Parse(SMajor);
-    public static uint Minor { get; } = uint.Parse(SMinor);
-    public static uint Build { get; } = uint.Parse(SBuild);
-    public static uint Revision { get; } = uint.Parse(SRevision);
-    public static string Name => SName;
+    public static int Major { get; } = int.Parse(SMajor);
+
+    public static int Minor { get; } = int.Parse(SMinor);
+
+    public static int Build { get; } = int.Parse(SBuild);
+
+    public static int Revision { get; } = int.Parse(SRevision);
+
+    public static string Testing => STesting;
 
     public override string ToString()
     {
-        var prefix = string.IsNullOrEmpty(Name) ? "" : $"v3-{Name}.{Build}";
+        if (!string.IsNullOrEmpty(Testing)) return $"{Major}-{Testing} r-{Revision}";
 
-        var parts = new[] { Major, Minor, Build, Revision }
-            .TakeWhile(part => part > 0);
+        string version = $"{Major}";
 
-        var versionNumbers = string.Join(".", parts);
+        if (Minor <= 0)
+            return version;
 
-        return $"{prefix} ({versionNumbers})";
+        version += $".{Minor}";
+
+        if (Build <= 0)
+            return version;
+
+        version += $".{Build}";
+
+        if (Revision <= 0)
+            return version;
+
+        version += $".{Revision}";
+
+        return version;
     }
 }

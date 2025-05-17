@@ -1,8 +1,8 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using PlayerStatsSystem;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
-using Qurre.API.Enums;
+using Qurre.API.Controllers;
+using Qurre.API.Objects;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
@@ -24,16 +24,16 @@ public class DeadEvent : IBaseEvent
     public Player Attacker { get; }
     public Player Target { get; }
     public DamageTypes DamageType { get; }
-    public DamagePrimitiveTypes LiteType { get; }
+    public LiteDamageTypes LiteType { get; }
     public DamageHandlerBase DamageInfo { get; }
     public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class DiesEvent : ICancellableEvent
+public class DiesEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.Dies;
-    private DamagePrimitiveTypes _liteType = DamagePrimitiveTypes.Unknown;
+    private LiteDamageTypes _liteType = LiteDamageTypes.Unknown;
 
     private DamageTypes _type = DamageTypes.Unknown;
 
@@ -42,12 +42,13 @@ public class DiesEvent : ICancellableEvent
         Attacker = attacker;
         Target = target;
         DamageInfo = damageInfo;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Attacker { get; }
     public Player Target { get; }
     public DamageHandlerBase DamageInfo { get; }
+    public bool Allowed { get; set; }
 
     public DamageTypes DamageType
     {
@@ -58,16 +59,14 @@ public class DiesEvent : ICancellableEvent
         }
     }
 
-    public DamagePrimitiveTypes LiteType
+    public LiteDamageTypes LiteType
     {
         get
         {
-            if (_liteType is DamagePrimitiveTypes.Unknown) _liteType = DamageInfo.GetLiteDamageTypes();
+            if (_liteType is LiteDamageTypes.Unknown) _liteType = DamageInfo.GetLiteDamageTypes();
             return _liteType;
         }
     }
-
-    public bool IsAllowed { get; set; }
 
     public uint EventId { get; } = EventID;
 }
@@ -76,7 +75,7 @@ public class DiesEvent : ICancellableEvent
 public class DamageEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.Damage;
-    private DamagePrimitiveTypes _liteType = DamagePrimitiveTypes.Unknown;
+    private LiteDamageTypes _liteType = LiteDamageTypes.Unknown;
 
     private DamageTypes _type = DamageTypes.Unknown;
 
@@ -104,11 +103,11 @@ public class DamageEvent : IBaseEvent
         }
     }
 
-    public DamagePrimitiveTypes LiteType
+    public LiteDamageTypes LiteType
     {
         get
         {
-            if (_liteType is DamagePrimitiveTypes.Unknown) _liteType = DamageInfo.GetLiteDamageTypes();
+            if (_liteType is LiteDamageTypes.Unknown) _liteType = DamageInfo.GetLiteDamageTypes();
             return _liteType;
         }
     }
@@ -120,7 +119,7 @@ public class DamageEvent : IBaseEvent
 public class AttackEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.Attack;
-    private DamagePrimitiveTypes _liteType = DamagePrimitiveTypes.Unknown;
+    private LiteDamageTypes _liteType = LiteDamageTypes.Unknown;
 
     private DamageTypes _type = DamageTypes.Unknown;
 
@@ -151,11 +150,11 @@ public class AttackEvent : IBaseEvent
         }
     }
 
-    public DamagePrimitiveTypes LiteType
+    public LiteDamageTypes LiteType
     {
         get
         {
-            if (_liteType is DamagePrimitiveTypes.Unknown) _liteType = DamageInfo.GetLiteDamageTypes();
+            if (_liteType is LiteDamageTypes.Unknown) _liteType = DamageInfo.GetLiteDamageTypes();
             return _liteType;
         }
     }
@@ -164,7 +163,7 @@ public class AttackEvent : IBaseEvent
 }
 
 [PublicAPI]
-public class HealEvent : ICancellableEvent
+public class HealEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.Heal;
 
@@ -172,11 +171,11 @@ public class HealEvent : ICancellableEvent
     {
         Player = player;
         Amount = amount;
-        IsAllowed = true;
+        Allowed = true;
     }
 
     public Player Player { get; }
     public float Amount { get; set; }
-    public bool IsAllowed { get; set; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
 }

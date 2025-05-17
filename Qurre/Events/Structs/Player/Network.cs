@@ -1,9 +1,6 @@
-using System;
-using System.Net;
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using LiteNetLib;
-using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
@@ -13,7 +10,7 @@ public class PreauthEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.Preauth;
 
-    internal PreauthEvent(string userid, IPAddress ip, CentralAuthPreauthFlags flags, string region,
+    internal PreauthEvent(string userid, string ip, CentralAuthPreauthFlags flags, string region,
         ConnectionRequest req)
     {
         UserId = userid;
@@ -22,26 +19,15 @@ public class PreauthEvent : IBaseEvent
         Region = region;
         Request = req;
         Allowed = true;
-
-        RejectionReason = RejectionReason.NotSpecified;
-        RejectionCustomReason = string.Empty;
-        RejectionExpiration = DateTime.UtcNow.Ticks;
-        RejectionRedirectPort = Server.Port;
-        RejectionDelay = 10;
     }
 
     public string UserId { get; }
-    public IPAddress Ip { get; }
+    public string Ip { get; }
     public CentralAuthPreauthFlags Flags { get; }
     public string Region { get; }
     public ConnectionRequest Request { get; }
     public bool Allowed { get; set; }
 
-    public RejectionReason RejectionReason { get; set; }
-    public string RejectionCustomReason { get; set; }
-    public long RejectionExpiration { get; set; }
-    public ushort RejectionRedirectPort { get; set; }
-    public byte RejectionDelay { get; set; }
     public uint EventId { get; } = EventID;
 }
 

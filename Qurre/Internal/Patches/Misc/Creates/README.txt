@@ -1,1 +1,0 @@
-These patches are mostly needed to work with objects that were created natively

@@ -1,12 +1,12 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using JetBrains.Annotations;
 
 namespace Qurre.API.Addons;
 
 [PublicAPI]
-public class VariableDictionary<TValue> : Dictionary<string, TValue>
+public class VariableDictionary<TKey, TValue> : Dictionary<TKey, TValue>
 {
-    public new TValue this[string key]
+    public new TValue this[TKey key]
     {
         get
         {
@@ -22,9 +22,9 @@ public class VariableDictionary<TValue> : Dictionary<string, TValue>
         set => base[key] = value;
     }
 
-    public bool TryGetAndParse<T>(string key, out T value)
+    public bool TryGetAndParse<T>(TKey key, out T value)
     {
-        if (TryGetValue(key, out var pre))
+        if (TryGetValue(key, out TValue pre))
             if (pre is T res)
             {
                 value = res;
@@ -35,7 +35,7 @@ public class VariableDictionary<TValue> : Dictionary<string, TValue>
         return false;
     }
 
-    public new bool TryGetValue(string key, out TValue value)
+    public new bool TryGetValue(TKey key, out TValue value)
     {
         try
         {
@@ -48,7 +48,7 @@ public class VariableDictionary<TValue> : Dictionary<string, TValue>
         }
     }
 
-    public new bool ContainsKey(string key)
+    public new bool ContainsKey(TKey key)
     {
         try
         {
@@ -60,7 +60,7 @@ public class VariableDictionary<TValue> : Dictionary<string, TValue>
         }
     }
 
-    public new bool Add(string key, TValue value)
+    public new bool Add(TKey key, TValue value)
     {
         try
         {
@@ -73,7 +73,7 @@ public class VariableDictionary<TValue> : Dictionary<string, TValue>
         }
     }
 
-    public new bool Remove(string key)
+    public new bool Remove(TKey key)
     {
         try
         {

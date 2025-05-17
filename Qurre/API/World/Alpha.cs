@@ -1,4 +1,4 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using LabApi.Features.Wrappers;
 
 namespace Qurre.API.World;

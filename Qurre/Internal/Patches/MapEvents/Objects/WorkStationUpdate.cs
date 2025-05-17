@@ -1,8 +1,8 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using InventorySystem.Items.Firearms.Attachments;
-using Qurre.API.Entities;
-using Qurre.API.Entities.Environment;
+using Mirror;
+using Qurre.API;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -17,12 +17,12 @@ internal static class WorkStationUpdate
     [HarmonyPrefix]
     private static bool Call(WorkstationController __instance)
     {
-        if (__instance.Status == 0 || !EntityManager.TryGet(__instance, out IWorkStation? workStation))
+        if (!NetworkServer.active || __instance.Status == 0)
             return false;
 
-        var ev = new WorkStationUpdateEvent(workStation);
+        WorkStationUpdateEvent ev = new(__instance.GetWorkStation());
         ev.InvokeEvent();
 
-        return ev.IsAllowed;
+        return ev.Allowed;
     }
 }

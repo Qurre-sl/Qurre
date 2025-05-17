@@ -1,64 +1,64 @@
-using Interactables.Interobjects.DoorUtils;
+﻿using Interactables.Interobjects.DoorUtils;
 using JetBrains.Annotations;
-using Qurre.API.Entities.Doors;
+using Qurre.API.Controllers;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class DamageDoorEvent : ICancellableEvent
+public class DamageDoorEvent : IBaseEvent
 {
     private const uint EventID = MapEvents.DamageDoor;
 
-    internal DamageDoorEvent(IBreakableDoor door, DoorDamageType type, float damage)
+    internal DamageDoorEvent(Door door, DoorDamageType type, float damage)
     {
         Door = door;
         Type = type;
         Damage = damage;
+        Allowed = true;
     }
 
-    public IBreakableDoor Door { get; }
+    public Door Door { get; }
     public DoorDamageType Type { get; }
     public float Damage { get; set; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
-public class LockDoorEvent : ICancellableEvent
+public class LockDoorEvent : IBaseEvent
 {
     private const uint EventID = MapEvents.LockDoor;
 
-    internal LockDoorEvent(IDoor door, DoorLockReason reason, bool newState)
+    internal LockDoorEvent(Door door, DoorLockReason reason, bool @new)
     {
         Door = door;
         Reason = reason;
-        NewState = newState;
+        NewState = @new;
+        Allowed = true;
     }
 
-    public IDoor Door { get; }
+    public Door Door { get; }
     public DoorLockReason Reason { get; }
     public bool NewState { get; set; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
-public class OpenDoorEvent : ICancellableEvent
+public class OpenDoorEvent : IBaseEvent
 {
     private const uint EventID = MapEvents.OpenDoor;
 
-    internal OpenDoorEvent(IDoor door, DoorEventOpenerExtension.OpenerEventType type)
+    internal OpenDoorEvent(Door door, DoorEventOpenerExtension.OpenerEventType type)
     {
         Door = door;
         Type = type;
+        Allowed = true;
     }
 
-    public IDoor Door { get; }
+    public Door Door { get; }
     public DoorEventOpenerExtension.OpenerEventType Type { get; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -8,7 +8,7 @@ using CommandSystem;
 using Footprinting;
 using HarmonyLib;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 using Qurre.Loader;
@@ -27,7 +27,7 @@ internal static class Ban
     {
         Label retLabel = generator.DefineLabel();
 
-        List<CodeInstruction> list = [.. instructions];
+        List<CodeInstruction> list = [..instructions];
         list.Last().labels.Add(retLabel);
 
         int translate = list.FindLastIndex(ins =>

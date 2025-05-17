@@ -1,11 +1,11 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
 using HarmonyLib;
 using InventorySystem.Items.Radio;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
-using Qurre.API.Enums;
+using Qurre.API.Controllers;
+using Qurre.API.Objects;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -47,14 +47,14 @@ internal static class UpdateRadio
                 break;
 
             case RadioMessages.RadioCommand.ChangeRange:
-                {
-                    byte b = (byte)(range + 1);
-                    if (b >= instance.Ranges.Length)
-                        b = 0;
+            {
+                byte b = (byte)(range + 1);
+                if (b >= instance.Ranges.Length)
+                    b = 0;
 
-                    range = b;
-                    break;
-                }
+                range = b;
+                break;
+            }
         }
 
         UpdateRadioEvent ev = new(player, instance, (RadioStatus)range, enabled);

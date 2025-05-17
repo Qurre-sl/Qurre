@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -6,14 +6,10 @@ using System.Reflection;
 using System.Reflection.Emit;
 using GameCore;
 using HarmonyLib;
-using LabApi.Events.Arguments.ServerEvents;
+using LabApi.Features.Wrappers;
 using MEC;
 using PlayerRoles;
-using Qurre.API;
-using Qurre.API.Core;
-using Qurre.API.Entities;
-using Qurre.API.Entities.Characters;
-using Qurre.API.World;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 using Qurre.Loader;
@@ -21,6 +17,10 @@ using RoundRestarting;
 using UnityEngine;
 using Console = GameCore.Console;
 using Log = Qurre.API.Log;
+using Map = LabApi.Features.Wrappers.Map;
+using Player = Qurre.API.Controllers.Player;
+using Round = Qurre.API.World.Round;
+using Server = Qurre.API.Server;
 
 namespace Qurre.Internal.Patches.RoundEvents;
 
@@ -55,7 +55,7 @@ internal static class Check
             yield return Timing.WaitForSeconds(2.5f);
 
             while (RoundSummary.RoundLock || !Round.Started || Time.unscaledTime - time < 15f ||
-                   (instance.KeepRoundOnOne && Player.List.Count < 2) || Round.ElapsedTime.TotalSeconds < 15f)
+                   (instance.KeepRoundOnOne && Player.List.Count() < 2) || Round.ElapsedTime.TotalSeconds < 15f)
                 yield return Timing.WaitForSeconds(1);
 
             RoundSummary.SumInfo_ClassList list = default;
@@ -80,13 +80,13 @@ internal static class Check
                             list.mtf_and_guards++;
                             break;
                         case Team.SCPs:
-                            {
-                                if (pl.RoleInformation.RoleType is RoleTypeId.Scp0492)
-                                    list.zombies++;
-                                else
-                                    list.scps_except_zombies++;
-                                break;
-                            }
+                        {
+                            if (pl.RoleInformation.Role is RoleTypeId.Scp0492)
+                                list.zombies++;
+                            else
+                                list.scps_except_zombies++;
+                            break;
+                        }
                     }
                 }
                 catch
@@ -169,12 +169,6 @@ internal static class Check
             if (!instance.IsRoundEnded)
                 continue;
 
-            RoundEndingEventArgs labEv1 = new(winner);
-            LabApi.Events.Handlers.ServerEvents.OnRoundEnding(labEv1);
-
-            if (!labEv1.IsAllowed)
-                continue;
-
             FriendlyFireConfig.PauseDetector = true;
 
             string text = $"Round finished! Anomalies: {scp} | Chaos: {list.chaos_insurgents} | " +
@@ -192,14 +186,9 @@ internal static class Check
             winner = evEnd.Winner;
             wait = Mathf.Clamp(evEnd.ToRestart, 5, 1000);
 
-            RoundEndedEventArgs labEv2 = new(winner);
-            labEv2.ShowSummary = evEnd.ShowSummary;
-            LabApi.Events.Handlers.ServerEvents.OnRoundEnded(labEv2);
-
-            if (labEv2.ShowSummary)
-                instance.RpcShowRoundSummary(instance.classlistStart, list, winner, RoundSummary.EscapedClassD,
-                    RoundSummary.EscapedScientists, RoundSummary.KilledBySCPs, wait,
-                    (int)RoundStart.RoundLength.TotalSeconds);
+            instance.RpcShowRoundSummary(instance.classlistStart, list, winner, RoundSummary.EscapedClassD,
+                RoundSummary.EscapedScientists, RoundSummary.KilledBySCPs, wait,
+                (int)RoundStart.RoundLength.TotalSeconds);
 
             yield return Timing.WaitForSeconds(wait - 1);
 
@@ -220,14 +209,14 @@ internal static class Check
             // optimization
             try
             {
-                foreach (var pl in Player.List)
+                foreach (Player? pl in Player.List)
                     try
                     {
-                        if (pl.RoleInformation.RoleType == RoleTypeId.Spectator)
+                        if (pl.RoleInformation.Role == RoleTypeId.Spectator)
                             continue;
 
                         pl.Inventory.Clear();
-                        pl.RoleInformation.RoleType = RoleTypeId.Spectator;
+                        pl.RoleInformation.Role = RoleTypeId.Spectator;
                     }
                     catch
                     {
@@ -239,7 +228,56 @@ internal static class Check
                 // ignored
             }
 
-            EntityManager.GetAll<IEntity>().ForEach(entity => entity.Destroy());
+            try
+            {
+                foreach (Pickup? p in Map.Pickups.ToArray())
+                    try
+                    {
+                        p.Destroy();
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+            }
+            catch
+            {
+                // ignored
+            }
+
+            try
+            {
+                foreach (Corpse? doll in API.World.Map.Corpses.ToArray())
+                    try
+                    {
+                        doll.Destroy();
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+            }
+            catch
+            {
+                // ignored
+            }
+
+            try
+            {
+                foreach (Primitive? prim in API.World.Map.Primitives.ToArray())
+                    try
+                    {
+                        prim.Destroy();
+                    }
+                    catch
+                    {
+                        // ignored
+                    }
+            }
+            catch
+            {
+                // ignored
+            }
 
             yield break;
         } // end while

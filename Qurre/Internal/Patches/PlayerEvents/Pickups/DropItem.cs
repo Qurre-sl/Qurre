@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -22,7 +22,7 @@ internal static class DropItem
 
         LocalBuilder @event = generator.DeclareLocal(typeof(DropItemEvent));
 
-        List<CodeInstruction> list = [.. instructions];
+        List<CodeInstruction> list = [..instructions];
         list.Last().labels.Add(retLabel);
 
         int index = list.FindIndex(ins => ins.opcode == OpCodes.Call && ins.operand is MethodBase
@@ -55,7 +55,7 @@ internal static class DropItem
             // if(!@event.Allowed) return;
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex),
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(DropItemEvent), nameof(DropItemEvent.IsAllowed))),
+                AccessTools.PropertyGetter(typeof(DropItemEvent), nameof(DropItemEvent.Allowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel)
         ]);
 

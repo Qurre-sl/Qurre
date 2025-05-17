@@ -14,7 +14,6 @@ internal static class Round
         ServerEvents.WaitingForPlayers += OnWaiting;
         ServerEvents.RoundRestarted += OnRestarted;
         ServerEvents.RoundStarted += OnStart;
-        ServerEvents.RoundStarting += OnStarting;
     }
 
     private static void OnWaiting()
@@ -30,12 +29,5 @@ internal static class Round
     private static void OnStart() // LabEvents.RoundEndingEventArgs ev
     {
         new RoundStartedEvent().InvokeEvent();
-    }
-
-    private static void OnStarting(LabEvents.RoundStartingEventArgs ev)
-    {
-        RoundStartingEvent @event = new(ev.IsAllowed);
-        @event.InvokeEvent();
-        ev.IsAllowed = @event.Allow;
     }
 }

@@ -1,11 +1,11 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
 using HarmonyLib;
 using PlayerStatsSystem;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 using UnityEngine;
@@ -38,7 +38,7 @@ internal static class Heal
             HealEvent ev = new(player, amount);
             ev.InvokeEvent();
 
-            if (!ev.IsAllowed)
+            if (!ev.Allowed)
                 return;
 
             instance.CurValue = Mathf.Min(instance.CurValue + Mathf.Abs(ev.Amount),

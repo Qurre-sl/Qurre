@@ -1,7 +1,7 @@
-using InventorySystem.Items.ThrowableProjectiles;
+﻿using InventorySystem.Items.ThrowableProjectiles;
 using JetBrains.Annotations;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace

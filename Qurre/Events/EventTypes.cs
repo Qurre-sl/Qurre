@@ -1,4 +1,4 @@
-namespace Qurre.Events;
+﻿namespace Qurre.Events;
 
 public static class PlayerEvents //1xxx
 {
@@ -85,10 +85,9 @@ public static class PlayerEvents //1xxx
 public static class MapEvents //2xxx
 {
     //2000+ ← Main Map Events
-    public const uint MapGenerating = 2001;
-    public const uint MapGenerated = 2002;
-    public const uint LczDecontamination = 2003;
-    public const uint LczAnnounce = 2004;
+    public const uint MapGenerated = 2001;
+    public const uint LczDecontamination = 2002;
+    public const uint LczAnnounce = 2003;
 
     //2100+ ← Place/Spawn
     public const uint PlaceBlood = 2101;
@@ -132,12 +131,10 @@ public static class RoundEvents //4xxx
 {
     public const uint Waiting = 4001;
     public const uint Start = 4002;
-    public const uint Starting = 4008;
     public const uint Restart = 4003;
     public const uint End = 4004;
     public const uint Check = 4005;
     public const uint ForceStart = 4006;
-    public const uint RestartTriggered = 4007;
 }
 
 public static class AlphaEvents //5xxx
@@ -145,6 +142,7 @@ public static class AlphaEvents //5xxx
     public const uint Start = 5001;
     public const uint Stop = 5002;
     public const uint Detonate = 5003;
+    public const uint UnlockPanel = 5004;
 }
 
 public static class EffectEvents //6xxx

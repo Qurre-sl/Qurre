@@ -1,10 +1,8 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using Interactables.Interobjects.DoorUtils;
 using Qurre.API;
-using Qurre.API.Entities;
-using Qurre.API.Entities.Doors;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -21,13 +19,13 @@ internal static class OpenDoor
     {
         try
         {
-            if (__instance == null || !EntityManager.TryGet(__instance.TargetDoor, out IDoor? door))
+            if (__instance == null || __instance.TargetDoor == null || __instance.TargetDoor.gameObject == null)
                 return true;
 
-            OpenDoorEvent ev = new(door, eventType);
+            OpenDoorEvent ev = new(__instance.TargetDoor.GetDoor(), eventType);
             ev.InvokeEvent();
 
-            return ev.IsAllowed;
+            return ev.Allowed;
         }
         catch (Exception e)
         {

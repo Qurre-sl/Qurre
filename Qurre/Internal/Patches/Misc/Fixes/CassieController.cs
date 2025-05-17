@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using MEC;
@@ -17,20 +17,20 @@ internal static class CassieController
     [HarmonyPrefix]
     private static bool Call(string words, bool makeHold, bool makeNoise)
     {
-        if (Cassie.IsLocked)
+        if (Cassie.Lock)
             return false;
 
         try
         {
-            foreach (Cassie _ in Map.CassieList)
+            foreach (Cassie _ in Map.Cassies)
                 if (_.Message == words && _.Hold == makeHold && _.Noise == makeNoise)
                 {
-                    Map.CassieList.Remove(_);
-                    Timing.CallDelayed(NineTailedFoxAnnouncer.singleton.CalculateDuration(words), Cassie.ForceEnd);
+                    Map.Cassies.Remove(_);
+                    Timing.CallDelayed(NineTailedFoxAnnouncer.singleton.CalculateDuration(words), Cassie.End);
                     return true;
                 }
 
-            Map.CassieList.Add(new Cassie(words, makeHold, makeNoise), true);
+            Map.Cassies.Add(new Cassie(words, makeHold, makeNoise), true);
             return false;
         }
         catch (Exception e)

@@ -1,7 +1,7 @@
-using System;
+﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using HarmonyLib;
-using JetBrains.Annotations;
 using Qurre.API;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
@@ -10,10 +10,11 @@ using RemoteAdmin;
 namespace Qurre.Internal.Patches.ServerEvents;
 
 [HarmonyPatch(typeof(CommandProcessor), nameof(CommandProcessor.ProcessQuery))]
+[SuppressMessage("ReSharper", "UnusedMember.Local")]
+[SuppressMessage("ReSharper", "UnusedType.Global")]
 internal static class RemoteAdmin
 {
     [HarmonyPrefix]
-    [UsedImplicitly]
     private static bool Call(string q, CommandSender sender)
     {
         try
@@ -23,23 +24,20 @@ internal static class RemoteAdmin
 
             if (q.StartsWith("$0 1"))
             {
-                RequestPlayerListCommandEvent requestPlayerListEv = new(sender, sender.GetPlayer(), q);
-                requestPlayerListEv.InvokeEvent();
+                RequestPlayerListCommandEvent req = new(sender, sender.GetPlayer(), q);
+                req.InvokeEvent();
 
-                if (!string.IsNullOrEmpty(requestPlayerListEv.Reply))
-                    sender.Print(requestPlayerListEv.Reply);
+                if (!string.IsNullOrEmpty(req.Reply))
+                    sender.Print(req.Reply);
 
-                return requestPlayerListEv.Allowed;
+                return req.Allowed;
             }
 
-            if (q.StartsWith("$"))
-                return true;
+            string[] arr = q.Split(' ');
+            string name = arr[0].ToLower();
+            string[] args = arr.Skip(1).ToArray();
 
-            string[]? arr = q.Split(' ');
-            string commandName = arr[0].ToLower();
-            string[] commandArgs = arr.Skip(1).ToArray();
-
-            RemoteAdminCommandEvent ev = new(sender, sender.GetPlayer(), q, commandName, commandArgs);
+            RemoteAdminCommandEvent ev = new(sender, sender.GetPlayer(), q, name, args);
             ev.InvokeEvent();
 
             if (!string.IsNullOrEmpty(ev.Reply))

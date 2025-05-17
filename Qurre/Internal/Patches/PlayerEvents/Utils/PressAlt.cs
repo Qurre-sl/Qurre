@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
 using HarmonyLib;
@@ -7,7 +7,7 @@ using PlayerRoles.FirstPersonControl;
 using PlayerRoles.FirstPersonControl.NetworkMessages;
 using PlayerStatsSystem;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 

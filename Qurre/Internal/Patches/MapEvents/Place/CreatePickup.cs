@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using InventorySystem;
@@ -24,7 +24,7 @@ internal static class CreatePickup
             CreatePickupEvent ev = new(psi, inv);
             ev.InvokeEvent();
 
-            spawn = ev.IsAllowed;
+            spawn = ev.Allowed;
         }
         catch (Exception e)
         {

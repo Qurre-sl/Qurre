@@ -1,11 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using MEC;
 using Qurre.API.Addons.Audio.Objects;
-using Qurre.API.Attributes;
-using Qurre.Events;
 using UnityEngine;
 using VoiceChat;
 using VoiceChat.Codec;
@@ -18,15 +16,9 @@ public abstract class BaseAudioPlayer : IEquatable<BaseAudioPlayer>
 {
     protected const int SamplesBufferLength = 480; // VoiceChat.Networking.VoiceTransceiver._packageSize
     protected const int EncoderBufferLength = 512; // VoiceChat.Networking.VoiceTransceiver._encodedBuffer.Length
-    private static readonly List<BaseAudioPlayer> Players = [];
+    internal static readonly List<BaseAudioPlayer> Players = [];
 
     private static int _idCounter;
-
-    [EventMethod(RoundEvents.Restart)]
-    private static void OnRoundRestart()
-    {
-        Players.Clear();
-    }
 
     /// <summary>
     ///     Initializes a new instance of the <see cref="BaseAudioPlayer" /> class.
@@ -192,9 +184,9 @@ public abstract class BaseAudioPlayer : IEquatable<BaseAudioPlayer>
                     // We check the target for presence in the white and blacklists.
                     bool allowed = true;
                     if (CurrentAudioTask.Blacklist != null)
-                        allowed &= !CurrentAudioTask.Blacklist.CheckRequirements(referenceHub);
+                        allowed &= !CurrentAudioTask.Blacklist.Contains(referenceHub);
                     if (CurrentAudioTask.Whitelist != null)
-                        allowed &= CurrentAudioTask.Whitelist.CheckRequirements(referenceHub);
+                        allowed &= CurrentAudioTask.Whitelist.Contains(referenceHub);
                     if (!allowed) continue;
 
                     referenceHub.connectionToClient.Send(messageSegment);

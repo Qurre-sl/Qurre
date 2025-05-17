@@ -1,6 +1,6 @@
-using System;
+﻿using System;
 using JetBrains.Annotations;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;

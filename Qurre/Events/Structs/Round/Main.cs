@@ -1,6 +1,7 @@
+﻿// ReSharper disable once CheckNamespace
+
 using JetBrains.Annotations;
 
-// ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
@@ -11,21 +12,6 @@ public class WaitingEvent : IBaseEvent
     internal WaitingEvent()
     {
     }
-
-    public uint EventId { get; } = EventID;
-}
-
-[PublicAPI]
-public class RoundStartingEvent : IBaseEvent
-{
-    private const uint EventID = RoundEvents.Starting;
-
-    internal RoundStartingEvent(bool allow = true)
-    {
-        Allow = allow;
-    }
-
-    public bool Allow { get; set; }
 
     public uint EventId { get; } = EventID;
 }
@@ -67,18 +53,6 @@ public class RoundRestartEvent : IBaseEvent
 }
 
 [PublicAPI]
-public class RoundRestartTriggeredEvent : IBaseEvent
-{
-    private const uint EventID = RoundEvents.RestartTriggered;
-
-    internal RoundRestartTriggeredEvent()
-    {
-    }
-
-    public uint EventId { get; } = EventID;
-}
-
-[PublicAPI]
 public class RoundCheckEvent : IBaseEvent
 {
     private const uint EventID = RoundEvents.Check;
@@ -106,12 +80,10 @@ public class RoundEndEvent : IBaseEvent
         Winner = winner;
         Info = info;
         ToRestart = toRestart;
-        ShowSummary = true;
     }
 
     public RoundSummary.LeadingTeam Winner { get; }
     public RoundSummary.SumInfo_ClassList Info { get; set; }
     public int ToRestart { get; set; }
-    public bool ShowSummary { get; set; }
     public uint EventId { get; } = EventID;
 }

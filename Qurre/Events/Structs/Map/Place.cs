@@ -1,14 +1,14 @@
-using InventorySystem;
+﻿using InventorySystem;
 using InventorySystem.Items.Pickups;
 using JetBrains.Annotations;
 using PlayerStatsSystem;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class CreatePickupEvent : ICancellableEvent
+public class CreatePickupEvent : IBaseEvent
 {
     private const uint EventID = MapEvents.CreatePickup;
 
@@ -16,17 +16,17 @@ public class CreatePickupEvent : ICancellableEvent
     {
         Info = psi;
         Inventory = inv;
+        Allowed = true;
     }
 
     public PickupSyncInfo Info { get; }
     public Inventory Inventory { get; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
-public class CorpseSpawnEvent : ICancellableEvent
+public class CorpseSpawnEvent : IBaseEvent
 {
     private const uint EventID = MapEvents.CorpseSpawn;
 
@@ -34,13 +34,13 @@ public class CorpseSpawnEvent : ICancellableEvent
     {
         Owner = owner;
         Handler = handler;
+        Allowed = true;
     }
 
     public Player Owner { get; }
     public DamageHandlerBase Handler { get; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
@@ -48,11 +48,11 @@ public class CorpseSpawnedEvent : IBaseEvent
 {
     private const uint EventID = MapEvents.CorpseSpawned;
 
-    internal CorpseSpawnedEvent(ICorpse corpse)
+    internal CorpseSpawnedEvent(Corpse corpse)
     {
         Corpse = corpse;
     }
 
-    public ICorpse Corpse { get; }
+    public Corpse Corpse { get; }
     public uint EventId { get; } = EventID;
 }

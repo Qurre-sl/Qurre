@@ -1,0 +1,53 @@
+﻿using JetBrains.Annotations;
+
+namespace Qurre.API.Objects;
+
+[PublicAPI]
+public enum EffectType : byte
+{
+    None,
+    AmnesiaItems,
+    AmnesiaVision,
+    AntiScp207,
+    Asphyxiated,
+    BecomingFlamingo,
+    Bleeding,
+    Blindness,
+    BodyshotReduction,
+    Burned,
+    CardiacArrest,
+    Concussed,
+    Corroding,
+    DamageReduction,
+    Deafened,
+    Decontaminating,
+    Disabled,
+    Ensnared,
+    Exhausted,
+    Flashed,
+    FogControl,
+    Ghostly,
+    Hemorrhage,
+    Hypothermia,
+    InsufficientLighting,
+    Invigorated,
+    Invisible,
+    MovementBoost,
+    PocketCorroding,
+    Poisoned,
+    RainbowTaste,
+    Scanned,
+    Scp1853,
+    Scp207,
+    SeveredHands,
+    SilentWalk,
+    Sinkhole,
+    Slowness,
+    SoundtrackMute,
+    SpawnProtected,
+    Stained,
+    Strangled,
+    Snowed,
+    Traumatized,
+    Vitality
+}

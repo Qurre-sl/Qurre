@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using MapGeneration.Distributors;
@@ -28,13 +28,13 @@ internal static class ActivateGenerator
             if (!state)
                 return true;
 
-            var ev = new ActivateGeneratorEvent(__instance.GetGenerator()!);
+            ActivateGeneratorEvent ev = new(__instance.GetGenerator());
             ev.InvokeEvent();
 
-            if (ev.IsAllowed)
+            if (ev.Allowed)
                 Round.ActiveGenerators++;
 
-            return ev.IsAllowed;
+            return ev.Allowed;
         }
         catch (Exception e)
         {

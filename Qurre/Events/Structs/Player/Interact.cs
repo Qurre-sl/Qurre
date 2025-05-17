@@ -1,13 +1,7 @@
-using AdminToys;
-using Interactables.Interobjects;
-using JetBrains.Annotations;
-using MapGeneration.Distributors;
-using Qurre.API.Entities.AdminToys;
-using Qurre.API.Entities.Characters;
-using Qurre.API.Entities.Doors;
-using Qurre.API.Entities.Environment;
-using Qurre.API.Entities.Structures;
-using Qurre.API.Enums;
+﻿using JetBrains.Annotations;
+using Qurre.API.Controllers;
+using Qurre.API.Controllers.Structs;
+using Qurre.API.Objects;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
@@ -17,7 +11,7 @@ public class InteractDoorEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.InteractDoor;
 
-    internal InteractDoorEvent(Player player, IDoor door, bool allowed)
+    internal InteractDoorEvent(Player player, Door door, bool allowed)
     {
         Player = player;
         Door = door;
@@ -25,9 +19,8 @@ public class InteractDoorEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public IDoor Door { get; }
+    public Door Door { get; }
     public bool Allowed { get; set; }
-
     public uint EventId { get; } = EventID;
 }
 
@@ -36,7 +29,7 @@ public class InteractGeneratorEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.InteractGenerator;
 
-    internal InteractGeneratorEvent(Player player, IGenerator generator, GeneratorStatus status)
+    internal InteractGeneratorEvent(Player player, Generator generator, GeneratorStatus status)
     {
         Player = player;
         Generator = generator;
@@ -45,10 +38,9 @@ public class InteractGeneratorEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public IGenerator Generator { get; }
+    public Generator Generator { get; }
     public GeneratorStatus Status { get; }
     public bool Allowed { get; set; }
-
     public uint EventId { get; } = EventID;
 }
 
@@ -57,7 +49,7 @@ public class InteractLiftEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.InteractLift;
 
-    internal InteractLiftEvent(Player player, ILift lift)
+    internal InteractLiftEvent(Player player, Lift lift)
     {
         Player = player;
         Lift = lift;
@@ -65,9 +57,8 @@ public class InteractLiftEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public ILift Lift { get; }
+    public Lift Lift { get; }
     public bool Allowed { get; set; }
-
     public uint EventId { get; } = EventID;
 }
 
@@ -76,7 +67,7 @@ public class InteractLockerEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.InteractLocker;
 
-    internal InteractLockerEvent(Player player, ILocker locker, LockerChamber? chamber, bool allow)
+    internal InteractLockerEvent(Player player, Locker locker, Chamber? chamber, bool allow)
     {
         Player = player;
         Locker = locker;
@@ -85,39 +76,37 @@ public class InteractLockerEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public ILocker Locker { get; }
-    public LockerChamber? Chamber { get; }
+    public Locker Locker { get; }
+    public Chamber? Chamber { get; }
     public bool Allowed { get; set; }
-
     public uint EventId { get; } = EventID;
 }
 
-[PublicAPI]
-public class InteractScp330Event : IBaseEvent
-{
-    private const uint EventID = PlayerEvents.InteractScp330;
-
-    internal InteractScp330Event(Player player, Scp330Interobject scp330)
-    {
-        Player = player;
-        Scp330 = scp330;
-        Allowed = true;
-    }
-
-    public Player Player { get; }
-    public Scp330Interobject Scp330 { get; }
-    public bool Allowed { get; set; }
-
-    public uint EventId { get; } = EventID;
-}
+// [PublicAPI]
+// public class InteractScp330Event : IBaseEvent
+// {
+//     private const uint EventID = PlayerEvents.InteractScp330;
+//
+//     internal InteractScp330Event(Player player, Scp330Interobject scp330)
+//     {
+//         Player = player;
+//         Scp330 = scp330;
+//         Allowed = true;
+//     }
+//
+//     public Player Player { get; }
+//     public Scp330Interobject Scp330 { get; }
+//     public bool Allowed { get; set; }
+//     public uint EventId { get; } = EventID;
+// }
 
 [PublicAPI]
 public class InteractShootingTargetEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.InteractShootingTarget;
 
-    internal InteractShootingTargetEvent(Player player, IShootingTarget shootingTarget,
-        ShootingTarget.TargetButton button)
+    internal InteractShootingTargetEvent(Player player, ShootingTarget shootingTarget,
+        AdminToys.ShootingTarget.TargetButton button)
     {
         Player = player;
         ShootingTarget = shootingTarget;
@@ -126,10 +115,9 @@ public class InteractShootingTargetEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public IShootingTarget ShootingTarget { get; }
-    public ShootingTarget.TargetButton Button { get; set; }
+    public ShootingTarget ShootingTarget { get; }
+    public AdminToys.ShootingTarget.TargetButton Button { get; set; }
     public bool Allowed { get; set; }
-
     public uint EventId { get; } = EventID;
 }
 
@@ -138,7 +126,7 @@ public class InteractWorkStationEvent : IBaseEvent
 {
     private const uint EventID = PlayerEvents.InteractWorkStation;
 
-    internal InteractWorkStationEvent(Player player, IWorkStation station, byte colliderId)
+    internal InteractWorkStationEvent(Player player, WorkStation station, byte colliderId)
     {
         Player = player;
         Station = station;
@@ -147,9 +135,8 @@ public class InteractWorkStationEvent : IBaseEvent
     }
 
     public Player Player { get; }
-    public IWorkStation Station { get; }
+    public WorkStation Station { get; }
     public byte ColliderId { get; }
     public bool Allowed { get; set; }
-
     public uint EventId { get; } = EventID;
 }

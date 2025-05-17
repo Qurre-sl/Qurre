@@ -39,8 +39,14 @@ internal static class Configs
 
     private static void SetupTranslations()
     {
-        var translationsToken = Config.GetToken("Translations");
-        Banned = Config.SafeGetValue("Banned", Banned, source: translationsToken);
-        Kicked = Config.SafeGetValue("Kicked", Kicked, source: translationsToken);
+        JToken? par = Config.JsonArray["Translations"];
+        if (par is null)
+        {
+            par = JObject.Parse("{ }");
+            Config.JsonArray["Translations"] = par;
+        }
+
+        Banned = Config.SafeGetValue("Banned", Banned, source: par);
+        Kicked = Config.SafeGetValue("Kicked", Kicked, source: par);
     }
 }

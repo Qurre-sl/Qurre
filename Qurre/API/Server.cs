@@ -1,10 +1,10 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using CustomPlayerEffects;
 using InventorySystem;
 using JetBrains.Annotations;
-using Qurre.API.Entities.Characters;
+using PlayerStatsSystem;
+using Qurre.API.Controllers;
 using RoundRestarting;
 using UnityEngine;
 using Object = UnityEngine.Object;
@@ -17,43 +17,54 @@ public static class Server
     private static Player? _host;
     private static Inventory? _hostInv;
 
-    public static ushort Port => ServerStatic.ServerPort;
+    public static ushort Port
+        => ServerStatic.ServerPort;
 
-    public static string Ip => ServerConsole.Ip;
+    public static string Ip
+        => ServerConsole.Ip;
 
-    public static double Tps => Math.Round(1f / Time.smoothDeltaTime);
+    public static double Tps
+        => Math.Round(1f / Time.smoothDeltaTime);
 
     public static Player Host
     {
         get
         {
-            if (_host?.ReferenceHub)
+            if (_host?.ReferenceHub is not null)
                 return _host;
 
-            if (!ReferenceHub.TryGetHostHub(out var hub) || !hub)
+            if (!ReferenceHub.TryGetHostHub(out ReferenceHub? hub))
                 throw new NullReferenceException("ReferenceHub could not be found");
 
-            _host = Player.Get(hub)!;
+            _host = new Player(hub);
             return _host;
         }
     }
 
-    public static Inventory InventoryHost => _hostInv ??= Host.ReferenceHub.inventory;
+    public static Inventory InventoryHost
+    {
+        get
+        {
+            _hostInv ??= Host.ReferenceHub.inventory;
+            return _hostInv;
+        }
+    }
 
     public static bool FriendlyFire
     {
         get => ServerConsole.FriendlyFire;
         set
         {
-            if (FriendlyFire == value) return;
+            if (FriendlyFire == value)
+                return;
 
             ServerConsole.FriendlyFire = value;
             ServerConfigSynchronizer.Singleton.RefreshMainBools();
             ServerConfigSynchronizer.OnRefreshed?.Invoke();
-            //AttackerDamageHandler.RefreshConfigs(); // подписан на ServerConfigSynchronizer
+            AttackerDamageHandler.RefreshConfigs();
 
-            foreach (var player in Player.List)
-                player.AllowFriendlyDamage = value;
+            foreach (Player pl in Player.List)
+                pl.FriendlyFire = value;
         }
     }
 
@@ -65,7 +76,7 @@ public static class Server
 
     public static List<TObject> GetObjectsOf<TObject>() where TObject : Object
     {
-        return Object.FindObjectsOfType<TObject>().ToList();
+        return [.. Object.FindObjectsOfType<TObject>()];
     }
 
     public static TObject GetObjectOf<TObject>() where TObject : Object

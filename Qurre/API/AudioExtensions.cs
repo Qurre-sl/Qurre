@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,7 +12,7 @@ using PlayerRoles.PlayableScps.Scp939.Mimicry;
 using PlayerRoles.Subroutines;
 using Qurre.API.Addons.Audio;
 using Qurre.API.Addons.Audio.Objects;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using RelativePositioning;
 using UnityEngine;
 using VoiceChat;

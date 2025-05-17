@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
 using Mirror;
-using Qurre.API.Attributes;
-using Qurre.Events;
 using VoiceChat;
 using VoiceChat.Networking;
 
@@ -25,6 +23,8 @@ public class AudioPlayerBot : BaseAudioPlayer
     {
         ReferenceHub = referenceHub ?? throw new ArgumentNullException(nameof(referenceHub));
     }
+
+    internal new static IEnumerable<AudioPlayerBot> Players => BaseAudioPlayer.Players.OfType<AudioPlayerBot>();
 
     /// <summary>
     ///     <see cref="global::ReferenceHub" /> of the entity on whose behalf the playback is taking place.
@@ -53,7 +53,7 @@ public class AudioPlayerBot : BaseAudioPlayer
     protected override ArraySegment<byte> SerializeAndPackToDataSegment(int dataLength, byte[] dataBuffer,
         int channelId = 0)
     {
-        using var networkWriter = NetworkWriterPool.Get();
+        using NetworkWriterPooled? writer = NetworkWriterPool.Get();
         VoiceMessage message = new(
             ReferenceHub,
             CurrentAudioTask?.VoiceChannel ?? VoiceChatChannel.None,
@@ -62,8 +62,8 @@ public class AudioPlayerBot : BaseAudioPlayer
             false
         );
 
-        NetworkMessages.Pack(message, networkWriter);
-        var maxMessageSize = NetworkMessages.MaxMessageSize(channelId);
-        return networkWriter.Position > maxMessageSize ? ArraySegment<byte>.Empty : networkWriter.ToArraySegment();
+        NetworkMessages.Pack(message, writer);
+        int maxMessageSize = NetworkMessages.MaxMessageSize(channelId);
+        return writer.Position > maxMessageSize ? ArraySegment<byte>.Empty : writer.ToArraySegment();
     }
 }

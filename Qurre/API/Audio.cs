@@ -1,13 +1,13 @@
-using System;
+﻿using System;
 using CentralAuth;
 using JetBrains.Annotations;
 using MEC;
 using Mirror;
-using NetworkManagerUtils.Dummies;
 using PlayerRoles;
 using PlayerRoles.FirstPersonControl;
 using Qurre.API.Addons.Audio;
 using Qurre.API.Addons.Audio.Objects;
+using Qurre.API.Addons.Audio.Objects.Mirror;
 using UnityEngine;
 using VoiceChat;
 using Object = UnityEngine.Object;
@@ -99,9 +99,9 @@ public static class Audio
         Vector3 rotation)
     {
         // Spawn a new bot.
-        var botObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
-        var zeroConnection = new DummyNetworkConnection();
-        var referenceHub = botObject.GetComponent<ReferenceHub>();
+        GameObject? botObject = Object.Instantiate(NetworkManager.singleton.playerPrefab);
+        ZeroConnectionToClient zeroConnection = new();
+        ReferenceHub? referenceHub = botObject.GetComponent<ReferenceHub>();
 
         // Setting up the bot.
         NetworkServer.AddPlayerForConnection(zeroConnection, botObject);
@@ -115,6 +115,7 @@ public static class Audio
         {
             referenceHub.characterClassManager.GodMode = true;
             referenceHub.TryOverridePosition(position);
+            referenceHub.TryOverrideRotation(rotation);
         });
 
         // Creating a new player.

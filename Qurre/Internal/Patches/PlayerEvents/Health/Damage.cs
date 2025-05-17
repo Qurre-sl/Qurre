@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using PlayerStatsSystem;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -21,7 +21,7 @@ internal static class Damage
     [HarmonyTranspiler]
     private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> instructions, ILGenerator generator)
     {
-        List<CodeInstruction> list = [.. instructions];
+        List<CodeInstruction> list = [..instructions];
 
         int index = list.FindIndex(ins =>
             ins.opcode == OpCodes.Callvirt && ins.operand is MethodBase

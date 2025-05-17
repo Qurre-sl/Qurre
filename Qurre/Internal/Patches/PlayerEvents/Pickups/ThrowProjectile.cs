@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Reflection;
@@ -23,7 +23,7 @@ internal static class ThrowProjectile
 
         LocalBuilder @event = generator.DeclareLocal(typeof(ThrowProjectileEvent));
 
-        List<CodeInstruction> list = [.. instructions];
+        List<CodeInstruction> list = [..instructions];
         list.Last().labels.Add(retLabel);
 
         int index = list.FindIndex(ins =>
@@ -61,7 +61,7 @@ internal static class ThrowProjectile
             // if(!@event.Allowed) return;
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex),
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(ThrowProjectileEvent), nameof(ThrowProjectileEvent.IsAllowed))),
+                AccessTools.PropertyGetter(typeof(ThrowProjectileEvent), nameof(ThrowProjectileEvent.Allowed))),
             new CodeInstruction(OpCodes.Brtrue, methodLabel),
 
 

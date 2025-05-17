@@ -1,6 +1,6 @@
-using JetBrains.Annotations;
-using Qurre.API.Entities.Characters;
-using Qurre.API.Enums;
+﻿using JetBrains.Annotations;
+using Qurre.API.Controllers;
+using Qurre.API.Objects;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
@@ -10,7 +10,7 @@ public class ScpAttackEvent : IBaseEvent
 {
     private const uint EventID = ScpEvents.Attack;
 
-    internal ScpAttackEvent(Player attacker, Player target, ScpAttackTypes type)
+    internal ScpAttackEvent(Player attacker, Player target, ScpAttackType type)
     {
         Attacker = attacker;
         Target = target;
@@ -20,7 +20,7 @@ public class ScpAttackEvent : IBaseEvent
 
     public Player Attacker { get; }
     public Player Target { get; }
-    public ScpAttackTypes Type { get; }
+    public ScpAttackType Type { get; }
     public float Damage { get; set; }
     public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;

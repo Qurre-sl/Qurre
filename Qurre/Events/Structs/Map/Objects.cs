@@ -1,61 +1,60 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using PlayerRoles.Voice;
-using Qurre.API.Entities.Characters;
-using Qurre.API.Entities.Environment;
+using Qurre.API.Controllers;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class TriggerTeslaEvent : ICancellableEvent
+public class TriggerTeslaEvent : IBaseEvent
 {
     private const uint EventID = MapEvents.TriggerTesla;
 
-    internal TriggerTeslaEvent(Player player, ITesla tesla, bool inIdlingRange, bool inRageRange)
+    internal TriggerTeslaEvent(Player player, Tesla tesla, bool inIdlingRange, bool inRageRange)
     {
         Player = player;
         Tesla = tesla;
         InIdlingRange = inIdlingRange;
         InRageRange = inRageRange;
+        Allowed = true;
     }
 
     public Player Player { get; }
-    public ITesla Tesla { get; }
+    public Tesla Tesla { get; }
     public bool InIdlingRange { get; }
     public bool InRageRange { get; set; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
-public class WorkStationUpdateEvent : ICancellableEvent
+public class WorkStationUpdateEvent : IBaseEvent
 {
     private const uint EventID = MapEvents.WorkStationUpdate;
 
-    internal WorkStationUpdateEvent(IWorkStation station)
+    internal WorkStationUpdateEvent(WorkStation station)
     {
         Station = station;
+        Allowed = true;
     }
 
-    public IWorkStation Station { get; }
-
+    public WorkStation Station { get; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
-public class IntercomSetStateEvent : ICancellableEvent
+public class IntercomSetStateEvent : IBaseEvent
 {
     private const uint EventID = MapEvents.IntercomSetState;
 
     internal IntercomSetStateEvent(IntercomState state)
     {
         State = state;
+        Allowed = true;
     }
 
     public IntercomState State { get; set; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }

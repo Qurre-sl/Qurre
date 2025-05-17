@@ -1,8 +1,8 @@
-using CustomPlayerEffects;
+﻿using CustomPlayerEffects;
 using JetBrains.Annotations;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
-using Qurre.API.Enums;
+using Qurre.API.Controllers;
+using Qurre.API.Objects;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;

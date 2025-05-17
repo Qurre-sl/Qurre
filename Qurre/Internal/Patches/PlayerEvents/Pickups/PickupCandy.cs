@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection.Emit;
@@ -49,13 +49,13 @@ internal static class PickupCandy
                     pickup.StoredCandies.RemoveAt(0);
                 }
 
-            var ev = new PickupCandyEvent(ply.GetPlayer() ?? throw new NullReferenceException(nameof(ply)), bag, list);
+            PickupCandyEvent ev = new(ply.GetPlayer() ?? throw new NullReferenceException(nameof(ply)), bag, list);
             ev.InvokeEvent();
 
-            if (!ev.IsAllowed)
+            if (!ev.Allowed)
                 ev.List.Clear();
 
-            foreach (var candy in ev.List)
+            foreach (CandyKindID candy in ev.List)
                 bag.TryAddSpecific(candy);
 
             if (bag.AcquisitionAlreadyReceived)

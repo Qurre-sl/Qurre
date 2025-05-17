@@ -1,8 +1,8 @@
 using System;
+using AdminToys;
 using JetBrains.Annotations;
 using Mirror;
 using VoiceChat.Networking;
-using SpeakerBase = AdminToys.SpeakerToy;
 
 namespace Qurre.API.Addons.Audio;
 
@@ -12,14 +12,14 @@ public class AudioPlayerSpeaker : BaseAudioPlayer
     /// <summary>
     ///     Initializes a new instance of the <see cref="AudioPlayerSpeaker" /> class.
     /// </summary>
-    /// <param name="speakerBase"><see cref="SpeakerBase" /> of the audio source.</param>
+    /// <param name="speakerToy"><see cref="AdminToys.SpeakerToy" /> of the audio source.</param>
     /// <exception cref="ArgumentNullException" />
-    public AudioPlayerSpeaker(SpeakerBase speakerBase)
+    public AudioPlayerSpeaker(SpeakerToy speakerToy)
     {
-        SpeakerToy = speakerBase ?? throw new ArgumentNullException(nameof(speakerBase));
+        SpeakerToy = speakerToy ?? throw new ArgumentNullException(nameof(speakerToy));
     }
 
-    public SpeakerBase SpeakerToy { get; }
+    public SpeakerToy SpeakerToy { get; }
 
     public override void DestroySelf()
     {
@@ -38,15 +38,15 @@ public class AudioPlayerSpeaker : BaseAudioPlayer
     protected override ArraySegment<byte> SerializeAndPackToDataSegment(int dataLength, byte[] dataBuffer,
         int channelId = 0)
     {
-        using var networkWriter = NetworkWriterPool.Get();
-        var message = new AudioMessage(
+        using NetworkWriterPooled? writer = NetworkWriterPool.Get();
+        AudioMessage message = new(
             SpeakerToy.ControllerId,
             dataBuffer,
             dataLength
         );
 
-        NetworkMessages.Pack(message, networkWriter);
-        var maxMessageSize = NetworkMessages.MaxMessageSize(channelId);
-        return networkWriter.Position > maxMessageSize ? ArraySegment<byte>.Empty : networkWriter.ToArraySegment();
+        NetworkMessages.Pack(message, writer);
+        int maxMessageSize = NetworkMessages.MaxMessageSize(channelId);
+        return writer.Position > maxMessageSize ? ArraySegment<byte>.Empty : writer.ToArraySegment();
     }
 }

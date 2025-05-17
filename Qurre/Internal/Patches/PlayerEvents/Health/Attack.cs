@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -7,7 +7,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using PlayerStatsSystem;
 using Qurre.API;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 using UnityEngine;
@@ -24,7 +24,7 @@ internal static class Attack
     {
         Label retLabel = generator.DefineLabel();
 
-        List<CodeInstruction> instructions = [.. ins];
+        List<CodeInstruction> instructions = [..ins];
         instructions.Last().labels.Add(retLabel);
 
         Label metLabel = retLabel;
@@ -119,7 +119,7 @@ internal static class Attack
             if (attacker is null || target is null)
                 return;
 
-            if (attacker.AllowFriendlyDamage)
+            if (attacker.FriendlyFire)
                 handler.IsFriendlyFire = false;
 
             AttackEvent ev = new(attacker, target, handler, handler.Damage, handler.IsFriendlyFire,

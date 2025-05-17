@@ -1,6 +1,6 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using PlayerRoles;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 using UnityEngine;
 
 // ReSharper disable once CheckNamespace

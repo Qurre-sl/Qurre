@@ -1,48 +1,47 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using PlayerRoles.Ragdolls;
 using Qurre.API;
-using Qurre.API.Entities;
-using Qurre.API.Entities.Characters;
+using Qurre.API.Controllers;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class Scp049RaisingStartEvent : ICancellableEvent
+public class Scp049RaisingStartEvent : IBaseEvent
 {
     private const uint EventID = ScpEvents.Scp049RaisingStart;
 
-    internal Scp049RaisingStartEvent(Player issuer, Player target, BasicRagdoll basicRagdoll)
+    internal Scp049RaisingStartEvent(Player player, Player target, BasicRagdoll doll)
     {
-        Issuer = issuer;
+        Player = player;
         Target = target;
-        Corpse = basicRagdoll.GetCorpse()!;
+        Corpse = doll.GetCorpse();
+        Allowed = true;
     }
 
-    public Player Issuer { get; }
+    public Player Player { get; }
     public Player Target { get; }
-    public ICorpse Corpse { get; }
-
+    public Corpse Corpse { get; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
-public class Scp049RaisingEndEvent : ICancellableEvent
+public class Scp049RaisingEndEvent : IBaseEvent
 {
     private const uint EventID = ScpEvents.Scp049RaisingEnd;
 
-    internal Scp049RaisingEndEvent(Player issuer, Player target, BasicRagdoll basicRagdoll)
+    internal Scp049RaisingEndEvent(Player player, Player target, BasicRagdoll doll)
     {
-        Issuer = issuer;
+        Player = player;
         Target = target;
-        Corpse = EntityManager.GetOrException<ICorpse>(basicRagdoll);
+        Corpse = doll.GetCorpse();
+        Allowed = true;
     }
 
-    public Player Issuer { get; }
+    public Player Player { get; }
     public Player Target { get; }
-    public ICorpse Corpse { get; }
-
+    public Corpse Corpse { get; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }

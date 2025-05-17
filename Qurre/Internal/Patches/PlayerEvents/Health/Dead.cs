@@ -1,9 +1,11 @@
-using System;
+﻿using System;
 using System.Diagnostics.CodeAnalysis;
 using HarmonyLib;
 using PlayerRoles;
 using PlayerStatsSystem;
 using Qurre.API;
+using Qurre.API.Controllers;
+using Qurre.API.Objects;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -20,15 +22,16 @@ internal static class Dead
     {
         try
         {
-            var attacker = handler.GetAttacker() ?? Server.Host;
-            var target = __instance.gameObject.GetPlayer();
+            Player attacker = handler.GetAttacker() ?? Server.Host;
+            Player? target = __instance.gameObject.GetPlayer();
 
             if (target is null)
                 return true;
 
             DiesEvent ev = new(attacker, target, handler);
             ev.InvokeEvent();
-            return ev.IsAllowed;
+
+            return ev.Allowed;
         }
         catch (Exception e)
         {
@@ -43,20 +46,20 @@ internal static class Dead
     {
         try
         {
-            var attacker = handler.GetAttacker();
-            var target = __instance.gameObject.GetPlayer();
+            Player? attacker = handler.GetAttacker();
+            Player? target = __instance.gameObject.GetPlayer();
 
             attacker ??= target;
 
             if (target is null || attacker is null)
                 return;
 
-            if (target.RoleInformation.RoleType != RoleTypeId.Spectator ||
+            if (target.RoleInformation.Role != RoleTypeId.Spectator ||
                 target.GamePlay.GodMode || target.IsHost)
                 return;
 
-            var type = handler.GetDamageType();
-            var ev = new DeadEvent(attacker, target, handler, type);
+            DamageTypes type = handler.GetDamageType();
+            DeadEvent ev = new(attacker, target, handler, type);
             ev.InvokeEvent();
         }
         catch (Exception e)

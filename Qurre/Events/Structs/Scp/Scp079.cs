@@ -1,29 +1,28 @@
-using JetBrains.Annotations;
+﻿using JetBrains.Annotations;
 using PlayerRoles.PlayableScps.Scp079;
-using Qurre.API.Entities.Characters;
-using Qurre.API.Entities.Structures;
+using Qurre.API.Controllers;
 
 // ReSharper disable once CheckNamespace
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class ActivateGeneratorEvent : ICancellableEvent
+public class ActivateGeneratorEvent : IBaseEvent
 {
     private const uint EventID = ScpEvents.ActivateGenerator;
 
-    internal ActivateGeneratorEvent(IGenerator generator)
+    internal ActivateGeneratorEvent(Generator generator)
     {
         Generator = generator;
+        Allowed = true;
     }
 
-    public IGenerator Generator { get; }
-
+    public Generator Generator { get; }
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
-public class Scp079GetExpEvent : ICancellableEvent
+public class Scp079GetExpEvent : IBaseEvent
 {
     private const uint EventID = ScpEvents.Scp079GetExp;
 
@@ -32,18 +31,18 @@ public class Scp079GetExpEvent : ICancellableEvent
         Player = player;
         Type = type;
         Amount = amount;
+        Allowed = true;
     }
 
     public Player Player { get; }
     public Scp079HudTranslation Type { get; }
     public int Amount { get; set; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
-public class Scp079NewLvlEvent : ICancellableEvent
+public class Scp079NewLvlEvent : IBaseEvent
 {
     private const uint EventID = ScpEvents.Scp079NewLvl;
 
@@ -51,13 +50,13 @@ public class Scp079NewLvlEvent : ICancellableEvent
     {
         Player = player;
         Level = level;
+        Allowed = true;
     }
 
     public Player Player { get; }
     public int Level { get; set; }
-
+    public bool Allowed { get; set; }
     public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
@@ -85,6 +84,5 @@ public class GeneratorStatusEvent : IBaseEvent
 
     public int EnragedCount { get; }
     public int TotalCount { get; }
-
     public uint EventId { get; } = EventID;
 }
