@@ -5,25 +5,27 @@ using Qurre.API.Entities.Characters;
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class CuffEvent : IBaseEvent
+public class CuffEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.Cuff;
-
     internal CuffEvent(Player target, Player cuffer)
     {
         Target = target;
         Cuffer = cuffer;
-        Allowed = true;
+        IsAllowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Cuff;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 
     public Player Target { get; }
     public Player Cuffer { get; set; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class UnCuffEvent : IBaseEvent
+public class UnCuffEvent : ICancellableEvent
 {
     private const uint EventID = PlayerEvents.UnCuff;
 
@@ -31,29 +33,33 @@ public class UnCuffEvent : IBaseEvent
     {
         Target = target;
         Cuffer = cuffer;
-        Allowed = true;
+        IsAllowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = EventID;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 
     public Player Target { get; }
     public Player Cuffer { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
 public class ChangeSpectateEvent : IBaseEvent
 {
-    private const uint EventID = PlayerEvents.ChangeSpectate;
-
-    internal ChangeSpectateEvent(Player player, Player? old, Player? @new)
+    internal ChangeSpectateEvent(Player player, Player? previousTarget, Player? newTarget)
     {
         Player = player;
-        Old = old;
-        New = @new;
+        PreviousTarget = previousTarget;
+        NewTarget = newTarget;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.ChangeSpectate;
 
     public Player Player { get; }
-    public Player? Old { get; }
-    public Player? New { get; }
-    public uint EventId { get; } = EventID;
+    public Player? PreviousTarget { get; }
+    public Player? NewTarget { get; }
 }

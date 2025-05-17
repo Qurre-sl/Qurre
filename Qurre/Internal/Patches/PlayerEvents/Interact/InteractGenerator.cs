@@ -21,6 +21,8 @@ namespace Qurre.Internal.Patches.PlayerEvents.Interact;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 internal static class InteractGenerator
 {
+    // TODO: полностью перенести события генератора на базу LabApi
+    /*
     [HarmonyTranspiler]
     private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> _)
     {
@@ -44,8 +46,8 @@ internal static class InteractGenerator
 
             instance._cooldownStopwatch.Stop();
 
-            Player? pl = ply.GetPlayer();
-            if (pl is null)
+            var player = ply.GetPlayer();
+            if (player is null)
                 return;
 
             switch (colliderId)
@@ -54,22 +56,22 @@ internal static class InteractGenerator
                     {
                         if (instance.HasFlag(instance._flags, Scp079Generator.GeneratorFlags.Unlocked))
                         {
-                            bool opened = instance.HasFlag(instance._flags, Scp079Generator.GeneratorFlags.Open);
+                            var isOpen = instance.HasFlag(instance._flags, Scp079Generator.GeneratorFlags.Open);
 
-                            InteractGeneratorEvent ev = new(pl, instance.GetGenerator(),
-                                opened ? GeneratorStatus.CloseDoor : GeneratorStatus.OpenDoor);
+                            var ev = new InteractGeneratorEvent(player, instance.GetGenerator(),
+                                isOpen ? GeneratorStatus.CloseDoor : GeneratorStatus.OpenDoor);
                             ev.InvokeEvent();
 
                             if (ev.Allowed)
-                                instance.ServerSetFlag(Scp079Generator.GeneratorFlags.Open, !opened);
+                                instance.ServerSetFlag(Scp079Generator.GeneratorFlags.Open, !isOpen);
                             else
-                                instance.RpcDenied();
+                                instance.RpcDenied(ply.GetCombinedPermissions(instance));
 
                             instance._targetCooldown = instance._doorToggleCooldownTime;
                         }
                         else
                         {
-                            InteractGeneratorEvent ev = new(pl, instance.GetGenerator(), GeneratorStatus.Unlock);
+                            var ev = new InteractGeneratorEvent(player, instance.GetGenerator(), GeneratorStatus.Unlock);
 
                             if (ply.serverRoles.BypassMode ||
                                 (ply.inventory.CurInstance is KeycardItem card
@@ -88,7 +90,7 @@ internal static class InteractGenerator
                             else
                             {
                                 instance._targetCooldown = instance._unlockCooldownTime;
-                                instance.RpcDenied();
+                                instance.RpcDenied(ply.GetCombinedPermissions(instance));
                             }
                         }
 
@@ -97,7 +99,7 @@ internal static class InteractGenerator
                 case 1: // Activate / Disable
                     if ((ply.IsHuman() || instance.Activating) && !instance.Engaged)
                     {
-                        InteractGeneratorEvent ev = new(pl, instance.GetGenerator(),
+                        InteractGeneratorEvent ev = new(player, instance.GetGenerator(),
                             instance.Activating ? GeneratorStatus.Deactivate : GeneratorStatus.Activate);
                         ev.InvokeEvent();
 
@@ -123,7 +125,7 @@ internal static class InteractGenerator
                 case 2:
                     if (instance is { Activating: true, Engaged: false })
                     {
-                        InteractGeneratorEvent ev = new(pl, instance.GetGenerator(), GeneratorStatus.Deactivate);
+                        InteractGeneratorEvent ev = new(player, instance.GetGenerator(), GeneratorStatus.Deactivate);
                         ev.InvokeEvent();
 
                         if (!ev.Allowed)
@@ -147,4 +149,5 @@ internal static class InteractGenerator
             Log.Error($"Patch Error - <Player> {{Interact}} [Generator]: {e}\n{e.StackTrace}");
         }
     }
+    */
 }

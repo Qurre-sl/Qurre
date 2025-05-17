@@ -9,8 +9,6 @@ namespace Qurre.Events.Structs;
 [PublicAPI]
 public class SpawnEvent : IBaseEvent
 {
-    private const uint EventID = PlayerEvents.Spawn;
-
     internal SpawnEvent(Player player, RoleTypeId role, Vector3 position, Vector3 rotation)
     {
         Player = player;
@@ -18,50 +16,56 @@ public class SpawnEvent : IBaseEvent
         Position = position;
         Rotation = rotation;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Spawn;
 
     public Player Player { get; }
     public RoleTypeId Role { get; }
     public Vector3 Position { get; set; }
     public Vector3 Rotation { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class ChangeRoleEvent : IBaseEvent
+public class ChangeRoleEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.ChangeRole;
-
     internal ChangeRoleEvent(Player player, PlayerRoleBase oldRole, RoleTypeId role, RoleChangeReason reason)
     {
         Player = player;
         OldRole = oldRole;
         Role = role;
         Reason = reason;
-        Allowed = true;
+        IsAllowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.ChangeRole;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 
     public Player Player { get; }
     public PlayerRoleBase OldRole { get; }
     public RoleTypeId Role { get; set; }
     public RoleChangeReason Reason { get; set; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class EscapeEvent : IBaseEvent
+public class EscapeEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.Escape;
-
     internal EscapeEvent(Player player, RoleTypeId role)
     {
         Player = player;
         Role = role;
-        Allowed = true;
+        IsAllowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Escape;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 
     public Player Player { get; }
     public RoleTypeId Role { get; set; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }

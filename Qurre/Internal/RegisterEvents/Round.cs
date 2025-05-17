@@ -36,6 +36,6 @@ internal static class Round
     {
         RoundStartingEvent @event = new(ev.IsAllowed);
         @event.InvokeEvent();
-        ev.IsAllowed = @event.Allow;
+        ev.IsAllowed = @event.IsAllowed;
     }
 }

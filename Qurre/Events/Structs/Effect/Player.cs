@@ -8,10 +8,8 @@ using UnityEngine;
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class PlayerFlashedEvent : IBaseEvent
+public class PlayerFlashedEvent : ICancellableEvent
 {
-    private const uint EventID = EffectEvents.Flashed;
-
     internal PlayerFlashedEvent(Player player, FlashbangGrenade grenade, float duration)
     {
         Player = player;
@@ -20,13 +18,17 @@ public class PlayerFlashedEvent : IBaseEvent
         Thrower = grenade.PreviousOwner.Hub.GetPlayer() ?? Server.Host;
         Position = grenade.transform.position;
 
-        Allowed = duration > grenade._minimalEffectDuration;
+        IsAllowed = duration > grenade._minimalEffectDuration;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = EffectEvents.Flashed;
 
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
+    
     public Player Player { get; }
     public Player Thrower { get; }
     public FlashbangGrenade Grenade { get; }
     public Vector3 Position { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }

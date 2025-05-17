@@ -58,7 +58,7 @@ internal static class UpgradePlayer
 
         ev.InvokeEvent();
 
-        if (!ev.Allowed)
+        if (!ev.IsAllowed)
             return;
 
         ply.TryOverridePosition(ev.TargetPosition);
@@ -83,8 +83,11 @@ internal static class UpgradePlayer
         HashSetPool<ItemBase>.Shared.Return(ev.Inventory);
         HashSetPool<ItemBase>.Shared.Return(ev.InstantUpgrade);
 
-        ply.inventory.RemoveEverythingExceedingLimits(ply.inventory.TryGetBodyArmor(out BodyArmor? bodyArmor)
+        ply.inventory.RemoveEverythingExceedingLimits();
+        /*
+         * ply.inventory.TryGetBodyArmor(out var bodyArmor)
             ? bodyArmor
-            : null);
+            : null
+         */
     }
 }

@@ -66,7 +66,7 @@ internal static class Flashed
 
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex), // if(!@event.Allowed) return;
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(PlayerFlashedEvent), nameof(PlayerFlashedEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(PlayerFlashedEvent), nameof(PlayerFlashedEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel)
         ]);
 

@@ -165,7 +165,7 @@ public class Player
     [EventMethod(PlayerEvents.ChangeRole, int.MinValue)]
     private static void SetSpawnedTime(ChangeRoleEvent ev)
     {
-        if (!ev.Allowed)
+        if (!ev.IsAllowed)
             return;
 
         if (ev.Role is RoleTypeId.Spectator or RoleTypeId.Overwatch or RoleTypeId.Filmmaker)

@@ -55,7 +55,7 @@ internal static class EnableSpeed
 
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex), // if (!@event.Allowed) return;
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(Scp173EnableSpeedEvent), nameof(Scp173EnableSpeedEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(Scp173EnableSpeedEvent), nameof(Scp173EnableSpeedEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel)
         ]);
 

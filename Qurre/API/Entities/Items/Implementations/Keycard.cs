@@ -11,10 +11,10 @@ internal sealed class Keycard(KeycardItem itemBase) : Item(itemBase), IKeycard
     /// <inheritdoc />
     public new UnityObjectWrapper<KeycardItem> Base { get; } = itemBase;
 
-    /// <inheritdoc />
+    /*/// <inheritdoc />
     public KeycardPermissions Permissions
     {
         get => Base.Instance.Permissions;
         set => Base.Instance.Permissions = value;
-    }
+    }*/ // TODO: переработать
 }

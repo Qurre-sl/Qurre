@@ -50,7 +50,7 @@ internal static class Escape
 
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex), // if(!@event.Allowed) return;
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(EscapeEvent), nameof(EscapeEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(EscapeEvent), nameof(EscapeEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel),
 
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex), // roleTypeId = @event.Role;

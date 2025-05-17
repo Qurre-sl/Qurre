@@ -5,19 +5,26 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using HarmonyLib;
-using MEC;
 using Qurre.API;
 using Qurre.API.Addons;
 using Qurre.API.Attributes;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Loader;
 
 internal static class Plugins
 {
+    public static event Action? Unloaded;
+    
     private static readonly List<PluginStruct> PluginsList = [];
     private static Harmony? _harmony;
 
-    internal static void Init()
+    static Plugins()
+    {
+        EntryPoint.Init += Init;
+    }
+
+    private static void Init()
     {
         if (!Directory.Exists(Paths.Plugins))
         {
@@ -38,19 +45,8 @@ internal static class Plugins
 
         LoadPlugins();
 
-        Internal.EventsManager.Loader.SortMethods();
+        Lists.SortAllCallMethodsByPriority();
         EnablePlugins();
-
-        // TODO: не имеет смысла, потому что Timing.RunCoroutine
-        // выполняет код в этом же потоке, просто в следующем кадре
-        //Timing.RunCoroutine(EnablePluginsInThread());
-        return;
-
-        static IEnumerator<float> EnablePluginsInThread()
-        {
-            EnablePlugins();
-            yield break;
-        }
     }
 
     private static void PatchMethods()
@@ -244,12 +240,12 @@ internal static class Plugins
             Log.Info("Plugins are reloading...");
 
             Disable();
-            Internal.EventsManager.Loader.UnloadPlugins();
+            Unloaded?.Invoke();
             PluginsList.Clear();
 
             LoadPlugins();
             EnablePlugins();
-            Internal.EventsManager.Loader.SortMethods();
+            Lists.SortAllCallMethodsByPriority();
 
             Log.Info("Plugins reloaded");
         }

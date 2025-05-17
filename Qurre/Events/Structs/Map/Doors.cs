@@ -8,8 +8,6 @@ namespace Qurre.Events.Structs;
 [PublicAPI]
 public class DamageDoorEvent : ICancellableEvent
 {
-    private const uint EventID = MapEvents.DamageDoor;
-
     internal DamageDoorEvent(IBreakableDoor door, DoorDamageType type, float damage)
     {
         Door = door;
@@ -21,15 +19,16 @@ public class DamageDoorEvent : ICancellableEvent
     public DoorDamageType Type { get; }
     public float Damage { get; set; }
 
-    public uint EventId { get; } = EventID;
+    /// <inheritdoc />
+    public uint EventId { get; } = MapEvents.DamageDoor;
+    
+    /// <inheritdoc />
     public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
 public class LockDoorEvent : ICancellableEvent
 {
-    private const uint EventID = MapEvents.LockDoor;
-
     internal LockDoorEvent(IDoor door, DoorLockReason reason, bool newState)
     {
         Door = door;
@@ -37,28 +36,32 @@ public class LockDoorEvent : ICancellableEvent
         NewState = newState;
     }
 
+    /// <inheritdoc />
+    public uint EventId { get; } = MapEvents.LockDoor;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
+
     public IDoor Door { get; }
     public DoorLockReason Reason { get; }
     public bool NewState { get; set; }
-
-    public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }
 
 [PublicAPI]
 public class OpenDoorEvent : ICancellableEvent
 {
-    private const uint EventID = MapEvents.OpenDoor;
-
     internal OpenDoorEvent(IDoor door, DoorEventOpenerExtension.OpenerEventType type)
     {
         Door = door;
         Type = type;
     }
 
+    /// <inheritdoc />
+    public uint EventId { get; } = MapEvents.OpenDoor;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
+
     public IDoor Door { get; }
     public DoorEventOpenerExtension.OpenerEventType Type { get; }
-
-    public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }

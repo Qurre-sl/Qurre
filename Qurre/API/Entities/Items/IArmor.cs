@@ -15,7 +15,7 @@ public interface IArmor : IItem
 
     bool IsWorn { get; }
 
-    bool RemoveExcessOnDrop { get; set; }
+    /*bool RemoveExcessOnDrop { get; set; }*/ // TODO: removed in 14.1
 
     int HelmetEfficacy { get; set; }
 

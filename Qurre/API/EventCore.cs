@@ -71,14 +71,11 @@ public static class EventCore
 
     public static void SortMethodsPriority()
     {
-        Internal.EventsManager.Loader.SortMethods();
+        EventLists.SortAllCallMethodsByPriority();
     }
 
     public static void SortMethodsPriority(uint eventId)
     {
-        if (!EventLists.CallMethods.TryGetValue(eventId, out var list))
-            return;
-
-        list.Sort((eventCallA, eventCallB) => eventCallB.Priority.CompareTo(eventCallA.Priority));
+        EventLists.SortCallMethodsByPriority(eventId);
     }
 }

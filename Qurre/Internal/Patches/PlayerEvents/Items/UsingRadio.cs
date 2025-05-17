@@ -60,7 +60,7 @@ internal static class UsingRadio
             // if(!@event.Allowed) return;
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex),
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(UsingRadioEvent), nameof(UsingRadioEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(UsingRadioEvent), nameof(UsingRadioEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel)
         ]);
 

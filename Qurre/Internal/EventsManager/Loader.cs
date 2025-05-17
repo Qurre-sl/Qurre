@@ -5,40 +5,12 @@ using System.Reflection;
 using Qurre.API;
 using Qurre.API.Attributes;
 using Qurre.Events.Structs;
+using Qurre.Loader;
 
 namespace Qurre.Internal.EventsManager;
 
 internal static class Loader
 {
-    internal static void UnloadPlugins()
-    {
-        Lists.CallMethods.Clear();
-        Lists.ClassesOfNonStaticMethods.Clear();
-    }
-
-    internal static void SortMethods()
-    {
-        foreach (var item in Lists.CallMethods)
-            item.Value.Sort((x, y) => y.Priority.CompareTo(x.Priority));
-    }
-
-    internal static void PathQurreEvents()
-    {
-        foreach (var method in Assembly.GetExecutingAssembly().GetTypes()
-                     //.Where(x => x.IsClass && x.Namespace == "Qurre.Internal.EventsCalled")
-                     .Where(x => x.IsClass)
-                     .SelectMany(x => x.GetMethods(BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public |
-                                                   BindingFlags.NonPublic)))
-        {
-            if (method.IsAbstract)
-                continue;
-
-            foreach (var attr in method.GetCustomAttributes<EventMethod>())
-                if (Lists.QurreMethods.TryGetValue(attr.Type, out var list)) list.Add(method);
-                else Lists.QurreMethods.Add(attr.Type, [method]);
-        }
-    }
-
     internal static void PluginPath(Assembly assembly)
     {
         foreach (var method in assembly.GetTypes().Where(x => x.IsClass)

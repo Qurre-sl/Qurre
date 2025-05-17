@@ -64,7 +64,7 @@ internal static class Preauth
             PreauthEvent ev = new(userid, req.RemoteEndPoint.Address, flags, region, req);
             ev.InvokeEvent();
 
-            if (ev.Allowed)
+            if (ev.IsAllowed)
                 return true;
 
             if (CustomLiteNetLib4MirrorTransport.DisplayPreauthLogs)

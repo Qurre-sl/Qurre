@@ -9,10 +9,8 @@ using Qurre.API.Entities.Characters;
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class PreauthEvent : IBaseEvent
+public class PreauthEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.Preauth;
-
     internal PreauthEvent(string userid, IPAddress ip, CentralAuthPreauthFlags flags, string region,
         ConnectionRequest req)
     {
@@ -21,7 +19,6 @@ public class PreauthEvent : IBaseEvent
         Flags = flags;
         Region = region;
         Request = req;
-        Allowed = true;
 
         RejectionReason = RejectionReason.NotSpecified;
         RejectionCustomReason = string.Empty;
@@ -30,77 +27,83 @@ public class PreauthEvent : IBaseEvent
         RejectionDelay = 10;
     }
 
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Preauth;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
+
     public string UserId { get; }
     public IPAddress Ip { get; }
     public CentralAuthPreauthFlags Flags { get; }
     public string Region { get; }
     public ConnectionRequest Request { get; }
-    public bool Allowed { get; set; }
-
+    
     public RejectionReason RejectionReason { get; set; }
     public string RejectionCustomReason { get; set; }
     public long RejectionExpiration { get; set; }
     public ushort RejectionRedirectPort { get; set; }
     public byte RejectionDelay { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
 public class JoinEvent : IBaseEvent
 {
-    private const uint EventID = PlayerEvents.Join;
-
     internal JoinEvent(Player player)
     {
         Player = player;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Join;
 
     public Player Player { get; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
 public class LeaveEvent : IBaseEvent
 {
-    private const uint EventID = PlayerEvents.Leave;
-
     internal LeaveEvent(Player player)
     {
         Player = player;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Leave;
 
     public Player Player { get; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
 public class CheckReserveSlotEvent : IBaseEvent
 {
-    private const uint EventID = PlayerEvents.CheckReserveSlot;
-
-    internal CheckReserveSlotEvent(string userid, bool allowed = true)
+    internal CheckReserveSlotEvent(string userid, bool hasReserveSlot = true)
     {
         UserId = userid;
-        Allowed = allowed;
+        HasReserveSlot = hasReserveSlot;
     }
-
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.CheckReserveSlot;
+    
     public string UserId { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
+    
+    public bool HasReserveSlot { get; set; }
 }
 
 [PublicAPI]
 public class CheckWhiteListEvent : IBaseEvent
 {
-    private const uint EventID = PlayerEvents.CheckWhiteList;
-
-    internal CheckWhiteListEvent(string userid, bool allowed = true)
+    internal CheckWhiteListEvent(string userid, bool isWhitelisted = true)
     {
         UserId = userid;
-        Allowed = allowed;
+        IsWhitelisted = isWhitelisted;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.CheckWhiteList;
 
     public string UserId { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
+    
+    public bool IsWhitelisted { get; set; }
 }

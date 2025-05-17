@@ -68,7 +68,7 @@ internal static class UseItem
             // if(!cancelUseEvent.Allowed) return;
             new CodeInstruction(OpCodes.Ldloc_S, cancelUseEvent.LocalIndex),
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(CancelUseItemEvent), nameof(CancelUseItemEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(CancelUseItemEvent), nameof(CancelUseItemEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel)
         ]);
 
@@ -109,7 +109,7 @@ internal static class UseItem
             // if(!UseEvent.Allowed) return;
             new CodeInstruction(OpCodes.Ldloc_S, useEvent.LocalIndex),
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(UseItemEvent), nameof(UseItemEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(UseItemEvent), nameof(UseItemEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel)
         ]);
 

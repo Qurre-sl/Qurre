@@ -23,7 +23,7 @@ internal static class UpgradePickup
             Scp914UpgradePickupEvent ev = new(pickup, upgradeDropped, API.World.Scp914.MoveVector, setting);
             ev.InvokeEvent();
 
-            if (!ev.Allowed)
+            if (!ev.IsAllowed)
                 return false;
 
             upgradeDropped = ev.UpgradeDropped;

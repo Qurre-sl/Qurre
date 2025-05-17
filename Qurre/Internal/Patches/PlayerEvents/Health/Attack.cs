@@ -132,7 +132,7 @@ internal static class Attack
             handler.Damage = ev.Damage;
             handler.IsFriendlyFire = ev.FriendlyFire;
 
-            if (!ev.Allowed)
+            if (!ev.IsAllowed)
                 handler.Damage = 0;
 
             if (!ev.FriendlyFire)

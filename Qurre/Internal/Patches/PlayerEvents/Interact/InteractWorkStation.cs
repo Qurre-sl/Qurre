@@ -26,6 +26,6 @@ internal static class InteractWorkStation
 
         ev.InvokeEvent();
 
-        return ev.Allowed;
+        return ev.IsAllowed;
     }
 }

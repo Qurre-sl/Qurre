@@ -56,7 +56,7 @@ internal static class InteractLift
             // if(!@event.Allowed) return;
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex),
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(InteractLiftEvent), nameof(InteractLiftEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(InteractLiftEvent), nameof(InteractLiftEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel)
         ]);
 

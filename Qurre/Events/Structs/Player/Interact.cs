@@ -13,143 +13,148 @@ using Qurre.API.Enums;
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class InteractDoorEvent : IBaseEvent
+public class InteractDoorEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.InteractDoor;
-
-    internal InteractDoorEvent(Player player, IDoor door, bool allowed)
+    internal InteractDoorEvent(Player player, IDoor door, bool isAllowed)
     {
         Player = player;
         Door = door;
-        Allowed = allowed;
+        IsAllowed = isAllowed;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.InteractDoor;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 
     public Player Player { get; }
     public IDoor Door { get; }
-    public bool Allowed { get; set; }
-
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class InteractGeneratorEvent : IBaseEvent
+public class InteractGeneratorEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.InteractGenerator;
-
     internal InteractGeneratorEvent(Player player, IGenerator generator, GeneratorStatus status)
     {
         Player = player;
         Generator = generator;
         Status = status;
-        Allowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.InteractGenerator;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public IGenerator Generator { get; }
     public GeneratorStatus Status { get; }
-    public bool Allowed { get; set; }
-
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class InteractLiftEvent : IBaseEvent
+public class InteractLiftEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.InteractLift;
-
     internal InteractLiftEvent(Player player, ILift lift)
     {
         Player = player;
         Lift = lift;
-        Allowed = true;
+        IsAllowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.InteractLift;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 
     public Player Player { get; }
     public ILift Lift { get; }
-    public bool Allowed { get; set; }
-
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class InteractLockerEvent : IBaseEvent
+public class InteractLockerEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.InteractLocker;
-
     internal InteractLockerEvent(Player player, ILocker locker, LockerChamber? chamber, bool allow)
     {
         Player = player;
         Locker = locker;
         Chamber = chamber;
-        Allowed = allow;
+        IsAllowed = allow;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.InteractLocker;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 
     public Player Player { get; }
     public ILocker Locker { get; }
     public LockerChamber? Chamber { get; }
-    public bool Allowed { get; set; }
-
-    public uint EventId { get; } = EventID;
+    
+    public bool CanOpen { get; set; } // TODO: понять что это значит
 }
 
 [PublicAPI]
-public class InteractScp330Event : IBaseEvent
+public class InteractScp330Event : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.InteractScp330;
-
     internal InteractScp330Event(Player player, Scp330Interobject scp330)
     {
         Player = player;
         Scp330 = scp330;
-        Allowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.InteractScp330;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public Scp330Interobject Scp330 { get; }
-    public bool Allowed { get; set; }
-
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class InteractShootingTargetEvent : IBaseEvent
+public class InteractShootingTargetEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.InteractShootingTarget;
-
     internal InteractShootingTargetEvent(Player player, IShootingTarget shootingTarget,
         ShootingTarget.TargetButton button)
     {
         Player = player;
         ShootingTarget = shootingTarget;
         Button = button;
-        Allowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.InteractShootingTarget;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public IShootingTarget ShootingTarget { get; }
     public ShootingTarget.TargetButton Button { get; set; }
-    public bool Allowed { get; set; }
-
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class InteractWorkStationEvent : IBaseEvent
+public class InteractWorkStationEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.InteractWorkStation;
-
     internal InteractWorkStationEvent(Player player, IWorkStation station, byte colliderId)
     {
         Player = player;
         Station = station;
         ColliderId = colliderId;
-        Allowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.InteractWorkStation;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public IWorkStation Station { get; }
     public byte ColliderId { get; }
-    public bool Allowed { get; set; }
-
-    public uint EventId { get; } = EventID;
 }

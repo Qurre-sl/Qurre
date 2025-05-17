@@ -21,12 +21,12 @@ internal sealed class Armor(BodyArmor itemBase) : Item(itemBase), IArmor
     /// <inheritdoc />
     public bool IsWorn => Base.Instance.IsWorn;
 
-    /// <inheritdoc />
+    /*/// <inheritdoc />
     public bool RemoveExcessOnDrop
     {
         get => !Base.Instance.DontRemoveExcessOnDrop;
         set => Base.Instance.DontRemoveExcessOnDrop = !value;
-    }
+    }*/ // TODO: removed in 14.1
 
     /// <inheritdoc />
     public int HelmetEfficacy

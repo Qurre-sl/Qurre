@@ -5,19 +5,21 @@ using Qurre.API.Entities.Characters;
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class PressAltEvent : IBaseEvent
+public class PressAltEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.PressAlt;
-
-    internal PressAltEvent(Player player, bool allowed)
+    internal PressAltEvent(Player player, bool isAllowed)
     {
         Player = player;
-        Allowed = allowed;
+        IsAllowed = isAllowed;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.PressAlt;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 
     public Player Player { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
@@ -29,7 +31,9 @@ public class JumpEvent : IBaseEvent
     {
         Player = player;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = EventID;
 
     public Player Player { get; }
-    public uint EventId { get; } = EventID;
 }

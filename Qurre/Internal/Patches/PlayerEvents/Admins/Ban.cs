@@ -80,7 +80,7 @@ internal static class Ban
             reason = ev.Reason;
             duration = (long)(ev.Expires - DateTime.Now).TotalSeconds;
 
-            return ev.Allowed;
+            return ev.IsAllowed;
         }
         catch (Exception e)
         {

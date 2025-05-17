@@ -61,7 +61,7 @@ internal static class Cuff
 
             new CodeInstruction(OpCodes.Ldloc_S, unCuffEvent.LocalIndex), // if(!unCuffEvent.Allowed) return;
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(UnCuffEvent), nameof(UnCuffEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(UnCuffEvent), nameof(UnCuffEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel)
         ]);
 
@@ -100,7 +100,7 @@ internal static class Cuff
 
             new CodeInstruction(OpCodes.Ldloc_S, cuffEvent.LocalIndex), // if(!cuffEvent.Allowed) return;
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(CuffEvent), nameof(CuffEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(CuffEvent), nameof(CuffEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel),
 
             new CodeInstruction(OpCodes.Ldloc_S,

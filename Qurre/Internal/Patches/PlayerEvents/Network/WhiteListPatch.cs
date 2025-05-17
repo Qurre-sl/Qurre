@@ -31,7 +31,7 @@ internal static class WhiteListPatch
             CheckWhiteListEvent ev = new(userId, allow);
             ev.InvokeEvent();
 
-            return ev.Allowed;
+            return ev.IsWhitelisted;
         }
         catch (Exception e)
         {

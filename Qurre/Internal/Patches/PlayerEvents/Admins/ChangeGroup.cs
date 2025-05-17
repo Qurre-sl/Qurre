@@ -29,7 +29,7 @@ internal static class ChangeGroup
 
             group = ev.Group;
 
-            return ev.Allowed;
+            return ev.IsAllowed;
         }
         catch (Exception e)
         {

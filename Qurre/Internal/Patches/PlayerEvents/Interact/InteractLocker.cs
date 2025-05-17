@@ -18,6 +18,8 @@ namespace Qurre.Internal.Patches.PlayerEvents.Interact;
 [SuppressMessage("ReSharper", "UnusedType.Global")]
 internal static class InteractLocker
 {
+    // Полностью перенести события взаимодействия с Locker-ами на базу LabApi
+    /*
     [HarmonyTranspiler]
     private static IEnumerable<CodeInstruction> Call(IEnumerable<CodeInstruction> _)
     {
@@ -47,7 +49,7 @@ internal static class InteractLocker
             if (player is null)
                 return;
 
-            var isAllowed = instance.CheckTogglePerms(colliderId, ply) || ply.serverRoles.BypassMode;
+            var isAllowed = instance.CheckTogglePerms(colliderId, ply, out var permissionUsed) || ply.serverRoles.BypassMode;
 
             InteractLockerEvent ev = new(player, locker, lockerChamber, isAllowed);
             ev.InvokeEvent();
@@ -66,4 +68,5 @@ internal static class InteractLocker
             Log.Error($"Patch Error - <Player> {{Interact}} [Locker]: {e}\n{e.StackTrace}");
         }
     }
+    */
 }

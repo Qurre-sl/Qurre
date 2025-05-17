@@ -55,7 +55,7 @@ internal static class AddObserver
 
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex), // return @event.Allowed;
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(Scp173AddObserverEvent), nameof(Scp173AddObserverEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(Scp173AddObserverEvent), nameof(Scp173AddObserverEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Brtrue, retTrueLabel),
 
             new CodeInstruction(OpCodes.Ldc_I4_0),

@@ -35,10 +35,10 @@ internal static class ChangeRole
             newRole = ev.Role;
             reason = ev.Reason;
 
-            if (ev.Allowed)
+            if (ev.IsAllowed)
                 pl.LastSynced = Time.time;
 
-            return ev.Allowed;
+            return ev.IsAllowed;
         }
         catch (Exception e)
         {

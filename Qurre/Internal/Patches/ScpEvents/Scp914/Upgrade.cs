@@ -65,7 +65,7 @@ internal static class Upgrade
 
             ev.InvokeEvent();
 
-            if (!ev.Allowed)
+            if (!ev.IsAllowed)
                 return;
 
             mode = ev.Mode;

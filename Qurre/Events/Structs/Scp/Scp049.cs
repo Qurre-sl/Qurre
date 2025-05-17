@@ -10,7 +10,14 @@ namespace Qurre.Events.Structs;
 [PublicAPI]
 public class Scp049RaisingStartEvent : ICancellableEvent
 {
+    #region Constants
+
+    // Unique identifier of the event (do not rename or alter).
     private const uint EventID = ScpEvents.Scp049RaisingStart;
+
+    #endregion
+
+    #region Constructor
 
     internal Scp049RaisingStartEvent(Player issuer, Player target, BasicRagdoll basicRagdoll)
     {
@@ -18,20 +25,29 @@ public class Scp049RaisingStartEvent : ICancellableEvent
         Target = target;
         Corpse = basicRagdoll.GetCorpse()!;
     }
+    
+    #endregion
+    
+    #region Public API
 
-    public Player Issuer { get; }
-    public Player Target { get; }
-    public ICorpse Corpse { get; }
+    /// <inheritdoc />
+    public uint EventId { get; } = ScpEvents.Scp049RaisingStart;
 
-    public uint EventId { get; } = EventID;
+    /// <inheritdoc />
     public bool IsAllowed { get; set; } = true;
+    
+    public Player Issuer { get; }
+    
+    public Player Target { get; }
+    
+    public ICorpse Corpse { get; }
+    
+    #endregion
 }
 
 [PublicAPI]
 public class Scp049RaisingEndEvent : ICancellableEvent
 {
-    private const uint EventID = ScpEvents.Scp049RaisingEnd;
-
     internal Scp049RaisingEndEvent(Player issuer, Player target, BasicRagdoll basicRagdoll)
     {
         Issuer = issuer;
@@ -39,10 +55,14 @@ public class Scp049RaisingEndEvent : ICancellableEvent
         Corpse = EntityManager.GetOrException<ICorpse>(basicRagdoll);
     }
 
+    /// <inheritdoc />
+    public uint EventId { get; } = ScpEvents.Scp049RaisingEnd;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
+    
     public Player Issuer { get; }
     public Player Target { get; }
     public ICorpse Corpse { get; }
 
-    public uint EventId { get; } = EventID;
-    public bool IsAllowed { get; set; } = true;
 }

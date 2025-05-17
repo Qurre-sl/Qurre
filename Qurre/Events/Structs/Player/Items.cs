@@ -10,117 +10,122 @@ using UnityEngine;
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class CancelUseItemEvent : IBaseEvent
+public class CancelUseItemEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.CancelUseItem;
-
     internal CancelUseItemEvent(Player player, IItem item)
     {
         Player = player;
         Item = item;
-        Allowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.CancelUseItem;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public IItem Item { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class UseItemEvent : IBaseEvent
+public class UseItemEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.UseItem;
-
     internal UseItemEvent(Player player, IItem item)
     {
         Player = player;
         Item = item;
-        Allowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.UseItem;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public IItem Item { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
 public class UsedItemEvent : IBaseEvent
 {
-    private const uint EventID = PlayerEvents.UsedItem;
-
     internal UsedItemEvent(Player player, IItem item)
     {
         Player = player;
         Item = item;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.UsedItem;
 
     public Player Player { get; }
     public IItem Item { get; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class ChangeItemEvent : IBaseEvent
+public class ChangeItemEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.ChangeItem;
-
     internal ChangeItemEvent(Player player, IItem? oldItem, IItem? newItem)
     {
         Player = player;
         OldItem = oldItem;
         NewItem = newItem;
-        Allowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.ChangeItem;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public IItem? OldItem { get; }
     public IItem? NewItem { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class UpdateRadioEvent : IBaseEvent
+public class UpdateRadioEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.UpdateRadio;
-
     internal UpdateRadioEvent(Player player, RadioItem radioBase, RadioStatus range, bool enabled)
     {
         Player = player;
         Radio = EntityManager.GetOrException<IRadio>(radioBase);
         Range = range;
         Enabled = enabled;
-        Allowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.UpdateRadio;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public IRadio Radio { get; }
     public RadioStatus Range { get; set; }
     public bool Enabled { get; set; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class UsingRadioEvent : IBaseEvent
+public class UsingRadioEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.UsingRadio;
-
     internal UsingRadioEvent(Player player, RadioItem radioBase, float num)
     {
         Player = player;
         Radio = EntityManager.GetOrException<IRadio>(radioBase);
         Battery = radioBase._battery * 100;
         Consumption = Time.deltaTime * (num / 60 / 100) * 100;
-        Allowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.UsingRadio;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public IRadio Radio { get; }
     public float Battery { get; set; }
     public float Consumption { get; set; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }

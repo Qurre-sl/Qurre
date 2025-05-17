@@ -17,29 +17,29 @@ internal static class Warhead
         WarheadEvents.Detonated += OnDetonate;
     }
 
-    private static void OnStart(LabApiEvents.WarheadStartingEventArgs ev)
+    private static void OnStart(LabApiEvents.WarheadStartingEventArgs labApiEv)
     {
-        AlphaStartEvent @event = new(ev.Player.GetPlayer(), ev.IsAutomatic, ev.SuppressSubtitles, ev.WarheadState);
-        @event.InvokeEvent();
+        var qurreEv = new AlphaStartEvent(labApiEv.Player.GetPlayer(), labApiEv.IsAutomatic, labApiEv.SuppressSubtitles, labApiEv.WarheadState);
+        qurreEv.InvokeEvent();
 
-        ev.IsAutomatic = @event.Automatic;
-        ev.IsAllowed = @event.Allowed;
-        ev.SuppressSubtitles = @event.SuppressSubtitles;
-        ev.WarheadState = @event.State;
+        labApiEv.IsAutomatic = qurreEv.IsAutomatic;
+        labApiEv.IsAllowed = qurreEv.IsAllowed;
+        qurreEv.SuppressSubtitles = qurreEv.SuppressSubtitles;
+        labApiEv.WarheadState = qurreEv.State;
     }
 
-    private static void OnStop(LabApiEvents.WarheadStoppingEventArgs ev)
+    private static void OnStop(LabApiEvents.WarheadStoppingEventArgs labApiEv)
     {
-        AlphaStopEvent @event = new(ev.Player.GetPlayer(), ev.WarheadState);
-        @event.InvokeEvent();
+        var qurreEv = new AlphaStopEvent(labApiEv.Player.GetPlayer(), labApiEv.WarheadState);
+        qurreEv.InvokeEvent();
 
-        ev.WarheadState = @event.State;
-        ev.IsAllowed = @event.Allowed;
+        labApiEv.WarheadState = qurreEv.State;
+        labApiEv.IsAllowed = qurreEv.IsAllowed;
     }
 
-    private static void OnDetonate(LabApiEvents.WarheadDetonatedEventArgs ev)
+    private static void OnDetonate(LabApiEvents.WarheadDetonatedEventArgs labApiEv)
     {
-        AlphaDetonateEvent @event = new();
-        @event.InvokeEvent();
+        var qurreEv = new AlphaDetonateEvent();
+        qurreEv.InvokeEvent();
     }
 }

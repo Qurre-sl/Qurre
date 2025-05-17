@@ -60,7 +60,7 @@ internal static class UpdateRadio
         UpdateRadioEvent ev = new(player, instance, (RadioStatus)range, enabled);
         ev.InvokeEvent();
 
-        if (!ev.Allowed) return;
+        if (!ev.IsAllowed) return;
 
         instance._rangeId = (byte)ev.Range;
         instance._enabled = ev.Enabled;

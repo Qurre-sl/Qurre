@@ -26,6 +26,6 @@ internal static class Attack
         Scp106AttackEvent ev = new(attacker, target);
         ev.InvokeEvent();
 
-        return ev.Allowed;
+        return ev.IsAllowed;
     }
 }

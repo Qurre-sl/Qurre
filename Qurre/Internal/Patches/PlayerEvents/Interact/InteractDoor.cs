@@ -63,7 +63,7 @@ internal static class InteractDoor
 
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex), // allowed = @event.Allowed;
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(InteractDoorEvent), nameof(InteractDoorEvent.Allowed))),
+                AccessTools.PropertyGetter(typeof(InteractDoorEvent), nameof(InteractDoorEvent.IsAllowed))),
             new CodeInstruction(OpCodes.Stloc_0)
         ]);
 
@@ -96,7 +96,7 @@ internal static class InteractDoor
 
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex), // allowed = @event.Allowed;
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(InteractDoorEvent), nameof(InteractDoorEvent.Allowed)))
+                AccessTools.PropertyGetter(typeof(InteractDoorEvent), nameof(InteractDoorEvent.IsAllowed)))
         ]);
 
         return list.AsEnumerable();

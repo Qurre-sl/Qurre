@@ -28,7 +28,7 @@ internal static class Mute
             ev.InvokeEvent();
 
             intercom = ev.Intercom;
-            return ev.Allowed;
+            return ev.IsAllowed;
         }
         catch (Exception e)
         {

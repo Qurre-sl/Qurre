@@ -10,8 +10,6 @@ namespace Qurre.Events.Structs;
 [PublicAPI]
 public class DeadEvent : IBaseEvent
 {
-    private const uint EventID = PlayerEvents.Dead;
-
     internal DeadEvent(Player attacker, Player target, DamageHandlerBase damageInfo, DamageTypes type)
     {
         Attacker = attacker;
@@ -20,30 +18,35 @@ public class DeadEvent : IBaseEvent
         DamageInfo = damageInfo;
         LiteType = damageInfo.GetLiteDamageTypes();
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Dead;
 
     public Player Attacker { get; }
     public Player Target { get; }
     public DamageTypes DamageType { get; }
     public DamagePrimitiveTypes LiteType { get; }
     public DamageHandlerBase DamageInfo { get; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
 public class DiesEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.Dies;
-    private DamagePrimitiveTypes _liteType = DamagePrimitiveTypes.Unknown;
-
-    private DamageTypes _type = DamageTypes.Unknown;
+    private DamagePrimitiveTypes _damagePrimitiveType = DamagePrimitiveTypes.Unknown;
+    private DamageTypes _damageType = DamageTypes.Unknown;
 
     internal DiesEvent(Player attacker, Player target, DamageHandlerBase damageInfo)
     {
         Attacker = attacker;
         Target = target;
         DamageInfo = damageInfo;
-        IsAllowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Dies;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Attacker { get; }
     public Player Target { get; }
@@ -53,32 +56,26 @@ public class DiesEvent : ICancellableEvent
     {
         get
         {
-            if (_type is DamageTypes.Unknown) _type = DamageInfo.GetDamageType();
-            return _type;
+            if (_damageType is DamageTypes.Unknown) _damageType = DamageInfo.GetDamageType();
+            return _damageType;
         }
     }
 
-    public DamagePrimitiveTypes LiteType
+    public DamagePrimitiveTypes DamagePrimitiveType
     {
         get
         {
-            if (_liteType is DamagePrimitiveTypes.Unknown) _liteType = DamageInfo.GetLiteDamageTypes();
-            return _liteType;
+            if (_damagePrimitiveType is DamagePrimitiveTypes.Unknown) _damagePrimitiveType = DamageInfo.GetLiteDamageTypes();
+            return _damagePrimitiveType;
         }
     }
-
-    public bool IsAllowed { get; set; }
-
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class DamageEvent : IBaseEvent
+public class DamageEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.Damage;
-    private DamagePrimitiveTypes _liteType = DamagePrimitiveTypes.Unknown;
-
-    private DamageTypes _type = DamageTypes.Unknown;
+    private DamagePrimitiveTypes _damagePrimitiveType = DamagePrimitiveTypes.Unknown;
+    private DamageTypes _damageType = DamageTypes.Unknown;
 
     internal DamageEvent(Player attacker, Player target, DamageHandlerBase damageInfo, float damage)
     {
@@ -86,97 +83,101 @@ public class DamageEvent : IBaseEvent
         Target = target;
         DamageInfo = damageInfo;
         Damage = damage;
-        Allowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Damage;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Attacker { get; }
     public Player Target { get; }
     public DamageHandlerBase DamageInfo { get; }
     public float Damage { get; set; }
-    public bool Allowed { get; set; }
-
+    
     public DamageTypes DamageType
     {
         get
         {
-            if (_type is DamageTypes.Unknown) _type = DamageInfo.GetDamageType();
-            return _type;
+            if (_damageType is DamageTypes.Unknown) _damageType = DamageInfo.GetDamageType();
+            return _damageType;
         }
     }
 
-    public DamagePrimitiveTypes LiteType
+    public DamagePrimitiveTypes DamagePrimitiveType
     {
         get
         {
-            if (_liteType is DamagePrimitiveTypes.Unknown) _liteType = DamageInfo.GetLiteDamageTypes();
-            return _liteType;
+            if (_damagePrimitiveType is DamagePrimitiveTypes.Unknown) _damagePrimitiveType = DamageInfo.GetLiteDamageTypes();
+            return _damagePrimitiveType;
         }
     }
-
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class AttackEvent : IBaseEvent
+public class AttackEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.Attack;
-    private DamagePrimitiveTypes _liteType = DamagePrimitiveTypes.Unknown;
-
-    private DamageTypes _type = DamageTypes.Unknown;
+    private DamagePrimitiveTypes _damagePrimitiveType = DamagePrimitiveTypes.Unknown;
+    private DamageTypes _damagesType = DamageTypes.Unknown;
 
     internal AttackEvent(Player attacker, Player target, AttackerDamageHandler damageInfo, float damage,
-        bool friendlyFire, bool allowed)
+        bool friendlyFire, bool isAllowed)
     {
         Attacker = attacker;
         Target = target;
         DamageInfo = damageInfo;
         Damage = damage;
         FriendlyFire = friendlyFire;
-        Allowed = allowed;
+        IsAllowed = isAllowed;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Attack;
+    
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 
     public Player Attacker { get; }
     public Player Target { get; }
     public AttackerDamageHandler DamageInfo { get; }
     public float Damage { get; set; }
     public bool FriendlyFire { get; set; }
-    public bool Allowed { get; set; }
 
     public DamageTypes DamageType
     {
         get
         {
-            if (_type is DamageTypes.Unknown) _type = DamageInfo.GetDamageType();
-            return _type;
+            if (_damagesType is DamageTypes.Unknown) _damagesType = DamageInfo.GetDamageType();
+            return _damagesType;
         }
     }
 
-    public DamagePrimitiveTypes LiteType
+    public DamagePrimitiveTypes DamagePrimitiveType
     {
         get
         {
-            if (_liteType is DamagePrimitiveTypes.Unknown) _liteType = DamageInfo.GetLiteDamageTypes();
-            return _liteType;
+            if (_damagePrimitiveType is DamagePrimitiveTypes.Unknown) _damagePrimitiveType = DamageInfo.GetLiteDamageTypes();
+            return _damagePrimitiveType;
         }
     }
-
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
 public class HealEvent : ICancellableEvent
 {
-    private const uint EventID = PlayerEvents.Heal;
-
     internal HealEvent(Player player, float amount)
     {
         Player = player;
         Amount = amount;
-        IsAllowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = PlayerEvents.Heal;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public float Amount { get; set; }
-    public bool IsAllowed { get; set; }
-    public uint EventId { get; } = EventID;
 }

@@ -33,7 +33,7 @@ internal static class Banned
             BannedEvent @event = new(string.IsNullOrEmpty(ban.Id) ? null : ban.Id.GetPlayer(), ban, banType, forced);
             @event.InvokeEvent();
 
-            if (!@event.UnsafeAllowed)
+            if (!@event.IsAllowed)
                 BanHandler.RemoveBan(ban.Id, banType, true);
         }
         catch (Exception e)

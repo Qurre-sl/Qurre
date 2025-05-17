@@ -14,8 +14,8 @@ internal sealed class GrenadeFrag : Throwable, IGrenadeFrag
     public GrenadeFrag(ThrowableItem itemBase, Player? owner = null) : base(itemBase)
     {
         var grenade = (ExplosionGrenade)Base.Instance.Projectile;
-        MaxRadius = grenade._maxRadius;
-        ScpMultiplier = grenade._scpDamageMultiplier;
+        MaxRadius = grenade.MaxRadius;
+        ScpMultiplier = grenade.ScpDamageMultiplier;
         BurnDuration = grenade._burnedDuration;
         DeafenDuration = grenade._deafenedDuration;
         ConcussDuration = grenade._concussedDuration;
@@ -33,8 +33,8 @@ internal sealed class GrenadeFrag : Throwable, IGrenadeFrag
     {
         var grenade = (ExplosionGrenade)Object.Instantiate(Base.Instance.Projectile, position, rotation);
         grenade.PreviousOwner = new Footprint(Owner.ReferenceHub);
-        grenade._maxRadius = MaxRadius;
-        grenade._scpDamageMultiplier = ScpMultiplier;
+        grenade.MaxRadius = MaxRadius;
+        grenade.ScpDamageMultiplier = ScpMultiplier;
         grenade._burnedDuration = BurnDuration;
         grenade._deafenedDuration = DeafenDuration;
         grenade._concussedDuration = ConcussDuration;

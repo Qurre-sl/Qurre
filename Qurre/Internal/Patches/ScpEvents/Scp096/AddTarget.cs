@@ -45,6 +45,6 @@ internal static class AddTarget
     private static bool Invoke(Scp096AddTargetEvent @event)
     {
         @event.InvokeEvent();
-        return @event.Allowed;
+        return @event.IsAllowed;
     }
 }

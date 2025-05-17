@@ -8,41 +8,43 @@ using Qurre.API.Enums;
 namespace Qurre.Events.Structs;
 
 [PublicAPI]
-public class EffectEnabledEvent : IBaseEvent
+public class EffectEnabledEvent : ICancellableEvent
 {
-    private const uint EventID = EffectEvents.Enabled;
-
     internal EffectEnabledEvent(Player player, StatusEffectBase effect)
     {
         Player = player;
         Effect = effect;
         Type = effect.GetEffectType();
-        Allowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = EffectEvents.Enabled;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public StatusEffectBase Effect { get; }
     public EffectType Type { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
-public class EffectDisabledEvent : IBaseEvent
+public class EffectDisabledEvent : ICancellableEvent
 {
-    private const uint EventID = EffectEvents.Disabled;
-
     internal EffectDisabledEvent(Player player, StatusEffectBase effect)
     {
         Player = player;
         Effect = effect;
         Type = effect.GetEffectType();
-        Allowed = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = EffectEvents.Disabled;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     public Player Player { get; }
     public StatusEffectBase Effect { get; }
     public EffectType Type { get; }
-    public bool Allowed { get; set; }
-    public uint EventId { get; } = EventID;
 }

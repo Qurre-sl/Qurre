@@ -41,11 +41,11 @@ internal static class InteractShootingTarget
                 (ShootingTarget.TargetButton)colliderId);
 
             if (!PermissionsHandler.IsPermitted(ply.serverRoles.Permissions, PlayerPermissions.FacilityManagement))
-                ev.Allowed = false;
+                ev.IsAllowed = false;
 
             ev.InvokeEvent();
 
-            if (!ev.Allowed)
+            if (!ev.IsAllowed)
                 return;
 
             colliderId = (byte)ev.Button;

@@ -21,7 +21,7 @@ public sealed class RequestPlayerListCommandEvent : IBaseEvent
 
     #endregion
 
-    #region Constructor
+    #region Constructors
 
     /// <summary>
     ///     Creates an instance of <see cref="RequestPlayerListCommandEvent" />.
@@ -91,7 +91,7 @@ public sealed class RemoteAdminCommandEvent : IBaseEvent
 
     #endregion
 
-    #region Constructor
+    #region Constructors
 
     /// <summary>
     ///     Creates an instance of <see cref="RemoteAdminCommandEvent" />.
@@ -185,7 +185,7 @@ public sealed class GameConsoleCommandEvent : IBaseEvent
 
     #endregion
 
-    #region Constructor
+    #region Constructors
 
     /// <summary>
     ///     Creates an instance of <see cref="GameConsoleCommandEvent" />.
@@ -248,7 +248,7 @@ public sealed class ServerConsoleCommandEvent : IBaseEvent
 
     #endregion
 
-    #region Constructor
+    #region Constructors
 
     /// <summary>
     ///     Creates an instance of <see cref="ServerConsoleCommandEvent" />.

@@ -34,7 +34,7 @@ internal static class ChangeItem
             ChangeItemEvent ev = new(player, oldItem, newItem);
             ev.InvokeEvent();
 
-            return ev.Allowed;
+            return ev.IsAllowed;
         }
         catch (Exception e)
         {

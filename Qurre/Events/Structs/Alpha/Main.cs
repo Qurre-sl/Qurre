@@ -9,22 +9,25 @@ namespace Qurre.Events.Structs;
 ///     Event triggered when an Alpha warhead start sequence is initiated
 /// </summary>
 [PublicAPI]
-public sealed class AlphaStartEvent : IBaseEvent
+public sealed class AlphaStartEvent : ICancellableEvent
 {
-    private const uint EventID = AlphaEvents.Start;
-
     internal AlphaStartEvent(
         Player? player,
-        bool automatic,
+        bool isAutomatic,
         bool suppressSubtitles,
         AlphaWarheadSyncInfo state)
     {
         Player = player ?? Server.Host;
-        Automatic = automatic;
+        IsAutomatic = isAutomatic;
         SuppressSubtitles = suppressSubtitles;
         State = state;
-        Allowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = AlphaEvents.Start;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     /// <summary>
     ///     Gets the player who initiated the warhead sequence
@@ -34,7 +37,7 @@ public sealed class AlphaStartEvent : IBaseEvent
     /// <summary>
     ///     Gets or sets whether the sequence was automatically triggered
     /// </summary>
-    public bool Automatic { get; set; }
+    public bool IsAutomatic { get; set; }
 
     /// <summary>
     ///     Gets or sets whether to suppress CASSIE subtitles
@@ -45,30 +48,25 @@ public sealed class AlphaStartEvent : IBaseEvent
     ///     Gets or sets the warhead state information
     /// </summary>
     public AlphaWarheadSyncInfo State { get; set; }
-
-    /// <summary>
-    ///     Gets or sets whether the event is allowed to proceed
-    /// </summary>
-    public bool Allowed { get; set; }
-
-    /// <inheritdoc />
-    public uint EventId { get; } = EventID;
 }
 
 /// <summary>
 ///     Event triggered when Alpha warhead detonation is stopped
 /// </summary>
 [PublicAPI]
-public sealed class AlphaStopEvent : IBaseEvent
+public sealed class AlphaStopEvent : ICancellableEvent
 {
-    private const uint EventID = AlphaEvents.Stop;
-
     internal AlphaStopEvent(Player? player, AlphaWarheadSyncInfo state)
     {
         Player = player ?? Server.Host;
         State = state;
-        Allowed = true;
     }
+
+    /// <inheritdoc />
+    public uint EventId { get; } = AlphaEvents.Stop;
+
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; } = true;
 
     /// <summary>
     ///     Gets the player who stopped the warhead sequence
@@ -79,14 +77,6 @@ public sealed class AlphaStopEvent : IBaseEvent
     ///     Gets or sets the warhead state information
     /// </summary>
     public AlphaWarheadSyncInfo State { get; set; }
-
-    /// <summary>
-    ///     Gets or sets whether the event is allowed to proceed
-    /// </summary>
-    public bool Allowed { get; set; }
-
-    /// <inheritdoc />
-    public uint EventId { get; } = EventID;
 }
 
 /// <summary>
@@ -95,12 +85,10 @@ public sealed class AlphaStopEvent : IBaseEvent
 [PublicAPI]
 public sealed class AlphaDetonateEvent : IBaseEvent
 {
-    private const uint EventID = AlphaEvents.Detonate;
-
     internal AlphaDetonateEvent()
     {
     }
 
     /// <inheritdoc />
-    public uint EventId { get; } = EventID;
+    public uint EventId { get; } = AlphaEvents.Detonate;
 }

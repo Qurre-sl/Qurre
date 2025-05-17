@@ -6,101 +6,94 @@ namespace Qurre.Events.Structs;
 [PublicAPI]
 public class WaitingEvent : IBaseEvent
 {
-    private const uint EventID = RoundEvents.Waiting;
-
     internal WaitingEvent()
     {
     }
 
-    public uint EventId { get; } = EventID;
+    /// <inheritdoc />
+    public uint EventId { get; } = RoundEvents.Waiting;
 }
 
 [PublicAPI]
-public class RoundStartingEvent : IBaseEvent
+public class RoundStartingEvent : ICancellableEvent
 {
-    private const uint EventID = RoundEvents.Starting;
-
-    internal RoundStartingEvent(bool allow = true)
+    internal RoundStartingEvent(bool isAllowed = true)
     {
-        Allow = allow;
+        IsAllowed = isAllowed;
     }
 
-    public bool Allow { get; set; }
+    /// <inheritdoc />
+    public uint EventId { get; } = RoundEvents.Starting;
 
-    public uint EventId { get; } = EventID;
+    /// <inheritdoc />
+    public bool IsAllowed { get; set; }
 }
 
 [PublicAPI]
 public class RoundStartedEvent : IBaseEvent
 {
-    private const uint EventID = RoundEvents.Start;
-
     internal RoundStartedEvent()
     {
     }
 
-    public uint EventId { get; } = EventID;
+    /// <inheritdoc />
+    public uint EventId { get; } = RoundEvents.Start;
 }
 
 [PublicAPI]
 public class RoundForceStartEvent : IBaseEvent
 {
-    private const uint EventID = RoundEvents.ForceStart;
-
     internal RoundForceStartEvent()
     {
     }
 
-    public uint EventId { get; } = EventID;
+    /// <inheritdoc />
+    public uint EventId { get; } = RoundEvents.ForceStart;
 }
 
 [PublicAPI]
 public class RoundRestartEvent : IBaseEvent
 {
-    private const uint EventID = RoundEvents.Restart;
-
     internal RoundRestartEvent()
     {
     }
 
-    public uint EventId { get; } = EventID;
+    /// <inheritdoc />
+    public uint EventId { get; } = RoundEvents.Restart;
 }
 
 [PublicAPI]
 public class RoundRestartTriggeredEvent : IBaseEvent
 {
-    private const uint EventID = RoundEvents.RestartTriggered;
-
     internal RoundRestartTriggeredEvent()
     {
     }
 
-    public uint EventId { get; } = EventID;
+    /// <inheritdoc />
+    public uint EventId { get; } = RoundEvents.RestartTriggered;
 }
 
 [PublicAPI]
 public class RoundCheckEvent : IBaseEvent
 {
-    private const uint EventID = RoundEvents.Check;
-
     internal RoundCheckEvent(RoundSummary.LeadingTeam winner, RoundSummary.SumInfo_ClassList info, bool end)
     {
         Winner = winner;
         Info = info;
         End = end;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = RoundEvents.Check;
 
     public RoundSummary.LeadingTeam Winner { get; set; }
     public RoundSummary.SumInfo_ClassList Info { get; set; }
     public bool End { get; set; }
-    public uint EventId { get; } = EventID;
 }
 
 [PublicAPI]
 public class RoundEndEvent : IBaseEvent
 {
-    private const uint EventID = RoundEvents.End;
-
     internal RoundEndEvent(RoundSummary.LeadingTeam winner, RoundSummary.SumInfo_ClassList info, int toRestart)
     {
         Winner = winner;
@@ -108,10 +101,12 @@ public class RoundEndEvent : IBaseEvent
         ToRestart = toRestart;
         ShowSummary = true;
     }
+    
+    /// <inheritdoc />
+    public uint EventId { get; } = RoundEvents.End;
 
     public RoundSummary.LeadingTeam Winner { get; }
     public RoundSummary.SumInfo_ClassList Info { get; set; }
     public int ToRestart { get; set; }
     public bool ShowSummary { get; set; }
-    public uint EventId { get; } = EventID;
 }

@@ -90,7 +90,7 @@ internal static class Damage
             if (!SetDamage(handler, ev.Damage))
                 ev.Damage = doDamage;
 
-            return ev.Allowed;
+            return ev.IsAllowed;
         }
         catch (Exception e)
         {

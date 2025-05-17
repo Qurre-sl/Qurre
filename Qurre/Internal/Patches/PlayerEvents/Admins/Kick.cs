@@ -38,7 +38,7 @@ internal static class Kick
             KickEvent ev = new(targetPlayer, issue ?? Server.Host, reason);
             ev.InvokeEvent();
 
-            if (!ev.Allowed)
+            if (!ev.IsAllowed)
                 return false;
 
             ServerConsole.Disconnect(targetPlayer.GameObject, Configs.Kicked + reason);

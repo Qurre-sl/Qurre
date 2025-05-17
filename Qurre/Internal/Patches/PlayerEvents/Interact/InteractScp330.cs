@@ -56,7 +56,7 @@ internal static class InteractScp330
 
             new CodeInstruction(OpCodes.Ldloc_S, @event.LocalIndex),
             new CodeInstruction(OpCodes.Callvirt,
-                AccessTools.PropertyGetter(typeof(InteractScp330Event), nameof(InteractScp330Event.Allowed))),
+                AccessTools.PropertyGetter(typeof(InteractScp330Event), nameof(InteractScp330Event.IsAllowed))),
             new CodeInstruction(OpCodes.Brfalse, retLabel)
         ]);
 

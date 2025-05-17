@@ -32,7 +32,7 @@ internal static class ReserveSlot
             CheckReserveSlotEvent ev = new(userId, allow);
             ev.InvokeEvent();
 
-            return ev.Allowed;
+            return ev.HasReserveSlot;
         }
         catch (Exception e)
         {

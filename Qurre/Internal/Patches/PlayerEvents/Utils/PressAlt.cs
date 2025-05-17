@@ -36,7 +36,7 @@ internal static class PressAlt
         PressAltEvent @event = new(pl, FpcNoclip.IsPermitted(pl.ReferenceHub));
         @event.InvokeEvent();
 
-        if (!@event.Allowed)
+        if (!@event.IsAllowed)
             return;
 
         if (pl.RoleInformation.Base is not IFpcRole)

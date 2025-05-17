@@ -65,14 +65,14 @@ internal static class ChangeIntensity
                         EffectEnabledEvent ev = new(pl, instance);
                         ev.InvokeEvent();
 
-                        return ev.Allowed;
+                        return ev.IsAllowed;
                     }
                 case > 0 when value == 0:
                     {
                         EffectDisabledEvent ev = new(pl, instance);
                         ev.InvokeEvent();
 
-                        return ev.Allowed;
+                        return ev.IsAllowed;
                     }
             }
         }
