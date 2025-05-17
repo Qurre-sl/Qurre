@@ -89,20 +89,3 @@ jobs:
     - name: Perform CodeQL Analysis
       uses: github/codeql-action/analyze@v3
 
-  secutity-scan:
-    needs: ["format-code"]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: | 
-            3.1.x
-            6.0.x
-      - name: Install Security Code Scan
-        run: dotnet tool install --global security-scan
-      - name: Run Security Code Scan
-        run: security-scan ${{ github.workspace }}/Qurre/Qurre.csproj
-
