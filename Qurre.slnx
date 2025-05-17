@@ -7,8 +7,5 @@
   <Project Path="Qurre.Loader\Qurre.Loader.csproj" Type="Classic C#">
     <Configuration Solution="Tests|Any CPU" Project="Debug|Any CPU" />
   </Project>
-  <Project Path="Qurre.Test\Qurre.Test.csproj" Type="Classic C#">
-    <Configuration Solution="Tests|Any CPU" Project="Debug|Any CPU" />
-  </Project>
   <Project Path="Qurre\Qurre.csproj" Type="Classic C#" />
 </Solution>
