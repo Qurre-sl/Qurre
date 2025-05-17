@@ -7,7 +7,6 @@ using HarmonyLib;
 using InventorySystem.Items;
 using InventorySystem.Items.ThrowableProjectiles;
 using Qurre.API;
-using Qurre.API.Utils.Entities;
 using Qurre.Events.Structs;
 
 namespace Qurre.Internal.Patches.PlayerEvents.Pickups;
@@ -48,8 +47,6 @@ internal static class ThrowProjectile
                 AccessTools.Method(typeof(Extensions), nameof(Extensions.GetPlayer), [typeof(ReferenceHub)])),
 
             new CodeInstruction(OpCodes.Ldarg_0),
-            new CodeInstruction(OpCodes.Call,
-                AccessTools.Method(typeof(ItemsHelper), nameof(ItemsHelper.GetItemByBase), [typeof(ItemBase)])),
 
             new CodeInstruction(OpCodes.Ldloc_S, 4), // ProjectileSettings
             new CodeInstruction(OpCodes.Ldarg_1), // fullForce [bool]

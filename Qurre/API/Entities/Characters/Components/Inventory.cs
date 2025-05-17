@@ -7,7 +7,6 @@ using InventorySystem.Items.Firearms.Attachments;
 using InventorySystem.Items.Pickups;
 using JetBrains.Annotations;
 using Qurre.API.Entities.Characters.Components.Structs;
-using Qurre.API.Entities.Items;
 using Qurre.API.Enums;
 
 namespace Qurre.API.Entities.Characters.Components;
@@ -31,26 +30,15 @@ public sealed class Inventory
 
     public int ItemsCount => Base.UserInventory.Items.Count;
 
-    public Dictionary<ushort, IItem> Items
+    public Dictionary<ushort, ItemBase> Items
     {
-        get
-        {
-            Dictionary<ushort, IItem> dict = [];
-            foreach (var preItem in Base.UserInventory.Items)
-            {
-                var item = EntityManager.Get<IItem>(preItem.Value);
-                if (item is not null)
-                    dict.Add(preItem.Key, item);
-            }
-
-            return dict;
-        }
+        get => Base.UserInventory.Items;
         set
         {
             Dictionary<ushort, ItemBase> dict = [];
 
             foreach (var preItem in value)
-                dict.Add(preItem.Key, preItem.Value.Base.Instance);
+                dict.Add(preItem.Key, preItem.Value);
 
             Base.UserInventory.Items = dict;
             Base.SendItemsNextFrame = true;
@@ -60,14 +48,6 @@ public sealed class Inventory
     public bool HasItem(ItemType item)
     {
         return Base.UserInventory.Items.Any(tempItem => tempItem.Value.ItemTypeId == item);
-    }
-
-    public void Reset(IEnumerable<IItem> newItems)
-    {
-        Clear();
-
-        foreach (var item in newItems)
-            AddItem(item);
     }
 
     public void Reset(IEnumerable<ItemBase> newItems)
@@ -130,9 +110,9 @@ public sealed class Inventory
         Base.ServerSelectItem(serial);
     }
 
-    public void SelectItem(IItem item)
+    public void SelectItem(ItemBase item)
     {
-        SelectItem(item.Serial);
+        SelectItem(item.ItemSerial);
     }
 
     public void DropItem(ushort serial)
@@ -140,17 +120,17 @@ public sealed class Inventory
         Base.ServerDropItem(serial);
     }
 
-    public void DropItem(IItem item)
+    public void DropItem(ItemBase item)
     {
-        Base.ServerDropItem(item.Serial);
+        Base.ServerDropItem(item.ItemSerial);
     }
 
-    public IItem? AddItem(ItemBase itemBase)
+    public ItemBase? AddItem(ItemBase itemBase)
     {
-        if (itemBase == null)
+        if (!itemBase)
             return null;
 
-        if (itemBase.PickupDropModel == null)
+        if (!itemBase.PickupDropModel)
             return null;
 
         Base.UserInventory.Items[itemBase.PickupDropModel.NetworkInfo.Serial] = itemBase;
@@ -161,15 +141,10 @@ public sealed class Inventory
 
         Base.SendItemsNextFrame = true;
 
-        return EntityManager.Get<IItem>(itemBase);
+        return itemBase;
     }
 
-    public void AddItem(IItem item)
-    {
-        AddItem(item.Base.Instance);
-    }
-
-    public void AddItem(IItem item, uint amount)
+    public void AddItem(ItemBase item, uint amount)
     {
         if (amount == 0)
             return;
@@ -178,12 +153,12 @@ public sealed class Inventory
             AddItem(item);
     }
 
-    public IItem? AddItem(ItemType itemType)
+    public ItemBase? AddItem(ItemType itemType)
     {
         var itemBase = Base.ServerAddItem(itemType, ItemAddReason.Undefined);
         if (itemBase is Firearm firearm)
             SetupFirearmAttachments(_player.ReferenceHub, firearm);
-        return EntityManager.Get<IItem>(itemBase);
+        return itemBase;
     }
 
     public void AddItem(ItemType itemType, uint amount)
@@ -195,7 +170,7 @@ public sealed class Inventory
             AddItem(itemType);
     }
 
-    public void AddItem(IEnumerable<IItem> items)
+    public void AddItem(IEnumerable<ItemBase> items)
     {
         foreach (var item in items)
             AddItem(item);
@@ -206,17 +181,17 @@ public sealed class Inventory
         Base.ServerRemoveItem(serial, itemPickupBase);
     }
 
-    public void RemoveItem(IPickup pickup)
+    public void RemoveItem(ItemPickupBase pickup)
     {
-        Base.ServerRemoveItem(pickup.Serial, pickup.Base.Instance);
+        Base.ServerRemoveItem(pickup.Info.Serial, pickup);
     }
 
-    public void RemoveItem(IItem item)
+    public void RemoveItem(ItemBase item)
     {
-        if (item.Pickup == null)
+        if (!item.PickupDropModel)
             return;
 
-        Base.ServerRemoveItem(item.Serial, item.Pickup.Base.Instance);
+        Base.ServerRemoveItem(item.ItemSerial, item.PickupDropModel);
     }
 
 

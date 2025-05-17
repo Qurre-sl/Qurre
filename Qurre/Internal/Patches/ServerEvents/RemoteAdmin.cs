@@ -23,7 +23,7 @@ internal static class RemoteAdmin
 
             if (q.StartsWith("$0 1"))
             {
-                var requestPlayerListEv = new RequestPlayerListCommandEvent(sender, sender.GetPlayer(), q);
+                RequestPlayerListCommandEvent requestPlayerListEv = new(sender, sender.GetPlayer(), q);
                 requestPlayerListEv.InvokeEvent();
 
                 if (!string.IsNullOrEmpty(requestPlayerListEv.Reply))
@@ -35,11 +35,11 @@ internal static class RemoteAdmin
             if (q.StartsWith("$"))
                 return true;
 
-            var arr = q.Split(' ');
-            var commandName = arr[0].ToLower();
-            var commandArgs = arr.Skip(1).ToArray();
+            string[]? arr = q.Split(' ');
+            string commandName = arr[0].ToLower();
+            string[] commandArgs = arr.Skip(1).ToArray();
 
-            var ev = new RemoteAdminCommandEvent(sender, sender.GetPlayer(), q, commandName, commandArgs);
+            RemoteAdminCommandEvent ev = new(sender, sender.GetPlayer(), q, commandName, commandArgs);
             ev.InvokeEvent();
 
             if (!string.IsNullOrEmpty(ev.Reply))

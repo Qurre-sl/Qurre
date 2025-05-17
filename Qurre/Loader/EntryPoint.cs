@@ -4,14 +4,13 @@ using JetBrains.Annotations;
 using MEC;
 using Qurre.API;
 using Qurre.API.Addons;
+using Qurre.Internal.EventsManager;
 
 namespace Qurre.Loader;
 
 [UsedImplicitly]
 internal class EntryPoint : ICharacterLoader
 {
-    internal static event Action? Init;
-
     public void Disable()
     {
     }
@@ -33,6 +32,7 @@ internal class EntryPoint : ICharacterLoader
 
             Init?.Invoke();
 
+            SelfInvokeExecutor.InvokeAll();
             Plugins.Init();
 
             Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{EventCore.Version}")} enabled"), "Loader",
@@ -48,7 +48,7 @@ internal class EntryPoint : ICharacterLoader
             return;
 
         Timing.CallDelayed(0.5f, () => ServerConsole.AddLog(BetterColors.Hidden("⠀") + """
-            
+
                                                                                             
                                                                                             
                        .:^:^:..:.                                         ..                
@@ -82,7 +82,9 @@ internal class EntryPoint : ICharacterLoader
                                                 ^~:7?^^^                                    
                                                  :^^:^:                                     
                                                                                             
-            
+
             """ + BetterColors.Hidden("⠀"), ConsoleColor.Red));
     }
+
+    internal static event Action? Init;
 }

@@ -7,9 +7,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using InventorySystem.Searching;
 using Qurre.API;
-using Qurre.API.Entities;
 using Qurre.API.Entities.Characters;
-using Qurre.API.Entities.Items;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -56,13 +54,10 @@ internal static class PickupItem
     {
         try
         {
-            if (!EntityManager.TryGet(instance.TargetPickup, out IPickup? pickup))
-                return true;
-
             if (!Player.TryGet(instance.Hub, out var player))
                 return true;
 
-            PickupItemEvent ev = new(player, pickup);
+            PickupItemEvent ev = new(player, instance.TargetPickup);
             ev.InvokeEvent();
 
             if (ev.IsAllowed)

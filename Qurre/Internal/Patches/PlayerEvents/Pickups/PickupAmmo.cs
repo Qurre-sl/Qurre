@@ -8,9 +8,7 @@ using HarmonyLib;
 using InventorySystem.Items.Firearms.Ammo;
 using InventorySystem.Searching;
 using Qurre.API;
-using Qurre.API.Entities;
 using Qurre.API.Entities.Characters;
-using Qurre.API.Entities.Items;
 using Qurre.Events.Structs;
 using Qurre.Internal.EventsManager;
 
@@ -56,13 +54,10 @@ internal static class PickupAmmo
     {
         try
         {
-            if (!EntityManager.TryGet(instance.TargetPickup, out IPickup? pickup))
-                return true;
-
             if (!Player.TryGet(instance.Hub, out var player))
                 return true;
 
-            PickupAmmoEvent ev = new(player, pickup, ammo);
+            PickupAmmoEvent ev = new(player, instance.TargetPickup, ammo);
             ev.InvokeEvent();
 
             if (ev.IsAllowed)

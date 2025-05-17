@@ -20,11 +20,11 @@ internal static class ServerConsole
     {
         try
         {
-            var arr = cmd.Split(' ');
-            var commandName = arr[0].ToLower();
-            var commandArgs = arr.Skip(1).ToArray();
+            string[]? arr = cmd.Split(' ');
+            string commandName = arr[0].ToLower();
+            string[] commandArgs = arr.Skip(1).ToArray();
 
-            var ev = new ServerConsoleCommandEvent(cmd, commandName, commandArgs);
+            ServerConsoleCommandEvent ev = new(cmd, commandName, commandArgs);
             ev.InvokeEvent();
 
             __result = ev.Reply;

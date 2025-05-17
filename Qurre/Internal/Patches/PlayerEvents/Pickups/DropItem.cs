@@ -5,9 +5,7 @@ using System.Reflection;
 using System.Reflection.Emit;
 using HarmonyLib;
 using InventorySystem;
-using InventorySystem.Items;
 using Qurre.API;
-using Qurre.API.Utils.Entities;
 using Qurre.Events.Structs;
 
 namespace Qurre.Internal.Patches.PlayerEvents.Pickups;
@@ -46,8 +44,6 @@ internal static class DropItem
                 AccessTools.Method(typeof(Extensions), nameof(Extensions.GetPlayer), [typeof(ReferenceHub)])),
 
             new CodeInstruction(OpCodes.Ldloc_0),
-            new CodeInstruction(OpCodes.Call,
-                AccessTools.Method(typeof(ItemsHelper), nameof(ItemsHelper.GetItemByBase), [typeof(ItemBase)])),
 
             new CodeInstruction(OpCodes.Newobj, AccessTools.GetDeclaredConstructors(typeof(DropItemEvent))[0]),
             new CodeInstruction(OpCodes.Stloc, @event.LocalIndex), // var @event = ...;
