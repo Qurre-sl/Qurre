@@ -4,12 +4,14 @@ using LabApi.Events.Arguments.Scp173Events;
 using LabApi.Events.Handlers;
 using MapGeneration.Distributors;
 using Qurre.API;
+using Qurre.API.Controllers;
 using Qurre.API.Objects;
 using Qurre.API.World;
 using Qurre.Events.Structs;
 using Qurre.Internal.Attributes;
 using Qurre.Internal.EventsManager;
 using LabEvents = LabApi.Events.Arguments.PlayerEvents;
+using Locker = MapGeneration.Distributors.Locker;
 
 namespace Qurre.Internal.RegisterEvents;
 
@@ -66,7 +68,7 @@ internal static class Moderation
 
     private static void OnJoin(LabEvents.PlayerJoinedEventArgs ev)
     {
-        new JoinEvent(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException()).InvokeEvent();
+        new JoinEvent(new Player(ev.Player.ReferenceHub)).InvokeEvent();
     }
 
     private static void OnUpdatingEffect(LabEvents.PlayerEffectUpdatingEventArgs ev)
