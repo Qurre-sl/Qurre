@@ -3,7 +3,7 @@
     <PropertyGroup>
         <!--<TargetFramework>net48</TargetFramework>-->
         <TargetFramework>netstandard2.1</TargetFramework>
-        <LangVersion>13</LangVersion>
+        <LangVersion>preview</LangVersion>
         <Nullable>enable</Nullable>
         <Title>Qurre SL</Title>
         <Authors>Qurre Team</Authors>
