@@ -18,8 +18,6 @@ public class Room
     internal readonly Color DefaultColor;
     internal readonly RoomLightController[] GameLights;
 
-    private ZoneType _zone = ZoneType.Unknown;
-
     internal Room(RoomIdentifier identifier)
     {
         Identifier = identifier;
@@ -56,7 +54,10 @@ public class Room
     public Tesla? Tesla => GameObject.GetComponentInChildren<TeslaGate>()?.GetTesla();
     public Transform Transform => GameObject.transform;
     public string Name => GameObject.name;
-    public IReadOnlyCollection<Player> Players => [.. Player.List.Where(x => !x.IsHost && x.GamePlay.Room.Name == Name)];
+
+    public IReadOnlyCollection<Player> Players =>
+        [.. Player.List.Where(x => !x.IsHost && x.GamePlay.Room.Name == Name)];
+
     public bool LightsDisabled => GameLights.Length > 0 && GameLights.Any(x => !x.NetworkLightsEnabled);
 
     public Vector3 Position
@@ -104,23 +105,23 @@ public class Room
     {
         get
         {
-            if (_zone != ZoneType.Unknown)
-                return _zone;
+            if (field != ZoneType.Unknown)
+                return field;
 
             if (Name.Contains("EZ") || Name.Contains("INTERCOM"))
-                _zone = ZoneType.Office;
+                field = ZoneType.Office;
             else
-                _zone = Position.y switch
+                field = Position.y switch
                 {
                     >= 0f and < 500f => ZoneType.Light,
                     < -100 and > -1015f => ZoneType.Heavy,
                     >= 5 => ZoneType.Surface,
-                    _ => _zone
+                    _ => field
                 };
 
-            return _zone;
+            return field;
         }
-    }
+    } = ZoneType.Unknown;
 
     public void LightsOff(float duration)
     {
