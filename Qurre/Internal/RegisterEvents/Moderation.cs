@@ -24,6 +24,7 @@ internal static class Moderation
         SpawnableStructure.OnAdded += OnRoomInit;
         PlayerEvents.PreAuthenticating += OnPreAuth;
         PlayerEvents.Joined += OnJoin;
+        PlayerEvents.ChangedSpectator += OnChangedSpectator;
         PlayerEvents.Spawning += OnSpawning;
         PlayerEvents.UpdatingEffect += OnUpdatingEffect;
         PlayerEvents.InteractingDoor += OnInteractingDoor;
@@ -71,6 +72,13 @@ internal static class Moderation
     private static void OnJoin(LabEvents.PlayerJoinedEventArgs ev)
     {
         new JoinEvent(new Player(ev.Player.ReferenceHub)).InvokeEvent();
+    }
+
+    private static void OnChangedSpectator(LabEvents.PlayerChangedSpectatorEventArgs ev)
+    {
+        new ChangeSpectateEvent(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+            ev.OldTarget.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+            ev.NewTarget.ReferenceHub.GetPlayer() ?? throw new NullReferenceException()).InvokeEvent();
     }
 
     private static void OnSpawning(LabEvents.PlayerSpawningEventArgs ev)
@@ -154,6 +162,7 @@ internal static class Moderation
     private static void OnEscaping(LabEvents.PlayerEscapingEventArgs ev)
     {
         EscapeEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(), ev.NewRole);
+        rep.Allowed = ev.IsAllowed && ev.EscapeScenario != Escape.EscapeScenarioType.None;
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
     }
