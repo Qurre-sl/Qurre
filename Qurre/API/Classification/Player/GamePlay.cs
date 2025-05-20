@@ -1,8 +1,8 @@
-using System;
 using InventorySystem.Disarming;
 using JetBrains.Annotations;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
+using Qurre.API.World;
 using UnityEngine;
 
 namespace Qurre.API.Classification.Player;
@@ -39,7 +39,7 @@ public sealed class GamePlay
     public Room Room
     {
         get => LabApi.Features.Wrappers.Player.Get(_player.ReferenceHub).Room?.Base.GetRoom() ??
-               throw new NullReferenceException();
+               Map.Rooms.Find(x => x.Type == RoomType.Surface);
         set => _player.MovementState.Position = value.Position + Vector3.up * 2;
     }
 
