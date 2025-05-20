@@ -95,21 +95,21 @@ internal static class Moderation
         switch (ev)
         {
             case { Intensity: > 0, Effect.Intensity: 0 }:
-                {
-                    EffectEnabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                        ev.Effect);
-                    rep.InvokeEvent();
-                    ev.IsAllowed = rep.Allowed;
-                    break;
-                }
+            {
+                EffectEnabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+                    ev.Effect);
+                rep.InvokeEvent();
+                ev.IsAllowed = rep.Allowed;
+                break;
+            }
             case { Effect.Intensity: > 0, Intensity: 0 }:
-                {
-                    EffectDisabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                        ev.Effect);
-                    rep.InvokeEvent();
-                    ev.IsAllowed = rep.Allowed;
-                    break;
-                }
+            {
+                EffectDisabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+                    ev.Effect);
+                rep.InvokeEvent();
+                ev.IsAllowed = rep.Allowed;
+                break;
+            }
         }
     }
 
@@ -161,8 +161,10 @@ internal static class Moderation
 
     private static void OnEscaping(LabEvents.PlayerEscapingEventArgs ev)
     {
-        EscapeEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(), ev.NewRole);
-        rep.Allowed = ev.IsAllowed && ev.EscapeScenario != Escape.EscapeScenarioType.None;
+        EscapeEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(), ev.NewRole)
+        {
+            Allowed = ev.IsAllowed && ev.EscapeScenario != Escape.EscapeScenarioType.None
+        };
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
     }
