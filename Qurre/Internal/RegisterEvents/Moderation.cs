@@ -10,6 +10,7 @@ using Qurre.API.World;
 using Qurre.Events.Structs;
 using Qurre.Internal.Attributes;
 using Qurre.Internal.EventsManager;
+using UnityEngine;
 using LabEvents = LabApi.Events.Arguments.PlayerEvents;
 using Locker = MapGeneration.Distributors.Locker;
 
@@ -23,6 +24,7 @@ internal static class Moderation
         SpawnableStructure.OnAdded += OnRoomInit;
         PlayerEvents.PreAuthenticating += OnPreAuth;
         PlayerEvents.Joined += OnJoin;
+        PlayerEvents.Spawning += OnSpawning;
         PlayerEvents.UpdatingEffect += OnUpdatingEffect;
         PlayerEvents.InteractingDoor += OnInteractingDoor;
         PlayerEvents.PickingUpItem += OnPickupItem;
@@ -71,26 +73,35 @@ internal static class Moderation
         new JoinEvent(new Player(ev.Player.ReferenceHub)).InvokeEvent();
     }
 
+    private static void OnSpawning(LabEvents.PlayerSpawningEventArgs ev)
+    {
+        SpawnEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+            ev.Role.RoleTypeId, ev.SpawnLocation, new Vector3(0, ev.HorizontalRotation));
+        rep.InvokeEvent();
+        ev.SpawnLocation = rep.Position;
+        ev.HorizontalRotation = rep.Rotation.y;
+    }
+
     private static void OnUpdatingEffect(LabEvents.PlayerEffectUpdatingEventArgs ev)
     {
         switch (ev)
         {
             case { Intensity: > 0, Effect.Intensity: 0 }:
-                {
-                    EffectEnabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                        ev.Effect);
-                    rep.InvokeEvent();
-                    ev.IsAllowed = rep.Allowed;
-                    break;
-                }
+            {
+                EffectEnabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+                    ev.Effect);
+                rep.InvokeEvent();
+                ev.IsAllowed = rep.Allowed;
+                break;
+            }
             case { Effect.Intensity: > 0, Intensity: 0 }:
-                {
-                    EffectDisabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                        ev.Effect);
-                    rep.InvokeEvent();
-                    ev.IsAllowed = rep.Allowed;
-                    break;
-                }
+            {
+                EffectDisabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+                    ev.Effect);
+                rep.InvokeEvent();
+                ev.IsAllowed = rep.Allowed;
+                break;
+            }
         }
     }
 
