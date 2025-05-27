@@ -1,5 +1,6 @@
 using InventorySystem.Disarming;
 using JetBrains.Annotations;
+using MapGeneration;
 using Qurre.API.Controllers;
 using Qurre.API.Objects;
 using Qurre.API.World;
@@ -22,7 +23,7 @@ public sealed class GamePlay
 
     public bool Cuffed => _player.ReferenceHub.inventory.IsDisarmed();
 
-    public ZoneType CurrentZone => Room.Zone;
+    public FacilityZone CurrentZone => Room.Zone;
 
     public bool Overwatch
     {

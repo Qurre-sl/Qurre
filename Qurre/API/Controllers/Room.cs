@@ -101,27 +101,7 @@ public class Room
         }
     }
 
-    public ZoneType Zone
-    {
-        get
-        {
-            if (field != ZoneType.Unknown)
-                return field;
-
-            if (Name.Contains("EZ") || Name.Contains("INTERCOM"))
-                field = ZoneType.Office;
-            else
-                field = Position.y switch
-                {
-                    >= 0f and < 500f => ZoneType.Light,
-                    < -100 and > -1015f => ZoneType.Heavy,
-                    >= 5 => ZoneType.Surface,
-                    _ => field
-                };
-
-            return field;
-        }
-    } = ZoneType.Unknown;
+    public FacilityZone Zone => LabApi.Features.Wrappers.Room.Get(Identifier).Zone;
 
     public void LightsOff(float duration)
     {

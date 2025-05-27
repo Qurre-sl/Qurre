@@ -1,8 +1,8 @@
 using System.Linq;
 using JetBrains.Annotations;
+using MapGeneration;
 using Qurre.API.Addons.Models;
 using Qurre.API.Controllers;
-using Qurre.API.Objects;
 using UnityEngine;
 
 namespace Qurre.API.World;
@@ -16,7 +16,7 @@ public static class GlobalLights
             room.LightsOff(duration);
     }
 
-    public static void TurnOff(float duration, ZoneType zone)
+    public static void TurnOff(float duration, FacilityZone zone)
     {
         foreach (Room? room in Map.Rooms.Where(x => x.Zone == zone))
             room.LightsOff(duration);
@@ -41,7 +41,7 @@ public static class GlobalLights
             }
     }
 
-    public static void ChangeColor(Color color, ZoneType zone)
+    public static void ChangeColor(Color color, FacilityZone zone)
     {
         foreach (Room? room in Map.Rooms.Where(x => x.Zone == zone))
             room.Lights.Color = color;
@@ -58,7 +58,7 @@ public static class GlobalLights
                 room.LightsController.Intensity = intensive;
     }
 
-    public static void Intensivity(float intensive, ZoneType zone)
+    public static void Intensivity(float intensive, FacilityZone zone)
     {
         foreach (Room? room in Map.Rooms.Where(x => x.Zone == zone))
             room.Lights.Intensity = intensive;

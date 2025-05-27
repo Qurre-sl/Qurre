@@ -30,6 +30,7 @@ internal class EntryPoint : ICharacterLoader
             Internal.EventsManager.Loader.PathQurreEvents();
 
             SelfInvokeExecutor.InvokeAll();
+            Prefabs.Init();
             Plugins.Init();
 
             Log.Custom(BetterColors.Bold($"Qurre {BetterColors.BrightRed($"v{Core.Version}")} enabled"), "Loader",

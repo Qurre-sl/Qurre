@@ -77,8 +77,8 @@ internal static class Moderation
     private static void OnChangedSpectator(LabEvents.PlayerChangedSpectatorEventArgs ev)
     {
         new ChangeSpectateEvent(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-            ev.OldTarget.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-            ev.NewTarget.ReferenceHub.GetPlayer() ?? throw new NullReferenceException()).InvokeEvent();
+            ev.OldTarget.ReferenceHub.GetPlayer(),
+            ev.NewTarget.ReferenceHub.GetPlayer()).InvokeEvent();
     }
 
     private static void OnSpawning(LabEvents.PlayerSpawningEventArgs ev)
