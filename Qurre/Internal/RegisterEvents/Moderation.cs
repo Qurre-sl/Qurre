@@ -76,14 +76,14 @@ internal static class Moderation
 
     private static void OnChangedSpectator(LabEvents.PlayerChangedSpectatorEventArgs ev)
     {
-        new ChangeSpectateEvent(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-            ev.OldTarget.ReferenceHub.GetPlayer(),
-            ev.NewTarget.ReferenceHub.GetPlayer()).InvokeEvent();
+        new ChangeSpectateEvent(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
+            ev.OldTarget.GetPlayer(),
+            ev.NewTarget.GetPlayer()).InvokeEvent();
     }
 
     private static void OnSpawning(LabEvents.PlayerSpawningEventArgs ev)
     {
-        SpawnEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        SpawnEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.Role.RoleTypeId, ev.SpawnLocation, new Vector3(0, ev.HorizontalRotation));
         rep.InvokeEvent();
         ev.SpawnLocation = rep.Position;
@@ -95,27 +95,27 @@ internal static class Moderation
         switch (ev)
         {
             case { Intensity: > 0, Effect.Intensity: 0 }:
-                {
-                    EffectEnabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                        ev.Effect);
-                    rep.InvokeEvent();
-                    ev.IsAllowed = rep.Allowed;
-                    break;
-                }
+            {
+                EffectEnabledEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
+                    ev.Effect);
+                rep.InvokeEvent();
+                ev.IsAllowed = rep.Allowed;
+                break;
+            }
             case { Effect.Intensity: > 0, Intensity: 0 }:
-                {
-                    EffectDisabledEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-                        ev.Effect);
-                    rep.InvokeEvent();
-                    ev.IsAllowed = rep.Allowed;
-                    break;
-                }
+            {
+                EffectDisabledEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
+                    ev.Effect);
+                rep.InvokeEvent();
+                ev.IsAllowed = rep.Allowed;
+                break;
+            }
         }
     }
 
     private static void OnInteractingDoor(LabEvents.PlayerInteractingDoorEventArgs ev)
     {
-        InteractDoorEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        InteractDoorEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.Door.Base.GetDoor(), ev.CanOpen);
         rep.InvokeEvent();
         ev.CanOpen = rep.Allowed;
@@ -123,7 +123,7 @@ internal static class Moderation
 
     private static void OnPickupItem(LabEvents.PlayerPickingUpItemEventArgs ev)
     {
-        PickupItemEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        PickupItemEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.Pickup.Base);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
@@ -131,7 +131,7 @@ internal static class Moderation
 
     private static void OnPickupArmor(LabEvents.PlayerPickingUpArmorEventArgs ev)
     {
-        PickupArmorEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        PickupArmorEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.BodyArmorPickup.Base);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
@@ -139,7 +139,7 @@ internal static class Moderation
 
     private static void OnPickupAmmo(LabEvents.PlayerPickingUpAmmoEventArgs ev)
     {
-        PickupAmmoEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        PickupAmmoEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.AmmoPickup.Base);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
@@ -147,21 +147,21 @@ internal static class Moderation
 
     private static void OnUsedItem(LabEvents.PlayerUsedItemEventArgs ev)
     {
-        UsedItemEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        UsedItemEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.UsableItem.Base);
         rep.InvokeEvent();
     }
 
     private static void OnSearch(LabEvents.PlayerSearchedPickupEventArgs ev)
     {
-        PrePickupItemEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        PrePickupItemEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.Pickup.Base);
         rep.InvokeEvent();
     }
 
     private static void OnEscaping(LabEvents.PlayerEscapingEventArgs ev)
     {
-        EscapeEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(), ev.NewRole)
+        EscapeEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(), ev.NewRole)
         {
             Allowed = ev.IsAllowed && ev.EscapeScenario != Escape.EscapeScenarioType.None
         };
@@ -171,30 +171,30 @@ internal static class Moderation
 
     private static void OnLocalReport(LabEvents.PlayerReportingPlayerEventArgs ev)
     {
-        LocalReportEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-            ev.Target.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(), ev.Reason);
+        LocalReportEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
+            ev.Target.GetPlayer() ?? throw new NullReferenceException(), ev.Reason);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
     }
 
     private static void OnAddObserver(Scp173AddingObserverEventArgs ev)
     {
-        Scp173AddObserverEvent rep = new(ev.Target.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-            ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException());
+        Scp173AddObserverEvent rep = new(ev.Target.GetPlayer() ?? throw new NullReferenceException(),
+            ev.Player.GetPlayer() ?? throw new NullReferenceException());
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
     }
 
     private static void OnRemovedObserver(Scp173RemovedObserverEventArgs ev)
     {
-        Scp173RemovedObserverEvent rep = new(ev.Target.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
-            ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException());
+        Scp173RemovedObserverEvent rep = new(ev.Target.GetPlayer() ?? throw new NullReferenceException(),
+            ev.Player.GetPlayer() ?? throw new NullReferenceException());
         rep.InvokeEvent();
     }
 
     private static void OnEnableSpeed(Scp173BreakneckSpeedChangingEventArgs ev)
     {
-        Scp173EnableSpeedEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        Scp173EnableSpeedEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.Active);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
@@ -210,7 +210,7 @@ internal static class Moderation
 
     private static void OnCharging(Scp096ChargingEventArgs ev)
     {
-        Scp096SetStateEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        Scp096SetStateEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             Scp096State.Charging);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
@@ -218,7 +218,7 @@ internal static class Moderation
 
     private static void OnStartCrying(Scp096StartCryingEventArgs ev)
     {
-        Scp096SetStateEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        Scp096SetStateEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             Scp096State.StartCrying);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
@@ -226,7 +226,7 @@ internal static class Moderation
 
     private static void OnTryingNotToCry(Scp096TryingNotToCryEventArgs ev)
     {
-        Scp096SetStateEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        Scp096SetStateEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             Scp096State.TryNotCry);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
@@ -234,7 +234,7 @@ internal static class Moderation
 
     private static void OnEnraging(Scp096EnragingEventArgs ev)
     {
-        Scp096SetStateEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        Scp096SetStateEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             Scp096State.Enraging);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;
@@ -242,7 +242,7 @@ internal static class Moderation
 
     private static void OnChangingState(Scp096ChangingStateEventArgs ev)
     {
-        Scp096SetStateEvent rep = new(ev.Player.ReferenceHub.GetPlayer() ?? throw new NullReferenceException(),
+        Scp096SetStateEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.State);
         rep.InvokeEvent();
         ev.IsAllowed = rep.Allowed;

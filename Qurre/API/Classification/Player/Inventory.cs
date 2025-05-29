@@ -155,10 +155,7 @@ public sealed class Inventory
 
     public ItemBase? AddItem(ItemType itemType)
     {
-        var itemBase = Base.ServerAddItem(itemType, ItemAddReason.Undefined);
-        if (itemBase is Firearm firearm)
-            SetupFirearmAttachments(_player.ReferenceHub, firearm);
-        return itemBase;
+        return LabApi.Features.Wrappers.Player.Get(_player.ReferenceHub).AddItem(itemType)?.Base;
     }
 
     public void AddItem(ItemType itemType, uint amount)

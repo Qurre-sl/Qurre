@@ -306,6 +306,11 @@ public static class Extensions
     }
 
 
+    public static Player? GetPlayer(this LabApi.Features.Wrappers.Player? labPlayer)
+    {
+        return labPlayer?.ReferenceHub.GetPlayer();
+    }
+
     public static Player? GetPlayer(this ReferenceHub? referenceHub)
     {
         if (referenceHub == null)
