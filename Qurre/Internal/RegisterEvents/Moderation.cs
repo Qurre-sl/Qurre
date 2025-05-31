@@ -2,6 +2,7 @@ using System;
 using LabApi.Events.Arguments.Scp096Events;
 using LabApi.Events.Arguments.Scp173Events;
 using LabApi.Events.Handlers;
+using LabApi.Features.Extensions;
 using MapGeneration.Distributors;
 using Qurre.API;
 using Qurre.API.Controllers;
@@ -25,6 +26,7 @@ internal static class Moderation
         PlayerEvents.PreAuthenticating += OnPreAuth;
         PlayerEvents.Joined += OnJoin;
         PlayerEvents.ChangedSpectator += OnChangedSpectator;
+        PlayerEvents.ChangingRole += OnChangeRole;
         PlayerEvents.Spawning += OnSpawning;
         PlayerEvents.UpdatingEffect += OnUpdatingEffect;
         PlayerEvents.InteractingDoor += OnInteractingDoor;
@@ -79,6 +81,16 @@ internal static class Moderation
         new ChangeSpectateEvent(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
             ev.OldTarget.GetPlayer(),
             ev.NewTarget.GetPlayer()).InvokeEvent();
+    }
+
+    private static void OnChangeRole(LabEvents.PlayerChangingRoleEventArgs ev)
+    {
+        if (!ev.NewRole.IsDead())
+            return;
+
+        SpawnEvent rep = new(ev.Player.GetPlayer() ?? throw new NullReferenceException(),
+            ev.NewRole, Vector3.zero, Vector3.zero);
+        rep.InvokeEvent();
     }
 
     private static void OnSpawning(LabEvents.PlayerSpawningEventArgs ev)
