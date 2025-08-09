@@ -12,8 +12,8 @@ public static class Decontamination
 
     public static DecontaminationController.DecontaminationStatus Status
     {
-        get => Controller.NetworkDecontaminationOverride;
-        set => Controller.NetworkDecontaminationOverride = value;
+        get => Controller._decontaminationOverride;
+        set => Controller._decontaminationOverride = value;
     }
 
     public static bool Locked
